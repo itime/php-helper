@@ -194,4 +194,26 @@ final class Arr{
 		};
 		return $handler($list, $child);
 	}
+
+	/**
+	 * 转换数组里面的key
+	 *
+	 * @param array $arr
+	 * @param array $keyMaps
+	 * @return array
+	 */
+	public static function transformKeys(array $arr, array $keyMaps){
+		foreach($keyMaps as $oldKey => $newKey){
+			if(!array_key_exists($oldKey, $arr)) continue;
+
+			if(is_callable($newKey)){
+				list($newKey, $value) = call_user_func($newKey, $arr[$oldKey], $oldKey, $arr);
+				$arr[$newKey] = $value;
+			}else{
+				$arr[$newKey] = $arr[$oldKey];
+			}
+			unset($arr[$oldKey]);
+		}
+		return $arr;
+	}
 }
