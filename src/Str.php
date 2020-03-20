@@ -7,12 +7,12 @@
  * @author BD<657306123@qq.com>
  */
 
-namespace  xin\helper;
+namespace Xin\Support;
 
 /**
  * 字符串工具类
  *
- * @package  xin\helper
+ * @package  Xin\Support
  */
 final class Str{
 
@@ -56,8 +56,8 @@ final class Str{
 	/**
 	 * 检查字符串是否以某些字符串结尾
 	 *
-	 * @param  string       $haystack
-	 * @param  string|array $needles
+	 * @param string       $haystack
+	 * @param string|array $needles
 	 * @return bool
 	 */
 	public static function endsWith($haystack, $needles){
@@ -102,8 +102,8 @@ final class Str{
 	/**
 	 * 检查字符串是否以某些字符串开头
 	 *
-	 * @param  string       $haystack
-	 * @param  string|array $needles
+	 * @param string       $haystack
+	 * @param string|array $needles
 	 * @return bool
 	 */
 	public static function startsWith($haystack, $needles){
@@ -118,7 +118,7 @@ final class Str{
 	/**
 	 * 字符串转小写
 	 *
-	 * @param  string $value
+	 * @param string $value
 	 * @return string
 	 */
 	public static function lower($value){
@@ -128,7 +128,7 @@ final class Str{
 	/**
 	 * 字符串转大写
 	 *
-	 * @param  string $value
+	 * @param string $value
 	 * @return string
 	 */
 	public static function upper($value){
@@ -138,7 +138,7 @@ final class Str{
 	/**
 	 * 获取字符串的长度
 	 *
-	 * @param  string $value
+	 * @param string $value
 	 * @return int
 	 */
 	public static function length($value){
@@ -229,7 +229,7 @@ final class Str{
 	/**
 	 * 转为首字母大写的标题格式
 	 *
-	 * @param  string $value
+	 * @param string $value
 	 * @return string
 	 */
 	public static function title($value){
@@ -308,9 +308,9 @@ final class Str{
 	/**
 	 * 截取字符串
 	 *
-	 * @param  string   $string
-	 * @param  int      $start
-	 * @param  int|null $length
+	 * @param string   $string
+	 * @param int      $start
+	 * @param int|null $length
 	 * @return string
 	 */
 	public static function substr($string, $start, $length = null){

@@ -7,12 +7,12 @@
  * @author BD<657306123@qq.com>
  */
 
-namespace  xin\helper;
+namespace Xin\Support;
 
 /**
  * 数字工具类
  *
- * @package  xin\helper
+ * @package  Xin\Support
  */
 final class Num{
 
@@ -42,8 +42,8 @@ final class Num{
 	/**
 	 * 格式化字节大小
 	 *
-	 * @param  number $size 字节数
-	 * @param  string $delimiter 数字和单位分隔符
+	 * @param number $size 字节数
+	 * @param string $delimiter 数字和单位分隔符
 	 * @return string            格式化后的带单位的大小
 	 * @author 麦当苗儿 <zuojiazi@vip.qq.com>
 	 */
@@ -54,14 +54,36 @@ final class Num{
 	}
 
 	/**
+	 * 人性化数字
+	 *
+	 * @param int $num
+	 * @return string
+	 */
+	public static function formatSimple($num){
+		if($num < 1000){
+			return $num;
+		}
+
+		if($num < 10000){
+			return round($num / 1000, 2)."千";
+		}
+
+		if($num < 100000000){
+			return round($num / 10000, 2)."万";
+		}
+
+		return round($num / 100000000, 2)."亿";
+	}
+
+	/**
 	 * 计算两点地理坐标之间的距离
 	 *
-	 * @param  float $longitude1 起点经度
-	 * @param  float $latitude1 起点纬度
-	 * @param  float $longitude2 终点经度
-	 * @param  float $latitude2 终点纬度
-	 * @param  int   $unit 单位 1:米 2:公里
-	 * @param  int   $decimal 精度 保留小数位数
+	 * @param float $longitude1 起点经度
+	 * @param float $latitude1 起点纬度
+	 * @param float $longitude2 终点经度
+	 * @param float $latitude2 终点纬度
+	 * @param int   $unit 单位 1:米 2:公里
+	 * @param int   $decimal 精度 保留小数位数
 	 * @return float
 	 */
 	public static function calcDistance($longitude1, $latitude1, $longitude2, $latitude2, $unit = 2, $decimal = 2){

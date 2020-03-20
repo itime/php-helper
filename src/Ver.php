@@ -7,7 +7,7 @@
  * @author BD<657306123@qq.com>
  */
 
-namespace  xin\helper;
+namespace Xin\Support;
 
 /**
  * 版本检测器
@@ -18,9 +18,9 @@ namespace  xin\helper;
  * 当前版本等于新版本 VersionUtil::eq( '1.20.63.56' , '1.20.63.056' )===true;
  * 当前版本小于新版本 VersionUtil::lt( '1.20.62.56' , '1.20.63.056' )===true;
  *
- * @package  xin\helper
+ * @package  Xin\Support
  */
-final class Version{
+final class Ver{
 
 	/**
 	 * 当前版本大于新版本

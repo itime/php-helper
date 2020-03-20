@@ -1,5 +1,5 @@
 <?php
-namespace  xin\helper;
+namespace Xin\Support;
 
 class Time{
 
@@ -178,5 +178,62 @@ class Time{
 		$time2 = explode(".", $time);
 		$time = $time2[0];
 		return $time;
+	}
+
+	/**
+	 * 获取相对时间
+	 *
+	 * @param int $timeStamp
+	 * @return string
+	 */
+	public static function formatRelative($timeStamp){
+		$currentTime = time();
+
+		// 判断传入时间戳是否早于当前时间戳
+		$isEarly = $timeStamp <= $currentTime;
+
+		// 获取两个时间戳差值
+		$diff = abs($currentTime - $timeStamp);
+
+		$dirStr = $isEarly ? '前' : '后';
+
+		if($diff < 60) $resStr = $diff.'秒'.$dirStr;
+		// 多于59秒，少于等于59分钟59秒
+		elseif($diff >= 60 && $diff < 3600) $resStr = floor($diff / 60).'分钟'.$dirStr;
+		// 多于59分钟59秒，少于等于23小时59分钟59秒
+		elseif($diff >= 3600 && $diff < 86400) $resStr = floor($diff / 3600).'小时'.$dirStr;
+		// 多于23小时59分钟59秒，少于等于29天59分钟59秒
+		elseif($diff >= 86400 && $diff < 2623860) $resStr = floor($diff / 86400).'天'.$dirStr;
+		// 多于29天59分钟59秒，少于364天23小时59分钟59秒，且传入的时间戳早于当前
+		elseif($diff >= 2623860 && $diff <= 31567860 && $isEarly) $resStr = date('MM-dd hh:mm', $timeStamp);
+		else $resStr = date('Y-m-d', $timeStamp);
+
+		return $resStr;
+	}
+
+	/**
+	 * 范围日期转换时间戳
+	 *
+	 * @param string $rangeDatetime
+	 * @param int    $maxRange 最大时间间隔
+	 * @param string $delimiter
+	 * @return array
+	 */
+	public static function parse_range_datetime($rangeDatetime, $maxRange = 0, $delimiter = ' - '){
+		$rangeDatetime = explode($delimiter, $rangeDatetime, 2);
+		$rangeDatetime[0] = strtotime($rangeDatetime[0]);
+		$rangeDatetime[1] = isset($rangeDatetime[1]) ? strtotime($rangeDatetime[1]) : time();
+
+		// 如果结束时间小于或等于开始时间 直接返回null
+		if($rangeDatetime[1] < $rangeDatetime[0]){
+			return null;
+		}
+
+		// 如果大于最大时间间隔 则用结束时间减去最大时间间隔获得开始时间
+		if($maxRange > 0 && $rangeDatetime[1] - $rangeDatetime[0] > $maxRange){
+			$rangeDatetime[0] = $rangeDatetime[1] - $maxRange;
+		}
+
+		return $rangeDatetime;
 	}
 }

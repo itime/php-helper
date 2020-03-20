@@ -7,12 +7,12 @@
  * @author BD<657306123@qq.com>
  */
 
-namespace  xin\helper;
+namespace Xin\Support;
 
 /**
  * 正则工具类
  *
- * @package  xin\helper
+ * @package  Xin\Support
  */
 final class Regex{
 

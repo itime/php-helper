@@ -7,12 +7,12 @@
  * @author        <657306123@qq.com> LXSEA
  */
 
-namespace  xin\helper;
+namespace Xin\Support;
 
 /**
  * 函数工具类
  *
- * @package  xin\helper
+ * @package  Xin\Support
  */
 final class Func{
 

@@ -7,12 +7,12 @@
  * @author        <657306123@qq.com> LXSEA
  */
 
-namespace  xin\helper;
+namespace Xin\Support;
 
 /**
  * 系统相关操作工具类
  *
- * @package  xin\helper
+ * @package  Xin\Support
  */
 final class Server{
 
@@ -233,8 +233,9 @@ final class Server{
 		if(isset ($_SERVER['HTTP_ACCEPT'])){
 			// 如果只支持wml并且不支持html那一定是移动设备
 			// 如果支持wml和html但是wml在html之前则是移动设备
-			if((strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') !== false) && (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') === false ||
-					(strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') < strpos($_SERVER['HTTP_ACCEPT'], 'text/html')))){
+			if((strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') !== false)
+				&& (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') === false
+					|| (strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') < strpos($_SERVER['HTTP_ACCEPT'], 'text/html')))){
 				return true;
 			}
 		}

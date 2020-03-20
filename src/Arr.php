@@ -6,12 +6,10 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0
  * @author BD<657306123@qq.com>
  */
-namespace  xin\helper;
+namespace Xin\Support;
 
 /**
  * 数组工具类
- *
- * @package  xin\helper
  */
 final class Arr{
 
@@ -125,7 +123,10 @@ final class Arr{
 			$keys = array_keys(current($array));
 		}
 
-		foreach($keys as $index => $key) $result[$index] = [];
+		foreach($keys as $index => $key){
+			$result[$index] = [];
+		}
+
 		foreach($array as $item){
 			foreach($keys as $index => $key){
 				$result[$index][] = isset($item[$key]) ? $item[$key] : null;
@@ -133,6 +134,27 @@ final class Arr{
 		}
 
 		return $result;
+	}
+
+	/**
+	 * 数组去重-二维数组
+	 * @param array  $array
+	 * @param string $key
+	 * @return array
+	 */
+	public static function array_multi_unique($array, $key){
+		$i = 0;
+		$temp_array = [];
+		$key_array = [];
+
+		foreach($array as $val){
+			if(!in_array($val[$key], $key_array)){
+				$key_array[$i] = $val[$key];
+				$temp_array[$i] = $val;
+			}
+			$i++;
+		}
+		return $temp_array;
 	}
 
 	/**
@@ -215,5 +237,55 @@ final class Arr{
 			unset($arr[$oldKey]);
 		}
 		return $arr;
+	}
+
+	/**
+	 * 安全处理-字符串或数组转数组
+	 * @param mixed         $value
+	 * @param string        $format
+	 * @param string        $delimiter
+	 * @param bool|\Closure $filter
+	 * @return array
+	 */
+	public static function explode($value, $format = 'intval', $delimiter = ',', $filter = true){
+		if(!is_array($value)){
+			$value = is_string($value) ? explode(",", $delimiter) : [$value];
+		}
+
+		//		foreach($value as $k => &$v){
+		//			if('intval' == $format){
+		//				$v = intval($v);
+		//			}elseif('floatval' == $format){
+		//				$v = floatval($v);
+		//			}elseif('boolval' == $format){
+		//				$v = boolval($v);
+		//			}elseif('long2ip' == $format){
+		//				$v = long2ip($v);
+		//			}
+		//		}
+		//		unset($v);
+
+		$value = array_map($format, $value);
+		$value = array_filter($value, $filter);
+
+		return array_values($value);
+	}
+
+	/**
+	 * 安全处理-数组转字符串
+	 * @param mixed  $value
+	 * @param string $format
+	 * @param string $delimiter
+	 * @return string
+	 */
+	public static function implode($value, $format = 'intval', $delimiter = ','){
+		//先转换为数组，进行安全过滤
+		$value = self::explode($value, $format, $delimiter);
+
+		//去除重复
+		$value = array_unique($value);
+
+		//再次转换为字符串
+		return implode(",", $value);
 	}
 }

@@ -7,12 +7,12 @@
  * @author BD<657306123@qq.com>
  */
 
-namespace  xin\helper;
+namespace Xin\Support;
 
 /**
  * 安全相关工具类
  *
- * @package  xin\helper
+ * @package  Xin\Support
  */
 final class Secure{
 
@@ -152,20 +152,20 @@ final class Secure{
 		for($i = 0; $i < $len; $i++){
 			$str .= chr(ord(substr($data, $i, 1)) + (ord(substr($char, $i, 1))) % 256);
 		}
-		return str_replace(array('+', '/', '='), array('-', '_', ''), base64_encode($str));
+		return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($str));
 	}
 
 	/**
 	 * 系统解密方法
 	 *
-	 * @param  string $data 要解密的字符串
-	 * @param  string $key 加密密钥
+	 * @param string $data 要解密的字符串
+	 * @param string $key 加密密钥
 	 * @return string
 	 * @author 麦当苗儿 <zuojiazi@vip.qq.com>
 	 */
 	public static function decrypt($data, $key = ''){
 		$key = md5($key);
-		$data = str_replace(array('-', '_'), array('+', '/'), $data);
+		$data = str_replace(['-', '_'], ['+', '/'], $data);
 		$mod4 = strlen($data) % 4;
 		if($mod4){
 			$data .= substr('====', $mod4);
