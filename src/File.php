@@ -11,8 +11,6 @@ namespace Xin\Support;
 
 /**
  * 目录操作类
- *
- * @package  Xin\Support
  */
 final class File{
 

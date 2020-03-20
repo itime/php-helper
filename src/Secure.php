@@ -11,8 +11,6 @@ namespace Xin\Support;
 
 /**
  * 安全相关工具类
- *
- * @package  Xin\Support
  */
 final class Secure{
 

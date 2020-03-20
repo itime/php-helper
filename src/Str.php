@@ -11,8 +11,6 @@ namespace Xin\Support;
 
 /**
  * 字符串工具类
- *
- * @package  Xin\Support
  */
 final class Str{
 

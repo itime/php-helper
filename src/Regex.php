@@ -11,8 +11,6 @@ namespace Xin\Support;
 
 /**
  * 正则工具类
- *
- * @package  Xin\Support
  */
 final class Regex{
 

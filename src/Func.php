@@ -11,8 +11,6 @@ namespace Xin\Support;
 
 /**
  * 函数工具类
- *
- * @package  Xin\Support
  */
 final class Func{
 

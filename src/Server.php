@@ -11,8 +11,6 @@ namespace Xin\Support;
 
 /**
  * 系统相关操作工具类
- *
- * @package  Xin\Support
  */
 final class Server{
 

@@ -17,8 +17,6 @@ namespace Xin\Support;
  * 当前版本大于新版本 VersionUtil::gt( '1.20.63.56' , '1.20.63.55.56' )===true;
  * 当前版本等于新版本 VersionUtil::eq( '1.20.63.56' , '1.20.63.056' )===true;
  * 当前版本小于新版本 VersionUtil::lt( '1.20.62.56' , '1.20.63.056' )===true;
- *
- * @package  Xin\Support
  */
 final class Ver{
 

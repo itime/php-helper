@@ -125,8 +125,7 @@ final class Position{
 	 */
 	public static function bd09ToGps84($bd_lat, $bd_lon){
 		$gcj02 = self::bd09ToGcj02($bd_lat, $bd_lon);
-		$map84 = self::gcjToGps84($gcj02[0], $gcj02[1]);
-		return $map84;
+		return self::gcjToGps84($gcj02[0], $gcj02[1]);
 	}
 
 	/**

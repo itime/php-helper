@@ -11,8 +11,6 @@ namespace Xin\Support;
 
 /**
  * 数字工具类
- *
- * @package  Xin\Support
  */
 final class Num{
 
