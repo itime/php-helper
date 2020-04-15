@@ -219,7 +219,7 @@ class Time{
 	 * @param string $delimiter
 	 * @return array
 	 */
-	public static function parse_range_datetime($rangeDatetime, $maxRange = 0, $delimiter = ' - '){
+	public static function parseRange($rangeDatetime, $maxRange = 0, $delimiter = ' - '){
 		$rangeDatetime = explode($delimiter, $rangeDatetime, 2);
 		$rangeDatetime[0] = strtotime($rangeDatetime[0]);
 		$rangeDatetime[1] = isset($rangeDatetime[1]) ? strtotime($rangeDatetime[1]) : time();
