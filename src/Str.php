@@ -529,7 +529,7 @@ final class Str{
 	 */
 	public static function explode($value, $format = 'intval', $delimiter = ',', $filter = true){
 		if(!is_array($value)){
-			$value = is_string($value) ? explode(",", $delimiter) : [$value];
+			$value = is_string($value) ? explode($delimiter, $value) : [$value];
 		}
 
 		//		foreach($value as $k => &$v){
@@ -546,7 +546,14 @@ final class Str{
 		//		unset($v);
 
 		$value = array_map($format, $value);
-		$value = array_filter($value, $filter);
+
+		if($filter !== false){
+			if($filter === true){
+				$value = array_filter($value);
+			}else{
+				$value = array_filter($value, $filter);
+			}
+		}
 
 		return array_values($value);
 	}
