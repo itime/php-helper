@@ -197,16 +197,19 @@ class Time{
 
 		$dirStr = $isEarly ? '前' : '后';
 
-		if($diff < 60) $resStr = $diff.'秒'.$dirStr;
-		// 多于59秒，少于等于59分钟59秒
-		elseif($diff >= 60 && $diff < 3600) $resStr = floor($diff / 60).'分钟'.$dirStr;
-		// 多于59分钟59秒，少于等于23小时59分钟59秒
-		elseif($diff >= 3600 && $diff < 86400) $resStr = floor($diff / 3600).'小时'.$dirStr;
-		// 多于23小时59分钟59秒，少于等于29天59分钟59秒
-		elseif($diff >= 86400 && $diff < 2623860) $resStr = floor($diff / 86400).'天'.$dirStr;
-		// 多于29天59分钟59秒，少于364天23小时59分钟59秒，且传入的时间戳早于当前
-		elseif($diff >= 2623860 && $diff <= 31567860 && $isEarly) $resStr = date('MM-dd hh:mm', $timeStamp);
-		else $resStr = date('Y-m-d', $timeStamp);
+		if($diff < 60){ // 一分钟之内
+			$resStr = $diff.'秒'.$dirStr;
+		}elseif($diff >= 60 && $diff < 3600){ // 多于59秒，少于等于59分钟59秒
+			$resStr = floor($diff / 60).'分钟'.$dirStr;
+		}elseif($diff >= 3600 && $diff < 86400){ // 多于59分钟59秒，少于等于23小时59分钟59秒
+			$resStr = floor($diff / 3600).'小时'.$dirStr;
+		}elseif($diff >= 86400 && $diff < 2623860){ // 多于23小时59分钟59秒，少于等于29天59分钟59秒
+			$resStr = floor($diff / 86400).'天'.$dirStr;
+		}elseif($diff >= 2623860 && $diff <= 31567860 && $isEarly){ // 多于29天59分钟59秒，少于364天23小时59分钟59秒，且传入的时间戳早于当前
+			$resStr = date('m-d H:i', $timeStamp);
+		}else{
+			$resStr = date('Y-m-d', $timeStamp);
+		}
 
 		return $resStr;
 	}
