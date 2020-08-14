@@ -2,7 +2,6 @@
 /**
  * I know no such things as genius,it is nothing but labor and diligence.
  *
- * @copyright (c) 2015~2019 BD All rights reserved.
  * @license http://www.apache.org/licenses/LICENSE-2.0
  * @author BD<657306123@qq.com>
  */
@@ -13,28 +12,28 @@ namespace Xin\Support;
  * 字符串工具类
  */
 final class Str{
-
+	
 	/**
 	 * 驼峰转下划线缓存
 	 *
 	 * @var array
 	 */
 	protected static $snakeCache = [];
-
+	
 	/**
 	 * 下划线转驼峰(首字母小写) 缓存
 	 *
 	 * @var array
 	 */
 	protected static $camelCache = [];
-
+	
 	/**
 	 * 下划线转驼峰(首字母大写)
 	 *
 	 * @var array
 	 */
 	protected static $studlyCache = [];
-
+	
 	/**
 	 * 检查字符串中是否包含某些字符串
 	 *
@@ -50,7 +49,7 @@ final class Str{
 		}
 		return false;
 	}
-
+	
 	/**
 	 * 检查字符串是否以某些字符串结尾
 	 *
@@ -66,7 +65,7 @@ final class Str{
 		}
 		return false;
 	}
-
+	
 	/**
 	 * 字符串截取，支持中文和其他编码
 	 *
@@ -96,7 +95,7 @@ final class Str{
 		}
 		return $slice;
 	}
-
+	
 	/**
 	 * 检查字符串是否以某些字符串开头
 	 *
@@ -112,7 +111,7 @@ final class Str{
 		}
 		return false;
 	}
-
+	
 	/**
 	 * 字符串转小写
 	 *
@@ -122,7 +121,7 @@ final class Str{
 	public static function lower($value){
 		return mb_strtolower($value, 'UTF-8');
 	}
-
+	
 	/**
 	 * 字符串转大写
 	 *
@@ -132,7 +131,7 @@ final class Str{
 	public static function upper($value){
 		return mb_strtoupper($value, 'UTF-8');
 	}
-
+	
 	/**
 	 * 获取字符串的长度
 	 *
@@ -142,7 +141,7 @@ final class Str{
 	public static function length($value){
 		return mb_strlen($value);
 	}
-
+	
 	/**
 	 * 驼峰转下划线
 	 *
@@ -153,27 +152,27 @@ final class Str{
 	 */
 	public static function snake($value, $delimiter = '_', $isCache = true){
 		$key = $value;
-
+		
 		if(isset(static::$snakeCache[$key][$delimiter])){
 			return static::$snakeCache[$key][$delimiter];
 		}
-
+		
 		if(!ctype_lower($value)){
 			$value = preg_replace('/\s+/u', '', $value);
-
+			
 			$value = static::lower(preg_replace('/(.)(?=[A-Z])/u', '$1'.$delimiter, $value));
 		}
-
+		
 		return $isCache ? static::$snakeCache[$key][$delimiter] = $value : $value;
 	}
-
+	
 	/**
 	 * 清除驼峰转下划线缓存
 	 */
 	public static function clearSnakeCache(){
 		self::$snakeCache = [];
 	}
-
+	
 	/**
 	 * 下划线转驼峰(首字母小写)
 	 *
@@ -185,18 +184,18 @@ final class Str{
 		if(isset(static::$camelCache[$value])){
 			return static::$camelCache[$value];
 		}
-
+		
 		$value = lcfirst(static::studly($value));
 		return $isCache ? static::$camelCache[$value] = $value : $value;
 	}
-
+	
 	/**
 	 * 清除下划线转驼峰(首字母小写)缓存
 	 */
 	public static function clearCamelCache(){
 		self::$snakeCache = [];
 	}
-
+	
 	/**
 	 * 下划线转驼峰(首字母大写)
 	 *
@@ -206,24 +205,24 @@ final class Str{
 	 */
 	public static function studly($value, $isCache = true){
 		$key = $value;
-
+		
 		if(isset(static::$studlyCache[$key])){
 			return static::$studlyCache[$key];
 		}
-
+		
 		$value = ucwords(str_replace(['-', '_'], ' ', $value));
 		$value = str_replace(' ', '', $value);
-
+		
 		return $isCache ? static::$studlyCache[$key] = $value : $value;
 	}
-
+	
 	/**
 	 * 清除下划线转驼峰(首字母大写)缓存
 	 */
 	public static function clearStudlyCache(){
 		self::$snakeCache = [];
 	}
-
+	
 	/**
 	 * 转为首字母大写的标题格式
 	 *
@@ -233,7 +232,7 @@ final class Str{
 	public static function title($value){
 		return mb_convert_case($value, MB_CASE_TITLE, 'UTF-8');
 	}
-
+	
 	/**
 	 * 实现多种字符编码方式
 	 *
@@ -256,7 +255,7 @@ final class Str{
 		}
 		return $output;
 	}
-
+	
 	/**
 	 * 实现多种字符解码方式
 	 *
@@ -277,7 +276,7 @@ final class Str{
 		}
 		return $output;
 	}
-
+	
 	/**
 	 * 获取随机字符串
 	 *
@@ -291,7 +290,7 @@ final class Str{
 			1 => 'abcdefghijklmnopqrstuvwxyz',
 			2 => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
 		];
-
+		
 		$poolStr = '';
 		if(0 == $type) $poolStr = $pool[0];
 		if(1 == $type) $poolStr = $pool[1];
@@ -299,10 +298,10 @@ final class Str{
 		if(3 == $type) $poolStr = $pool[0].$pool[1];
 		if(4 == $type) $poolStr = $pool[1].$pool[2];
 		if(5 == $type) $poolStr = $pool[0].$pool[1].$pool[2];
-
+		
 		return self::substr(str_shuffle(str_repeat($poolStr, $length)), 0, $length);
 	}
-
+	
 	/**
 	 * 截取字符串
 	 *
@@ -314,7 +313,7 @@ final class Str{
 	public static function substr($string, $start, $length = null){
 		return mb_substr($string, $start, $length, 'UTF-8');
 	}
-
+	
 	/**
 	 * 生成随机字符串
 	 *
@@ -324,7 +323,7 @@ final class Str{
 	public static function nonceHash32($factor = ''){
 		return md5(uniqid(md5(microtime(true).$factor), true));
 	}
-
+	
 	/**
 	 * 创建订单编号
 	 *
@@ -338,7 +337,7 @@ final class Str{
 		$nonceStr = substr(implode(null, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
 		return $prefix.$datetime.$microtime.$nonceStr;
 	}
-
+	
 	/**
 	 * 创建一个随机名字
 	 *
@@ -352,13 +351,13 @@ final class Str{
 		if(is_null($data)){
 			$data = require_once './name_config.php';
 		}
-
+		
 		//姓氏
 		if(empty($firstName)){
 			$len = count($data['first_name_list']);
 			$firstName = $data['first_name_list'][rand(0, $len - 1)];
 		}
-
+		
 		//名字
 		$len = count($data['chars']);
 		$lastName = '';
@@ -367,7 +366,7 @@ final class Str{
 		}
 		return $firstName.$delimiter.$lastName;
 	}
-
+	
 	/**
 	 * 解析Url Query
 	 *
@@ -405,7 +404,7 @@ final class Str{
 		//		}
 		//		return $result;
 	}
-
+	
 	/**
 	 * 把数组所有元素按照“参数=参数值”的模式用“&”字符拼接成字符串
 	 *
@@ -417,11 +416,11 @@ final class Str{
 		if(!is_callable($handleFunc)) $handleFunc = function($key, $val){
 			$type = gettype($val);
 			if($type == 'object' || $type == 'array') return '';
-
+			
 			$val = urlencode($val);
 			return $key.'='.$val;
 		};
-
+		
 		$result = '';
 		$i = 0;
 		foreach($params as $key => $val){
@@ -432,93 +431,7 @@ final class Str{
 		}
 		return $result;
 	}
-
-	/**
-	 * 将XML转换成数组
-	 *
-	 * @param string $xml
-	 * @return mixed
-	 */
-	public static function parseXml($xml){
-		//将XML转为array,禁止引用外部xml实体
-		libxml_disable_entity_loader(true);
-		$info = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
-		return $info;
-	}
-
-	/**
-	 * 数组转XML(微信)
-	 *
-	 * @param array  $param 要转换的数组
-	 * @param string $root 根元素
-	 * @param string $tag 指定元素标签名称，主要用于索引数组
-	 * @return string
-	 */
-	public static function encodeXml($param, $root = 'xml', $tag = ''){
-		if(!is_array($param) || count($param) <= 0) return '';
-
-		$xml = '';
-		foreach($param as $key => $val){
-			$key = empty($tag) ? $key : $tag;
-			if(is_int($val)){
-				$xml .= "<".$key.">".$val."</".$key.">";
-				$root = !empty($tag) ? '' : $root;
-			}elseif(is_array($val)){
-				$tempRoot = Arr::isAssoc($param) ? $key : '';
-				$tempTag = (Arr::isAssoc($param) && !Arr::isAssoc($val)) ? $key : '';
-				$xml .= self::encodeXml($val, $tempRoot, $tempTag);
-			}else{
-				$xml .= "<".$key."><![CDATA[".$val."]]></".$key.">";
-				$root = !empty($tag) ? '' : $root;
-			}
-		}
-		$xml = (empty($root) ? "" : "<$root>").$xml.(empty($root) ? "" : "</$root>");
-		return $xml;
-	}
-
-	/**
-	 * 解析UBB语法
-	 *
-	 * @param string $Text 要解析的文本
-	 * @return mixed|string
-	 */
-	public static function parseUBB($Text){
-		$Text = trim($Text);
-		$Text = htmlspecialchars($Text);
-		$Text = preg_replace("/\\t/is", "  ", $Text);
-		$Text = preg_replace("/\\[h1\\](.+?)\\[\\/h1\\]/is", "<h1>\\1</h1>", $Text);
-		$Text = preg_replace("/\\[h2\\](.+?)\\[\\/h2\\]/is", "<h2>\\1</h2>", $Text);
-		$Text = preg_replace("/\\[h3\\](.+?)\\[\\/h3\\]/is", "<h3>\\1</h3>", $Text);
-		$Text = preg_replace("/\\[h4\\](.+?)\\[\\/h4\\]/is", "<h4>\\1</h4>", $Text);
-		$Text = preg_replace("/\\[h5\\](.+?)\\[\\/h5\\]/is", "<h5>\\1</h5>", $Text);
-		$Text = preg_replace("/\\[h6\\](.+?)\\[\\/h6\\]/is", "<h6>\\1</h6>", $Text);
-		$Text = preg_replace("/\\[separator\\]/is", "", $Text);
-		$Text = preg_replace("/\\[center\\](.+?)\\[\\/center\\]/is", "<span style=\"text-align: center\">\\1</span>",
-			$Text);
-		$Text = preg_replace("/\\[url=http:\\/\\/([^\\[]*)\\](.+?)\\[\\/url\\]/is", "<a href=\"http://\\1\" target=\"_blank\">\\2</a>", $Text);
-		$Text = preg_replace("/\\[url=([^\\[]*)\\](.+?)\\[\\/url\\]/is", "<a href=\"http://\\1\" target=\"_blank\">\\2</a>", $Text);
-		$Text = preg_replace("/\\[url\\]http:\\/\\/([^\\[]*)\\[\\/url\\]/is", "<a href=\"http://\\1\" target=\"_blank\">\\1</a>", $Text);
-		$Text = preg_replace("/\\[url\\]([^\\[]*)\\[\\/url\\]/is", "<a href=\"\\1\" target=\"_blank\">\\1</a>", $Text);
-		$Text = preg_replace("/\\[img\\](.+?)\\[\\/img\\]/is", "<img src=\"\\1\">", $Text);
-		$Text = preg_replace("/\\[color=(.+?)\\](.+?)\\[\\/color\\]/is", "<span style=\"color: \\1\">\\2</span>", $Text);
-		$Text = preg_replace("/\\[size=(.+?)\\](.+?)\\[\\/size\\]/is", "<span style=\"font-size: \\1\">\\2</span>", $Text);
-		$Text = preg_replace("/\\[sup\\](.+?)\\[\\/sup\\]/is", "<sup>\\1</sup>", $Text);
-		$Text = preg_replace("/\\[sub\\](.+?)\\[\\/sub\\]/is", "<sub>\\1</sub>", $Text);
-		$Text = preg_replace("/\\[pre\\](.+?)\\[\\/pre\\]/is", "<pre>\\1</pre>", $Text);
-		$Text = preg_replace("/\\[email\\](.+?)\\[\\/email\\]/is", "<a href=\"mailto:\\1\">\\1</a>", $Text);
-		$Text = preg_replace("/\\[colorTxt\\](.+?)\\[\\/colorTxt\\]/eis", "color_txt('\\1')", $Text);
-		$Text = preg_replace("/\\[emot\\](.+?)\\[\\/emot\\]/eis", "emot('\\1')", $Text);
-		$Text = preg_replace("/\\[i\\](.+?)\\[\\/i\\]/is", "<i>\\1</i>", $Text);
-		$Text = preg_replace("/\\[u\\](.+?)\\[\\/u\\]/is", "<u>\\1</u>", $Text);
-		$Text = preg_replace("/\\[b\\](.+?)\\[\\/b\\]/is", "<b>\\1</b>", $Text);
-		$Text = preg_replace("/\\[quote\\](.+?)\\[\\/quote\\]/is", " <div class=\"quote\"><h5>引用:</h5><blockquote>\\1</blockquote></div>", $Text);
-		$Text = preg_replace("/\\[code\\](.+?)\\[\\/code\\]/eis", "highlight_code('\\1')", $Text);
-		$Text = preg_replace("/\\[php\\](.+?)\\[\\/php\\]/eis", "highlight_code('\\1')", $Text);
-		$Text = preg_replace("/\\[sig\\](.+?)\\[\\/sig\\]/is", "<div class=\"sign\">\\1</div>", $Text);
-		$Text = preg_replace("/\\n/is", "<br/>", $Text);
-		return $Text;
-	}
-
+	
 	/**
 	 * 安全处理-字符串或数组转数组
 	 * @param mixed         $value
@@ -531,7 +444,7 @@ final class Str{
 		if(!is_array($value)){
 			$value = is_string($value) ? explode($delimiter, $value) : [$value];
 		}
-
+		
 		//		foreach($value as $k => &$v){
 		//			if('intval' == $format){
 		//				$v = intval($v);
@@ -544,9 +457,9 @@ final class Str{
 		//			}
 		//		}
 		//		unset($v);
-
+		
 		$value = array_map($format, $value);
-
+		
 		if($filter !== false){
 			if($filter === true){
 				$value = array_filter($value);
@@ -554,10 +467,10 @@ final class Str{
 				$value = array_filter($value, $filter);
 			}
 		}
-
+		
 		return array_values($value);
 	}
-
+	
 	/**
 	 * 安全处理-数组转字符串
 	 * @param mixed  $value
@@ -568,10 +481,10 @@ final class Str{
 	public static function implode($value, $format = 'intval', $delimiter = ','){
 		//先转换为数组，进行安全过滤
 		$value = self::explode($value, $format, $delimiter);
-
+		
 		//去除重复
 		$value = array_unique($value);
-
+		
 		//再次转换为字符串
 		return implode(",", $value);
 	}

@@ -40,6 +40,7 @@ final class Server{
 	 */
 	public static function getRemotePort(){
 		$port = 0;
+		
 		if(isset($_SERVER ["REMOTE_PORT"])){
 			$port = $_SERVER ["REMOTE_PORT"];
 		}elseif(isset($_COOKIE ["REMOTE_PORT"])){

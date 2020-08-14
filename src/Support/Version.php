@@ -2,7 +2,6 @@
 /**
  * I know no such things as genius,it is nothing but labor and diligence.
  *
- * @copyright (c) 2015~2019 BD All rights reserved.
  * @license http://www.apache.org/licenses/LICENSE-2.0
  * @author BD<657306123@qq.com>
  */
@@ -11,14 +10,14 @@ namespace Xin\Support;
 
 /**
  * 版本检测器
- * 当前版本大于新版本 VersionUtil::check( '1.20.63.56' , '1.20.63.55.56' )===1;
- * 当前版本等于新版本 VersionUtil::check( '1.20.63.56' , '1.20.63.056' )===0;
- * 当前版本小于新版本 VersionUtil::check( '1.20.62.56' , '1.20.63.056' )===-1;
- * 当前版本大于新版本 VersionUtil::gt( '1.20.63.56' , '1.20.63.55.56' )===true;
- * 当前版本等于新版本 VersionUtil::eq( '1.20.63.56' , '1.20.63.056' )===true;
- * 当前版本小于新版本 VersionUtil::lt( '1.20.62.56' , '1.20.63.056' )===true;
+ * 当前版本大于新版本 Version::check( '1.20.63.56' , '1.20.63.55.56' )===1;
+ * 当前版本等于新版本 Version::check( '1.20.63.56' , '1.20.63.056' )===0;
+ * 当前版本小于新版本 Version::check( '1.20.62.56' , '1.20.63.056' )===-1;
+ * 当前版本大于新版本 Version::gt( '1.20.63.56' , '1.20.63.55.56' )===true;
+ * 当前版本等于新版本 Version::eq( '1.20.63.56' , '1.20.63.056' )===true;
+ * 当前版本小于新版本 Version::lt( '1.20.62.56' , '1.20.63.056' )===true;
  */
-final class Ver{
+final class Version{
 
 	/**
 	 * 当前版本大于新版本
