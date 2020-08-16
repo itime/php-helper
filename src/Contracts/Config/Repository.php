@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Config;
 
-interface Config extends \ArrayAccess{
+interface Repository extends \ArrayAccess{
 	
 	/**
 	 * Determine if the given configuration value exists.

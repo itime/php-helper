@@ -5,13 +5,13 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\App;
+namespace Xin\Contracts\Saas;
 
 /**
  * Interface App
  */
 interface App{
-
+	
 	/**
 	 * 获取应用信息
 	 *
@@ -21,7 +21,7 @@ interface App{
 	 * @return mixed
 	 */
 	public function getAppInfo($field = null, $default = null, $abort = true);
-
+	
 	/**
 	 * 获取应用id
 	 *
@@ -29,7 +29,7 @@ interface App{
 	 * @return int
 	 */
 	public function getAppId($abort = true);
-
+	
 	/**
 	 * 暂存应用信息
 	 *
@@ -37,11 +37,11 @@ interface App{
 	 * @return bool
 	 */
 	public function temporaryAppInfo($info);
-
+	
 	/**
 	 * 获取config实例
 	 *
-	 * @return \Xin\Config\Config
+	 * @return \Xin\Contracts\Config\Repository
 	 */
 	public function getConfig();
 }

@@ -8,8 +8,7 @@ namespace Xin\Auth;
 
 use Closure;
 use InvalidArgumentException;
-use Xin\Contracts\Auth\Guard as GuardContract;
-use Xin\Contracts\Auth\User as UserContract;
+use Xin\Contracts\Auth\Factory as GuardContract;
 
 /**
  * Class AuthManager
@@ -79,7 +78,7 @@ class AuthManager implements GuardContract{
 	 * 解决给定守卫者
 	 *
 	 * @param string $name
-	 * @return \Xin\Contracts\Auth\User
+	 * @return \Xin\Contracts\Auth\Guard
 	 * @throws \InvalidArgumentException
 	 */
 	protected function resolve($name){
@@ -301,11 +300,11 @@ class AuthManager implements GuardContract{
 	/**
 	 * 设置一个守卫者实例
 	 *
-	 * @param string       $name
-	 * @param UserContract $user
+	 * @param string        $name
+	 * @param GuardContract $user
 	 * @return $this
 	 */
-	public function setGuard($name, UserContract $user){
+	public function setGuard($name, GuardContract $user){
 		$this->guards[$name] = $user;
 		
 		return $this;

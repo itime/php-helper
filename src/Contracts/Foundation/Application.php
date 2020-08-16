@@ -4,12 +4,12 @@
  *
  * @author: 晋<657306123@qq.com>
  */
-namespace Xin\Contracts\OS;
+namespace Xin\Contracts\Foundation;
 
 /**
- * Interface OSInterface
+ * Interface Application
  */
-interface OS{
+interface Application{
 	
 	/**
 	 * 网站根目录

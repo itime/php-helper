@@ -1,0 +1,19 @@
+<?php
+/**
+ * Talents come from diligence, and knowledge is gained by accumulation.
+ *
+ * @author: 晋<657306123@qq.com>
+ */
+
+namespace Xin\Contracts\Product;
+
+interface ProductRepository{
+	
+	/**
+	 * get one product by sku.
+	 *
+	 * @param $sku
+	 * @return mixed
+	 */
+	public function findOneBySku($sku);
+}

@@ -1,0 +1,116 @@
+<?php
+/**
+ * Talents come from diligence, and knowledge is gained by accumulation.
+ *
+ * @author: 晋<657306123@qq.com>
+ */
+
+namespace Xin\Thinkphp\Http;
+
+use think\exception\ValidateException;
+use think\facade\App;
+use think\Validate;
+
+/**
+ * Trait RequestValidate
+ *
+ * @mixin RequestOptimize
+ */
+trait RequestValidate{
+
+	/**
+	 * 验证数据
+	 *
+	 * @param string|array $name 要获取的参数名称
+	 * @param string|array $validate 验证器名或者验证规则数组
+	 * @param bool         $batch 是否批量验证
+	 * @return array
+	 */
+	public function validate($name, $validate, bool $batch = false){
+		if(!is_array($validate)){
+			$validate = [
+				'rules' => $validate,
+			];
+		}
+
+		if(is_array($validate['rules'])){
+			$v = new Validate(
+				$validate['rules'],
+				isset($validate['message']) ? $validate['message'] : [],
+				isset($validate['field']) ? $validate['field'] : []
+			);
+		}else{
+			$validator = $validate['rules'];
+			if(strpos($validator, '.')){
+				// 支持场景
+				list($validator, $scene) = explode('.', $validator);
+			}
+
+			$appendSuffix = property_exists($this, 'appendValidateSuffix') ? $this->appendValidateSuffix : false;
+			$v = App::validate($validator, 'validate', $appendSuffix);
+			if(!empty($scene)){
+				$v->scene($scene);
+			}
+
+			if(isset($validate['message'])){
+				$v->message($validate['message']);
+			}
+		}
+
+		// 是否批量验证
+		$v->batch($batch);
+
+		$data = $this->only($name);
+		if(!$v->check($data)){
+			throw new ValidateException($v->getError());
+		}
+
+		return $data;
+	}
+
+	/**
+	 * 获取ID 列表
+	 *
+	 * @param string $field
+	 * @return array
+	 */
+	public function idsWithValid($field = 'ids'){
+		$ids = $this->ids($field);
+		if(empty($ids)){
+			throw new ValidateException("param {$field} invalid.");
+		}
+
+		return $ids;
+	}
+
+	/**
+	 * 获取ID并验证
+	 *
+	 * @param string $field
+	 * @return int
+	 */
+	public function idWithValid($field = 'id'){
+		$id = $this->param("{$field}/d");
+		if($id < 1){
+			throw new ValidateException("param {$field} invalid.");
+		}
+
+		return $id;
+	}
+
+	/**
+	 * 获取整形数据并验证
+	 *
+	 * @param string $field
+	 * @param array  $array
+	 * @return mixed
+	 */
+	public function intWithValidArray($field, $array){
+		$int = $this->param("{$field}/d");
+		if(!in_array($int, $array)){
+			throw new ValidateException("param {$field} invalid.");
+		}
+
+		return $int;
+	}
+}

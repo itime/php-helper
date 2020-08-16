@@ -8,9 +8,9 @@
 namespace Xin\Auth;
 
 /**
- * Class GenericUser
+ * Class GenericGuard
  */
-class GenericUser extends User{
+class GenericGuard extends Guard{
 
 	/**
 	 * @var callable|array

@@ -102,3 +102,57 @@ if(!function_exists('tap')){
 		return $value;
 	}
 }
+
+if(!function_exists('build_mysql_distance_field')){
+	/**
+	 * 生成计算位置字段
+	 *
+	 * @param float  $longitude
+	 * @param float  $latitude
+	 * @param string $lng_name
+	 * @param string $lat_name
+	 * @param string $as_name
+	 * @return string
+	 */
+	function build_mysql_distance_field($longitude, $latitude, $lng_name = 'longitude', $lat_name = 'latitude', $as_name = 'distance'){
+		return "ROUND(6378.138*2*ASIN(SQRT(POW(SIN(({$latitude}*PI()/180-{$lat_name}*PI()/180)/2),2)+COS({$latitude}*PI()/180)*COS({$lat_name}*PI()/180)*POW(SIN(({$longitude}*PI()/180-{$lng_name}*PI()/180)/2),2)))*1000) AS {$as_name}";
+	}
+}
+if(!function_exists('analysis_words')){
+	/**
+	 * 关键字分词
+	 *
+	 * @param string $keyword
+	 * @param int    $num 最大返回条数
+	 * @param int    $holdLength 保留字数
+	 * @return array
+	 */
+	function analysis_words($keyword, $num = 5, $holdLength = 48){
+		if($keyword === null || $keyword === "") return [];
+		if(mb_strlen($keyword) > $holdLength) $keyword = mb_substr($keyword, 0, 48);
+		
+		//执行分词
+		$pa = new \xin\analysis\Analysis('utf-8', 'utf-8');
+		$pa->setSource($keyword);
+		$pa->startAnalysis();
+		$result = $pa->getFinallyResult($num);
+		if(empty($result)) return [$keyword];
+		
+		return array_unique($result);
+	}
+}
+
+if(!function_exists('build_keyword_sql')){
+	/**
+	 * 编译查询关键字SQL
+	 *
+	 * @param string $keywords
+	 * @return array
+	 */
+	function build_keyword_sql($keywords){
+		$keywords = analysis_words($keywords);
+		return array_map(function($item){
+			return "%{$item}%";
+		}, $keywords);
+	}
+}

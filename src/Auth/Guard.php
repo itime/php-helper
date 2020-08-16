@@ -7,44 +7,47 @@
 
 namespace Xin\Auth;
 
-/**
- * Class User
- */
-abstract class User implements UserInterface{
+use Xin\Contracts\Auth\Guard as GuardContract;
+use Xin\Contracts\Auth\UserProvider;
 
+/**
+ * Class Guard
+ */
+abstract class Guard implements GuardContract{
+	
 	/**
 	 * @var string
 	 */
 	protected $name;
-
+	
 	/**
 	 * @var mixed
 	 */
 	protected $user;
-
+	
 	/**
 	 * @var array
 	 */
 	protected $config;
-
+	
 	/**
-	 * @var \Xin\Auth\UserProviderInterface
+	 * @var \Xin\Contracts\Auth\UserProvider
 	 */
 	protected $provider;
-
+	
 	/**
 	 * User constructor.
 	 *
-	 * @param                                           $name
-	 * @param array                                     $config
-	 * @param \Xin\Auth\UserProviderInterface           $provider
+	 * @param string                           $name
+	 * @param array                            $config
+	 * @param \Xin\Contracts\Auth\UserProvider $provider
 	 */
-	public function __construct($name, array $config, UserProviderInterface $provider = null){
+	public function __construct($name, array $config, UserProvider $provider = null){
 		$this->name = $name;
 		$this->config = $config;
 		$this->provider = $provider;
 	}
-
+	
 	/**
 	 * @inheritDoc
 	 * @throws \Xin\Auth\AuthenticationException
@@ -53,22 +56,22 @@ abstract class User implements UserInterface{
 		if(is_null($this->user)){
 			$this->user = $this->resolveUser();
 		}
-
+		
 		if($abort && is_null($this->user)){
 			throw new AuthenticationException(
 				$this->name,
 				$this->config
 			);
 		}
-
+		
 		return empty($field) ? $this->user : (isset($this->user[$field]) ? $this->user[$field] : $default);
 	}
-
+	
 	/**
 	 * @return mixed
 	 */
 	abstract protected function resolveUser();
-
+	
 	/**
 	 * @inheritDoc
 	 * @throws \Xin\Auth\AuthenticationException
@@ -76,7 +79,7 @@ abstract class User implements UserInterface{
 	public function getUserId($abort = true){
 		return $this->getUserInfo('id', 0, $abort);
 	}
-
+	
 	/**
 	 * @inheritDoc
 	 * @throws \Xin\Auth\AuthenticationException
@@ -84,7 +87,7 @@ abstract class User implements UserInterface{
 	public function getUserPassword($abort = true){
 		return $this->getUserInfo('password', false, $abort);
 	}
-
+	
 	/**
 	 * 缓存用户模型
 	 *
@@ -94,21 +97,21 @@ abstract class User implements UserInterface{
 	protected function makeAuthSign($user){
 		return sha1(md5($user['id']).time());
 	}
-
+	
 	/**
 	 * @inheritDoc
 	 */
 	public function temporaryUser($user){
 		$this->user = $user;
 	}
-
+	
 	/**
 	 * @inheritDoc
 	 */
 	public function logout(){
 		$this->user = null;
 	}
-
+	
 	/**
 	 * 获取一个Session的唯一名称
 	 *
@@ -117,5 +120,5 @@ abstract class User implements UserInterface{
 	public function getName(){
 		return 'login_'.$this->name.'_'.sha1(static::class);
 	}
-
+	
 }

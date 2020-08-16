@@ -7,14 +7,14 @@
 
 namespace Xin\Contracts\Hint;
 
-interface Repository{
+interface Factory{
 	
 	/**
 	 * 使用Ajax
 	 *
 	 * @return static
 	 */
-	public function useAjax();
+	public function useApi();
 	
 	/**
 	 * 使用Web
@@ -26,8 +26,8 @@ interface Repository{
 	/**
 	 * 设置使用完成器
 	 *
-	 * @param \Closure $userResolver
+	 * @param \Closure $resolver
 	 * @return static
 	 */
-	public function resolveUsing(\Closure $userResolver);
+	public function resolveUsing(\Closure $resolver);
 }
