@@ -82,12 +82,11 @@ interface Guard{
 	/**
 	 * 根据属性登录
 	 *
-	 * @param string   $field
-	 * @param string   $credential
+	 * @param array    $credentials
 	 * @param \Closure $notExistCallback
 	 * @return \Xin\Contracts\Auth\Guard
 	 */
-	public function loginUsingCredential($field, $credential, \Closure $notExistCallback = null);
+	public function loginUsingCredential(array $credentials, \Closure $notExistCallback = null);
 	
 	/**
 	 * 退出登录

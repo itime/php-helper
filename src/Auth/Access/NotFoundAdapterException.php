@@ -5,20 +5,20 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Auth;
+namespace Xin\Auth\Access;
 
 class NotFoundAdapterException extends \Exception{
-
+	
 	/**
 	 * @var string
 	 */
 	private $name;
-
+	
 	/**
 	 * @var array
 	 */
 	private $adapters;
-
+	
 	/**
 	 * NotFoundAdapterException constructor.
 	 *
@@ -27,7 +27,7 @@ class NotFoundAdapterException extends \Exception{
 	 */
 	public function __construct($name, $adapters){
 		parent::__construct("验证规则[{$name}]适配器未找到！");
-
+		
 		$this->name = $name;
 		$this->adapters = $adapters;
 	}
