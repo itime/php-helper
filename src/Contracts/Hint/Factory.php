@@ -10,24 +10,24 @@ namespace Xin\Contracts\Hint;
 interface Factory{
 	
 	/**
-	 * 使用Ajax
+	 * 使用 Ajax 提示器
 	 *
 	 * @return static
 	 */
-	public function useApi();
+	public function shouldUseApi();
 	
 	/**
-	 * 使用Web
+	 * 使用 Web 提示器
 	 *
 	 * @return static
 	 */
-	public function useWeb();
+	public function shouldUseWeb();
 	
 	/**
-	 * 设置使用完成器
+	 * 获取提示器
 	 *
-	 * @param \Closure $resolver
-	 * @return static
+	 * @param string $name
+	 * @return \Xin\Contracts\Hint\Hint
 	 */
-	public function resolveUsing(\Closure $resolver);
+	public function hint($name = null);
 }

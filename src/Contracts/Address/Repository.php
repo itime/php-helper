@@ -5,12 +5,11 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Mall;
+namespace Xin\Contracts\Address;
 
-/**
- * Interface Address
- */
-interface Address{
+use Xin\Contracts\Foundation\Repository as BaseRepository;
+
+interface Repository extends BaseRepository{
 	
 	/**
 	 * 获取用户的收获地址列表
@@ -39,10 +38,10 @@ interface Address{
 	/**
 	 * 更新用户的收获地址信息
 	 *
-	 * @param array $attributes
 	 * @param int   $id
 	 * @param int   $userId
+	 * @param array $attributes
 	 * @return mixed
 	 */
-	public function updateByUser(array $attributes, $id, $userId);
+	public function updateByUser($id, $userId, array $attributes);
 }

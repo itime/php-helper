@@ -5,8 +5,9 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Hint;
+namespace Xin\Contracts\Menu;
 
-class Repository{
-
+interface Factory{
+	
+	public function generate();
 }
