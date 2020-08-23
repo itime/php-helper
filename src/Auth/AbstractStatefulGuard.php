@@ -77,7 +77,7 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	 * @param array $credentials
 	 * @return bool
 	 */
-	protected function hasPasswordInCredential(array $credentials){
+	protected function hasPasswordInCredential($credentials){
 		$passwordName = $this->provider->getPasswordName();
 		
 		return isset($credentials[$passwordName]);
@@ -96,15 +96,13 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	}
 	
 	/**
-	 * @param array         $credentials
-	 * @param \Closure|null $notExistCallback
+	 * @param array|\Closure $credentials
+	 * @param \Closure       $notExistCallback
 	 * @return mixed
 	 */
 	protected function credentials(array $credentials, \Closure $notExistCallback = null){
-		try{
-			$this->provider->validateCredentials($credentials);
-		}catch(\Exception $e){
-			throw new LoginException($e->getMessage(), $e->getCode(), $e);
+		if(isset($credentials['password'])){
+			unset($credentials['password']);
 		}
 		
 		$user = $this->provider->getByCredentials($credentials);

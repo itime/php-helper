@@ -41,5 +41,5 @@ class DatabaseUserProvider implements UserProviderContract{
 	protected function query(){
 		return $this->db->name($this->config['table']);
 	}
-
+	
 }

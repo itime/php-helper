@@ -13,7 +13,7 @@ namespace Xin\Support;
  * 函数工具类
  */
 final class Func{
-
+	
 	/**
 	 * 中间件
 	 *

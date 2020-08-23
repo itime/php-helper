@@ -8,15 +8,14 @@
 namespace Xin\Thinkphp\Hint;
 
 use think\exception\HttpResponseException;
-use think\facade\Request;
 
 /**
  * Trait OutputHint
  *
- * @mixin \Xin\Hint\HintInterface
+ * @mixin \Xin\Contracts\Hint\Hint
  */
 trait HintHelper{
-
+	
 	/**
 	 * @param string $url
 	 * @return mixed|string
@@ -27,23 +26,23 @@ trait HintHelper{
 		}elseif($url){
 			$url = $this->resolveUrl($url);
 		}
-
+		
 		return $url;
 	}
-
+	
 	/**
 	 * @param string $url
 	 * @return mixed|string
 	 */
 	protected function resolveErrorUrl($url){
 		if(is_null($url)){
-			$url = Request::isAjax() ? '' : 'javascript:history.back(-1);';
+			$url = $this->request->isAjax() ? '' : 'javascript:history.back(-1);';
 		}elseif($url){
 			$url = $this->resolveUrl($url);
 		}
 		return $url;
 	}
-
+	
 	/**
 	 * 解决url问题
 	 *
@@ -51,9 +50,9 @@ trait HintHelper{
 	 * @return string
 	 */
 	private function resolveUrl($url){
-		return (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : url($url);
+		return (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : url($url ?: '');
 	}
-
+	
 	/**
 	 * @inheritDoc
 	 */
@@ -63,7 +62,7 @@ trait HintHelper{
 			$callback
 		);
 	}
-
+	
 	/**
 	 * @inheritDoc
 	 */
@@ -73,7 +72,7 @@ trait HintHelper{
 			$callback
 		);
 	}
-
+	
 	/**
 	 * @inheritDoc
 	 */
@@ -83,7 +82,7 @@ trait HintHelper{
 			$callback
 		);
 	}
-
+	
 	/**
 	 * 直接输出
 	 *
@@ -94,10 +93,10 @@ trait HintHelper{
 		if(is_callable($callback)){
 			call_user_func($callback, $response);
 		}
-
+		
 		throw new HttpResponseException($response);
 	}
-
+	
 	/**
 	 * @inheritDoc
 	 */

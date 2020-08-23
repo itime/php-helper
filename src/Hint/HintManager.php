@@ -7,10 +7,9 @@
 
 namespace Xin\Hint;
 
-use Psr\Container\ContainerInterface;
 use Xin\Contracts\Hint\Factory as HintFactory;
 
-class Factory implements HintFactory{
+class HintManager implements HintFactory{
 	
 	/**
 	 * @var \Psr\Container\ContainerInterface
@@ -37,13 +36,9 @@ class Factory implements HintFactory{
 	private $customCreators = [];
 	
 	/**
-	 * Factory constructor.
-	 *
-	 * @param \Psr\Container\ContainerInterface $container
+	 * @var \Closure
 	 */
-	public function __construct(ContainerInterface $container){
-		$this->container = $container;
-	}
+	protected $autoResolverCallback;
 	
 	/**
 	 * 获取提示器
@@ -60,7 +55,7 @@ class Factory implements HintFactory{
 	/**
 	 * 强制使用Api模式
 	 *
-	 * @return $this|\Xin\Hint\Factory
+	 * @return $this|\Xin\Hint\HintManager
 	 */
 	public function shouldUseApi(){
 		$this->setDefaultDriver('api');
@@ -70,7 +65,7 @@ class Factory implements HintFactory{
 	/**
 	 * 强制使用Web模式
 	 *
-	 * @return $this|\Xin\Hint\Factory
+	 * @return $this|\Xin\Hint\HintManager
 	 */
 	public function shouldUseWeb(){
 		$this->setDefaultDriver('web');
@@ -105,7 +100,16 @@ class Factory implements HintFactory{
 	 * @return \Xin\Contracts\Hint\Hint
 	 */
 	protected function callCustomCreator($name){
-		return $this->customCreators[$name]($this->container);
+		return $this->customCreators[$name]($name);
+	}
+	
+	/**
+	 * 设置自动完成提示器
+	 *
+	 * @param \Closure $resolverCallback
+	 */
+	public function setAutoResolver(\Closure $resolverCallback){
+		$this->autoResolverCallback = $resolverCallback;
 	}
 	
 	/**
@@ -127,7 +131,15 @@ class Factory implements HintFactory{
 	 * @return string
 	 */
 	public function getDefaultDriver(){
-		return $this->default;
+		if($this->default){
+			return $this->default;
+		}
+		
+		if($this->autoResolverCallback){
+			return call_user_func($this->autoResolverCallback);
+		}
+		
+		throw new \RuntimeException("hint default driver not defined.");
 	}
 	
 	/**

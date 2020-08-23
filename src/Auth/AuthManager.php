@@ -13,15 +13,15 @@ use Xin\Contracts\Auth\Guard as GuardContract;
 
 /**
  * Class AuthManager
- * @method mixed getUser($field = null, $default = null, $abort = true)
- * @method int getUserId($abort = true)
- * @method mixed saveUser(array $data, $abort = true)
- * @method mixed temporaryUser($user)
- * @method bool check()
- * @method bool guest()
- * @method bool login($user)
- * @method bool loginUsingId($id)
- * @method bool loginUsingCredential(array $credentials, \Closure $notExistCallback = null)
+ * @method static mixed getUser($field = null, $default = null, $abort = true)
+ * @method static int getUserId($abort = true)
+ * @method static mixed saveUser(array $data, $abort = true)
+ * @method static mixed temporaryUser($user)
+ * @method static bool check()
+ * @method static bool guest()
+ * @method static bool login($user)
+ * @method static bool loginUsingId($id)
+ * @method static bool loginUsingCredential(array $credentials, \Closure $notExistCallback = null)
  */
 class AuthManager implements FactoryContract{
 	
@@ -141,6 +141,12 @@ class AuthManager implements FactoryContract{
 	 */
 	public function getProviderConfiguration($provider){
 		if($provider = $provider ?: $this->getDefaultUserProvider()){
+			if(!isset($this->config['providers'][$provider])){
+				throw new \RuntimeException(
+					"auth config provider [{$provider}] not defined."
+				);
+			}
+			
 			return $this->config['providers'][$provider];
 		}
 	}

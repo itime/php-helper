@@ -7,12 +7,27 @@
 
 namespace Xin\Thinkphp\Hint;
 
+use think\Request;
 use think\Response;
 use Xin\Contracts\Hint\Hint as HintContract;
 
 class ApiHint implements HintContract{
 	
 	use HintHelper;
+	
+	/**
+	 * @var \think\Request
+	 */
+	protected $request;
+	
+	/**
+	 * ApiHint constructor.
+	 *
+	 * @param \think\Request $request
+	 */
+	public function __construct(Request $request){
+		$this->request = $request;
+	}
 	
 	/**
 	 * @inheritDoc

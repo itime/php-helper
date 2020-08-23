@@ -7,7 +7,7 @@
 
 namespace Xin\Thinkphp\Auth;
 
-use think\Request;
+use think\Container;
 use Xin\Auth\AbstractStatefulGuard;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 
@@ -43,7 +43,7 @@ class TokenGuard extends AbstractStatefulGuard{
 	public function __construct($name, array $config, UserProviderContract $provider){
 		parent::__construct($name, $config, $provider);
 		
-		$this->app = Container::get('app');
+		$this->app = Container::getInstance();
 		
 		$this->request = $this->app['request'];
 		$this->cache = $this->app['cache'];

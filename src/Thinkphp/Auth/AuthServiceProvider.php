@@ -9,7 +9,8 @@ namespace Xin\Thinkphp\Auth;
 
 use Xin\Auth\AuthManager;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
-use Xin\Thinkphp\Provider\ServiceProvider;
+use Xin\Support\Reflect;
+use Xin\Thinkphp\Foundation\Provider\ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider{
 	
@@ -30,13 +31,18 @@ class AuthServiceProvider extends ServiceProvider{
 	 * @return void
 	 */
 	protected function registerAuthManager(){
-		$method = method_exists($this->config, 'pull') ? 'pull' : 'get';
+		$method = Reflect::methodVisible($this->config, 'pull') === Reflect::VISIBLE_PUBLIC ?
+			'pull' : 'get';
 		
 		$auth = new AuthManager(
 			$this->config->$method('auth')
 		);
 		
-		$this->app->bindTo('auth', $auth);
+		if(Reflect::methodVisible($this->app, 'bindTo') === Reflect::VISIBLE_PUBLIC){
+			$this->app->bindTo('auth', $auth);
+		}else{
+			$this->app->bind('auth', $auth);
+		}
 	}
 	
 	/**

@@ -29,14 +29,6 @@ interface UserProvider{
 	public function getByCredentials($credentials);
 	
 	/**
-	 * 验证凭证信息是否正确
-	 *
-	 * @param array $credentials
-	 * @return mixed
-	 */
-	public function validateCredentials(array $credentials);
-	
-	/**
 	 * 验证密码是否正确
 	 *
 	 * @param mixed  $user

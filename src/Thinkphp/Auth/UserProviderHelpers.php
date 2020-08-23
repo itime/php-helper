@@ -7,6 +7,8 @@
 
 namespace Xin\Thinkphp\Auth;
 
+use Xin\Support\Hasher;
+
 /**
  * Class UserProvider
  *
@@ -37,14 +39,10 @@ trait UserProviderHelpers{
 	/**
 	 * @inheritDoc
 	 */
-	public function validateCredentials(array $credentials){
-	}
-	
-	/**
-	 * @inheritDoc
-	 */
 	public function validatePassword($user, $password){
-		// TODO: Implement validatePassword() method.
+		$passwordName = $this->getPasswordName();
+		$userPassword = $user[$passwordName];
+		return (new Hasher())->check($userPassword, $password);
 	}
 	
 	/**
