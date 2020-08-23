@@ -5,9 +5,11 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Product;
+namespace Xin\Contracts\Mall;
 
-interface ProductRepository{
+use Xin\Contracts\Foundation\Repository;
+
+interface Goods extends Repository{
 	
 	/**
 	 * get one product by sku.

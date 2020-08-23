@@ -7,6 +7,8 @@
 
 namespace Xin\Contracts\Mall;
 
-interface Shipping{
-	
+use Xin\Contracts\Foundation\Repository;
+
+interface ShoppingCart extends Repository{
+
 }

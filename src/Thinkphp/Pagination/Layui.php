@@ -4,7 +4,7 @@
  *
  * @author: 晋<657306123@qq.com>
  */
-namespace Xin\Thinkphp\Paginate;
+namespace Xin\Thinkphp\Pagination;
 
 use think\Paginator;
 

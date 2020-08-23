@@ -7,10 +7,12 @@
 
 namespace Xin\Contracts\Mall;
 
+use Xin\Contracts\Foundation\Repository;
+
 /**
  * Interface Order
  */
-interface Order{
+interface Order extends Repository{
 	
 	/**
 	 * 根据订单编号获得订单数据.

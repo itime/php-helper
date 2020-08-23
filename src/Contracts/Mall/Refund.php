@@ -7,6 +7,8 @@
 
 namespace Xin\Contracts\Mall;
 
-interface Refund{
-	
+use Xin\Contracts\Foundation\Repository;
+
+interface Refund extends Repository{
+
 }

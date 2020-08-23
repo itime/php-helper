@@ -7,39 +7,39 @@
 namespace Xin\Thinkphp\Auth;
 
 use think\Container;
-use Xin\Auth\LoginException;
 use Xin\Auth\Guard;
+use Xin\Auth\LoginException;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 
 /**
  * Class BasicUser
  */
 abstract class BasicGuard extends Guard{
-
+	
 	/**
 	 * @var \think\App
 	 */
 	protected $app;
-
+	
 	/**
 	 * @var \think\Request
 	 */
 	protected $request;
-
+	
 	/**
 	 * BasicUser constructor.
 	 *
-	 * @param string                          $name
-	 * @param array                           $config
+	 * @param string               $name
+	 * @param array                $config
 	 * @param UserProviderContract $provider
 	 */
 	public function __construct($name, array $config, UserProviderContract $provider){
 		parent::__construct($name, $config, $provider);
-
+		
 		$this->app = Container::get('app');
 		$this->request = $this->app['request'];
 	}
-
+	
 	/**
 	 * @inheritDoc
 	 */
@@ -47,12 +47,12 @@ abstract class BasicGuard extends Guard{
 		if(!$this->getUserInfo(null, null, $abort)){
 			return;
 		}
-
+		
 		$this->updateSession($user);
-
+		
 		parent::temporaryUser($user);
 	}
-
+	
 	/**
 	 * @inheritDoc
 	 * @throws \Xin\Auth\AuthenticationException
@@ -61,12 +61,12 @@ abstract class BasicGuard extends Guard{
 		if(!$this->getUserInfo(null, null, $abort)){
 			return;
 		}
-
+		
 		$this->user->save($data);
-
+		
 		$this->temporaryUser($this->user);
 	}
-
+	
 	/**
 	 * 更新用户身份信息
 	 *
@@ -74,17 +74,17 @@ abstract class BasicGuard extends Guard{
 	 * @return mixed
 	 */
 	abstract protected function updateSession($user);
-
+	
 	/**
 	 * @inheritDoc
 	 */
 	public function login($user){
 		$this->updateSession($user);
 		$this->user = $user;
-
+		
 		return $user;
 	}
-
+	
 	/**
 	 * @inheritDoc
 	 */
@@ -93,23 +93,19 @@ abstract class BasicGuard extends Guard{
 		if(empty($user)){
 			throw new LoginException('用户不存在!', 40401);
 		}
-
+		
 		return $this->login($user);
 	}
-
+	
 	/**
 	 * @inheritDoc
 	 */
-	public function loginUsingCredential($field, $credential, \Closure $notExistCallback = null){
-		$credentials = [
-			$field => $credential,
-		];
-
+	public function loginUsingCredential(array $credentials, \Closure $notExistCallback = null){
 		$user = $this->credentials($credentials, $notExistCallback);
-
+		
 		return $this->login($user);
 	}
-
+	
 	/**
 	 * @inheritDoc
 	 */
@@ -118,33 +114,33 @@ abstract class BasicGuard extends Guard{
 			$user = $this->credentials([
 				$field => $credential,
 			]);
-
+			
 			if(!$this->provider->validatePassword($user, $password)){
 				throw new LoginException('账号密码不正确', 40001);
 			}
-
+			
 			return $this->login($user);
 		}catch(LoginException $e){
 			if($e->getCode() === 40402){
 				throw new LoginException('账号密码不正确！', $e->getCode(), $e);
 			}
-
+			
 			throw $e;
 		}
 	}
-
+	
 	/**
 	 * @param array         $credentials
 	 * @param \Closure|null $notExistCallback
 	 * @return mixed
 	 */
-	private function credentials(array $credentials, \Closure $notExistCallback = null){
+	protected function credentials(array $credentials, \Closure $notExistCallback = null){
 		try{
 			$this->provider->validateCredentials($credentials);
 		}catch(\Exception $e){
 			throw new LoginException($e->getMessage(), $e->getCode(), $e);
 		}
-
+		
 		$user = $this->provider->getByCredentials($credentials);
 		if(empty($user)){
 			if(is_callable($notExistCallback)){
@@ -153,8 +149,8 @@ abstract class BasicGuard extends Guard{
 				throw new LoginException("用户不存在！", 40402);
 			}
 		}
-
+		
 		return $user;
 	}
-
+	
 }

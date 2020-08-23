@@ -5,12 +5,14 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Mall;
+namespace Xin\Contracts\Category;
+
+use Xin\Contracts\Foundation\Repository as BaseRepository;
 
 /**
  * Interface Category.
  */
-interface Category{
+interface Repository extends BaseRepository{
 	
 	/**
 	 * 根据id获取子分类ID列表
