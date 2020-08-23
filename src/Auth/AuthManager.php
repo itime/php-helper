@@ -8,14 +8,27 @@ namespace Xin\Auth;
 
 use Closure;
 use InvalidArgumentException;
-use Xin\Contracts\Auth\Factory as GuardContract;
+use Xin\Contracts\Auth\Factory as FactoryContract;
+use Xin\Contracts\Auth\Guard as GuardContract;
 
 /**
  * Class AuthManager
- * @method mixed getUserInfo($field = null, $default = null, $abort = true)
+ * @method mixed getUser($field = null, $default = null, $abort = true)
  * @method int getUserId($abort = true)
+ * @method mixed saveUser(array $data, $abort = true)
+ * @method mixed temporaryUser($user)
+ * @method bool check()
+ * @method bool guest()
+ * @method bool login($user)
+ * @method bool loginUsingId($id)
+ * @method bool loginUsingCredential(array $credentials, \Closure $notExistCallback = null)
  */
-class AuthManager implements GuardContract{
+class AuthManager implements FactoryContract{
+	
+	/**
+	 * @var array
+	 */
+	protected $config = [];
 	
 	/**
 	 * 守卫者列表
@@ -23,11 +36,6 @@ class AuthManager implements GuardContract{
 	 * @var array
 	 */
 	protected $guards = [];
-	
-	/**
-	 * @var array
-	 */
-	protected $config = [];
 	
 	/**
 	 * 自定义驱动器
@@ -117,26 +125,53 @@ class AuthManager implements GuardContract{
 	}
 	
 	/**
-	 * 注册一个驱动创建器
+	 * 获取默认的提供者
 	 *
-	 * @param string   $driver
-	 * @param \Closure $callback
-	 * @return \Xin\Auth\AuthManager
+	 * @return string
 	 */
-	public function extend($driver, Closure $callback){
-		$this->customCreators[$driver] = $callback;
-		
-		return $this;
+	public function getDefaultUserProvider(){
+		return $this->config['defaults']['provider'];
 	}
 	
 	/**
-	 * 获取守卫者配置信息
+	 * 获取用户提供者配置
 	 *
-	 * @param string $name
-	 * @return array
+	 * @param string $provider
+	 * @return array|void
 	 */
-	protected function getGuardConfig($name){
-		return $this->config['guards'][$name];
+	public function getProviderConfiguration($provider){
+		if($provider = $provider ?: $this->getDefaultUserProvider()){
+			return $this->config['providers'][$provider];
+		}
+	}
+	
+	/**
+	 * 创建用户提供者
+	 *
+	 * @param string|null $provider
+	 * @return \Xin\Contracts\Auth\UserProvider
+	 */
+	public function createUserProvider($provider = null){
+		if(is_null($config = $this->getProviderConfiguration($provider))){
+			throw new InvalidArgumentException(
+				"Authentication user provider [{$provider}] is not defined."
+			);
+		}
+		
+		$driver = isset($config['driver']) ? $config['driver'] : null;
+		if(isset($this->customProviderCreators[$driver])){
+			return call_user_func(
+				$this->customProviderCreators[$driver],
+				$config
+			);
+		}
+		
+		$driverMethod = 'create'.ucfirst($config['driver']).'Provider';
+		if(method_exists($this, $driverMethod)){
+			return $this->{$driverMethod}($config);
+		}
+		
+		return new $config['use']();
 	}
 	
 	/**
@@ -158,52 +193,39 @@ class AuthManager implements GuardContract{
 	}
 	
 	/**
-	 * 创建用户提供者
+	 * 设置一个守卫者实例
 	 *
-	 * @param string|null $provider
-	 * @return \Xin\Contracts\Auth\UserProvider
+	 * @param string        $name
+	 * @param GuardContract $user
+	 * @return $this
 	 */
-	public function createUserProvider($provider = null){
-		if(is_null($config = $this->getProviderConfiguration($provider))){
-			throw new InvalidArgumentException(
-				"Authentication user provider [{$provider}] is not defined."
-			);
-		}
+	public function setGuard($name, GuardContract $user){
+		$this->guards[$name] = $user;
 		
-		$driver = isset($config['driver']) ? $config['driver'] : null;
-		if(isset($this->customProviderCreators[$driver])){
-			return call_user_func(
-				$this->customProviderCreators[$driver]
-			);
-		}
-		
-		$driverMethod = 'create'.ucfirst($config['driver']).'Provider';
-		if(method_exists($this, $driverMethod)){
-			return $this->{$driverMethod}($config);
-		}
-		
-		return new $config['use']();
+		return $this;
 	}
 	
 	/**
-	 * 获取用户提供者配置
+	 * 获取守卫者配置信息
 	 *
-	 * @param string $provider
-	 * @return array|void
+	 * @param string $name
+	 * @return array
 	 */
-	protected function getProviderConfiguration($provider){
-		if($provider = $provider ?: $this->getDefaultUserProvider()){
-			return $this->config['providers'][$provider];
-		}
+	public function getGuardConfig($name){
+		return $this->config['guards'][$name];
 	}
 	
 	/**
-	 * 获取默认的提供者
+	 * 注册一个驱动创建器
 	 *
-	 * @return string
+	 * @param string   $driver
+	 * @param \Closure $callback
+	 * @return \Xin\Auth\AuthManager
 	 */
-	public function getDefaultUserProvider(){
-		return $this->config['defaults']['provider'];
+	public function extend($driver, Closure $callback){
+		$this->customCreators[$driver] = $callback;
+		
+		return $this;
 	}
 	
 	/**
@@ -225,7 +247,7 @@ class AuthManager implements GuardContract{
 	 * @return mixed
 	 */
 	public function user(){
-		return $this->getUserInfo(null, null, false);
+		return $this->getUser(null, null, false);
 	}
 	
 	/**
@@ -235,79 +257,6 @@ class AuthManager implements GuardContract{
 	 */
 	public function id(){
 		return $this->getUserId(false);
-	}
-	
-	/**
-	 * 获取当前用户信息 如果不存在将会抛出异常
-	 *
-	 * @return mixed
-	 * @throws \Xin\Auth\AuthenticationException
-	 */
-	public function authenticate(){
-		$user = $this->getUserInfo();
-		
-		if(empty($user)){
-			throw new AuthenticationException(
-				$this->getDefaultDriver(),
-				$this->getGuardConfig(
-					$this->getDefaultDriver()
-				)
-			);
-		}
-		
-		return $user;
-	}
-	
-	/**
-	 * 获取当前用户ID 如果不存在将会抛出异常
-	 *
-	 * @return mixed
-	 * @throws \Xin\Auth\AuthenticationException
-	 */
-	public function authenticateId(){
-		$id = $this->getUserId();
-		
-		if(empty($id)){
-			throw new AuthenticationException(
-				$this->getDefaultDriver(),
-				$this->getGuardConfig(
-					$this->getDefaultDriver()
-				)
-			);
-		}
-		
-		return $id;
-	}
-	
-	/**
-	 * 检查当前用户是否已经授权
-	 *
-	 * @return bool
-	 */
-	public function check(){
-		return !is_null($this->user());
-	}
-	
-	/**
-	 * 检查当前用户是否是访客模式
-	 *
-	 * @return bool
-	 */
-	public function guest(){
-		return !$this->check();
-	}
-	
-	/**
-	 * 设置一个守卫者实例
-	 *
-	 * @param string        $name
-	 * @param GuardContract $user
-	 * @return $this
-	 */
-	public function setGuard($name, GuardContract $user){
-		$this->guards[$name] = $user;
-		
-		return $this;
 	}
 	
 	/**

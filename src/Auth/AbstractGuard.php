@@ -13,7 +13,7 @@ use Xin\Contracts\Auth\UserProvider;
 /**
  * Class Guard
  */
-abstract class Guard implements GuardContract{
+abstract class AbstractGuard implements GuardContract{
 	
 	/**
 	 * @var string
@@ -52,7 +52,7 @@ abstract class Guard implements GuardContract{
 	 * @inheritDoc
 	 * @throws \Xin\Auth\AuthenticationException
 	 */
-	public function getUserInfo($field = null, $default = null, $abort = true){
+	public function getUser($field = null, $default = null, $abort = true){
 		if(is_null($this->user)){
 			$this->user = $this->resolveUser();
 		}
@@ -68,34 +68,11 @@ abstract class Guard implements GuardContract{
 	}
 	
 	/**
-	 * @return mixed
-	 */
-	abstract protected function resolveUser();
-	
-	/**
 	 * @inheritDoc
 	 * @throws \Xin\Auth\AuthenticationException
 	 */
 	public function getUserId($abort = true){
-		return $this->getUserInfo('id', 0, $abort);
-	}
-	
-	/**
-	 * @inheritDoc
-	 * @throws \Xin\Auth\AuthenticationException
-	 */
-	public function getUserPassword($abort = true){
-		return $this->getUserInfo('password', false, $abort);
-	}
-	
-	/**
-	 * 缓存用户模型
-	 *
-	 * @param mixed $user
-	 * @return string
-	 */
-	protected function makeAuthSign($user){
-		return sha1(md5($user['id']).time());
+		return $this->getUser('id', 0, $abort);
 	}
 	
 	/**
@@ -108,17 +85,24 @@ abstract class Guard implements GuardContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function logout(){
-		$this->user = null;
+	public function check(){
+		try{
+			return !is_null($this->getUserId(false));
+		}catch(AuthenticationException $e){
+			return false;
+		}
 	}
 	
 	/**
-	 * 获取一个Session的唯一名称
-	 *
-	 * @return string
+	 * @inheritDoc
 	 */
-	public function getName(){
-		return 'login_'.$this->name.'_'.sha1(static::class);
+	public function guest(){
+		return !$this->check();
 	}
+	
+	/**
+	 * @return mixed
+	 */
+	abstract protected function resolveUser();
 	
 }

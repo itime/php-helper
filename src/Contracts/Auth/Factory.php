@@ -15,7 +15,7 @@ interface Factory{
 	 * 尝试从本地缓存获取守卫者
 	 *
 	 * @param string|null $name
-	 * @return \Xin\Contracts\Auth\Guard
+	 * @return \Xin\Contracts\Auth\Guard|\Xin\Contracts\Auth\StatefulGuard
 	 */
 	public function guard($name = null);
 	
@@ -23,7 +23,7 @@ interface Factory{
 	 * 选择一个默认的守卫者
 	 *
 	 * @param string $name
-	 * @return \Xin\Contracts\Auth\Guard
+	 * @return \Xin\Contracts\Auth\Guard|\Xin\Contracts\Auth\StatefulGuard
 	 */
 	public function shouldUse($name);
 }

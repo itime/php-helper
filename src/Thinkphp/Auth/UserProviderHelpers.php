@@ -13,20 +13,25 @@ namespace Xin\Thinkphp\Auth;
  * @mixin \think\Model
  * @mixin \Xin\Contracts\Auth\UserProvider
  */
-trait UserProvider{
+trait UserProviderHelpers{
+	
+	/**
+	 * @return \think\Db|\think\db\Query
+	 */
+	abstract protected function query();
 	
 	/**
 	 * @inheritDoc
 	 */
 	public function getById($identifier){
-		return $this->find($identifier);
+		return $this->query()->find($identifier);
 	}
 	
 	/**
 	 * @inheritDoc
 	 */
-	public function getByCredentials(array $credentials){
-		return $this->where($credentials)->find();
+	public function getByCredentials($credentials){
+		return $this->query()->where($credentials)->find();
 	}
 	
 	/**
@@ -38,5 +43,14 @@ trait UserProvider{
 	/**
 	 * @inheritDoc
 	 */
-	abstract public function validatePassword($user, $password);
+	public function validatePassword($user, $password){
+		// TODO: Implement validatePassword() method.
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function getPasswordName(){
+		return "password";
+	}
 }

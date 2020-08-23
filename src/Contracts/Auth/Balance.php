@@ -22,10 +22,10 @@ interface Balance{
 	 *
 	 * @param int    $userId
 	 * @param string $type
-	 * @param int    $limit
+	 * @param array  $options
 	 * @return mixed
 	 */
-	public function getUserBalanceListByType($userId, $type = 'recharge', $limit = 15);
+	public function getUserBalanceListByType($userId, $type = 'recharge', array $options = []);
 	
 	/**
 	 * 充值

@@ -5,9 +5,6 @@
 
 namespace Xin\Contracts\Auth;
 
-/**
- * Interface Guard
- */
 interface Guard{
 	
 	/**
@@ -18,7 +15,7 @@ interface Guard{
 	 * @param bool   $abort
 	 * @return mixed
 	 */
-	public function getUserInfo($field = null, $default = null, $abort = true);
+	public function getUser($field = null, $default = null, $abort = true);
 	
 	/**
 	 * 获取用户id
@@ -27,22 +24,6 @@ interface Guard{
 	 * @return int
 	 */
 	public function getUserId($abort = true);
-	
-	/**
-	 * 获取用户密码
-	 *
-	 * @param bool $abort
-	 * @return string|false
-	 */
-	public function getUserPassword($abort = true);
-	
-	/**
-	 * 更新用户信息-持久化数据
-	 * @param array $data
-	 * @param bool  $abort
-	 * @return mixed
-	 */
-	public function saveUserInfo(array $data, $abort = true);
 	
 	/**
 	 * 暂存用户信息
@@ -54,45 +35,17 @@ interface Guard{
 	public function temporaryUser($user);
 	
 	/**
-	 * 登录
+	 * 检查是否已登录
 	 *
-	 * @param mixed $user
-	 * @return \Xin\Contracts\Auth\Guard
+	 * @return bool
 	 */
-	public function login($user);
+	public function check();
 	
 	/**
-	 * 根据ID登录
+	 * Determine if the current user is a guest.
 	 *
-	 * @param mixed $id
-	 * @return \Xin\Contracts\Auth\Guard
+	 * @return bool
 	 */
-	public function loginUsingId($id);
-	
-	/**
-	 * 根据字段来登录 并且验证密码
-	 *
-	 * @param mixed  $field
-	 * @param string $credential
-	 * @param string $password
-	 * @return mixed
-	 */
-	public function loginUsingPassword($field, $credential, $password);
-	
-	/**
-	 * 根据属性登录
-	 *
-	 * @param array    $credentials
-	 * @param \Closure $notExistCallback
-	 * @return \Xin\Contracts\Auth\Guard
-	 */
-	public function loginUsingCredential(array $credentials, \Closure $notExistCallback = null);
-	
-	/**
-	 * 退出登录
-	 *
-	 * @return void
-	 */
-	public function logout();
+	public function guest();
 	
 }

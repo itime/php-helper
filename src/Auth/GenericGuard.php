@@ -10,7 +10,7 @@ namespace Xin\Auth;
 /**
  * Class GenericGuard
  */
-class GenericGuard extends Guard{
+class GenericGuard extends AbstractGuard{
 	
 	/**
 	 * @var callable|array
@@ -20,7 +20,7 @@ class GenericGuard extends Guard{
 	/**
 	 * GenericUser constructor.
 	 *
-	 * @param null $userResolver
+	 * @param callable $userResolver
 	 */
 	public function __construct($userResolver){
 		parent::__construct('generic', [], null);
@@ -36,20 +36,5 @@ class GenericGuard extends Guard{
 		}
 		
 		return $this->user;
-	}
-	
-	public function saveUserInfo(array $data, $abort = true){
-	}
-	
-	public function login($user){
-	}
-	
-	public function loginUsingId($id){
-	}
-	
-	public function loginUsingPassword($field, $credential, $password){
-	}
-	
-	public function loginUsingCredential($credentials, \Closure $notExistCallback = null){
 	}
 }

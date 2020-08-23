@@ -7,14 +7,32 @@
 
 namespace Xin\Thinkphp\Auth;
 
+use Xin\Auth\AbstractStatefulGuard;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 
-class TokenSessionGuard extends TokenGuard{
+class SessionTokenGuard extends AbstractStatefulGuard{
+	
+	use EventHelpers, TokenGuardHelpers;
+	
+	/**
+	 * @var \think\App
+	 */
+	protected $app;
+	
+	/**
+	 * @var \think\Request
+	 */
+	protected $request;
 	
 	/**
 	 * @var \think\Session
 	 */
 	protected $session;
+	
+	/**
+	 * @var bool
+	 */
+	private $sessionInit = false;
 	
 	/**
 	 * TokenSessionUser constructor.
@@ -25,6 +43,11 @@ class TokenSessionGuard extends TokenGuard{
 	 */
 	public function __construct($name, array $config, UserProviderContract $provider){
 		parent::__construct($name, $config, $provider);
+		
+		$this->app = Container::get('app');
+		
+		$this->request = $this->app['request'];
+		$this->session = $this->app['session'];
 	}
 	
 	/**
@@ -49,6 +72,7 @@ class TokenSessionGuard extends TokenGuard{
 	 */
 	public function logout(){
 		parent::logout();
+		
 		$this->session()->destroy();
 	}
 	
@@ -59,7 +83,7 @@ class TokenSessionGuard extends TokenGuard{
 	 * @throws \think\Exception
 	 */
 	protected function session(){
-		if(is_null($this->session)){
+		if(!$this->sessionInit){
 			$this->session = $this->app['session'];
 			$this->session->init([
 				'id' => $this->getAuthToken(),

@@ -8,22 +8,30 @@
 namespace Xin\Thinkphp\Auth;
 
 use think\Request;
+use Xin\Auth\AbstractStatefulGuard;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 
 /**
  * Class TokenUser
  */
-class TokenGuard extends BasicGuard{
+class TokenGuard extends AbstractStatefulGuard{
+	
+	use EventHelpers, TokenGuardHelpers;
+	
+	/**
+	 * @var \think\App
+	 */
+	protected $app;
+	
+	/**
+	 * @var \think\Request
+	 */
+	protected $request;
 	
 	/**
 	 * @var \think\Cache
 	 */
 	protected $cache;
-	
-	/**
-	 * @var \Closure
-	 */
-	protected $authTokenResolver;
 	
 	/**
 	 * TokenUser constructor.
@@ -35,16 +43,20 @@ class TokenGuard extends BasicGuard{
 	public function __construct($name, array $config, UserProviderContract $provider){
 		parent::__construct($name, $config, $provider);
 		
+		$this->app = Container::get('app');
+		
+		$this->request = $this->app['request'];
 		$this->cache = $this->app['cache'];
 		
 		$this->authTokenResolver = $this->getDefaultAuthTokenResolver();
 	}
 	
 	/**
-	 * @return string
+	 * @inheritDoc
 	 */
-	public function getAuthToken(){
-		return call_user_func($this->authTokenResolver, $this->request, $this);
+	public function logout(){
+		parent::logout();
+		$this->cache->rm($this->getAuthToken());
 	}
 	
 	/**
@@ -61,20 +73,4 @@ class TokenGuard extends BasicGuard{
 		return $this->cache->get($this->getAuthToken());
 	}
 	
-	/**
-	 * @return \Closure
-	 */
-	protected function getDefaultAuthTokenResolver(){
-		return function(Request $request){
-			return $request->param('session_id');
-		};
-	}
-	
-	/**
-	 * @inheritDoc
-	 */
-	public function logout(){
-		parent::logout();
-		$this->cache->rm($this->getAuthToken());
-	}
 }

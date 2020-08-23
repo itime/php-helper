@@ -11,18 +11,17 @@ use Xin\Auth\AuthManager;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 use Xin\Thinkphp\Provider\ServiceProvider;
 
-/**
- * Class AuthServiceProvider
- */
 class AuthServiceProvider extends ServiceProvider{
 	
 	/**
 	 * @inheritDoc
 	 */
 	public function register(){
-		$this->registerAuthenticator();
+		$this->registerAuthManager();
 		
-		$this->registerGuard();
+		$this->registerGuards();
+		
+		$this->registerProviders();
 	}
 	
 	/**
@@ -30,8 +29,9 @@ class AuthServiceProvider extends ServiceProvider{
 	 *
 	 * @return void
 	 */
-	protected function registerAuthenticator(){
+	protected function registerAuthManager(){
 		$method = method_exists($this->config, 'pull') ? 'pull' : 'get';
+		
 		$auth = new AuthManager(
 			$this->config->$method('auth')
 		);
@@ -40,9 +40,9 @@ class AuthServiceProvider extends ServiceProvider{
 	}
 	
 	/**
-	 * 注册网关
+	 * 注册守卫者
 	 */
-	protected function registerGuard(){
+	protected function registerGuards(){
 		/** @var AuthManager $auth */
 		$auth = $this->app->make('auth');
 		
@@ -58,7 +58,27 @@ class AuthServiceProvider extends ServiceProvider{
 		
 		// 注册有状态守卫者
 		$auth->extend('token_session', function($name, $config, UserProviderContract $provider){
-			return new TokenSessionGuard($name, $config, $provider);
+			return new SessionTokenGuard($name, $config, $provider);
+		});
+	}
+	
+	/**
+	 * 注册数据提供者
+	 */
+	protected function registerProviders(){
+		/** @var AuthManager $auth */
+		$auth = $this->app->make('auth');
+		
+		// Database Provider
+		$auth->provider('database', function($config){
+			return new DatabaseUserProvider(
+				$this->app['db'], $config
+			);
+		});
+		
+		// Model Provider
+		$auth->provider('model', function($config){
+			return new ModelUserProvider($config);
 		});
 	}
 }

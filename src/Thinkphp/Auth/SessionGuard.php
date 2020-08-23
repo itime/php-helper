@@ -6,9 +6,22 @@
  */
 namespace Xin\Thinkphp\Auth;
 
+use Xin\Auth\AbstractStatefulGuard;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 
-class SessionGuard extends BasicGuard{
+class SessionGuard extends AbstractStatefulGuard{
+	
+	use EventHelpers;
+	
+	/**
+	 * @var \think\App
+	 */
+	protected $app;
+	
+	/**
+	 * @var \think\Request
+	 */
+	protected $request;
 	
 	/**
 	 * @var \think\Session
@@ -30,6 +43,9 @@ class SessionGuard extends BasicGuard{
 	public function __construct($name, array $config, UserProviderContract $provider){
 		parent::__construct($name, $config, $provider);
 		
+		$this->app = Container::get('app');
+		
+		$this->request = $this->app['request'];
 		$this->session = $this->app['session'];
 		$this->cookie = $this->app['cookie'];
 	}
@@ -69,6 +85,7 @@ class SessionGuard extends BasicGuard{
 	 */
 	public function logout(){
 		parent::logout();
+		
 		$this->session->delete($this->getName());
 	}
 	

@@ -23,10 +23,10 @@ interface UserProvider{
 	/**
 	 * 根据凭证信息获取用户
 	 *
-	 * @param array $credentials
+	 * @param array|\Closure $credentials
 	 * @return mixed
 	 */
-	public function getByCredentials(array $credentials);
+	public function getByCredentials($credentials);
 	
 	/**
 	 * 验证凭证信息是否正确
@@ -44,4 +44,11 @@ interface UserProvider{
 	 * @return boolean
 	 */
 	public function validatePassword($user, $password);
+	
+	/**
+	 * 获取密码字段名称
+	 *
+	 * @return string
+	 */
+	public function getPasswordName();
 }
