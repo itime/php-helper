@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Auth;
 
-interface UserWechatBind{
+interface UserWechatBinder{
 	
 	/**
 	 * get user bind model by openid.

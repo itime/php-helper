@@ -5,33 +5,33 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Auth\Rule;
+namespace Xin\Auth\Access\Rule;
 
-use Xin\Auth\Access\AuthenticRule;
+use Xin\Contracts\Auth\Access\AuthenticRule as AuthenticRuleContract;
 
-class AuthenticRule implements AuthenticRule{
-
+class AuthenticRule implements AuthenticRuleContract{
+	
 	/**
 	 * 规则方案
 	 *
 	 * @var string
 	 */
 	private $scheme = "";
-
+	
 	/**
 	 * 规则实体
 	 *
 	 * @var string
 	 */
 	private $rule = '';
-
+	
 	/**
 	 * 规则参数
 	 *
 	 * @var array
 	 */
 	private $options = [];
-
+	
 	/**
 	 * AuthenticRule constructor.
 	 *
@@ -44,7 +44,7 @@ class AuthenticRule implements AuthenticRule{
 		$this->rule = $rule;
 		$this->options = $options;
 	}
-
+	
 	/**
 	 * 获取规则方案
 	 *
@@ -53,7 +53,7 @@ class AuthenticRule implements AuthenticRule{
 	public function getScheme(){
 		return $this->scheme;
 	}
-
+	
 	/**
 	 * 获取规则实体
 	 *
@@ -62,7 +62,7 @@ class AuthenticRule implements AuthenticRule{
 	public function getEntity(){
 		return $this->rule;
 	}
-
+	
 	/**
 	 * 获取扩展参数
 	 *
@@ -71,14 +71,14 @@ class AuthenticRule implements AuthenticRule{
 	public function getOptions(){
 		return $this->options;
 	}
-
+	
 	/**
 	 * @return string
 	 */
 	public function __toString(){
 		return $this->scheme.':'.$this->rule;
 	}
-
+	
 	/**
 	 * 解析字符串规则
 	 *
@@ -90,24 +90,24 @@ class AuthenticRule implements AuthenticRule{
 		if(empty($fullRule)){
 			throw new AuthenticRuleException("authentic rule invalid.");
 		}
-
+		
 		$result = parse_url($fullRule);
-
+		
 		if(!isset($result['scheme']) || empty($scheme = $result['scheme'])){
 			throw new AuthenticRuleException("authentic rule scheme invalid.");
 		}
-
+		
 		$path = ($result['host'] ?: '').($result['path'] ?: '');
 		if(empty($path)){
 			throw new AuthenticRuleException("authentic rule path invalid.");
 		}
-
+		
 		$options = $result['query'] ?: [];
 		if(is_string($options)){
 			parse_str($options, $options);
 		}
-
+		
 		return new static($scheme, $path, $options);
 	}
-
+	
 }

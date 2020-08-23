@@ -5,8 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Auth\Access\Rule;
+namespace Xin\Auth\Access;
 
-class AuthenticRuleException extends \Exception{
-
+class AuthorizationException extends \Exception{
 }

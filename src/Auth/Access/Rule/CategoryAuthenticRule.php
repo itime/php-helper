@@ -5,15 +5,15 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Auth\Rule;
+namespace Xin\Auth\Access\Rule;
 
 class CategoryAuthenticRule extends AuthenticRule{
-
+	
 	/**
 	 * 规则方案
 	 */
 	const SCHEME_NAME = 'category';
-
+	
 	/**
 	 * CategoryAuthenticRule constructor.
 	 *
