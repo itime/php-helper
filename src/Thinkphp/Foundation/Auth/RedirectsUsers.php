@@ -14,7 +14,7 @@ trait RedirectsUsers{
 	 *
 	 * @return string
 	 */
-	public function redirectPath(){
+	protected function redirectPath(){
 		if(method_exists($this, 'redirectTo')){
 			return $this->redirectTo();
 		}

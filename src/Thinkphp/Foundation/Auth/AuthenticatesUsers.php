@@ -7,40 +7,48 @@
 
 namespace Xin\Thinkphp\Foundation\Auth;
 
-use think\exception\ValidateException;
 use think\facade\Session;
 use think\Request;
 use think\Validate;
+use Xin\Auth\LoginException;
 use Xin\Thinkphp\Auth\Facade\Auth;
+use Xin\Thinkphp\Hint\Facade\Hint;
 
 trait AuthenticatesUsers{
 	
 	use RedirectsUsers;
 	
 	/**
+	 * Handle a login request to the application.
+	 *
+	 * @param Request $request
+	 * @return mixed|\think\Response|\think\response\Redirect
+	 */
+	public function login(Request $request){
+		if($request->isGet()){
+			return $this->showLoginForm();
+		}
+		
+		$this->validateLogin($request);
+		
+		try{
+			$user = $this->guard()->loginUsingCredential(
+				$this->credentials($request)
+			);
+			
+			return $this->sendLoginResponse($request, $user);
+		}catch(LoginException $e){
+			return $this->sendFailedLoginResponse($request, $e);
+		}
+	}
+	
+	/**
 	 * Show the application's login form.
 	 *
 	 * @return \think\response\View
 	 */
-	public function showLoginForm(){
-		return view('auth.login');
-	}
-	
-	/**
-	 * Handle a login request to the application.
-	 *
-	 * @param Request $request
-	 */
-	public function login(Request $request){
-		$this->validateLogin($request);
-		
-		if($this->guard()->loginUsingCredential(
-			$this->credentials($request)
-		)){
-			return $this->sendLoginResponse($request);
-		}
-		
-		return $this->sendFailedLoginResponse($request);
+	protected function showLoginForm(){
+		return view('auth/login');
 	}
 	
 	/**
@@ -52,7 +60,7 @@ trait AuthenticatesUsers{
 	protected function validateLogin(Request $request){
 		$validate = new Validate();
 		$validate->failException(true);
-		$validate->check([
+		$validate->check($request->param(), [
 			$this->username() => 'required|string',
 			'password'        => 'required|string',
 		]);
@@ -75,15 +83,25 @@ trait AuthenticatesUsers{
 	 * Send the response after the user was authenticated.
 	 *
 	 * @param Request $request
+	 * @param mixed   $user
 	 * @return mixed|\think\response\Redirect
 	 */
-	protected function sendLoginResponse(Request $request){
+	protected function sendLoginResponse(Request $request, $user){
 		Session::regenerate();
 		
-		return $this->authenticated(
-			$request,
-			$this->guard()->getUserInfo(null, null, false)
-		) ?: redirect($this->redirectPath());
+		return $this->authenticated($request, $user)
+			?: redirect($this->redirectPath());
+	}
+	
+	/**
+	 * Get the failed login response instance.
+	 *
+	 * @param Request                  $request
+	 * @param \Xin\Auth\LoginException $e
+	 * @return \think\Response
+	 */
+	protected function sendFailedLoginResponse(Request $request, LoginException $e){
+		return Hint::error($e->getMessage());
 	}
 	
 	/**
@@ -94,17 +112,6 @@ trait AuthenticatesUsers{
 	 * @return mixed
 	 */
 	protected function authenticated(Request $request, $user){
-		//
-	}
-	
-	/**
-	 * Get the failed login response instance.
-	 *
-	 * @param Request $request
-	 * @return \think\Response
-	 */
-	protected function sendFailedLoginResponse(Request $request){
-		throw new ValidateException('登录失败！');
 	}
 	
 	/**
@@ -125,7 +132,7 @@ trait AuthenticatesUsers{
 	public function logout(Request $request){
 		$this->guard()->logout();
 		
-		$request->session()->invalidate();
+		Session::destroy();
 		
 		return $this->loggedOut($request) ?: redirect('/');
 	}
@@ -137,7 +144,6 @@ trait AuthenticatesUsers{
 	 * @return mixed
 	 */
 	protected function loggedOut(Request $request){
-		//
 	}
 	
 	/**

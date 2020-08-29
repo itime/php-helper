@@ -23,6 +23,8 @@ class AuthServiceProvider extends ServiceProvider{
 		$this->registerGuards();
 		
 		$this->registerProviders();
+		
+		$this->registerRequestUserResolver();
 	}
 	
 	/**
@@ -85,6 +87,23 @@ class AuthServiceProvider extends ServiceProvider{
 		// Model Provider
 		$auth->provider('model', function($config){
 			return new ModelUserProvider($config);
+		});
+	}
+	
+	/**
+	 * 注册Request用户完成器
+	 */
+	protected function registerRequestUserResolver(){
+		$request = $this->app->request;
+		if(!method_exists($request, 'setUserResolver')){
+			return;
+		}
+		
+		/** @var AuthManager $auth */
+		$auth = $this->app->make('auth');
+		
+		$request->setUserResolver(function($field, $default, $abort) use ($auth){
+			return $auth->guard()->getUser($field, $default, $abort);
 		});
 	}
 }

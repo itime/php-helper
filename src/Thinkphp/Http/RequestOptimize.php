@@ -30,6 +30,17 @@ trait RequestOptimize{
 	protected $plugin;
 	
 	/**
+	 * 获取 ID list
+	 *
+	 * @param string $field
+	 * @return array
+	 */
+	public function ids($field = 'ids'):array{
+		$ids = $this->only([$field]);
+		return Str::explode($ids[$field]);
+	}
+	
+	/**
 	 * 获取页码
 	 *
 	 * @return int
@@ -128,26 +139,6 @@ trait RequestOptimize{
 	}
 	
 	/**
-	 * 当前应用名称
-	 *
-	 * @return string
-	 */
-	public function appName(){
-		return App::getInstance()->get('http')->getName();
-	}
-	
-	/**
-	 * 获取 ID list
-	 *
-	 * @param string $field
-	 * @return array
-	 */
-	public function ids($field = 'ids'):array{
-		$ids = $this->only($field);
-		return Str::explode($ids[$field]);
-	}
-	
-	/**
 	 * 获取当前的模块名
 	 *
 	 * @access public
@@ -170,23 +161,11 @@ trait RequestOptimize{
 	}
 	
 	/**
-	 * 设置 数据
+	 * 当前应用名称
 	 *
-	 * @param string $key
-	 * @param mixed  $value
+	 * @return string
 	 */
-	public function setOption(string $key, &$value){
-		$this->data[$key] = $value;
+	public function appName(){
+		return App::getInstance()->get('http')->getName();
 	}
-	
-	/**
-	 * 获取数据
-	 *
-	 * @param string $key
-	 * @return mixed
-	 */
-	public function &getOption(string $key){
-		return $this->data[$key];
-	}
-	
 }
