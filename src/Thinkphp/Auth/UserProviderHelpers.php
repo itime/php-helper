@@ -39,8 +39,8 @@ trait UserProviderHelpers{
 	 */
 	public function validatePassword($user, $password){
 		$passwordName = $this->getPasswordName();
-		$userPassword = $user[$passwordName];
-		return app('hash')->check($userPassword, $password);
+		$hashedPassword = $user[$passwordName];
+		return app('hash')->check($password, $hashedPassword);
 	}
 	
 	/**

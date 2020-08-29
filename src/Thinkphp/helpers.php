@@ -4,7 +4,10 @@
  *
  * @author: 晋<657306123@qq.com>
  */
-if(!function_exists('listen')){
+
+use Xin\Support\Str;
+
+if(!function_exists('event')){
 	/**
 	 * 监听行为
 	 *
@@ -12,6 +15,64 @@ if(!function_exists('listen')){
 	 */
 	function listen($tag){
 		app('hook')->listen($tag);
+	}
+}
+
+if(!function_exists('call')){
+	/**
+	 * 调用反射执行callable 支持参数绑定
+	 *
+	 * @access public
+	 * @param mixed $callable
+	 * @param array $vars 参数
+	 * @param bool  $accessible 设置是否可访问
+	 * @return mixed
+	 */
+	function call($callable, array $vars = [], bool $accessible = false){
+		return app()->invoke($callable, $vars, $accessible);
+	}
+}
+
+if(!function_exists('controller')){
+	/**
+	 * 实例化控制器
+	 *
+	 * @param string $url
+	 * @param string $layer
+	 * @param bool   $appendSuffix
+	 * @return mixed
+	 */
+	function controller($url, $layer = 'controller', $appendSuffix = true){
+		$info = explode("/", $url, 2);
+		$controller = array_pop($info);
+		$controller = str_replace(".", "/", $controller);
+		$appName = array_pop($info) ?: app()->http->getName();
+		
+		$suffix = $appendSuffix ? Str::studly($layer) : '';
+		$class = "app\\{$appName}\\{$layer}\\{$controller}{$suffix}";
+		
+		return app($class);
+	}
+}
+
+if(!function_exists('action')){
+	/**
+	 * 调用操作
+	 *
+	 * @param string $url
+	 * @param array  $vars
+	 * @param string $layer
+	 * @param bool   $appendSuffix
+	 * @return mixed
+	 */
+	function action($url, array $vars = [], $layer = 'controller', $appendSuffix = true){
+		$info = explode("/", $url, 2);
+		$action = array_pop($info);
+		
+		$controller = array_pop($info);
+		$controller = controller($controller, $layer, $appendSuffix);
+		
+		return call([$controller, $action], $vars);
 	}
 }
 
@@ -67,8 +128,8 @@ if(!function_exists('table_rows')){
 	 * @param string $page
 	 * @return array|string|\think\Collection
 	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
-	 * @throws \think\exception\DbException
 	 */
 	function table_rows($table, $where = [], $field = '*', $order = '', $page = ''){
 		return \think\Db::name($table)->field($field)->where($where)->order($order)->page($page)->select();
@@ -104,6 +165,19 @@ if(!function_exists('table_value')){
 	 */
 	function table_value($table, $field, $where, $default = null){
 		return \think\Db::name($table)->where($where)->value($field, $default);
+	}
+}
+
+if(!function_exists('bcrypt')){
+	/**
+	 * Hash the given value against the bcrypt algorithm.
+	 *
+	 * @param string $value
+	 * @param array  $options
+	 * @return string
+	 */
+	function bcrypt($value, $options = []){
+		return app('hash')->make($value, $options);
 	}
 }
 
@@ -150,15 +224,3 @@ if(!function_exists('optimize_asset')){
 	}
 }
 
-if(!function_exists('bcrypt')){
-	/**
-	 * Hash the given value against the bcrypt algorithm.
-	 *
-	 * @param string $value
-	 * @param array  $options
-	 * @return string
-	 */
-	function bcrypt($value, $options = []){
-		return app('hash')->make($value, $options);
-	}
-}

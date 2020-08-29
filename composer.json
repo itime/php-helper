@@ -25,6 +25,7 @@
 		"files":[
 			"src/Support/helpers.php",
 			"src/Thinkphp/helpers.php",
+			"src/Thinkphp/helpers.php",
 			"src/Thinkphp/Plugin/helpers.php"
 		],
 		"psr-4":{

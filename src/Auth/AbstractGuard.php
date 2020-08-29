@@ -105,4 +105,11 @@ abstract class AbstractGuard implements GuardContract{
 	 */
 	abstract protected function resolveUser();
 	
+	/**
+	 * @return array
+	 */
+	public function getConfig(){
+		return $this->config;
+	}
+	
 }

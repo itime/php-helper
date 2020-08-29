@@ -7,13 +7,13 @@
 
 namespace Xin\Thinkphp\Foundation\Auth;
 
+use think\exception\HttpException;
 use think\facade\Session;
 use think\Request;
 use think\Validate;
 use Xin\Auth\LoginException;
-use Xin\Support\Hasher;
-use Xin\Thinkphp\Auth\Facade\Auth;
-use Xin\Thinkphp\Hint\Facade\Hash;
+use Xin\Thinkphp\Facade\Auth;
+use Xin\Thinkphp\Facade\Hint;
 
 trait AuthenticatesUsers{
 	
@@ -33,13 +33,11 @@ trait AuthenticatesUsers{
 		$this->validateLogin($request);
 		
 		try{
-			halt((new Hasher())->make('123456'));
 			$user = $this->guard()->loginUsingCredential(
 				$this->credentials($request)
 			);
 			return $this->sendLoginResponse($request, $user);
 		}catch(LoginException $e){
-			halt($e);
 			return $this->sendFailedLoginResponse($request, $e);
 		}
 	}
@@ -97,9 +95,13 @@ trait AuthenticatesUsers{
 	protected function sendLoginResponse(Request $request, $user){
 		Session::regenerate();
 		
-		halt($user);
-		return $this->authenticated($request, $user)
-			?: redirect($this->redirectPath());
+		if($result = $this->authenticated($request, $user)){
+			return $result;
+		}
+		
+		return $request->isJson() || $request->isAjax()
+			? Hint::result($user)
+			: redirect($this->redirectPath());
 	}
 	
 	/**
@@ -110,7 +112,7 @@ trait AuthenticatesUsers{
 	 * @return \think\Response
 	 */
 	protected function sendFailedLoginResponse(Request $request, LoginException $e){
-		return Hash::error($e->getMessage());
+		return Hint::error($e->getMessage());
 	}
 	
 	/**
@@ -139,6 +141,10 @@ trait AuthenticatesUsers{
 	 * @return mixed|\think\response\Redirect
 	 */
 	public function logout(Request $request){
+		if(!$request->isPost()){
+			throw new HttpException(500, ' not support '.$request->method());
+		}
+		
 		$this->guard()->logout();
 		
 		Session::destroy();

@@ -18,7 +18,7 @@ class HashServiceProvider extends ServiceProvider{
 	 * 启动器
 	 */
 	public function register(){
-		$this->app->bind('hint', function(){
+		$this->app->bind('hash', function(){
 			return new Hasher();
 		});
 	}
