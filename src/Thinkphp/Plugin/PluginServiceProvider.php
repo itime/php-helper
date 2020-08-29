@@ -7,7 +7,7 @@
 
 namespace Xin\Thinkphp\Plugin;
 
-use Xin\Thinkphp\Foundation\Provider\ServiceProvider;
+use Xin\Thinkphp\Foundation\ServiceProvider;
 
 class PluginServiceProvider extends ServiceProvider{
 	

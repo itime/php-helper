@@ -10,7 +10,7 @@ namespace Xin\Thinkphp\Auth;
 use Xin\Auth\AuthManager;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 use Xin\Support\Reflect;
-use Xin\Thinkphp\Foundation\Provider\ServiceProvider;
+use Xin\Thinkphp\Foundation\ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider{
 	

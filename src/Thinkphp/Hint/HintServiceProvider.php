@@ -9,7 +9,7 @@ namespace Xin\Thinkphp\Hint;
 
 use Xin\Hint\HintManager;
 use Xin\Support\Reflect;
-use Xin\Thinkphp\Foundation\Provider\ServiceProvider;
+use Xin\Thinkphp\Foundation\ServiceProvider;
 
 /**
  * Class HintServiceProvider

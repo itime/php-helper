@@ -4,7 +4,7 @@
  *
  * @author: 晋<657306123@qq.com>
  */
-namespace Xin\Thinkphp\Foundation\Provider;
+namespace Xin\Thinkphp\Foundation;
 
 use think\App;
 use think\Container;

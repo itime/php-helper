@@ -5,14 +5,14 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Hint\Facade;
+namespace Xin\Thinkphp\Facade;
 
 use think\Facade;
 
 /**
  * Class Hint
- * @method static \Xin\Hint\HintManager shouldUseApi()
- * @method static \Xin\Hint\HintManager shouldUseWeb()
+ * @method \Xin\Hint\HintManager shouldUseApi() static
+ * @method \Xin\Hint\HintManager shouldUseWeb() static
  * @method \think\Response success($msg, $url = null, $data = null, array $extend = []) static
  * @method \think\Response error($msg, $code = 0, $url = null, array $extend = []) static
  * @method \think\Response alert($msg, $code = 0, $url = null, array $extend = []) static

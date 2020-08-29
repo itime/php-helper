@@ -11,8 +11,9 @@ use think\facade\Session;
 use think\Request;
 use think\Validate;
 use Xin\Auth\LoginException;
+use Xin\Support\Hasher;
 use Xin\Thinkphp\Auth\Facade\Auth;
-use Xin\Thinkphp\Hint\Facade\Hint;
+use Xin\Thinkphp\Hint\Facade\Hash;
 
 trait AuthenticatesUsers{
 	
@@ -32,12 +33,13 @@ trait AuthenticatesUsers{
 		$this->validateLogin($request);
 		
 		try{
+			halt((new Hasher())->make('123456'));
 			$user = $this->guard()->loginUsingCredential(
 				$this->credentials($request)
 			);
-			
 			return $this->sendLoginResponse($request, $user);
 		}catch(LoginException $e){
+			halt($e);
 			return $this->sendFailedLoginResponse($request, $e);
 		}
 	}
@@ -60,10 +62,16 @@ trait AuthenticatesUsers{
 	protected function validateLogin(Request $request){
 		$validate = new Validate();
 		$validate->failException(true);
-		$validate->check($request->param(), [
-			$this->username() => 'required|string',
-			'password'        => 'required|string',
+		
+		$validate->rule([
+			$this->username() => 'require|alphaDash',
+			'password'        => 'require|alphaDash',
+		], [
+			$this->username() => '用户名',
+			'password'        => '密码',
 		]);
+		
+		$validate->check($request->param());
 	}
 	
 	/**
@@ -89,6 +97,7 @@ trait AuthenticatesUsers{
 	protected function sendLoginResponse(Request $request, $user){
 		Session::regenerate();
 		
+		halt($user);
 		return $this->authenticated($request, $user)
 			?: redirect($this->redirectPath());
 	}
@@ -101,7 +110,7 @@ trait AuthenticatesUsers{
 	 * @return \think\Response
 	 */
 	protected function sendFailedLoginResponse(Request $request, LoginException $e){
-		return Hint::error($e->getMessage());
+		return Hash::error($e->getMessage());
 	}
 	
 	/**

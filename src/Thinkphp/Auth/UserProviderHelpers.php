@@ -7,8 +7,6 @@
 
 namespace Xin\Thinkphp\Auth;
 
-use Xin\Support\Hasher;
-
 /**
  * Class UserProvider
  *
@@ -42,7 +40,7 @@ trait UserProviderHelpers{
 	public function validatePassword($user, $password){
 		$passwordName = $this->getPasswordName();
 		$userPassword = $user[$passwordName];
-		return (new Hasher())->check($userPassword, $password);
+		return app('hash')->check($userPassword, $password);
 	}
 	
 	/**

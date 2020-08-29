@@ -4,172 +4,207 @@
  *
  * @author: 晋<657306123@qq.com>
  */
-namespace Xin\Thinkphp\Support;
+namespace Xin\Thinkphp\Foundation;
 
-use think\facade\App;
-use think\facade\Env;
-use think\facade\Request;
+use think\App;
+use Xin\Contracts\Foundation\Application;
 
-final class OS{
-
+class OS implements Application{
+	
+	/**
+	 * @var \think\App
+	 */
+	protected $app;
+	
+	/**
+	 * @var \Closure
+	 */
+	protected $isCustomDevelopCallback;
+	
 	/**
 	 * @var array
 	 */
-	public static $DEV_DOMAIN_LIST = [];
-
+	protected $developDomainList = [];
+	
 	/**
-	 * 是否是开发环境
+	 * OS constructor.
+	 *
+	 * @param \think\App $app
+	 */
+	public function __construct(App $app){
+		$this->app = $app;
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function isEnv(...$env){
+		return in_array($this->app->config->get('app.env'), $env);
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function isLocal(){
+		return $this->isEnv('local');
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function isDevelop(){
+		return $this->isEnv('dev', 'develop') || $this->isCustomDevelop();
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function isProduction(){
+		return $this->isEnv('pro', 'production');
+	}
+	
+	/**
+	 * 是否是开发模式
 	 *
 	 * @return bool
 	 */
-	public static function isDev(){
-		return in_array(Request::host(true), self::$DEV_DOMAIN_LIST);
+	public function isCustomDevelop(){
+		$result = null;
+		if($this->isCustomDevelopCallback){
+			$result = call_user_func($this->isCustomDevelopCallback, $this);
+		}
+		
+		if($result !== null){
+			return $result;
+		}
+		
+		return in_array($this->app->request->domain(), $this->developDomainList);
 	}
-
+	
 	/**
-	 * 是否是本地开发环境
+	 * 优化系统路径
 	 *
-	 * @return bool
-	 */
-	public static function isLocal(){
-		return Env::get('app_env') == 'local';
-	}
-
-	/**
-	 * 是否是线上环境
-	 *
-	 * @return bool
-	 */
-	public static function isProduction(){
-		return Env::get('app_env') == 'production';
-	}
-
-	/**
-	 * 当前所属环境
-	 *
-	 * @param array $envs
-	 * @return bool
-	 */
-	public static function is(array $envs){
-		$env = Env::get('app_env');
-		return in_array($env, $envs);
-	}
-
-	/**
-	 * 获取系统插件目录
-	 *
+	 * @param string $path
 	 * @return string
 	 */
-	public static function getAddonsPath(){
-		return App::getRootPath()."addons";
+	protected function optimizePath($path){
+		return $path ? $path.DIRECTORY_SEPARATOR : $path;
 	}
-
+	
 	/**
-	 * 获取插件目录
+	 * 优化Web路径
 	 *
+	 * @param string $path
 	 * @return string
 	 */
-	public static function getPluginsPath(){
-		return App::getRootPath()."plugins";
+	protected function optimizeWebPath($path){
+		return $path ? $path.'/' : $path;
 	}
-
+	
 	/**
-	 * 获取开放目录
-	 *
-	 * @return string
+	 * @inheritDoc
 	 */
-	public static function getPublicPath(){
-		return App::getRootPath()."public";
+	public function rootPath($path = null){
+		return $this->app->getRootPath().$this->optimizePath($path);
 	}
-
+	
 	/**
-	 * 获取上传目录
-	 *
-	 * @return string
+	 * @inheritDoc
 	 */
-	public static function getUploadsPath(){
-		return self::getPublicPath().DIRECTORY_SEPARATOR.'uploads';
+	public function webRootPath($path = null){
+		return $this->rootPath('public').$this->optimizePath($path);
 	}
-
+	
 	/**
-	 * 获取Web公共目录
-	 *
-	 * @return string
+	 * @inheritDoc
 	 */
-	public static function getWebRootPath(){
-		return Env::get('web_public_path') ?: '';
+	public function storagePath($path = null){
+		return $this->rootPath('storage').$this->optimizePath($path);
 	}
-
+	
 	/**
-	 * 获取Web公共静态资源目录
-	 *
-	 * @return string
+	 * @inheritDoc
 	 */
-	public static function getWebStaticPath(){
-		return self::getWebRootPath()."/static";
+	public function pluginPath($path = null){
+		return $this->rootPath('storage').$this->optimizePath($path);
 	}
-
+	
 	/**
-	 * 获取Web上传目录
-	 *
-	 * @return string
+	 * @inheritDoc
 	 */
-	public static function getWebUploadsPath(){
-		return self::getWebRootPath()."/uploads";
+	public function runtimePath($path = null){
+		return $this->app->getRuntimePath().$this->optimizePath($path);
 	}
-
+	
 	/**
-	 * 获取Web第三方插件目录
-	 *
-	 * @return string
+	 * @inheritDoc
 	 */
-	public static function getWebVendorPath(){
-		return self::getWebRootPath()."/vendor";
+	public function assetVendorPath($path = null){
+		return '/vendor/'.$this->optimizeWebPath($path);
 	}
-
+	
 	/**
-	 * 获取作用域目录
-	 *
-	 * @param string $resDir
-	 * @return string
+	 * @inheritDoc
 	 */
-	public static function getWebScopePath($resDir){
-		return self::getWebRootPath().$resDir.'/'.Request::module();
+	public function assetScopePath($path = null){
+		$appName = $this->app->http->getName();
+		return "/{$appName}/".$this->optimizeWebPath($path);
 	}
-
+	
 	/**
-	 * 获取Web模块下图片路径
-	 *
-	 * @return string
+	 * @inheritDoc
 	 */
-	public static function getWebImagesPath(){
-		return self::getWebScopePath('images');
+	public function assetImagesPath($path = null){
+		return $this->assetScopePath('images').$this->optimizeWebPath($path);
 	}
-
+	
 	/**
-	 * 获取Web模块下js路径
-	 *
-	 * @return string
+	 * @inheritDoc
 	 */
-	public static function getWebJsPath(){
-		return self::getWebScopePath('js');
+	public function assetScriptsPath($path = null){
+		return $this->assetScopePath('js').$this->optimizeWebPath($path);
 	}
-
+	
 	/**
-	 * 获取Web模块下css路径
-	 *
-	 * @return string
+	 * @inheritDoc
 	 */
-	public static function getWebCssPath(){
-		return self::getWebScopePath('css');
+	public function assetStylesPath($path = null){
+		return $this->assetScopePath('css').$this->optimizeWebPath($path);
 	}
-
+	
 	/**
-	 * 获取Web模块下字体路径
-	 *
-	 * @return string
+	 * @inheritDoc
 	 */
-	public static function getWebFontsPath(){
-		return self::getWebRootPath()."/fonts";
+	public function assetFontsPath($path = null){
+		return $this->assetScopePath('fonts').$this->optimizeWebPath($path);
 	}
+	
+	/**
+	 * @return \Closure
+	 */
+	public function getIsCustomDevelopCallback(){
+		return $this->isCustomDevelopCallback;
+	}
+	
+	/**
+	 * @param \Closure $customDevelopCallback
+	 */
+	public function setIsCustomDevelopCallback(\Closure $customDevelopCallback){
+		$this->isCustomDevelopCallback = $customDevelopCallback;
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function getDevelopDomainList(){
+		return $this->developDomainList;
+	}
+	
+	/**
+	 * @param array $developDomainList
+	 */
+	public function setDevelopDomainList(array $developDomainList){
+		$this->developDomainList = $developDomainList;
+	}
+	
 }

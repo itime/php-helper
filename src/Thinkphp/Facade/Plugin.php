@@ -4,7 +4,7 @@
  *
  * @author: 晋<657306123@qq.com>
  */
-namespace Xin\Thinkphp\Plugin\Facade;
+namespace Xin\Thinkphp\Facade;
 
 use think\Facade;
 

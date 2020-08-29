@@ -149,3 +149,16 @@ if(!function_exists('optimize_asset')){
 		return $uri;
 	}
 }
+
+if(!function_exists('bcrypt')){
+	/**
+	 * Hash the given value against the bcrypt algorithm.
+	 *
+	 * @param string $value
+	 * @param array  $options
+	 * @return string
+	 */
+	function bcrypt($value, $options = []){
+		return app('hash')->make($value, $options);
+	}
+}

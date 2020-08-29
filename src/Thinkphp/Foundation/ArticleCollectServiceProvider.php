@@ -7,25 +7,24 @@
  * @author        <657306123@qq.com> LXSEA
  */
 
-namespace Xin\Thinkphp\ArticleCollect;
+namespace Xin\Thinkphp\Foundation;
 
 use think\facade\Validate;
 use Xin\articlecollect\ArticleCollect;
 use Xin\articlecollect\ArticleCollectException;
-use Xin\Thinkphp\hint\facade\Hint;
-use Xin\Thinkphp\provider\ServiceProvider;
+use Xin\Thinkphp\Facade\Hint;
 
 /**
  * 初始化应用
  */
 class ArticleCollectServiceProvider extends ServiceProvider{
-
+	
 	/**
 	 * 注册服务
 	 */
 	public function register(){
 	}
-
+	
 	/**
 	 * 启动
 	 */
@@ -36,16 +35,16 @@ class ArticleCollectServiceProvider extends ServiceProvider{
 			if(empty($url) || !Validate::is($url, 'url')){
 				Hint::outputError('不是一个有效的url！', 400);
 			}
-
+			
 			try{
 				$result = ArticleCollect::url($url);
-				return Hint::result($result);
+				return Hash::result($result);
 			}catch(ArticleCollectException $e){
-				return Hint::error($e->getMessage(), $e->getCode());
+				return Hash::error($e->getMessage(), $e->getCode());
 			}catch(\LogicException $e){
-				return Hint::error($e->getMessage(), $e->getCode());
+				return Hash::error($e->getMessage(), $e->getCode());
 			}
 		});
 	}
-
+	
 }
