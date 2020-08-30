@@ -82,6 +82,13 @@ class OS implements Application{
 	}
 	
 	/**
+	 * @inheritDoc
+	 */
+	public function version(){
+		return $this->app->version();
+	}
+	
+	/**
 	 * 优化系统路径
 	 *
 	 * @param string $path

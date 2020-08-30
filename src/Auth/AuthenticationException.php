@@ -7,43 +7,61 @@
 namespace Xin\Auth;
 
 class AuthenticationException extends \Exception{
-
-	/**
-	 * @var array
-	 */
-	protected $config = [];
-
+	
 	/**
 	 * @var string
 	 */
 	protected $guard;
-
+	
+	/**
+	 * @var string
+	 */
+	protected $redirectTo;
+	
+	/**
+	 * @var array
+	 */
+	protected $config = [];
+	
 	/**
 	 * AuthenticationException constructor.
 	 *
 	 * @param string $guard
+	 * @param string $redirectTo
 	 * @param array  $config
-	 * @param string $message
 	 */
-	public function __construct($guard, array $config, $message = 'Unauthenticated.'){
-		parent::__construct($message, -1);
-
+	public function __construct($guard, $redirectTo = '', array $config = []){
+		parent::__construct('Unauthenticated.', -1);
+		
 		$this->guard = $guard;
+		
+		$this->redirectTo = is_null($redirectTo) ? '' : $redirectTo;
+		if(empty($this->redirectTo) && isset($config['auth_url'])){
+			$this->redirectTo = $config['auth_url'];
+		}
+		
 		$this->config = $config;
 	}
-
+	
 	/**
 	 * @return array
 	 */
 	public function getConfig(){
 		return $this->config;
 	}
-
+	
 	/**
 	 * @return string
 	 */
 	public function getGuard(){
 		return $this->guard;
 	}
-
+	
+	/**
+	 * @return string
+	 */
+	public function redirectTo(){
+		return $this->redirectTo;
+	}
+	
 }

@@ -102,7 +102,7 @@ interface Gate{
 	/**
 	 * 获取给定用户的保护实例
 	 *
-	 * @param \Illuminate\Contracts\Auth\Authenticatable|mixed $user
+	 * @param mixed $user
 	 * @return static
 	 */
 	public function forUser($user);

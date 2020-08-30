@@ -8,6 +8,7 @@
 namespace Xin\Thinkphp\Auth;
 
 use Xin\Auth\AuthManager;
+use Xin\Contracts\Auth\Factory as AuthFactory;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 use Xin\Support\Reflect;
 use Xin\Thinkphp\Foundation\ServiceProvider;
@@ -43,7 +44,10 @@ class AuthServiceProvider extends ServiceProvider{
 		if(Reflect::methodVisible($this->app, 'bindTo') === Reflect::VISIBLE_PUBLIC){
 			$this->app->bindTo('auth', $auth);
 		}else{
-			$this->app->bind('auth', $auth);
+			$this->app->bind([
+				'auth'             => $auth,
+				AuthFactory::class => $auth,
+			]);
 		}
 	}
 	

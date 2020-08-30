@@ -146,10 +146,15 @@ trait AuthenticatesUsers{
 		}
 		
 		$this->guard()->logout();
-		
 		Session::destroy();
 		
-		return $this->loggedOut($request) ?: redirect('/');
+		if($result = $this->loggedOut($request)){
+			return $result;
+		}
+		
+		return $request->isJson() || $request->isAjax()
+			? Hint::success("已退出登录！", (string)url("login/login"))
+			: redirect(url("login/login"));
 	}
 	
 	/**

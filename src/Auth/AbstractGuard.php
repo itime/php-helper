@@ -60,6 +60,7 @@ abstract class AbstractGuard implements GuardContract{
 		if($abort && is_null($this->user)){
 			throw new AuthenticationException(
 				$this->name,
+				isset($this->config['auth_url']) ? $this->config['auth_url'] : '',
 				$this->config
 			);
 		}
@@ -87,7 +88,7 @@ abstract class AbstractGuard implements GuardContract{
 	 */
 	public function check(){
 		try{
-			return !is_null($this->getUserId(false));
+			return $this->getUserId(false);
 		}catch(AuthenticationException $e){
 			return false;
 		}

@@ -7,17 +7,33 @@
 
 namespace Xin\Menu;
 
-class MenuManager{
+use Xin\Support\Manager;
 
+/**
+ * Class MenuManager
+ * @method \Xin\Contracts\Menu\Menu driver($driver = null)
+ */
+class MenuManager extends Manager{
+	
 	/**
-	 * @var array
+	 * @inheritDoc
 	 */
-	protected $menus = [];
-
-	public function __construct($menus){
-		$this->menus = $menus;
+	public function getDefaultDriver(){
+		return "array";
 	}
-
-	public function genator(){
+	
+	/**
+	 * @return \Xin\Menu\ArrayMenu
+	 */
+	public function createArrayDriver(){
+		return new ArrayMenu();
+	}
+	
+	/**
+	 * @param array $options
+	 * @return array
+	 */
+	public function generate(array $options = []){
+		return $this->driver()->generate($options);
 	}
 }

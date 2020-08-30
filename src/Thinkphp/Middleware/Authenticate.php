@@ -63,8 +63,20 @@ class Authenticate{
 			}
 		}
 		
+		$config = $this->auth->guard()->getConfig();
 		throw new AuthenticationException(
-			$guards, $this->auth->guard()->getConfig()
+			$guards,
+			$this->redirectTo($request),
+			$config
 		);
+	}
+	
+	/**
+	 * Get the path the user should be redirected to when they are not authenticated.
+	 *
+	 * @param \think\Request $request
+	 * @return string
+	 */
+	protected function redirectTo($request){
 	}
 }

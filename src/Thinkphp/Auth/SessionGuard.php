@@ -57,28 +57,38 @@ class SessionGuard extends AbstractStatefulGuard{
 	 * @param array $user
 	 */
 	protected function updateSession($user){
+		$authSignKey = $this->authSignKey();
 		$userAuthSign = $this->makeAuthSign($user);
 		
 		$this->session->set($this->getName(), $user);
 		
-		$this->session->set($this->getName().'_auth_sign', $userAuthSign);
-		$this->cookie->set($this->getName().'_auth_sign', $userAuthSign);
+		$this->session->set($authSignKey, $userAuthSign);
+		$this->cookie->set($authSignKey, $userAuthSign);
 	}
 	
 	/**
 	 * @inheritDoc
 	 */
 	protected function resolveUser(){
-		$authSignKey = $this->getName().'_auth_sign';
+		$authSignKey = $this->authSignKey();
 		
 		$sessionAuthSign = $this->session->get($authSignKey);
 		$cookieAuthSign = $this->cookie->get($authSignKey);
 		
-		if($sessionAuthSign == $cookieAuthSign){
+		if($sessionAuthSign && $cookieAuthSign && $sessionAuthSign == $cookieAuthSign){
 			return $this->session->get($this->getName());
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * 生成签名 key
+	 *
+	 * @return string
+	 */
+	protected function authSignKey(){
+		return $this->getName().'_auth_sign';
 	}
 	
 	/**

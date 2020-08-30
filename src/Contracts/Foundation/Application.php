@@ -41,6 +41,11 @@ interface Application{
 	public function isEnv(...$env);
 	
 	/**
+	 * @return string
+	 */
+	public function version();
+	
+	/**
 	 * 网站根目录
 	 *
 	 * @param string $path
