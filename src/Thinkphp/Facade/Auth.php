@@ -10,7 +10,7 @@ use think\Facade;
 
 /**
  * Class Auth
- * @method \Xin\Contracts\Auth\Guard guard($name = null) static
+ * @method \Xin\Contracts\Auth\Guard|\Xin\Contracts\Auth\StatefulGuard guard($name = null) static
  * @method void shouldUse($name = null) static
  *
  * @mixin \Xin\Auth\AuthManager

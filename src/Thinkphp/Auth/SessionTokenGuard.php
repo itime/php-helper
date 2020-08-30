@@ -36,13 +36,13 @@ class SessionTokenGuard extends AbstractStatefulGuard{
 	private $sessionInit = false;
 	
 	/**
-	 * TokenSessionUser constructor.
+	 * SessionTokenGuard constructor.
 	 *
-	 * @param string                           $name
-	 * @param array                            $config
-	 * @param \Xin\Contracts\Auth\UserProvider $provider
+	 * @param string               $name
+	 * @param array                $config
+	 * @param UserProviderContract $provider
 	 */
-	public function __construct($name, array $config, UserProviderContract $provider){
+	public function __construct($name, array $config, UserProviderContract $provider = null){
 		parent::__construct($name, $config, $provider);
 		
 		$this->app = Container::getInstance();

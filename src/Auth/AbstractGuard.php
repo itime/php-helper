@@ -8,11 +8,8 @@
 namespace Xin\Auth;
 
 use Xin\Contracts\Auth\Guard as GuardContract;
-use Xin\Contracts\Auth\UserProvider;
+use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 
-/**
- * Class Guard
- */
 abstract class AbstractGuard implements GuardContract{
 	
 	/**
@@ -31,18 +28,18 @@ abstract class AbstractGuard implements GuardContract{
 	protected $config;
 	
 	/**
-	 * @var \Xin\Contracts\Auth\UserProvider
+	 * @var UserProviderContract
 	 */
 	protected $provider;
 	
 	/**
-	 * User constructor.
+	 * AbstractGuard constructor.
 	 *
-	 * @param string                           $name
-	 * @param array                            $config
-	 * @param \Xin\Contracts\Auth\UserProvider $provider
+	 * @param string               $name
+	 * @param array                $config
+	 * @param UserProviderContract $provider
 	 */
-	public function __construct($name, array $config, UserProvider $provider = null){
+	public function __construct($name, array $config, UserProviderContract $provider = null){
 		$this->name = $name;
 		$this->config = $config;
 		$this->provider = $provider;

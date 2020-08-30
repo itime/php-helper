@@ -27,7 +27,7 @@ trait AuthenticatesUsers{
 	 */
 	public function login(Request $request){
 		if($request->isGet()){
-			return $this->showLoginForm();
+			return $this->showLoginForm($request);
 		}
 		
 		$this->validateLogin($request);
@@ -45,9 +45,10 @@ trait AuthenticatesUsers{
 	/**
 	 * Show the application's login form.
 	 *
+	 * @param \think\Request $request
 	 * @return \think\response\View
 	 */
-	protected function showLoginForm(){
+	protected function showLoginForm($request){
 		return view('auth/login');
 	}
 	
@@ -100,7 +101,7 @@ trait AuthenticatesUsers{
 		}
 		
 		return $request->isJson() || $request->isAjax()
-			? Hint::result($user)
+			? Hint::success("登录成功！")
 			: redirect($this->redirectPath());
 	}
 	
@@ -169,7 +170,7 @@ trait AuthenticatesUsers{
 	/**
 	 * 获取守卫者
 	 *
-	 * @return \Xin\Contracts\Auth\Guard
+	 * @return \Xin\Contracts\Auth\StatefulGuard
 	 */
 	protected function guard(){
 		return Auth::guard();

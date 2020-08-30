@@ -9,8 +9,8 @@ namespace Xin\Thinkphp\Foundation\Auth;
 
 use think\exception\ValidateException;
 use think\Request;
+use Xin\Auth\Events\Lockout;
 use Xin\Support\Str;
-use Xin\Thinkphp\Auth\Events\Lockout;
 use Xin\Thinkphp\Cache\RateLimiter;
 
 trait ThrottlesLogins{
