@@ -21,6 +21,9 @@
 		"ext-libxml":"*",
 		"ext-simplexml":"*"
 	},
+	"require-dev": {
+		"xin/oss": "^2.0"
+	},
 	"autoload":{
 		"files":[
 			"src/Support/helpers.php",

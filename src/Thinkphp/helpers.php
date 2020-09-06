@@ -7,14 +7,92 @@
 
 use Xin\Support\Str;
 
+if(!function_exists('thinkphp_version')){
+	/**
+	 * ThinkPHP 版本
+	 *
+	 * @return string
+	 */
+	function thinkphp_version(){
+		static $version = null;
+		
+		if(empty($version)){
+			if(const_exist('\think\App', 'VERSION')){
+				$version = "5.1";
+			}
+			
+			$version = "6.0";
+		}
+		
+		return $version;
+	}
+}
+
+if(!function_exists('thinkphp_is')){
+	/**
+	 * ThinkPHP版本号是否是指定版本
+	 *
+	 * @param string $version
+	 * @return bool
+	 */
+	function thinkphp_is($version){
+		$tVersion = thinkphp_version();
+		return $version == $tVersion;
+	}
+}
+
+if(!function_exists('thinkphp51_if')){
+	/**
+	 * 如果ThinkPHP版本是5.1执行第一个回调，如果不是执行第二个回调
+	 *
+	 * @param callable $resolve
+	 * @param callable $reject
+	 * @return mixed
+	 */
+	function thinkphp51_if($resolve, $reject = null){
+		if(thinkphp_is("5.1")){
+			return call_user_func($resolve);
+		}elseif($reject){
+			return call_user_func($reject);
+		}
+		
+		return null;
+	}
+}
+
+if(!function_exists('thinkphp60_if')){
+	/**
+	 * 如果ThinkPHP版本是6.0执行第一个回调，如果不是执行第二个回调
+	 *
+	 * @param callable $resolve
+	 * @param callable $reject
+	 * @return mixed|null
+	 */
+	function thinkphp60_if($resolve, $reject = null){
+		if(thinkphp_is("6.0")){
+			return call_user_func($resolve);
+		}elseif($reject){
+			return call_user_func($reject);
+		}
+		
+		return null;
+	}
+}
+
 if(!function_exists('event')){
 	/**
 	 * 监听行为
 	 *
-	 * @param string $tag
+	 * @param string $event
+	 * @param array  $params
 	 */
-	function listen($tag){
-		app('hook')->listen($tag);
+	function listen($event, $params = null){
+		if(is_object($event)){
+			$params = $event;
+			$event = get_class($event);
+		}
+		
+		app('hook')->listen($event, $params);
 	}
 }
 

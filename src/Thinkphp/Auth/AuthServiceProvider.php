@@ -43,6 +43,7 @@ class AuthServiceProvider extends ServiceProvider{
 		
 		if(Reflect::methodVisible($this->app, 'bindTo') === Reflect::VISIBLE_PUBLIC){
 			$this->app->bindTo('auth', $auth);
+			$this->app->bindTo(AuthFactory::class, $auth);
 		}else{
 			$this->app->bind([
 				'auth'             => $auth,

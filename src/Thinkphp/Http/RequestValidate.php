@@ -17,7 +17,7 @@ use think\Validate;
  * @mixin RequestOptimize
  */
 trait RequestValidate{
-
+	
 	/**
 	 * 验证数据
 	 *
@@ -32,42 +32,53 @@ trait RequestValidate{
 				'rules' => $validate,
 			];
 		}
-
+		
 		if(is_array($validate['rules'])){
-			$v = new Validate(
+			$v = new Validate();
+			//			$v = new Validate(
+			//				$validate['rules'],
+			//				isset($validate['message']) ? $validate['message'] : [],
+			//				isset($validate['field']) ? $validate['field'] : []
+			//			);
+			$v->rule(
 				$validate['rules'],
-				isset($validate['message']) ? $validate['message'] : [],
-				isset($validate['field']) ? $validate['field'] : []
+				isset($validate['fields']) ? $validate['fields'] : []
 			);
 		}else{
 			$validator = $validate['rules'];
 			if(strpos($validator, '.')){
 				// 支持场景
-				list($validator, $scene) = explode('.', $validator);
+				[$validator, $scene] = explode('.', $validator);
 			}
-
-			$appendSuffix = property_exists($this, 'appendValidateSuffix') ? $this->appendValidateSuffix : false;
-			$v = App::validate($validator, 'validate', $appendSuffix);
-			if(!empty($scene)){
+			
+			/** @var Validate $v */
+			$v = App::make($validator);
+			
+			if(isset($scene)){
 				$v->scene($scene);
 			}
-
-			if(isset($validate['message'])){
-				$v->message($validate['message']);
-			}
 		}
-
+		
+		if(isset($validate['messages'])){
+			$v->message($validate['messages']);
+		}
+		
 		// 是否批量验证
 		$v->batch($batch);
-
-		$data = $this->only($name);
+		
+		if(empty($name)){
+			$data = $this->param();
+		}else{
+			$data = $this->only($name);
+		}
+		
 		if(!$v->check($data)){
 			throw new ValidateException($v->getError());
 		}
-
+		
 		return $data;
 	}
-
+	
 	/**
 	 * 获取ID 列表
 	 *
@@ -79,10 +90,10 @@ trait RequestValidate{
 		if(empty($ids)){
 			throw new ValidateException("param {$field} invalid.");
 		}
-
+		
 		return $ids;
 	}
-
+	
 	/**
 	 * 获取ID并验证
 	 *
@@ -94,10 +105,10 @@ trait RequestValidate{
 		if($id < 1){
 			throw new ValidateException("param {$field} invalid.");
 		}
-
+		
 		return $id;
 	}
-
+	
 	/**
 	 * 获取整形数据并验证
 	 *
@@ -110,7 +121,7 @@ trait RequestValidate{
 		if(!in_array($int, $array)){
 			throw new ValidateException("param {$field} invalid.");
 		}
-
+		
 		return $int;
 	}
 }

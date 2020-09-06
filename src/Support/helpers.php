@@ -25,6 +25,19 @@ if(!function_exists('tap')){
 		return $value;
 	}
 }
+
+if(!function_exists('value')){
+	/**
+	 * Return the default value of the given value.
+	 *
+	 * @param mixed $value
+	 * @return mixed
+	 */
+	function value($value){
+		return $value instanceof Closure ? $value() : $value;
+	}
+}
+
 if(!function_exists('blank')){
 	/**
 	 * Determine if the given value is "blank".
@@ -50,17 +63,6 @@ if(!function_exists('blank')){
 		}
 		
 		return empty($value);
-	}
-}
-if(!function_exists('value')){
-	/**
-	 * Return the default value of the given value.
-	 *
-	 * @param mixed $value
-	 * @return mixed
-	 */
-	function value($value){
-		return $value instanceof Closure ? $value() : $value;
 	}
 }
 
@@ -116,6 +118,7 @@ if(!function_exists('build_mysql_distance_field')){
 		return "ROUND(6378.138*2*ASIN(SQRT(POW(SIN(({$latitude}*PI()/180-{$lat_name}*PI()/180)/2),2)+COS({$latitude}*PI()/180)*COS({$lat_name}*PI()/180)*POW(SIN(({$longitude}*PI()/180-{$lng_name}*PI()/180)/2),2)))*1000) AS {$as_name}";
 	}
 }
+
 if(!function_exists('analysis_words')){
 	/**
 	 * 关键字分词
@@ -152,5 +155,42 @@ if(!function_exists('build_keyword_sql')){
 		return array_map(function($item){
 			return "%{$item}%";
 		}, $keywords);
+	}
+}
+
+if(!function_exists('get_class_const_list')){
+	/**
+	 * 获取常量列表
+	 *
+	 * @param string $class
+	 * @return array|bool
+	 */
+	function get_class_const_list($class){
+		try{
+			$ref = new \ReflectionClass($class);
+			return $ref->getConstants();
+		}catch(\ReflectionException $e){
+		}
+		
+		return false;
+	}
+}
+
+if(!function_exists('const_exist')){
+	/**
+	 * 类常量是否存在
+	 *
+	 * @param string $class
+	 * @param string $name
+	 * @return bool
+	 */
+	function const_exist($class, $name){
+		try{
+			$ref = new \ReflectionClass($class);
+			return $ref->hasConstant($name);
+		}catch(\ReflectionException $e){
+		}
+		
+		return false;
 	}
 }

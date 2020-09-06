@@ -37,10 +37,8 @@ class ArrayMenu implements Menu{
 		$this->tree($options['rule'], $this->menus);
 		
 		$this->breads = array_reverse($this->breads);
+		array_pop($this->breads);
 		$this->breads = Arr::multiUnique($this->breads, 'name');
-		if(!empty($this->breads)){
-			array_pop($this->breads);
-		}
 		
 		return [
 			$this->menus,
@@ -80,7 +78,7 @@ class ArrayMenu implements Menu{
 			}
 			
 			if($menu['active'] && isset($menu['title']) && !empty($menu['title'])){
-				$breads[] = [
+				$this->breads[] = [
 					'name'  => $this->getFirstUrl($menu),
 					'title' => $menu['title'],
 				];
@@ -98,12 +96,12 @@ class ArrayMenu implements Menu{
 	 * @return string
 	 */
 	protected function getFirstUrl($menu){
-		if(isset($menu['name'])){
-			return $menu['name'];
-		}
-		
 		if(isset($menu['child']) && isset($menu['child'][0])){
 			return $this->getFirstUrl($menu['child'][0]);
+		}
+		
+		if(isset($menu['name'])){
+			return $menu['name'];
 		}
 		
 		return '';

@@ -6,7 +6,7 @@
  */
 namespace Xin\Auth\Events;
 
-class Login{
+class Logged{
 	
 	/**
 	 * The authentication guard name.

@@ -7,26 +7,30 @@
 
 namespace Xin\Thinkphp\Auth;
 
+use Xin\Auth\Events\Logged as LoginEvent;
+use Xin\Auth\Events\LoginFailed as LoginFailedEvent;
+use Xin\Auth\Events\Logout as LogoutEvent;
+
 trait EventHelpers{
 	
 	/**
 	 * @inheritDoc
 	 */
 	protected function fireLoginEvent($user, $remember = false){
-		// TODO: Implement fireLoginEvent() method.
+		$this->app->event(new LoginEvent($this, $user, $remember));
 	}
 	
 	/**
 	 * @inheritDoc
 	 */
 	protected function fireFailedEvent($user, array $credentials){
-		// TODO: Implement fireFailedEvent() method.
+		$this->app->event(new LoginFailedEvent($this, $user, $credentials));
 	}
 	
 	/**
 	 * @inheritDoc
 	 */
 	protected function fireLogoutEvent($user){
-		// TODO: Implement fireLogoutEvent() method.
+		$this->app->event(new LogoutEvent($this, $user));
 	}
 }
