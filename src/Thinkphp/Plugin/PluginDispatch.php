@@ -7,9 +7,7 @@
 
 namespace Xin\Thinkphp\Plugin;
 
-use think\facade\Route;
 use think\route\Dispatch;
-use Xin\Thinkphp\Plugin\Facade\Plugin;
 
 /**
  * Class PluginDispatch
@@ -26,7 +24,10 @@ class PluginDispatch extends Dispatch{
 		$controller = $this->param['controller'];
 		$action = $this->param['action'];
 		
-		return Plugin::invokeAction(
+		/** @var \Xin\Thinkphp\Plugin\PluginManager $pluginManager */
+		$pluginManager = $this->app->get('PlugManager');
+		
+		return $pluginManager->invoke(
 			$this->request,
 			$plugin,
 			$controller,
@@ -34,10 +35,4 @@ class PluginDispatch extends Dispatch{
 		);
 	}
 	
-	/**
-	 * 路由到自定义调度对象
-	 */
-	public static function routes(){
-		Route::get('plugin/:plugin/:controller/:action', static::class);
-	}
 }

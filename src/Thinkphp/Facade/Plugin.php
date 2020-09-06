@@ -7,6 +7,8 @@
 namespace Xin\Thinkphp\Facade;
 
 use think\Facade;
+use think\facade\Route;
+use Xin\Thinkphp\Plugin\PluginDispatch;
 
 /**
  * Class Plugin
@@ -14,7 +16,7 @@ use think\Facade;
  * @method string path($plugin) static
  * @method string classPath($plugin) static
  * @method string controllerPath($plugin, $controller, $layer = 'controller') static
- * @method static invokeAction(\think\Request $request, $plugin, $controller, $action)
+ * @method mixed invoke(\think\Request $request, $plugin, $controller, $action) static
  */
 class Plugin extends Facade{
 	
@@ -26,5 +28,12 @@ class Plugin extends Facade{
 	 */
 	protected static function getFacadeClass(){
 		return 'PlugManager';
+	}
+	
+	/**
+	 * 路由到自定义调度对象
+	 */
+	public static function routes(){
+		Route::get('plugin/:plugin/:controller/:action', PluginDispatch::class);
 	}
 }

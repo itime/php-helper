@@ -11,6 +11,7 @@ use think\App;
 use think\exception\HttpException;
 use think\helper\Str;
 use think\Request;
+use Xin\Support\Arr;
 
 class PluginManager{
 	
@@ -20,12 +21,19 @@ class PluginManager{
 	protected $app;
 	
 	/**
+	 * @var array
+	 */
+	protected $config;
+	
+	/**
 	 * PluginManager constructor.
 	 *
 	 * @param \think\App $app
+	 * @param array      $config
 	 */
-	public function __construct(App $app){
+	public function __construct(App $app, array $config){
 		$this->app = $app;
+		$this->config = $config;
 	}
 	
 	/**
@@ -81,14 +89,15 @@ class PluginManager{
 	 * @param string                                            $action
 	 * @return mixed
 	 */
-	public function invokeAction(Request $request, $plugin, $controller, $action){
+	public function invoke(Request $request, $plugin, $controller, $action){
 		if(!$this->has($plugin)){
 			throw new HttpException(404, "plugin {$plugin} not exist.");
 		}
 		
 		$appName = $this->app->http->getName();
+		
 		$controllerLayer = 'controller';
-		if($appName != 'index'){
+		if($appName != $this->getDefaultAppName()){
 			$controllerLayer = "{$appName}controller";
 		}
 		
@@ -104,4 +113,12 @@ class PluginManager{
 		return $this->app->invoke([$class, $action]);
 	}
 	
+	/**
+	 * 默认的应用名称
+	 *
+	 * @return string
+	 */
+	public function getDefaultAppName(){
+		return Arr::get($this->config, 'default.app_name', 'admin');
+	}
 }

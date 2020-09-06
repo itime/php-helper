@@ -15,6 +15,8 @@ class PluginServiceProvider extends ServiceProvider{
 	 * 注册插件管理器
 	 */
 	public function register(){
-		$this->app->bind("PlugManager", PluginManager::class);
+		$this->app->bind("PlugManager", function($app){
+			return new PluginManager($app, config('plugin'));
+		});
 	}
 }

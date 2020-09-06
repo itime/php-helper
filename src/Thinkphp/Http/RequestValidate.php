@@ -8,7 +8,6 @@
 namespace Xin\Thinkphp\Http;
 
 use think\exception\ValidateException;
-use think\facade\App;
 use think\Validate;
 
 /**
@@ -35,11 +34,6 @@ trait RequestValidate{
 		
 		if(is_array($validate['rules'])){
 			$v = new Validate();
-			//			$v = new Validate(
-			//				$validate['rules'],
-			//				isset($validate['message']) ? $validate['message'] : [],
-			//				isset($validate['field']) ? $validate['field'] : []
-			//			);
 			$v->rule(
 				$validate['rules'],
 				isset($validate['fields']) ? $validate['fields'] : []
@@ -52,7 +46,7 @@ trait RequestValidate{
 			}
 			
 			/** @var Validate $v */
-			$v = App::make($validator);
+			$v = app($validator);
 			
 			if(isset($scene)){
 				$v->scene($scene);

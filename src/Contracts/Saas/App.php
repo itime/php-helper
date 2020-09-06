@@ -7,9 +7,6 @@
 
 namespace Xin\Contracts\Saas;
 
-/**
- * Interface App
- */
 interface App{
 	
 	/**
