@@ -9,11 +9,10 @@ namespace Xin\Thinkphp\Plugin;
 
 use think\App;
 use think\exception\HttpException;
-use think\helper\Str;
-use Xin\Contracts\Plugin\Factory as PluginFactory;
+use Xin\Plugin\AbstractPluginManager;
 use Xin\Support\Arr;
 
-class PluginManager implements PluginFactory{
+class PluginManager extends AbstractPluginManager{
 	
 	/**
 	 * @var \think\App
@@ -32,85 +31,9 @@ class PluginManager implements PluginFactory{
 	 * @param array      $config
 	 */
 	public function __construct(App $app, array $config){
+		parent::__construct($config);
+		
 		$this->app = $app;
-		$this->config = $config;
-	}
-	
-	/**
-	 * @inheritDoc
-	 */
-	public function has($plugin){
-		return class_exists($this->pluginClass($plugin, "Plugin"));
-	}
-	
-	/**
-	 * @inheritDoc
-	 */
-	public function lists(){
-		$it = new \FilesystemIterator($this->rootPath());
-		
-		$plugins = [];
-		foreach($it as $file){
-			if(!$file->isDir()){
-				continue;
-			}
-			
-			$name = $file->getFilename();
-			if(!$this->has($name)){
-				continue;
-			}
-			
-			$plugins[$name] = $this->pluginClass($name, "Plugin");
-		}
-		
-		return new PlugLazyCollection($this, $plugins);
-	}
-	
-	/**
-	 * @inheritDoc
-	 */
-	public function boot(){
-		$plugins = $this->lists();
-		foreach($plugins as $plugin){
-			$pluginClass = $this->pluginClass($plugin, "Plugin");
-			if(!class_exists($pluginClass)){
-				continue;
-			}
-			
-			$this->plugin($plugin)->boot();
-		}
-	}
-	
-	/**
-	 * @inheritDoc
-	 */
-	public function plugin($plugin){
-		$class = $this->pluginClass($plugin, "Plugin");
-		if(!class_exists($class)){
-			throw new PluginNotFoundException($plugin);
-		}
-		
-		return new $class();
-	}
-	
-	/**
-	 * @inheritDoc
-	 */
-	public function pluginClass($plugin, $class){
-		return "\\".$this->rootNamespace()."\\{$plugin}\\{$class}";
-	}
-	
-	/**
-	 * 获取插件下的控制器路径
-	 *
-	 * @param string $plugin
-	 * @param string $controller
-	 * @param string $layer
-	 * @return string
-	 */
-	public function controllerClass($plugin, $controller, $layer = 'controller'){
-		$controller = Str::studly($controller);
-		return $this->pluginClass($plugin, "{$layer}\\{$controller}Controller");
 	}
 	
 	/**
@@ -138,29 +61,6 @@ class PluginManager implements PluginFactory{
 		$request->setAction($action);
 		
 		return $this->app->invoke([$class, $action]);
-	}
-	
-	/**
-	 * @inheritDoc
-	 */
-	public function rootPath($path = ''){
-		return $this->config['path'].($path ? $path.DIRECTORY_SEPARATOR : $path);
-	}
-	
-	/**
-	 * @inheritDoc
-	 */
-	public function path($plugin){
-		return $this->rootPath($plugin);
-	}
-	
-	/**
-	 * 默认命名空间
-	 *
-	 * @return string
-	 */
-	public function rootNamespace(){
-		return Arr::get($this->config, 'namespace', 'plugin');
 	}
 	
 	/**

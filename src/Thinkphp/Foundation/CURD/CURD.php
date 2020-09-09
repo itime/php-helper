@@ -45,12 +45,19 @@ class CURD{
 	protected $hint;
 	
 	/**
+	 * @var mixed
+	 */
+	protected $controller;
+	
+	/**
 	 * CURD constructor.
 	 *
 	 * @param \think\App $app
+	 * @param mixed      $controller
 	 */
-	public function __construct(\think\App $app){
+	public function __construct(\think\App $app, $controller){
 		$this->app = $app;
+		$this->controller = $this->resolveController($controller);
 		
 		$this->request = $app['request'];
 		$this->view = $app['view'];
@@ -401,7 +408,7 @@ class CURD{
 	 *
 	 * @return string
 	 */
-	private function getClassName(){
+	protected function getClassName(){
 		$class = explode('\\', get_class($this));
 		$class = end($class);
 		$class = substr($class, 0, strpos($class, "Controller"));
@@ -415,7 +422,7 @@ class CURD{
 	 * @param array $vars
 	 * @throws \ReflectionException
 	 */
-	private function invokeMethod($method, $vars = []){
+	protected function invokeMethod($method, $vars = []){
 		if(!method_exists($this, $method)){
 			return;
 		}
@@ -423,5 +430,13 @@ class CURD{
 		$reflect = new \ReflectionMethod($this, $method);
 		$reflect->setAccessible(true);
 		$this->app->invokeReflectMethod($this, $reflect, $vars);
+	}
+	
+	protected function resolveController($controller){
+		if(is_string($controller)){
+			$controller = $this->app->make($controller);
+		}
+		
+		return $controller;
 	}
 }

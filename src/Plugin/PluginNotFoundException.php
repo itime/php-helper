@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Plugin;
+namespace Xin\Plugin;
 
 use Throwable;
 use Xin\Contracts\Plugin\PluginNotFoundException as PluginNotFoundExceptionContract;

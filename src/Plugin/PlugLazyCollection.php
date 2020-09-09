@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Plugin;
+namespace Xin\Plugin;
 
 use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Contracts\Plugin\PlugLazyCollection as PlugLazyCollectionContract;
@@ -48,12 +48,10 @@ class PlugLazyCollection implements \ArrayAccess, PlugLazyCollectionContract{
 	 *
 	 * @param string $offset
 	 * @return \Xin\Contracts\Plugin\Plugin
-	 * @throws \Xin\Thinkphp\Plugin\PluginNotFoundException
+	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
 	public function offsetGet($offset){
-		return $this->resolve(
-			$this->plugins[$offset]
-		);
+		return $this->plugin($offset);
 	}
 	
 	/**

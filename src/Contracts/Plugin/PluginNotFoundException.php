@@ -5,8 +5,8 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Alipay;
+namespace Xin\Contracts\Plugin;
 
-class AlipayResponseLogicException extends AlipayException{
-
+interface PluginNotFoundException{
+	
 }

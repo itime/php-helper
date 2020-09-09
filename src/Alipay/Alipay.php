@@ -126,7 +126,7 @@ class Alipay{
 		if(isset($response->error_response)){
 			$response = $response->error_response;
 			$errorMsg = $response->msg.($response->sub_msg ? '('.$response->sub_msg.')' : '');
-			throw new AlipayResponseLogicException($errorMsg, $response->code, $response);
+			throw new AlipayResponseException($errorMsg, $response->code, $response);
 		}
 		
 		$response = $response->$responseNode;
@@ -137,7 +137,7 @@ class Alipay{
 		
 		if(isset($response->code) && $response->code != 10000){
 			$errorMsg = $response->msg.($response->sub_msg ? '('.$response->sub_msg.')' : '');
-			throw new AlipayResponseLogicException($errorMsg, $response->code, $response);
+			throw new AlipayResponseException($errorMsg, $response->code, $response);
 		}
 		
 		return (array)$response;
