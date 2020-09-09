@@ -61,7 +61,7 @@ abstract class AbstractPluginManager implements PluginFactory{
 	 * @inheritDoc
 	 */
 	public function boot(){
-		$plugins = $this->lists();
+		$plugins = $this->lists()->lists();
 		foreach($plugins as $plugin){
 			$pluginClass = $this->pluginClass($plugin, "Plugin");
 			if(!class_exists($pluginClass)){

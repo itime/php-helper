@@ -17,7 +17,16 @@ class PluginServiceProvider extends ServiceProvider{
 	 * 注册插件管理器
 	 */
 	public function register(){
-		$this->app->bind("PlugManager", PluginFactory::class);
+		$this->registerPluginManager();
+		
+		$this->registerMiddleware();
+	}
+	
+	/**
+	 * 注册插件管理器
+	 */
+	protected function registerPluginManager(){
+		$this->app->bind("PluginManager", PluginFactory::class);
 		$this->app->bind(PluginFactory::class, function(App $app){
 			return new PluginManager($app, array_merge([
 				'default' => [
@@ -27,6 +36,21 @@ class PluginServiceProvider extends ServiceProvider{
 				'namespace' => 'plugin',
 				'path'      => root_path('plugin'),
 			], config('plugin')));
+		});
+	}
+	
+	/**
+	 * 注册中间件
+	 */
+	protected function registerMiddleware(){
+		$this->app->event->listen('HttpRun', function(){
+			$this->app->middleware->add(function($request, \Closure $next){
+				/** @var PluginFactory $pm */
+				$pm = $this->app['PluginManager'];
+				$pm->boot();
+				
+				return $next($request);
+			});
 		});
 	}
 }

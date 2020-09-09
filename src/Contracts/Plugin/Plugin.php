@@ -27,6 +27,14 @@ interface Plugin{
 	public function getExtraConfig($name);
 	
 	/**
+	 * 当前插件路径
+	 *
+	 * @param string $path
+	 * @return string
+	 */
+	public function pluginPath($path = '');
+	
+	/**
 	 * 插件安装
 	 *
 	 * @return boolean

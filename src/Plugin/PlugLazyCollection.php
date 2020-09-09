@@ -80,7 +80,10 @@ class PlugLazyCollection implements \ArrayAccess, PlugLazyCollectionContract{
 		return $this->factory->plugin($plugin);
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public function lists(){
-		// TODO: Implement lists() method.
+		return array_keys($this->plugins);
 	}
 }

@@ -48,7 +48,7 @@ interface Factory{
 	/**
 	 * 插件列表
 	 *
-	 * @return array
+	 * @return \Xin\Contracts\Plugin\PlugLazyCollection
 	 */
 	public function lists();
 	

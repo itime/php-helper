@@ -19,6 +19,8 @@ interface PlugLazyCollection{
 	public function plugin($plugin);
 	
 	/**
+	 * 获取列表
+	 *
 	 * @return array
 	 */
 	public function lists();
