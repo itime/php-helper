@@ -10,10 +10,10 @@ namespace Xin\Thinkphp\Plugin;
 use think\App;
 use think\exception\HttpException;
 use think\helper\Str;
-use think\Request;
+use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Support\Arr;
 
-class PluginManager{
+class PluginManager implements PluginFactory{
 	
 	/**
 	 * @var \think\App
@@ -37,34 +37,67 @@ class PluginManager{
 	}
 	
 	/**
-	 * 插件是否存在
-	 *
-	 * @param string $plugin
-	 * @return bool
+	 * @inheritDoc
 	 */
 	public function has($plugin){
-		$path = $this->path($plugin);
-		return is_dir($path);
+		return class_exists($this->pluginClass($plugin, "Plugin"));
 	}
 	
 	/**
-	 * 获取插件目录
-	 *
-	 * @param string $plugin
-	 * @return string
+	 * @inheritDoc
 	 */
-	public function path($plugin){
-		return root_path("plugin".DIRECTORY_SEPARATOR.$plugin);
+	public function lists(){
+		$it = new \FilesystemIterator($this->rootPath());
+		
+		$plugins = [];
+		foreach($it as $file){
+			if(!$file->isDir()){
+				continue;
+			}
+			
+			$name = $file->getFilename();
+			if(!$this->has($name)){
+				continue;
+			}
+			
+			$plugins[$name] = $this->pluginClass($name, "Plugin");
+		}
+		
+		return new PlugLazyCollection($this, $plugins);
 	}
 	
 	/**
-	 * 获取插件下的类路径
-	 *
-	 * @param string $classPath
-	 * @return string
+	 * @inheritDoc
 	 */
-	public function classPath($classPath){
-		return "\\plugin\\{$classPath}";
+	public function boot(){
+		$plugins = $this->lists();
+		foreach($plugins as $plugin){
+			$pluginClass = $this->pluginClass($plugin, "Plugin");
+			if(!class_exists($pluginClass)){
+				continue;
+			}
+			
+			$this->plugin($plugin)->boot();
+		}
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function plugin($plugin){
+		$class = $this->pluginClass($plugin, "Plugin");
+		if(!class_exists($class)){
+			throw new PluginNotFoundException($plugin);
+		}
+		
+		return new $class();
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function pluginClass($plugin, $class){
+		return "\\".$this->rootNamespace()."\\{$plugin}\\{$class}";
 	}
 	
 	/**
@@ -75,21 +108,15 @@ class PluginManager{
 	 * @param string $layer
 	 * @return string
 	 */
-	public function controllerPath($plugin, $controller, $layer = 'controller'){
+	public function controllerClass($plugin, $controller, $layer = 'controller'){
 		$controller = Str::studly($controller);
-		return $this->classPath("{$plugin}\\{$layer}\\{$controller}Controller");
+		return $this->pluginClass($plugin, "{$layer}\\{$controller}Controller");
 	}
 	
 	/**
-	 * 调用插件操作
-	 *
-	 * @param \think\Request|\Xin\Thinkphp\Http\RequestOptimize $request
-	 * @param string                                            $plugin
-	 * @param string                                            $controller
-	 * @param string                                            $action
-	 * @return mixed
+	 * @inheritDoc
 	 */
-	public function invoke(Request $request, $plugin, $controller, $action){
+	public function invoke($request, $plugin, $controller, $action){
 		if(!$this->has($plugin)){
 			throw new HttpException(404, "plugin {$plugin} not exist.");
 		}
@@ -101,7 +128,7 @@ class PluginManager{
 			$controllerLayer = "{$appName}controller";
 		}
 		
-		$class = $this->controllerPath($plugin, $controller, $controllerLayer);
+		$class = $this->controllerClass($plugin, $controller, $controllerLayer);
 		if(!class_exists($class)){
 			throw new HttpException(404, "controller {$class} not exist.");
 		}
@@ -114,6 +141,29 @@ class PluginManager{
 	}
 	
 	/**
+	 * @inheritDoc
+	 */
+	public function rootPath($path = ''){
+		return $this->config['path'].($path ? $path.DIRECTORY_SEPARATOR : $path);
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function path($plugin){
+		return $this->rootPath($plugin);
+	}
+	
+	/**
+	 * 默认命名空间
+	 *
+	 * @return string
+	 */
+	public function rootNamespace(){
+		return Arr::get($this->config, 'namespace', 'plugin');
+	}
+	
+	/**
 	 * 默认的应用名称
 	 *
 	 * @return string
@@ -121,4 +171,5 @@ class PluginManager{
 	public function getDefaultAppName(){
 		return Arr::get($this->config, 'default.app_name', 'admin');
 	}
+	
 }
