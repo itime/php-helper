@@ -13,10 +13,14 @@ use Xin\Thinkphp\Plugin\PluginDispatch;
 /**
  * Class Plugin
  * @method bool has($plugin) static
- * @method string path($plugin) static
- * @method string classPath($plugin) static
- * @method string controllerPath($plugin, $controller, $layer = 'controller') static
+ * @method \Xin\Contracts\Plugin\Plugin plugin($plugin) static
+ * @method string pluginClass($plugin) static
+ * @method string controllerClass($plugin, $controller, $layer = 'controller') static
  * @method mixed invoke(\think\Request $request, $plugin, $controller, $action) static
+ * @method \Xin\Contracts\Plugin\PlugLazyCollection lists() static
+ * @method void boot() static
+ * @method string rootPath($path = '') static
+ * @method string path($path = '') static
  */
 class Plugin extends Facade{
 	

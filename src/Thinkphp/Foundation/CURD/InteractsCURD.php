@@ -7,33 +7,333 @@
 
 namespace Xin\Thinkphp\Foundation\CURD;
 
+use think\exception\HttpException;
+use Xin\Support\Str;
+use Xin\Thinkphp\Facade\Hint;
+
+/**
+ * @property-read \think\Request|\Xin\Thinkphp\Http\RequestValidate $request
+ * @property-read \think\View                                       $view
+ */
 trait InteractsCURD{
 	
-	/**
-	 * @var \Xin\Thinkphp\Foundation\CURD\CURD
-	 */
-	protected $curd = null;
+	use Attribute;
 	
 	/**
-	 * @param string $name
-	 * @param array  $arguments
-	 * @return mixed
+	 * 显示数据列表视图
+	 *
+	 * @param mixed $data
+	 * @return string
+	 * @throws \Exception
 	 */
-	public function __call($name, $arguments){
-		return call_user_func_array([
-			$this->curd(),
-			$name,
-		], $arguments);
+	protected function showListView($data){
+		$this->view->assign('data', $data);
+		
+		return $this->view->fetch($this->property('listTpl', 'index'));
 	}
 	
 	/**
-	 * @return \Xin\Thinkphp\Foundation\CURD\CURD
+	 * 数据列表
+	 *
+	 * @return mixed
+	 * @throws \think\db\exception\DbException
 	 */
-	protected function curd(){
-		if($this->curd === null){
-			$this->curd = new CURD(app(), static::class);
+	public function index(){
+		$data = $this->model()::order('id desc')->paginate(
+			$this->request->limit(), false, [
+			'page'  => $this->request->page(),
+			'query' => $this->request->get(),
+		]);
+		
+		return $this->showListView($data);
+	}
+	
+	/**
+	 * 显示创建视图
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	protected function showCreateView(){
+		return $this->view->fetch($this->property('createTpl', 'edit'));
+	}
+	
+	/**
+	 * 数据创建之前回调
+	 *
+	 * @param \think\Model $model
+	 * @param array        $data
+	 * @return array
+	 */
+	protected function beforeCreate($model, $data){
+		return $data;
+	}
+	
+	/**
+	 * 数据创建之后回调
+	 *
+	 * @param \think\Model $model
+	 * @param array        $data
+	 */
+	protected function afterCreate($model, $data){
+	}
+	
+	/**
+	 * 添加行为
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function create(){
+		if($this->request->isGet()){
+			return $this->showCreateView();
 		}
 		
-		return $this->curd;
+		$data = $this->request->param();
+		$this->validateData($data, 'create');
+		
+		$model = $this->model();
+		$data = $this->beforeCreate($model, $data);
+		
+		if($model->allowField([])->save($data) === false){
+			return Hint::error("添加失败！");
+		}
+		
+		$this->afterCreate($model, $data);
+		
+		return Hint::success("添加成功！", $this->jumpUrl('index'));
 	}
+	
+	/**
+	 * 显示查看详情视图
+	 *
+	 * @param \think\Model $model
+	 * @return string
+	 * @throws \Exception
+	 */
+	protected function showDetailView($model){
+		$this->view->assign('info', $model);
+		
+		return $this->view->fetch($this->property('detailTpl', 'edit'));
+	}
+	
+	/**
+	 * 查看详情
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function show(){
+		$model = $this->findIsEmptyAssert();
+		
+		return $this->showDetailView($model);
+	}
+	
+	/**
+	 * 显示更新视图
+	 *
+	 * @param \think\Model $model
+	 * @return string
+	 * @throws \Exception
+	 */
+	protected function showUpdateView($model){
+		$this->view->assign('info', $model);
+		return $this->view->fetch($this->property('updateTpl', 'edit'));
+	}
+	
+	/**
+	 * 数据更新之前回调
+	 *
+	 * @param \think\Model $model
+	 * @param array        $data
+	 * @return array
+	 */
+	protected function beforeUpdate($model, $data){
+		return $data;
+	}
+	
+	/**
+	 * 数据更新之后回调
+	 *
+	 * @param \think\Model $model
+	 * @param array        $data
+	 */
+	protected function afterUpdate($model, $data){
+	}
+	
+	/**
+	 * 更新行为
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function update(){
+		$model = $this->findIsEmptyAssert();
+		
+		if($this->request->isGet()){
+			return $this->showUpdateView($model);
+		}
+		
+		$data = $this->request->param();
+		$this->validateData($data, 'update');
+		
+		$data = $this->beforeUpdate($model, $data);
+		if($model->allowField([])->save($data) === false){
+			return Hint::error("更新失败！");
+		}
+		$this->afterUpdate($model, $data);
+		
+		return Hint::success("更新成功！", $this->jumpUrl('index'));
+	}
+	
+	/**
+	 * 是否允许设置字段
+	 *
+	 * @param string $field
+	 * @return bool
+	 */
+	protected function isAllowField($field){
+		$allowFields = $this->property('allowFields', ['status']);
+		return in_array($field, $allowFields);
+	}
+	
+	/**
+	 * 数据设置之前回调
+	 *
+	 * @param array  $ids
+	 * @param string $field
+	 * @param mixed  $value
+	 * @return mixed
+	 */
+	protected function beforeSetField(&$ids, $field, $value){
+		return $value;
+	}
+	
+	/**
+	 * 数据设置之后回调
+	 *
+	 * @param array  $ids
+	 * @param string $field
+	 * @param mixed  $value
+	 */
+	protected function afterSetField($ids, $field, $value){
+	}
+	
+	/**
+	 * 设置字段值
+	 *
+	 * @param string $field
+	 * @return \think\Response
+	 * @throws \think\db\exception\DbException
+	 */
+	public function setFieldValue($field){
+		if(!$this->isAllowField($field)){
+			throw new HttpException(403, "{$field} not in allow field list.");
+		}
+		
+		$ids = $this->request->idsWithValid();
+		$value = $this->request->param("{$field}/d");
+		
+		$valueCondition = $this->property("{$field}Condition", [0, 1]);
+		if(!in_array($value, $valueCondition)){
+			return Hint::error("参数错误[param {$field} invalid]！");
+		}
+		
+		$this->beforeSetField($ids, $field, $value);
+		
+		$fieldStudly = Str::studly($field);
+		$this->invokeMethod("beforeSet{$fieldStudly}", [$ids, $value]);
+		if($this->model()::update([
+				$field => $value,
+			], [
+				['id', 'IN', $ids],
+			]) === false){
+			return Hint::error("更新失败！");
+		}
+		
+		$this->afterSetField($ids, $field, $value);
+		$this->invokeMethod("afterSet{$fieldStudly}", [$ids, $value]);
+		
+		return Hint::success("更新成功！", $this->jumpUrl('index'));
+	}
+	
+	/**
+	 * 数据删除之前操作
+	 *
+	 * @param array $ids
+	 */
+	protected function beforeDelete($ids){
+	}
+	
+	/**
+	 * 数据删除之后操作
+	 *
+	 * @param array $ids
+	 */
+	protected function afterDelete($ids){
+	}
+	
+	/**
+	 * 删除数据
+	 *
+	 * @return mixed
+	 * @throws \think\db\exception\DbException
+	 */
+	public function delete(){
+		$ids = $this->request->idsWithValid();
+		$force = $this->request->param('force/d', 0);
+		
+		$this->beforeDelete($ids);
+		
+		$model = $this->model();
+		
+		$allowForceDelete = $this->property('allowForceDelete', false);
+		if($allowForceDelete && $force){
+			/** @var \think\db\BaseQuery $query */
+			$query = call_user_func([$model, 'withTrashed']);
+			
+			if($query->where('id', 'in', $ids)->delete(true) === false){
+				return Hint::error("删除失败！");
+			}
+		}else{
+			if($model instanceof \think\Model){
+				$flag = $model::destroy($ids);
+			}else{
+				$flag = $model->delete($ids);
+			}
+			
+			if($flag === false){
+				return Hint::error("删除失败！");
+			}
+		}
+		
+		$this->afterDelete($ids);
+		
+		return Hint::success("删除成功！");
+	}
+	
+	/**
+	 * 根据id获取数据，如果为空将中断执行
+	 *
+	 * @param int $id
+	 * @return array|string|\think\Model
+	 */
+	protected function findIsEmptyAssert($id = null){
+		if(is_null($id)){
+			$id = $this->request->idWithValid();
+		}
+		
+		return $this->model()->findOrFail($id);
+	}
+	
+	/**
+	 * 跳转地址
+	 *
+	 * @param mixed $default
+	 * @return mixed
+	 */
+	protected function jumpUrl($default){
+		return $this->request->param("http_referer", 'index') ?: $default;
+	}
+	
 }

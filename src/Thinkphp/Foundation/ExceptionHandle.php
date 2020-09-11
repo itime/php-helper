@@ -78,6 +78,11 @@ class ExceptionHandle extends Handle{
 			return Hint::error($e->getMessage(), 400);
 		}elseif($e instanceof AuthenticationException){
 			return $this->authenticationHandle($e);
+		}elseif($e instanceof ModelNotFoundException){
+			$title = get_const_value($e->getModel(), 'TITLE');
+			$e = new HttpException(404, ($title ?: '数据')."不存在！");
+		}elseif($e instanceof DataNotFoundException){
+			$e = new HttpException(404, "数据不存在！");
 		}
 		
 		// 其他错误交给系统处理
@@ -170,33 +175,4 @@ class ExceptionHandle extends Handle{
 			|| $this->app->request->isJson();
 	}
 	
-	//	/**
-	//	 * 错误输出
-	//	 *
-	//	 * @param \Exception $e
-	//	 * @return Response
-	//	 */
-	//	private function hint(\Exception $e){
-	//		$url = 'javascript:history.back(-1);';
-	//
-	//		$code = $e->getCode();
-	//		if($code == 0 && $e instanceof ValidateException){
-	//			$code = 400;
-	//		}
-	//
-	//		$msg = $e->getMessage();
-	//
-	//		$result = [
-	//			'code' => $code,
-	//			'msg'  => $msg,
-	//			'data' => [],
-	//			'url'  => $url,
-	//			'wait' => 3,
-	//			'time' => Request::time(),
-	//		];
-	//
-	//		return Response::create($result, 'jump')->options([
-	//			'jump_template' => Config::get('dispatch_error_tmpl'),
-	//		]);
-	//	}
 }

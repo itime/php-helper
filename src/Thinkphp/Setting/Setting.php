@@ -23,33 +23,35 @@ use think\Model;
  * @property int    group
  */
 class Setting extends Model{
-
+	
 	/**
 	 * 配置缓存键名
 	 */
 	const CONFIG_KEY = '__CONFIG__';
-
+	
 	/**
 	 * 禁止写入创建时间
 	 *
 	 * @var bool
 	 */
 	protected $createTime = false;
-
+	
 	/**
 	 * 禁止写入更新时间
 	 *
 	 * @var bool
 	 */
 	protected $updateTime = false;
-
+	
 	/**
 	 * 插入数据自动完成
 	 *
 	 * @var array
 	 */
-	protected $insert = ['status' => 1];
-
+	protected $insert = [
+		'status' => 1,
+	];
+	
 	/**
 	 * 模型初始化
 	 */
@@ -60,14 +62,14 @@ class Setting extends Model{
 		self::afterWrite($callback);
 		self::afterDelete($callback);
 	}
-
+	
 	/**
 	 * 更新缓存
 	 */
 	private static function updateCache(){
 		Cache::rm(self::CONFIG_KEY);
 	}
-
+	
 	/**
 	 * 加载数据库设置信息
 	 *
@@ -90,18 +92,18 @@ class Setting extends Model{
 			}
 			self::updateCache();
 		}
-
+		
 		$data = self::field('type,name,value')->cache(self::CONFIG_KEY)->where('status', 1)->select();
-
+		
 		$settings = [];
 		foreach($data as $key => $item){
 			$settings[$item['name']] = $item->value;
 			unset($data[$key]);
 		}
-
+		
 		return $settings;
 	}
-
+	
 	/**
 	 * 获取分组
 	 *
@@ -109,11 +111,18 @@ class Setting extends Model{
 	 */
 	public static function getGroup(){
 		$groups = Config::get('web.config_group_list');
-		if(empty($groups)) throw new \RuntimeException("请手动配置 settings 数据表 ‘config_group_list’标识");
-		if(!is_array($groups)) throw new \RuntimeException('获取配置分组数据格式异常！');
+		
+		if(empty($groups)){
+			throw new \RuntimeException("请手动配置 settings 数据表 ‘config_group_list’标识");
+		}
+		
+		if(!is_array($groups)){
+			throw new \RuntimeException('获取配置分组数据格式异常！');
+		}
+		
 		return $groups;
 	}
-
+	
 	/**
 	 * 获取扩展配置信息
 	 *
@@ -123,7 +132,7 @@ class Setting extends Model{
 	protected function getExtraAttr($string){
 		return self::parseValue2Array($string);
 	}
-
+	
 	/**
 	 * 解析配置值字符串为数字
 	 *
@@ -135,16 +144,16 @@ class Setting extends Model{
 		if(strpos($string, ':')){
 			$value = [];
 			foreach($array as $val){
-				list($k, $v) = explode(':', $val);
+				[$k, $v] = explode(':', $val);
 				$value[$k] = $v;
 			}
 		}else{
 			$value = $array;
 		}
-
+		
 		return $value;
 	}
-
+	
 	/**
 	 * 获取数据类型
 	 *
@@ -153,15 +162,15 @@ class Setting extends Model{
 	 */
 	protected function getTypeTextAttr(){
 		$types = Config::get('web.config_type_list');
-
+		
 		if(empty($types)){
 			throw new NotConfigureException("请手动配置数据库settings数据表 ‘config_type_list’ 标识。");
 		}
-
+		
 		$type = $this->getData('type');
 		return isset($types[$type]) ? $types[$type] : "无";
 	}
-
+	
 	/**
 	 * 获取数据分组
 	 *
@@ -170,16 +179,16 @@ class Setting extends Model{
 	 */
 	protected function getGroupTextAttr(){
 		$groups = Config::get('web.config_group_list');
-
+		
 		if(empty($groups)){
 			throw new NotConfigureException(
 				"请手动配置数据库settings数据表 ‘config_group_list’ 标识"
 			);
 		}
-
+		
 		return isset($groups[$this->group]) ? $groups[$this->group] : "无";
 	}
-
+	
 	/**
 	 * 根据配置类型解析配置
 	 *
@@ -193,5 +202,5 @@ class Setting extends Model{
 		}
 		return $val;
 	}
-
+	
 }

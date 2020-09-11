@@ -8,10 +8,10 @@
 namespace Xin\Thinkphp\Setting;
 
 use think\facade\Config;
-use Xin\Thinkphp\provider\ServiceProvider;
+use Xin\Thinkphp\Foundation\ServiceProvider;
 
 class SettingServiceProvider extends ServiceProvider{
-
+	
 	/**
 	 * @inheritDoc
 	 */
@@ -22,5 +22,5 @@ class SettingServiceProvider extends ServiceProvider{
 			'web' => $settings,
 		]);
 	}
-
+	
 }
