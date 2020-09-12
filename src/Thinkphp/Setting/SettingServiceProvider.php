@@ -7,8 +7,11 @@
 
 namespace Xin\Thinkphp\Setting;
 
-use think\facade\Config;
+use think\Console;
 use Xin\Thinkphp\Foundation\ServiceProvider;
+use Xin\Thinkphp\Setting\Command\Clear;
+use Xin\Thinkphp\Setting\Command\Show;
+use Xin\Thinkphp\Setting\Command\Update;
 
 class SettingServiceProvider extends ServiceProvider{
 	
@@ -16,11 +19,22 @@ class SettingServiceProvider extends ServiceProvider{
 	 * @inheritDoc
 	 */
 	public function register(){
-		//注入配置信息
-		$settings = Setting::load();
-		Config::set([
-			'web' => $settings,
-		]);
+		Console::starting(function(Console $console){
+			$console->addCommands([
+				Show::class,
+				Clear::class,
+				Update::class,
+			]);
+		});
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function boot(){
+		$this->app->config->set(
+			Setting::load()
+		);
 	}
 	
 }

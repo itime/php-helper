@@ -168,4 +168,20 @@ trait RequestOptimize{
 	public function appName(){
 		return App::getInstance()->get('http')->getName();
 	}
+	
+	/**
+	 * 前进地址
+	 *
+	 * @param mixed $default
+	 * @return string
+	 */
+	public function forwardUrl($default = ''){
+		$referer = $this->param("http_referer", '');
+		
+		if(empty($referer)){
+			$referer = $this->server('HTTP_REFERER');
+		}
+		
+		return $referer ?: (string)$default;
+	}
 }

@@ -8,7 +8,6 @@
 namespace Xin\Menu;
 
 use Xin\Contracts\Menu\Menu;
-use Xin\Support\Arr;
 
 class ArrayMenu implements Menu{
 	
@@ -38,7 +37,7 @@ class ArrayMenu implements Menu{
 		
 		$this->breads = array_reverse($this->breads);
 		array_pop($this->breads);
-		$this->breads = Arr::multiUnique($this->breads, 'name');
+		//		$this->breads = Arr::multiUnique($this->breads, 'name');
 		
 		return [
 			$this->menus,
@@ -96,12 +95,12 @@ class ArrayMenu implements Menu{
 	 * @return string
 	 */
 	protected function getFirstUrl($menu){
-		if(isset($menu['child']) && isset($menu['child'][0])){
-			return $this->getFirstUrl($menu['child'][0]);
+		if(isset($menu['name']) && strpos($menu['name'], '/')){
+			return $menu['name'];
 		}
 		
-		if(isset($menu['name'])){
-			return $menu['name'];
+		if(isset($menu['child']) && isset($menu['child'][0])){
+			return $this->getFirstUrl($menu['child'][0]);
 		}
 		
 		return '';

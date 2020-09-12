@@ -8,12 +8,12 @@
 namespace Xin\Thinkphp\Foundation\CURD;
 
 use think\exception\HttpException;
+use think\facade\Validate;
 use Xin\Support\Str;
 use Xin\Thinkphp\Facade\Hint;
 
 /**
  * @property-read \think\Request|\Xin\Thinkphp\Http\RequestValidate $request
- * @property-read \think\View                                       $view
  */
 trait InteractsCURD{
 	
@@ -24,7 +24,6 @@ trait InteractsCURD{
 	 *
 	 * @param mixed $data
 	 * @return string
-	 * @throws \Exception
 	 */
 	protected function showListView($data){
 		$this->view->assign('data', $data);
@@ -52,7 +51,6 @@ trait InteractsCURD{
 	 * 显示创建视图
 	 *
 	 * @return string
-	 * @throws \Exception
 	 */
 	protected function showCreateView(){
 		return $this->view->fetch($this->property('createTpl', 'edit'));
@@ -82,7 +80,6 @@ trait InteractsCURD{
 	 * 添加行为
 	 *
 	 * @return mixed
-	 * @throws \Exception
 	 */
 	public function create(){
 		if($this->request->isGet()){
@@ -109,7 +106,6 @@ trait InteractsCURD{
 	 *
 	 * @param \think\Model $model
 	 * @return string
-	 * @throws \Exception
 	 */
 	protected function showDetailView($model){
 		$this->view->assign('info', $model);
@@ -121,7 +117,6 @@ trait InteractsCURD{
 	 * 查看详情
 	 *
 	 * @return mixed
-	 * @throws \Exception
 	 */
 	public function show(){
 		$model = $this->findIsEmptyAssert();
@@ -134,7 +129,6 @@ trait InteractsCURD{
 	 *
 	 * @param \think\Model $model
 	 * @return string
-	 * @throws \Exception
 	 */
 	protected function showUpdateView($model){
 		$this->view->assign('info', $model);
@@ -165,7 +159,6 @@ trait InteractsCURD{
 	 * 更新行为
 	 *
 	 * @return mixed
-	 * @throws \Exception
 	 */
 	public function update(){
 		$model = $this->findIsEmptyAssert();
@@ -187,14 +180,25 @@ trait InteractsCURD{
 	}
 	
 	/**
+	 * 获取允许修改字段
+	 *
+	 * @return array
+	 */
+	protected function allowFields(){
+		return array_merge([
+			'status' => 'in:0,1',
+		], $this->property('allowFields', []));
+	}
+	
+	/**
 	 * 是否允许设置字段
 	 *
 	 * @param string $field
 	 * @return bool
 	 */
 	protected function isAllowField($field){
-		$allowFields = $this->property('allowFields', ['status']);
-		return in_array($field, $allowFields);
+		$allowFields = $this->allowFields();
+		return in_array($field, array_map('strval', array_keys($allowFields)));
 	}
 	
 	/**
@@ -234,25 +238,34 @@ trait InteractsCURD{
 		$ids = $this->request->idsWithValid();
 		$value = $this->request->param("{$field}/d");
 		
-		$valueCondition = $this->property("{$field}Condition", [0, 1]);
-		if(!in_array($value, $valueCondition)){
-			return Hint::error("参数错误[param {$field} invalid]！");
+		$data = [
+			$field => $value,
+		];
+		
+		// 验证规则
+		$allowFields = $this->allowFields();
+		if(isset($allowFields[$field]) && ($validateRule = $allowFields[$field])){
+			$flag = Validate::check($data, [
+				$field => $validateRule,
+			]);
+			
+			if(!$flag){
+				return Hint::error("参数错误[param {$field} invalid]！");
+			}
 		}
 		
 		$this->beforeSetField($ids, $field, $value);
 		
 		$fieldStudly = Str::studly($field);
-		$this->invokeMethod("beforeSet{$fieldStudly}", [$ids, $value]);
-		if($this->model()::update([
-				$field => $value,
-			], [
+		$this->invokeMethod("beforeSet{$fieldStudly}", [&$ids, $field, $value]);
+		if($this->model()::update($data, [
 				['id', 'IN', $ids],
 			]) === false){
 			return Hint::error("更新失败！");
 		}
 		
 		$this->afterSetField($ids, $field, $value);
-		$this->invokeMethod("afterSet{$fieldStudly}", [$ids, $value]);
+		$this->invokeMethod("afterSet{$fieldStudly}", [$ids, $field, $value]);
 		
 		return Hint::success("更新成功！", $this->jumpUrl('index'));
 	}
@@ -333,7 +346,13 @@ trait InteractsCURD{
 	 * @return mixed
 	 */
 	protected function jumpUrl($default){
-		return $this->request->param("http_referer", 'index') ?: $default;
+		$referer = $this->request->param("http_referer", '');
+		
+		if(empty($referer)){
+			$referer = $this->request->server('HTTP_REFERER');
+		}
+		
+		return $referer ?: $default;
 	}
 	
 }

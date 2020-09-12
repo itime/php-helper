@@ -37,16 +37,18 @@ trait Attribute{
 	 * @return string|null
 	 */
 	private function resolveCommonClass($baseClass, $layer, $appendSuffix = true){
-		if(strpos($baseClass, "\\") === false){
-			$baseClass = $baseClass.($appendSuffix ? Str::studly($layer) : '');
-			$class = "\\app\\common\\{$layer}\\{$baseClass}";
-			
-			if(!class_exists($class)){
-				return null;
-			}
+		if(strpos($baseClass, "\\") !== false){
+			return $baseClass;
 		}
 		
-		return $baseClass;
+		$baseClass = $baseClass.($appendSuffix ? Str::studly($layer) : '');
+		$class = "\\app\\common\\{$layer}\\{$baseClass}";
+		
+		if(!class_exists($class)){
+			return null;
+		}
+		
+		return $class;
 	}
 	
 	/**

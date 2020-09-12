@@ -316,7 +316,7 @@ if(!function_exists('analysis_words')){
 		if(mb_strlen($keyword) > $holdLength) $keyword = mb_substr($keyword, 0, 48);
 		
 		//执行分词
-		$pa = new \xin\analysis\Analysis('utf-8', 'utf-8');
+		$pa = new \Xin\Analysis\Analysis('utf-8', 'utf-8');
 		$pa->setSource($keyword);
 		$pa->startAnalysis();
 		$result = $pa->getFinallyResult($num);

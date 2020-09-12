@@ -50,7 +50,7 @@ trait HintHelper{
 	 * @return string
 	 */
 	private function resolveUrl($url){
-		return (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : url($url ?: '');
+		return (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : (string)url($url ?: '');
 	}
 	
 	/**
