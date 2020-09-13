@@ -7,6 +7,7 @@
 
 namespace Xin\Thinkphp\Foundation\CURD;
 
+use think\db\Query;
 use think\exception\HttpException;
 use think\facade\Validate;
 use Xin\Support\Str;
@@ -38,7 +39,7 @@ trait InteractsCURD{
 	 * @throws \think\db\exception\DbException
 	 */
 	public function index(){
-		$data = $this->model()::order('id desc')->paginate(
+		$data = $this->model()->order('id desc')->paginate(
 			$this->request->limit(), false, [
 			'page'  => $this->request->page(),
 			'query' => $this->request->get(),
@@ -274,8 +275,9 @@ trait InteractsCURD{
 	 * 数据删除之前操作
 	 *
 	 * @param array $ids
+	 * @param array $where
 	 */
-	protected function beforeDelete($ids){
+	protected function beforeDelete(&$ids, array &$where = null){
 	}
 	
 	/**
@@ -296,23 +298,30 @@ trait InteractsCURD{
 		$ids = $this->request->idsWithValid();
 		$force = $this->request->param('force/d', 0);
 		
-		$this->beforeDelete($ids);
-		
 		$model = $this->model();
+		
+		$this->beforeDelete($ids, $where);
+		if(empty($ids)){
+			return Hint::success("删除成功！");
+		}
+		
+		$where = $where ? $where : [];
+		$where[] = ['id', 'in', $ids];
 		
 		$allowForceDelete = $this->property('allowForceDelete', false);
 		if($allowForceDelete && $force){
 			/** @var \think\db\BaseQuery $query */
 			$query = call_user_func([$model, 'withTrashed']);
-			
-			if($query->where('id', 'in', $ids)->delete(true) === false){
+			if($query->where($where)->delete(true) === false){
 				return Hint::error("删除失败！");
 			}
 		}else{
 			if($model instanceof \think\Model){
-				$flag = $model::destroy($ids);
+				$flag = $model::destroy(function(Query $query) use ($where){
+					$query->where($where);
+				});
 			}else{
-				$flag = $model->delete($ids);
+				$flag = $model->where($where)->delete();
 			}
 			
 			if($flag === false){
