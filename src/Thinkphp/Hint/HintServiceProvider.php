@@ -7,6 +7,7 @@
 
 namespace Xin\Thinkphp\Hint;
 
+use Xin\Contracts\Hint\Factory as HintFactory;
 use Xin\Hint\HintManager;
 use Xin\Support\Reflect;
 use Xin\Thinkphp\Foundation\ServiceProvider;
@@ -38,8 +39,10 @@ class HintServiceProvider extends ServiceProvider{
 		});
 		
 		if(Reflect::VISIBLE_PUBLIC === Reflect::methodVisible($this->app, 'bindTo')){
+			$this->app->bindTo(HintFactory::class, 'hint');
 			$this->app->bindTo('hint', $hint);
 		}else{
+			$this->app->bind(HintFactory::class, 'hint');
 			$this->app->bind('hint', $hint);
 		}
 	}

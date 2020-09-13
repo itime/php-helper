@@ -56,7 +56,7 @@ class Stat implements StatRepository{
 		$this->provider = $provider
 			? $provider
 			: new StatProvider(
-				$app, $config, $this
+				$app, $this, $config
 			);
 	}
 	
@@ -89,7 +89,7 @@ class Stat implements StatRepository{
 			'create_time' => $this->request->time(),
 		], $options);
 		
-		$this->tally('ip');
+		$this->tally('ip', 1, $options);
 	}
 	
 	/**

@@ -145,6 +145,6 @@ class StatProvider implements StatProviderContract{
 	 * @inheritDoc
 	 */
 	public function insertIpLog($data, array $options = []){
-		return $this->query()->insertGetId(array_merge($options, $data));
+		return $this->ipQuery()->insertGetId(array_merge($options, $data));
 	}
 }
