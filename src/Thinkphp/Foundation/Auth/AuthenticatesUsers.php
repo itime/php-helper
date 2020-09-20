@@ -32,14 +32,35 @@ trait AuthenticatesUsers{
 		
 		$this->validateLogin($request);
 		
+		$notExistCallback = method_exists($this, 'notExistUser')
+			? \Closure::fromCallable([$this, 'notExistUser']) : null;
+		
 		try{
 			$user = $this->guard()->loginUsingCredential(
-				$this->credentials($request)
+				$this->credentials($request),
+				$notExistCallback,
+				\Closure::fromCallable([$this, 'loginPreCheck'])
 			);
 			return $this->sendLoginResponse($request, $user);
 		}catch(LoginException $e){
 			return $this->sendFailedLoginResponse($request, $e);
 		}
+	}
+	
+	//	/**
+	//	 * The user found does not exist.
+	//	 *
+	//	 * @param mixed $credentials
+	//	 */
+	//	protected function notExistUser($credentials){
+	//	}
+	
+	/**
+	 * Pre check before login.
+	 *
+	 * @param mixed $user
+	 */
+	protected function loginPreCheck($user){
 	}
 	
 	/**
@@ -121,7 +142,7 @@ trait AuthenticatesUsers{
 	 *
 	 * @param Request $request
 	 * @param mixed   $user
-	 * @return mixed
+	 * @return mixed|void
 	 */
 	protected function authenticated(Request $request, $user){
 	}
@@ -162,7 +183,7 @@ trait AuthenticatesUsers{
 	 * The user has logged out of the application.
 	 *
 	 * @param Request $request
-	 * @return mixed
+	 * @return mixed|void
 	 */
 	protected function loggedOut(Request $request){
 	}

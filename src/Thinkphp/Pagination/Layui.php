@@ -9,7 +9,7 @@ namespace Xin\Thinkphp\Pagination;
 use think\Paginator;
 
 class Layui extends Paginator{
-
+	
 	/**
 	 * 渲染分页html
 	 *
@@ -34,7 +34,7 @@ class Layui extends Paginator{
 		}
 		return "";
 	}
-
+	
 	/**
 	 * 上一页按钮
 	 *
@@ -45,14 +45,14 @@ class Layui extends Paginator{
 		if($this->currentPage() <= 1){
 			return $this->getDisabledTextWrapper($text);
 		}
-
+		
 		$url = $this->url(
 			$this->currentPage() - 1
 		);
-
+		
 		return $this->getPageLinkWrapper($url, $text);
 	}
-
+	
 	/**
 	 * 生成一个禁用的按钮
 	 *
@@ -62,7 +62,7 @@ class Layui extends Paginator{
 	protected function getDisabledTextWrapper($text){
 		return '<span class="layui-disabled">'.$text.'</span>';
 	}
-
+	
 	/**
 	 * 生成普通页码按钮
 	 *
@@ -74,10 +74,10 @@ class Layui extends Paginator{
 		if($this->currentPage() == $page){
 			return $this->getActivePageWrapper($page);
 		}
-
+		
 		return $this->getAvailablePageWrapper($url, $page);
 	}
-
+	
 	/**
 	 * 生成一个激活的按钮
 	 *
@@ -87,7 +87,7 @@ class Layui extends Paginator{
 	protected function getActivePageWrapper($text){
 		return '<span class="layui-laypage-curr"><em class="layui-laypage-em"></em><em>'.$text.'</em></span>';
 	}
-
+	
 	/**
 	 * 生成一个可点击的按钮
 	 *
@@ -98,7 +98,7 @@ class Layui extends Paginator{
 	protected function getAvailablePageWrapper($url, $page){
 		return '<a href="'.htmlentities($url).'">'.$page.'</a>';
 	}
-
+	
 	/**
 	 * 下一页按钮
 	 *
@@ -109,12 +109,12 @@ class Layui extends Paginator{
 		if(!$this->hasMore){
 			return $this->getDisabledTextWrapper($text);
 		}
-
+		
 		$url = $this->url($this->currentPage() + 1);
-
+		
 		return $this->getPageLinkWrapper($url, $text);
 	}
-
+	
 	/**
 	 * 页码按钮
 	 *
@@ -124,16 +124,16 @@ class Layui extends Paginator{
 		if($this->simple){
 			return '';
 		}
-
+		
 		$block = [
 			'first'  => null,
 			'slider' => null,
 			'last'   => null,
 		];
-
+		
 		$side = 3;
 		$window = $side * 2;
-
+		
 		if($this->lastPage < $window + 6){
 			$block['first'] = $this->getUrlRange(1, $this->lastPage);
 		}elseif($this->currentPage <= $window){
@@ -147,26 +147,26 @@ class Layui extends Paginator{
 			$block['slider'] = $this->getUrlRange($this->currentPage - $side, $this->currentPage + $side);
 			$block['last'] = $this->getUrlRange($this->lastPage - 1, $this->lastPage);
 		}
-
+		
 		$html = '';
-
+		
 		if(is_array($block['first'])){
 			$html .= $this->getUrlLinks($block['first']);
 		}
-
+		
 		if(is_array($block['slider'])){
 			$html .= $this->getDots();
 			$html .= $this->getUrlLinks($block['slider']);
 		}
-
+		
 		if(is_array($block['last'])){
 			$html .= $this->getDots();
 			$html .= $this->getUrlLinks($block['last']);
 		}
-
+		
 		return $html;
 	}
-
+	
 	/**
 	 * 批量生成页码按钮.
 	 *
@@ -175,14 +175,14 @@ class Layui extends Paginator{
 	 */
 	protected function getUrlLinks(array $urls){
 		$html = '';
-
+		
 		foreach($urls as $page => $url){
 			$html .= $this->getPageLinkWrapper($url, $page);
 		}
-
+		
 		return $html;
 	}
-
+	
 	/**
 	 * 生成省略号按钮
 	 *

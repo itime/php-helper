@@ -30,9 +30,14 @@ interface StatefulGuard extends Guard{
 	 *
 	 * @param array    $credentials
 	 * @param \Closure $notExistCallback
+	 * @param \Closure $preCheckCallback
 	 * @return \Xin\Contracts\Auth\Guard
 	 */
-	public function loginUsingCredential(array $credentials, \Closure $notExistCallback = null);
+	public function loginUsingCredential(
+		array $credentials,
+		\Closure $notExistCallback = null,
+		\Closure $preCheckCallback = null
+	);
 	
 	/**
 	 * 退出登录

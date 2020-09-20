@@ -52,7 +52,11 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	/**
 	 * @inheritDoc
 	 */
-	public function loginUsingCredential(array $credentials, \Closure $notExistCallback = null){
+	public function loginUsingCredential(
+		array $credentials,
+		\Closure $notExistCallback = null,
+		\Closure $preCheckCallback = null
+	){
 		$user = $this->credentials($credentials, $notExistCallback);
 		
 		// password field exist.
@@ -66,6 +70,10 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 				
 				throw new LoginException('账号密码不正确', 40001);
 			}
+		}
+		
+		if(is_callable($preCheckCallback)){
+			call_user_func($preCheckCallback, $user);
 		}
 		
 		return $this->login($user);

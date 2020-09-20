@@ -13,9 +13,9 @@ namespace Xin\Thinkphp\Http;
  * @mixin RequestOptimize
  */
 trait RequestPlatform{
-
+	
 	protected $platform;
-
+	
 	/**
 	 * 获取当前请求平台
 	 *
@@ -25,7 +25,7 @@ trait RequestPlatform{
 		if(is_null($this->platform)){
 			$userAgent = $this->server('HTTP_USER_AGENT');
 			$referer = $this->server('HTTP_REFERER');
-
+			
 			if(stripos($userAgent, "wechatdevtools") !== false
 				|| stripos($userAgent, "MicroMessenger") !== false
 				|| stripos($referer, "servicewechat.com") !== false){
@@ -46,10 +46,10 @@ trait RequestPlatform{
 				$this->platform = 'browser';
 			}
 		}
-
+		
 		return $this->platform;
 	}
-
+	
 	/**
 	 * 是否是微信请求
 	 *
@@ -58,7 +58,7 @@ trait RequestPlatform{
 	public function isWechat(){
 		return "wechat" === $this->platform();
 	}
-
+	
 	/**
 	 * 是否是支付宝请求
 	 *
@@ -67,7 +67,7 @@ trait RequestPlatform{
 	public function isAlipay(){
 		return "alipay" === $this->platform();
 	}
-
+	
 	/**
 	 * 是否是百度请求
 	 *
@@ -76,7 +76,7 @@ trait RequestPlatform{
 	public function isBaidu(){
 		return "baidu" === $this->platform();
 	}
-
+	
 	/**
 	 * 是否是浏览器请求
 	 *

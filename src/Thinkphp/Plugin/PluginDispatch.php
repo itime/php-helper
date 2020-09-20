@@ -25,8 +25,7 @@ class PluginDispatch extends Dispatch{
 		$action = $this->param['action'];
 		
 		/** @var \Xin\Thinkphp\Plugin\PluginManager $pluginManager */
-		$pluginManager = $this->app->get('PlugManager');
-		
+		$pluginManager = $this->app->get('PluginManager');
 		return $pluginManager->invoke(
 			$this->request,
 			$plugin,

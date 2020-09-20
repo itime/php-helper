@@ -13,22 +13,22 @@ use think\exception\HttpResponseException;
 use think\Response;
 
 class CheckSiteState{
-
+	
 	/**
 	 * @var \app\Request
 	 */
 	private $request;
-
+	
 	/**
 	 * @var \think\Config
 	 */
 	private $config;
-
+	
 	/**
 	 * @var \app\View
 	 */
 	private $view;
-
+	
 	/**
 	 * CheckSiteState constructor.
 	 *
@@ -41,7 +41,7 @@ class CheckSiteState{
 		$this->config = $config;
 		$this->view = $view;
 	}
-
+	
 	/**
 	 * 初始化站点状态
 	 *
@@ -58,14 +58,14 @@ class CheckSiteState{
 			$response = $this->view->fetch('public/close', [
 				'msg' => $closeMsg,
 			]);
-
+			
 			$response = Response::create($response);
 			throw new HttpResponseException($response);
 		}
-
+		
 		return $next($request);
 	}
-
+	
 	/**
 	 * @return array
 	 */

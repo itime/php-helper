@@ -39,9 +39,9 @@ class PluginManager extends AbstractPluginManager{
 	/**
 	 * @inheritDoc
 	 */
-	public function invoke($request, $plugin, $controller, $action){
-		if(!$this->has($plugin)){
-			throw new HttpException(404, "plugin {$plugin} not exist.");
+	public function invoke($request, $pluginName, $controller, $action){
+		if(!$this->has($pluginName)){
+			throw new HttpException(404, "plugin {$pluginName} not exist.");
 		}
 		
 		$appName = $this->app->http->getName();
@@ -51,16 +51,49 @@ class PluginManager extends AbstractPluginManager{
 			$controllerLayer = "{$appName}controller";
 		}
 		
-		$class = $this->controllerClass($plugin, $controller, $controllerLayer);
+		$class = $this->controllerClass($pluginName, $controller, $controllerLayer);
 		if(!class_exists($class)){
 			throw new HttpException(404, "controller {$class} not exist.");
 		}
 		
-		$request->setPlugin($plugin);
+		if($appName != "api"){
+			$this->initView($appName, $pluginName);
+		}
+		
+		$request->setPlugin($pluginName);
 		$request->setController($controller);
 		$request->setAction($action);
 		
 		return $this->app->invoke([$class, $action]);
+	}
+	
+	/**
+	 * 初始化视图
+	 *
+	 * @param string $appName
+	 * @param string $pluginName
+	 */
+	protected function initView($appName, $pluginName){
+		/** @var \think\View $view */
+		$view = $this->app->make('view');
+		
+		//		/** @var \think\view\driver\Think $driver */
+		//		$driver = $view->engine();
+		//		$template = new Template();
+		//		$ref = new \ReflectionProperty($driver, "template");
+		//		$ref->setAccessible(true);
+		//		$ref->setValue();
+		
+		$viewPath = $this->path($pluginName)."{$appName}view".DIRECTORY_SEPARATOR;
+		$view->engine()->config([
+			"view_dir_name" => "{$appName}view",
+			"view_path"     => $viewPath,
+		]);
+		
+		// layout view path
+		$layoutPath = app_path('view')."layout.html";
+		//		halt($layoutPath);
+		$view->assign('__layout__', $layoutPath);
 	}
 	
 	/**
