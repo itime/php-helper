@@ -78,19 +78,19 @@ class Setting extends Model{
 	 * 获取分组
 	 *
 	 * @return array
-	 * @throws \Xin\Thinkphp\Setting\NotConfigureException
+	 * @throws \Xin\Thinkphp\Setting\InvalidConfigureException
 	 */
 	public static function getGroupList(){
 		$groups = Config::get('web.config_group_list');
 		
 		if(empty($groups)){
-			throw new NotConfigureException(
+			throw new InvalidConfigureException(
 				"请手动配置 settings 数据表 ‘config_group_list’标识"
 			);
 		}
 		
 		if(!is_array($groups)){
-			throw new NotConfigureException(
+			throw new InvalidConfigureException(
 				'获取配置分组数据格式异常！'
 			);
 		}
@@ -99,40 +99,45 @@ class Setting extends Model{
 	}
 	
 	/**
-	 * 获取数据类型
+	 * 获取数据分组
 	 *
-	 * @return string
-	 * @throws \Xin\Thinkphp\Setting\NotConfigureException
+	 * @return mixed
+	 * @throws \Xin\Thinkphp\Setting\InvalidConfigureException
 	 */
-	protected function getTypeTextAttr(){
+	protected function getGroupTextAttr(){
+		$groups = static::getGroupList();
+		$group = $this->getData('group');
+		return isset($groups[$group]) ? $groups[$group] : "无";
+	}
+	
+	/**
+	 * 获取分组
+	 *
+	 * @return array
+	 * @throws \Xin\Thinkphp\Setting\InvalidConfigureException
+	 */
+	public static function getTypeList(){
 		$types = Config::get('web.config_type_list');
 		
 		if(empty($types)){
-			throw new NotConfigureException(
+			throw new InvalidConfigureException(
 				"请手动配置数据库settings数据表 ‘config_type_list’ 标识。"
 			);
 		}
 		
-		$type = $this->getData('type');
-		return isset($types[$type]) ? $types[$type] : "无";
+		return $types;
 	}
 	
 	/**
-	 * 获取数据分组
+	 * 获取数据类型
 	 *
-	 * @return mixed
-	 * @throws \Xin\Thinkphp\Setting\NotConfigureException
+	 * @return string
+	 * @throws \Xin\Thinkphp\Setting\InvalidConfigureException
 	 */
-	protected function getGroupTextAttr(){
-		$groups = Config::get('web.config_group_list');
-		
-		if(empty($groups)){
-			throw new NotConfigureException(
-				"请手动配置数据库settings数据表 ‘config_group_list’ 标识"
-			);
-		}
-		
-		return isset($groups[$this->group]) ? $groups[$this->group] : "无";
+	protected function getTypeTextAttr(){
+		$types = static::getTypeList();
+		$type = $this->getData('type');
+		return isset($types[$type]) ? $types[$type] : "无";
 	}
 	
 	/**
@@ -154,7 +159,7 @@ class Setting extends Model{
 	protected function getValueAttr($val){
 		$type = $this->getData('type');
 		
-		if($type == 3){
+		if($type == 'array'){
 			return self::stringToArray($val);
 		}
 		

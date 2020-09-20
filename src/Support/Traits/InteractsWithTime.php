@@ -1,6 +1,6 @@
 <?php
 
-namespace Xin\Support;
+namespace Xin\Support\Traits;
 
 use Carbon\Carbon;
 use DateInterval;

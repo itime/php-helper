@@ -10,6 +10,7 @@ namespace Xin\Thinkphp\Foundation\CURD;
 use think\db\Query;
 use think\exception\HttpException;
 use think\facade\Validate;
+use Xin\Support\Arr;
 use Xin\Support\Str;
 use Xin\Thinkphp\Facade\Hint;
 
@@ -88,12 +89,17 @@ trait InteractsCURD{
 		}
 		
 		$data = $this->request->param();
+		unset($data['id']);
+		
 		$this->validateData($data, 'create');
 		
 		$model = $this->model();
+		
 		$data = $this->beforeCreate($model, $data);
 		
-		if($model->allowField([])->save($data) === false){
+		$model = $this->writeAllowField($model, $data, false);
+		
+		if($model->save($data) === false){
 			return Hint::error("添加失败！");
 		}
 		
@@ -171,13 +177,40 @@ trait InteractsCURD{
 		$data = $this->request->param();
 		$this->validateData($data, 'update');
 		
+		// 数组转换成模型
+		if(is_array($model)){
+			$model = $this->model($model);
+		}
+		
 		$data = $this->beforeUpdate($model, $data);
-		if($model->allowField([])->save($data) === false){
+		
+		$model = $this->writeAllowField($model, $data, true);
+		
+		if($model->save($data) === false){
 			return Hint::error("更新失败！");
 		}
+		
 		$this->afterUpdate($model, $data);
 		
 		return Hint::success("更新成功！", $this->jumpUrl('index'));
+	}
+	
+	/**
+	 * 写入数据库时允许的字段
+	 *
+	 * @param \think\db\BaseQuery|\think\Model $model
+	 * @param bool                             $isUpdate
+	 * @return mixed
+	 */
+	protected function writeAllowField($model, &$data, $isUpdate = false){
+		if(method_exists($model, 'allowField')){
+			return $model->allowField([]);
+		}else{
+			$fields = $model->getTableFields();
+			$data = Arr::only($data, $fields);
+			
+			return $model;
+		}
 	}
 	
 	/**

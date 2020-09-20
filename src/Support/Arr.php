@@ -228,7 +228,7 @@ final class Arr{
 			if(!array_key_exists($oldKey, $arr)) continue;
 			
 			if(is_callable($newKey)){
-				list($newKey, $value) = call_user_func($newKey, $arr[$oldKey], $oldKey, $arr);
+				[$newKey, $value] = call_user_func($newKey, $arr[$oldKey], $oldKey, $arr);
 				$arr[$newKey] = $value;
 			}else{
 				$arr[$newKey] = $arr[$oldKey];
@@ -381,6 +381,24 @@ final class Arr{
 		$array[array_shift($keys)] = $value;
 		
 		return $array;
+	}
+	
+	/**
+	 * 从数组里面获取指定的数据
+	 *
+	 * @param array $data
+	 * @param array $keys
+	 * @return array
+	 */
+	public static function only($data, array $keys){
+		$result = [];
+		foreach($keys as $key){
+			if(isset($data[$key])){
+				$result[$key] = $data[$key];
+			}
+		}
+		
+		return $result;
 	}
 	
 	/**

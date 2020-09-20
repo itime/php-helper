@@ -22,8 +22,8 @@ class SettingValidate extends Validate{
 	protected $rule = [
 		'name'  => 'require|alphaDash|length:3,32|unique:setting',
 		'title' => 'require|length:2,12',
-		'group' => 'integer',
-		'type'  => 'integer',
+		'group' => 'alphaDash',
+		'type'  => 'alphaDash',
 	];
 	
 	/**

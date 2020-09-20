@@ -5,48 +5,58 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Weight;
+namespace Xin\Thinkphp\Foundation;
 
-use think\Config;
+use think\App;
 use think\View;
-use Xin\Thinkphp\Http\RequestOptimize;
 
 /**
- * Class Weight
- *
+ * @property-read \think\App     $app
  * @property-read \think\Request $request
  * @property-read \think\Config  $config
  * @property-read \think\View    $view
  */
 class Weight{
-
+	
+	/**
+	 * @var \think\App
+	 */
+	protected $app;
+	
 	/**
 	 * @var \think\Request
 	 */
 	protected $request;
-
+	
 	/**
 	 * @var \think\Config
 	 */
 	protected $config;
-
+	
 	/**
 	 * @var \think\View
 	 */
 	protected $view;
-
+	
 	/**
 	 * Weight constructor.
 	 *
-	 * @param \Xin\Thinkphp\Http\RequestOptimize $request
-	 * @param \think\Config                      $config
+	 * @param \think\App $app
 	 */
-	public function __construct(RequestOptimize $request, Config $config){
-		$this->request = $request;
-		$this->config = $config;
-
-		$this->view = new View();
-		$this->view->init($this->config->pull('template'));
+	public function __construct(App $app){
+		$this->app = $app;
+		$this->request = $app['request'];
+		$this->config = $app['config'];
+		
+		$this->view = new View($app);
+		thinkphp60_if(function(){
+			$this->view->engine()->config([
+				"view_dir_name" => "view",
+				"view_path"     => root_path(dirname(get_class($this))),
+			]);
+		}, function(){
+			$this->view->init($this->config->pull('template'));
+		});
 	}
-
+	
 }

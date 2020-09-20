@@ -5,8 +5,10 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Setting;
+namespace Xin\Thinkphp\Plugin;
 
-class NotConfigureException extends \Exception{
+use Think\Model;
+
+class Plugin extends Model{
 
 }

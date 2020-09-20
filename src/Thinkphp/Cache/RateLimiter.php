@@ -51,7 +51,6 @@ class RateLimiter{
 	 * @param string $key
 	 * @param int    $decaySeconds
 	 * @return int
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function hit($key, $decaySeconds = 60){
 		$this->cache->set(
