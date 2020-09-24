@@ -81,23 +81,38 @@ trait TemplateFinder{
 	 */
 	public function finder(){
 		if(!$this->finder){
-			$view = $this->config['view_dir_name'];
+			$this->initViewPath();
 			
-			if(is_dir($this->app->getAppPath().$view)){
-				$path = $this->app->getAppPath().$view.DIRECTORY_SEPARATOR;
-			}else{
-				$appName = $this->app->http->getName();
-				$path = $this->app->getRootPath().$view.DIRECTORY_SEPARATOR.($appName ? $appName.DIRECTORY_SEPARATOR : '');
-			}
-			
-			$this->config['view_path'] = $path;
+			$extensions = is_array($this->config['view_suffix'])
+				? $this->config['view_suffix']
+				: explode(',', $this->config['view_suffix']);
 			
 			$this->finder = new FileFinder([
 				$this->config['view_path'],
-			]);
+			], $extensions);
 		}
 		
 		return $this->finder;
+	}
+	
+	/**
+	 * 初始化视图路径
+	 */
+	protected function initViewPath(){
+		if(!empty($this->config['view_path'])){
+			return;
+		}
+		
+		$view = $this->config['view_dir_name'];
+		
+		if(is_dir($this->app->getAppPath().$view)){
+			$path = $this->app->getAppPath().$view.DIRECTORY_SEPARATOR;
+		}else{
+			$appName = $this->app->http->getName();
+			$path = $this->app->getRootPath().$view.DIRECTORY_SEPARATOR.($appName ? $appName.DIRECTORY_SEPARATOR : '');
+		}
+		
+		$this->config['view_path'] = $path;
 	}
 	
 	/**
@@ -120,6 +135,7 @@ trait TemplateFinder{
 			}
 			
 			$finder->addNamespace($appName, $path);
+			$finder->addLocation($path);
 		}
 		
 		return $finder;

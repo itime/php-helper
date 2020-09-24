@@ -86,14 +86,8 @@ class PluginManager extends AbstractPluginManager{
 		
 		$viewPath = $this->path($pluginName)."{$appName}view".DIRECTORY_SEPARATOR;
 		$view->engine()->config([
-			"view_dir_name" => "{$appName}view",
 			"view_path"     => $viewPath,
 		]);
-		
-		// layout view path
-		$layoutPath = app_path('view')."layout.html";
-		//		halt($layoutPath);
-		$view->assign('__layout__', $layoutPath);
 	}
 	
 	/**

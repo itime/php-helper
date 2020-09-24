@@ -8,6 +8,7 @@
 namespace Xin\Thinkphp\Plugin;
 
 use think\App;
+use think\app\MultiApp;
 use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Thinkphp\Foundation\ServiceProvider;
 
@@ -20,6 +21,17 @@ class PluginServiceProvider extends ServiceProvider{
 		$this->registerPluginManager();
 		
 		$this->registerMiddleware();
+	}
+	
+	/**
+	 * 启动程序
+	 */
+	public function boot(){
+		$this->app->event->listen('HttpRun', function(){
+			$this->app->bind([
+				'think\route\Url' => Url::class,
+			]);
+		});
 	}
 	
 	/**

@@ -23,8 +23,7 @@ use Xin\Support\Str;
  */
 class Template{
 	
-	use TemplateFinder;
-	use TemplateParser;
+	use TemplateFinder, TemplateParser;
 	
 	/**
 	 * @var \think\App
@@ -188,6 +187,11 @@ class Template{
 	 * @return string
 	 */
 	protected function parseTemplate(string $template):string{
+		if('' != pathinfo($template, PATHINFO_EXTENSION)
+			|| strpos($template, '@')){
+			return $template;
+		}
+		
 		$depr = $this->config['view_depr'];
 		
 		if(0 === strpos($template, '/')){

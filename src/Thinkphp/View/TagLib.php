@@ -12,7 +12,6 @@
 namespace Xin\Thinkphp\View;
 
 use Exception;
-use think\Template;
 
 /**
  * ThinkPHP标签库TagLib解析基类
@@ -83,9 +82,9 @@ class TagLib{
 	 * 架构函数
 	 *
 	 * @access public
-	 * @param Template $template 模板引擎对象
+	 * @param \Xin\Thinkphp\View\Template $template 模板引擎对象
 	 */
-	public function __construct(Template $template){
+	public function __construct($template){
 		$this->tpl = $template;
 	}
 	
@@ -96,6 +95,7 @@ class TagLib{
 	 * @param string $content 模板内容
 	 * @param string $lib 标签库名
 	 * @return void
+	 * @throws \Exception
 	 */
 	public function parseTag(string &$content, string $lib = ''):void{
 		$tags = [];
@@ -242,6 +242,7 @@ class TagLib{
 	 * @param string $name 标签名
 	 * @param string $alias 别名
 	 * @return array
+	 * @throws \Exception
 	 */
 	public function parseAttr(string $str, string $name, string $alias = ''):array{
 		$regex = '/\s+(?>(?P<name>[\w-]+)\s*)=(?>\s*)([\"\'])(?P<value>(?:(?!\\2).)*)\\2/is';
