@@ -45,3 +45,19 @@ if(!function_exists('plugin_invoke')){
 		return Plugin::invoke($request, $plugin, $controller, $action);
 	}
 }
+
+if(!function_exists('plugin_url')){
+	/**
+	 * 生成插件url
+	 *
+	 * @param string $url
+	 * @param array  $vars
+	 * @param bool   $suffix
+	 * @param bool   $domain
+	 * @return \think\route\Url
+	 */
+	function plugin_url(string $url = '', array $vars = [], $suffix = true, $domain = false){
+		$url = strpos($url, '>') ? $url : request()->plugin().">".$url;
+		return url($url, $vars, $suffix, $domain);
+	}
+}

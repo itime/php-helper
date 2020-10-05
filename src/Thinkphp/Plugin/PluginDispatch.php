@@ -22,7 +22,8 @@ class PluginDispatch extends Dispatch{
 	public function exec(){
 		$plugin = $this->param['plugin'];
 		$controller = $this->param['controller'];
-		$action = $this->param['action'];
+		$action = isset($this->param['action']) ? $this->param['action']
+			: $this->app->config->get('route.default_action');
 		
 		/** @var \Xin\Thinkphp\Plugin\PluginManager $pluginManager */
 		$pluginManager = $this->app->get('PluginManager');

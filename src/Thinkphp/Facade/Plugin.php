@@ -38,6 +38,6 @@ class Plugin extends Facade{
 	 * 路由到自定义调度对象
 	 */
 	public static function routes(){
-		Route::get('plugin/:plugin/:controller/:action', PluginDispatch::class);
+		Route::any('plugin/:plugin/:controller/[:action]', PluginDispatch::class);
 	}
 }
