@@ -58,17 +58,6 @@ interface Factory{
 	public function boot();
 	
 	/**
-	 * 调用插件操作
-	 *
-	 * @param mixed  $request
-	 * @param string $plugin
-	 * @param string $controller
-	 * @param string $action
-	 * @return mixed
-	 */
-	public function invoke($request, $plugin, $controller, $action);
-	
-	/**
 	 * 插件根路径
 	 *
 	 * @param string $path
@@ -83,5 +72,14 @@ interface Factory{
 	 * @return string
 	 */
 	public function path($plugin);
+	
+	/**
+	 * 获取配置信息
+	 *
+	 * @param string $name
+	 * @param mixed   $default
+	 * @return mixed
+	 */
+	public function config($name, $default = null);
 	
 }

@@ -122,4 +122,10 @@ abstract class AbstractPluginManager implements PluginFactory{
 		return Arr::get($this->config, 'namespace', 'plugin');
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
+	public function config($name, $default = null){
+		return Arr::get($this->config, $name, $default);
+	}
 }
