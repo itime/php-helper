@@ -5,9 +5,9 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Config;
+namespace Xin\Contracts\Foundation;
 
-interface Repository extends \ArrayAccess{
+interface ConfigRepository extends \ArrayAccess{
 	
 	/**
 	 * Determine if the given configuration value exists.

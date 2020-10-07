@@ -212,7 +212,7 @@ class TagLib{
 	public function getRegex($tags, bool $close):string{
 		$begin = $this->tpl->getConfig('taglib_begin');
 		$end = $this->tpl->getConfig('taglib_end');
-		$single = strlen(ltrim($begin, '\\')) == 1 && strlen(ltrim($end, '\\')) == 1 ? true : false;
+		$single = strlen(ltrim($begin, '\\')) == 1 && strlen(ltrim($end, '\\')) == 1;
 		$tagName = is_array($tags) ? implode('|', $tags) : $tags;
 		
 		if($single){

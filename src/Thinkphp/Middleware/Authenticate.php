@@ -75,7 +75,7 @@ class Authenticate{
 	 * Get the path the user should be redirected to when they are not authenticated.
 	 *
 	 * @param \think\Request $request
-	 * @return string
+	 * @return string|void
 	 */
 	protected function redirectTo($request){
 	}

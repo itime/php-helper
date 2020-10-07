@@ -47,6 +47,7 @@ class Compiler{
 	 * @param string $cacheFile 缓存的文件名
 	 * @param array  $vars 变量数组
 	 * @return void
+	 * @noinspection PhpIncludeInspection
 	 */
 	public function read(string $cacheFile, array $vars = []):void{
 		$this->cacheFile = $cacheFile;

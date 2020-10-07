@@ -22,6 +22,7 @@ trait UserProviderHelpers{
 	
 	/**
 	 * @inheritDoc
+	 * @noinspection PhpUnhandledExceptionInspection
 	 */
 	public function getById($identifier){
 		return $this->query()->find($identifier);
@@ -29,6 +30,7 @@ trait UserProviderHelpers{
 	
 	/**
 	 * @inheritDoc
+	 * @noinspection PhpUnhandledExceptionInspection
 	 */
 	public function getByCredentials($credentials){
 		return $this->query()->where($credentials)->find();

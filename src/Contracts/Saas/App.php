@@ -38,7 +38,7 @@ interface App{
 	/**
 	 * 获取config实例
 	 *
-	 * @return \Xin\Contracts\Config\Repository
+	 * @return \Xin\Contracts\Foundation\ConfigRepository
 	 */
 	public function getConfig();
 }

@@ -28,6 +28,7 @@ trait TemplateParser{
 	 * @access public
 	 * @param string $content 要解析的模板内容
 	 * @return void
+	 * @noinspection PhpDocMissingThrowsInspection
 	 */
 	public function parse(string &$content):void{
 		// 内容为空不解析
@@ -806,7 +807,7 @@ trait TemplateParser{
 		}else{
 			$begin = $this->config['taglib_begin'];
 			$end = $this->config['taglib_end'];
-			$single = strlen(ltrim($begin, '\\')) == 1 && strlen(ltrim($end, '\\')) == 1 ? true : false;
+			$single = strlen(ltrim($begin, '\\')) == 1 && strlen(ltrim($end, '\\')) == 1;
 			
 			switch($tagName){
 				case 'block':

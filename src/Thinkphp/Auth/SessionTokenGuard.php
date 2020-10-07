@@ -81,7 +81,6 @@ class SessionTokenGuard extends AbstractStatefulGuard{
 	 * 获取Session实例
 	 *
 	 * @return \think\Session
-	 * @throws \think\Exception
 	 */
 	protected function session(){
 		if(!$this->sessionInit){

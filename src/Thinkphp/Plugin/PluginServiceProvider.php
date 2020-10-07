@@ -8,7 +8,6 @@
 namespace Xin\Thinkphp\Plugin;
 
 use think\App;
-use think\app\MultiApp;
 use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Thinkphp\Foundation\ServiceProvider;
 

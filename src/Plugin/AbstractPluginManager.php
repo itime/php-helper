@@ -59,6 +59,7 @@ abstract class AbstractPluginManager implements PluginFactory{
 	
 	/**
 	 * @inheritDoc
+	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
 	public function boot(){
 		$plugins = $this->lists()->lists();
@@ -74,6 +75,7 @@ abstract class AbstractPluginManager implements PluginFactory{
 	
 	/**
 	 * @inheritDoc
+	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
 	public function plugin($plugin){
 		$class = $this->pluginClass($plugin, "Plugin");

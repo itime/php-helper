@@ -54,6 +54,8 @@ class Alipay{
 	 * @param string $sdkPath
 	 * @param string $storeDir
 	 * @param bool   $debug
+	 * @noinspection PhpIncludeInspection
+	 * @noinspection PhpUndefinedClassInspection
 	 */
 	public static function initFramework($sdkPath, $storeDir = null, $debug = false){
 		//		$sdkPath = $this->app->getRootPath().'alipay-sdk'.DIRECTORY_SEPARATOR;
@@ -74,6 +76,7 @@ class Alipay{
 	 * 初始化支付宝请求器
 	 *
 	 * @param array $options
+	 * @noinspection PhpUndefinedClassInspection
 	 */
 	private function initAopClient(array $options){
 		if(!class_exists('\AopClient')){

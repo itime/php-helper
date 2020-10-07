@@ -53,6 +53,7 @@ abstract class AbstractPlugin implements PluginContract{
 	 *
 	 * @param string $name
 	 * @return mixed
+	 * @noinspection PhpIncludeInspection
 	 */
 	protected function loadConfig($name){
 		if(!isset($this->config[$name])){

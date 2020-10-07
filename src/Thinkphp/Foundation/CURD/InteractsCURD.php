@@ -199,8 +199,10 @@ trait InteractsCURD{
 	 * 写入数据库时允许的字段
 	 *
 	 * @param \think\db\BaseQuery|\think\Model $model
+	 * @param mixed                            $data
 	 * @param bool                             $isUpdate
 	 * @return mixed
+	 * @noinspection PhpUndefinedMethodInspection
 	 */
 	protected function writeAllowField($model, &$data, $isUpdate = false){
 		if(method_exists($model, 'allowField')){

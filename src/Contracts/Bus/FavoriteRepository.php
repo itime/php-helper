@@ -4,12 +4,9 @@
  *
  * @author: 晋<657306123@qq.com>
  */
-namespace Xin\Contracts\Favorite;
+namespace Xin\Contracts\Bus;
 
-/**
- * Interface Repository
- */
-interface Repository{
+interface FavoriteRepository{
 	
 	/**
 	 * 根据用户和数据类型获取收藏数据

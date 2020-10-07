@@ -33,8 +33,6 @@ class ServiceProviderSupportBehavior{
 	
 	/**
 	 * 执行操作
-	 *
-	 * @throws \think\Exception
 	 */
 	public function run(){
 		$appPath = $this->app->getAppPath();

@@ -15,7 +15,7 @@ trait ForwardsCalls{
 	 * @param mixed  $object
 	 * @param string $method
 	 * @param array  $parameters
-	 * @return mixed
+	 * @return mixed|void
 	 * @throws \BadMethodCallException
 	 */
 	protected function forwardCallTo($object, $method, $parameters){

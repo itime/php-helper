@@ -5,11 +5,11 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Address;
+namespace Xin\Contracts\Bus;
 
 use Xin\Contracts\Foundation\Repository as BaseRepository;
 
-interface Repository extends BaseRepository{
+interface AddressRepository extends BaseRepository{
 	
 	/**
 	 * 获取用户的收获地址列表

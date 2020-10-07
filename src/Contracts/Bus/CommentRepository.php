@@ -5,11 +5,11 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Comment;
+namespace Xin\Contracts\Bus;
 
 use Xin\Contracts\Foundation\Repository as BaseRepository;
 
-interface Repository extends BaseRepository{
+interface CommentRepository extends BaseRepository{
 	
 	/**
 	 * get recommend comments by item id.

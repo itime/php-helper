@@ -26,8 +26,7 @@ final class Secure{
 		$x509data = $certs ['cert'];
 		openssl_x509_read($x509data);
 		$certdata = openssl_x509_parse($x509data);
-		$cert_id = $certdata ['serialNumber'];
-		return $cert_id;
+		return $certdata ['serialNumber'];
 	}
 
 	/**
@@ -79,8 +78,7 @@ final class Secure{
 		$x509data = file_get_contents($cert_path);
 		openssl_x509_read($x509data);
 		$certdata = openssl_x509_parse($x509data);
-		$cert_id = $certdata ['serialNumber'];
-		return $cert_id;
+		return $certdata ['serialNumber'];
 	}
 
 	/**

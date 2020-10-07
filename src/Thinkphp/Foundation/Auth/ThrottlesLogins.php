@@ -32,7 +32,6 @@ trait ThrottlesLogins{
 	 *
 	 * @param Request $request
 	 * @return void
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function incrementLoginAttempts(Request $request){
 		$this->limiter()->hit(
