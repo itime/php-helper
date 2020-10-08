@@ -7,13 +7,20 @@
 
 namespace Xin\Thinkphp\Auth;
 
+use Xin\Auth\Access\Gate;
 use Xin\Auth\AuthManager;
+use Xin\Contracts\Auth\Access\Gate as GateContract;
 use Xin\Contracts\Auth\Factory as AuthFactory;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 use Xin\Support\Reflect;
 use Xin\Thinkphp\Foundation\ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider{
+	
+	/**
+	 * @var callable
+	 */
+	protected $userResolver;
 	
 	/**
 	 * @inheritDoc
@@ -26,6 +33,8 @@ class AuthServiceProvider extends ServiceProvider{
 		$this->registerProviders();
 		
 		$this->registerRequestUserResolver();
+		
+		$this->registerAccessGate();
 	}
 	
 	/**
@@ -104,11 +113,36 @@ class AuthServiceProvider extends ServiceProvider{
 			return;
 		}
 		
-		/** @var AuthManager $auth */
-		$auth = $this->app->make('auth');
-		
-		$request->setUserResolver(function($field, $default, $abort) use ($auth){
-			return $auth->guard()->getUser($field, $default, $abort);
+		$request->setUserResolver($this->userResolver());
+	}
+	
+	/**
+	 * 注册授权服务
+	 *
+	 * @return void
+	 */
+	protected function registerAccessGate(){
+		$this->app->bind(GateContract::class, function($app){
+			return new Gate($app, function() use ($app){
+				return $app['auth']->guard()->getUser(null, null, false);
+			});
 		});
+	}
+	
+	/**
+	 * 用户解析器
+	 *
+	 * @return callable|\Closure
+	 */
+	protected function userResolver(){
+		if(!$this->userResolver){
+			/** @var AuthManager $auth */
+			$auth = $this->app->make('auth');
+			$this->userResolver = function($field = null, $default = null, $abort = true) use ($auth){
+				return $auth->guard()->getUser($field, $default, $abort);
+			};
+		}
+		
+		return $this->userResolver;
 	}
 }
