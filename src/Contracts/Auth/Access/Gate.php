@@ -7,9 +7,6 @@
 
 namespace Xin\Contracts\Auth\Access;
 
-/**
- * Interface Gate
- */
 interface Gate{
 	
 	/**

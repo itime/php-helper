@@ -7,10 +7,16 @@
 
 namespace Xin\Thinkphp\Middleware;
 
+use think\App;
 use Xin\Auth\AuthenticationException;
 use Xin\Contracts\Auth\Factory as Auth;
 
 class Authenticate{
+	
+	/**
+	 * @var \think\App
+	 */
+	protected $app;
 	
 	/**
 	 * The authentication factory instance.
@@ -20,12 +26,22 @@ class Authenticate{
 	protected $auth;
 	
 	/**
+	 * The route operation to exclude is not authorized
+	 *
+	 * @var array
+	 */
+	protected $except = [
+		//
+	];
+	
+	/**
 	 * Create a new middleware instance.
 	 *
+	 * @param \think\App                  $app
 	 * @param \Xin\Contracts\Auth\Factory $auth
-	 * @return void
 	 */
-	public function __construct(Auth $auth){
+	public function __construct(App $app, Auth $auth){
+		$this->app = $app;
 		$this->auth = $auth;
 	}
 	
@@ -63,6 +79,10 @@ class Authenticate{
 			}
 		}
 		
+		if($this->isExcept($request) === true){
+			return null;
+		}
+		
 		$config = $this->auth->guard()->getConfig();
 		throw new AuthenticationException(
 			$guards,
@@ -78,5 +98,27 @@ class Authenticate{
 	 * @return string|void
 	 */
 	protected function redirectTo($request){
+		if($request->isJson() || $request->isAjax()){
+			return;
+		}
+	}
+	
+	/**
+	 * The route operation to exclude is not authorized
+	 *
+	 * @param \think\Request $request
+	 * @return bool|void
+	 */
+	protected function isExcept($request){
+		$appName = $this->app->http->getName();
+		
+		$path = $request->pathinfo();
+		if($dotIndex = stripos($path, '.')){
+			$path = substr($path, 0, $dotIndex);
+		}
+		
+		$path = $appName."/".$path;
+		
+		return in_array($path, $this->except);
 	}
 }

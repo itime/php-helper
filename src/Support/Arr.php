@@ -239,7 +239,7 @@ final class Arr{
 	}
 	
 	/**
-	 * Flatten a multi-dimensional array into a single level.
+	 * 将多维数组展平为单个级别
 	 *
 	 * @param array $array
 	 * @param int   $depth
@@ -266,7 +266,7 @@ final class Arr{
 	}
 	
 	/**
-	 * Determine if the given key exists in the provided array.
+	 * 确定给定的键是否存在于提供的数组中
 	 *
 	 * @param \ArrayAccess|array $array
 	 * @param string|int         $key
@@ -281,7 +281,7 @@ final class Arr{
 	}
 	
 	/**
-	 * Get an item from an array using "dot" notation.
+	 * 支持使用“点”表示法从数组中获取项
 	 *
 	 * @param \ArrayAccess|array $array
 	 * @param string|int         $key
@@ -317,7 +317,7 @@ final class Arr{
 	}
 	
 	/**
-	 * Check if an item or items exist in an array using "dot" notation.
+	 * 支持使用“点”表示法检查数组中是否存在一个或多个项
 	 *
 	 * @param \ArrayAccess|array $array
 	 * @param string|array       $keys
@@ -350,8 +350,8 @@ final class Arr{
 	}
 	
 	/**
-	 * Set an array item to a given value using "dot" notation.
-	 * If no key is given to the method, the entire array will be replaced.
+	 * 支持使用“点”表示法将数组项设置为给定值
+	 * 如果没有给方法指定键，整个数组将被替换
 	 *
 	 * @param array  $array
 	 * @param string $key
@@ -402,7 +402,7 @@ final class Arr{
 	}
 	
 	/**
-	 * Get one or a specified number of random values from an array.
+	 * 从数组中获取一个或指定数量的随机值
 	 *
 	 * @param array    $array
 	 * @param int|null $number
@@ -440,7 +440,7 @@ final class Arr{
 	}
 	
 	/**
-	 * Shuffle the given array and return the result.
+	 * 打乱给定数组并返回结果
 	 *
 	 * @param array    $array
 	 * @param int|null $seed
@@ -459,7 +459,7 @@ final class Arr{
 	}
 	
 	/**
-	 * If the given value is not an array and not null, wrap it in one.
+	 * 如果给定的值不是数组且不是null，将其包装在一个数组中
 	 *
 	 * @param mixed $value
 	 * @return array
@@ -473,7 +473,7 @@ final class Arr{
 	}
 	
 	/**
-	 * Flatten a multi-dimensional associative array with dots.
+	 * 将数组使用点展平多维关联数组
 	 *
 	 * @param array  $array
 	 * @param string $prepend
@@ -494,12 +494,73 @@ final class Arr{
 	}
 	
 	/**
-	 * Determine whether the given value is array accessible.
+	 * 给定值是否可由数组访问
 	 *
 	 * @param mixed $value
 	 * @return bool
 	 */
 	public static function accessible($value){
 		return is_array($value) || $value instanceof \ArrayAccess;
+	}
+	
+	/**
+	 * 返回数组中通过给定真值测试的第一个元素
+	 *
+	 * @param array|iterable $array
+	 * @param callable|null  $callback
+	 * @param mixed          $default
+	 * @return mixed
+	 */
+	public static function first($array, callable $callback = null, $default = null){
+		if(is_null($callback)){
+			if(empty($array)){
+				return value($default);
+			}
+			
+			foreach($array as $item){
+				return $item;
+			}
+		}
+		
+		foreach($array as $key => $value){
+			if(call_user_func($callback, $value, $key)){
+				return $value;
+			}
+		}
+		
+		return value($default);
+	}
+	
+	/**
+	 * 返回数组中通过给定真值测试的最后一个元素
+	 *
+	 * @param array         $array
+	 * @param callable|null $callback
+	 * @param mixed         $default
+	 * @return mixed
+	 */
+	public static function last($array, callable $callback = null, $default = null){
+		if(is_null($callback)){
+			return empty($array) ? value($default) : end($array);
+		}
+		
+		return static::first(array_reverse($array, true), $callback, $default);
+	}
+	
+	/**
+	 * 检测数组所有元素是否都符合指定条件
+	 *
+	 * @param array|iterable  $array
+	 * @param string|callable $callback
+	 * @return bool
+	 */
+	public static function every($array, $callback){
+		foreach($array as $k => $v){
+			if(!$callback($v, $k)){
+				return false;
+			}
+		}
+		
+		return true;
 	}
 }

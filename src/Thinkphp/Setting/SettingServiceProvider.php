@@ -32,9 +32,11 @@ class SettingServiceProvider extends ServiceProvider{
 	 * @inheritDoc
 	 */
 	public function boot(){
-		$this->app->config->set(
-			Setting::load()
-		);
+		$this->app->event->listen('HttpRun', function(){
+			$this->app->config->set(
+				Setting::load()
+			);
+		});
 	}
 	
 }

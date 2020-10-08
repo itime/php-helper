@@ -15,56 +15,56 @@ use Xin\Support\Str;
 class Gate implements GateContract{
 	
 	/**
-	 * The container instance.
+	 * 容器实例
 	 *
 	 * @var \Psr\Container\ContainerInterface
 	 */
 	protected $container;
 	
 	/**
-	 * The user resolver callable.
+	 * 用户解析解决器
 	 *
 	 * @var callable
 	 */
 	protected $userResolver;
 	
 	/**
-	 * All of the defined abilities.
+	 * 所有定义的能力
 	 *
 	 * @var array
 	 */
 	protected $abilities = [];
 	
 	/**
-	 * All of the defined policies.
+	 * 所有定义的策略
 	 *
 	 * @var array
 	 */
 	protected $policies = [];
 	
 	/**
-	 * All of the registered before callbacks.
+	 * 所有在回调之前注册的
 	 *
 	 * @var array
 	 */
 	protected $beforeCallbacks = [];
 	
 	/**
-	 * All of the registered after callbacks.
+	 * 所有在回调后注册的
 	 *
 	 * @var array
 	 */
 	protected $afterCallbacks = [];
 	
 	/**
-	 * All of the defined abilities using class@method notation.
+	 * 所有定义的能力，使用class@method notation.
 	 *
 	 * @var array
 	 */
 	protected $stringCallbacks = [];
 	
 	/**
-	 * The callback to be used to guess policy names.
+	 * 策略名称探测器
 	 *
 	 * @var callable|null
 	 */
@@ -85,17 +85,17 @@ class Gate implements GateContract{
 	public function __construct(ContainerInterface $container, callable $userResolver, array $abilities = [],
 		array $policies = [], array $beforeCallbacks = [], array $afterCallbacks = [],
 		callable $guessPolicyNamesUsingCallback = null){
-		$this->policies = $policies;
 		$this->container = $container;
-		$this->abilities = $abilities;
 		$this->userResolver = $userResolver;
+		$this->abilities = $abilities;
+		$this->policies = $policies;
 		$this->afterCallbacks = $afterCallbacks;
 		$this->beforeCallbacks = $beforeCallbacks;
 		$this->guessPolicyNamesUsingCallback = $guessPolicyNamesUsingCallback;
 	}
 	
 	/**
-	 * Determine if a given ability has been defined.
+	 *给定的能力是否已定义
 	 *
 	 * @param string|array $ability
 	 * @return bool
@@ -113,7 +113,7 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Define a new ability.
+	 *定义一个新的能力
 	 *
 	 * @param string          $ability
 	 * @param callable|string $callback
@@ -135,7 +135,7 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Define abilities for a resource.
+	 * 定义资源的能力
 	 *
 	 * @param string     $name
 	 * @param string     $class
@@ -160,7 +160,7 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Create the ability callback for a callback string.
+	 * 为回调字符串创建能力回调
 	 *
 	 * @param string $ability
 	 * @param string $callback
@@ -195,7 +195,7 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Define a policy class for a given class type.
+	 * 为给定的类类型定义策略类
 	 *
 	 * @param string $class
 	 * @param string $policy
@@ -208,7 +208,7 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Register a callback to run before all Gate checks.
+	 * 注册一个回调以在所有检查之前运行
 	 *
 	 * @param callable $callback
 	 * @return $this
@@ -220,7 +220,7 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Register a callback to run after all Gate checks.
+	 * 注册一个回调以在所有检查之后运行
 	 *
 	 * @param callable $callback
 	 * @return $this
@@ -232,7 +232,7 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Determine if the given ability should be denied for the current user.
+	 * 是否应拒绝当前用户的给定能力
 	 *
 	 * @param string      $ability
 	 * @param array|mixed $arguments
@@ -243,14 +243,14 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Determine if all of the given abilities should be granted for the current user.
+	 * 是否应该为当前用户授予所有给定的能力
 	 *
 	 * @param iterable|string $abilities
 	 * @param array|mixed     $arguments
 	 * @return bool
 	 */
 	public function check($abilities, $arguments = []){
-		return collect($abilities)->every(function($ability) use ($arguments){
+		return Arr::every($abilities, function($ability) use ($arguments){
 			try{
 				return (bool)$this->raw($ability, $arguments);
 			}catch(AuthorizationException $e){
@@ -260,31 +260,20 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Determine if any one of the given abilities should be granted for the current user.
+	 * 是否应为当前用户授予任何给定的能力
 	 *
-	 * @param iterable|string $abilities
-	 * @param array|mixed     $arguments
+	 * @param array|iterable $abilities
+	 * @param array|mixed    $arguments
 	 * @return bool
 	 */
 	public function any($abilities, $arguments = []){
-		return collect($abilities)->contains(function($ability) use ($arguments){
+		return Arr::first($abilities, function($ability) use ($arguments){
 			return $this->check($ability, $arguments);
 		});
 	}
 	
 	/**
-	 * Determine if all of the given abilities should be denied for the current user.
-	 *
-	 * @param iterable|string $abilities
-	 * @param array|mixed     $arguments
-	 * @return bool
-	 */
-	public function none($abilities, $arguments = []){
-		return !$this->any($abilities, $arguments);
-	}
-	
-	/**
-	 * Get the raw result from the authorization callback.
+	 * 从授权回调获取原始结果
 	 *
 	 * @param string      $ability
 	 * @param array|mixed $arguments
@@ -315,11 +304,11 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Determine whether the callback/method can be called with the given user.
+	 * 是否可以使用给定的回调/方法
 	 *
-	 * @param \Illuminate\Contracts\Auth\Authenticatable|null $user
-	 * @param \Closure|string|array                           $class
-	 * @param string|null                                     $method
+	 * @param mixed                 $user
+	 * @param \Closure|string|array $class
+	 * @param string|null           $method
 	 * @return bool
 	 */
 	protected function canBeCalledWithUser($user, $class, $method = null){
@@ -341,7 +330,7 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Determine if the given class method allows guests.
+	 * 给定的类方法是否允许来宾访问
 	 *
 	 * @param string $class
 	 * @param string $method
@@ -364,11 +353,12 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Determine if the callback allows guests.
+	 * 回调是否允许来宾访问
 	 *
 	 * @param callable $callback
 	 * @return bool
-	 * @throws \ReflectionException
+	 * @noinspection PhpDocMissingThrowsInspection
+	 * @noinspection PhpUnhandledExceptionInspection
 	 */
 	protected function callbackAllowsGuests($callback){
 		$parameters = (new \ReflectionFunction($callback))->getParameters();
@@ -377,11 +367,12 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Determine if the given parameter allows guests.
+	 * 给定参数是否允许来宾访问
 	 *
 	 * @param \ReflectionParameter $parameter
 	 * @return bool
-	 * @throws \ReflectionException
+	 * @noinspection PhpDocMissingThrowsInspection
+	 * @noinspection PhpUnhandledExceptionInspection
 	 */
 	protected function parameterAllowsGuests($parameter){
 		return ($parameter->getClass() && $parameter->allowsNull())
@@ -389,11 +380,11 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Resolve and call the appropriate authorization callback.
+	 * 解决授权用户回调
 	 *
-	 * @param \Illuminate\Contracts\Auth\Authenticatable|null $user
-	 * @param string                                          $ability
-	 * @param array                                           $arguments
+	 * @param mixed  $user
+	 * @param string $ability
+	 * @param array  $arguments
 	 * @return bool
 	 */
 	protected function callAuthCallback($user, $ability, array $arguments){
@@ -403,13 +394,12 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Call all of the before callbacks and return if a result is given.
+	 * 调用所有before回调并在给定结果时返回
 	 *
-	 * @param \Illuminate\Contracts\Auth\Authenticatable|null $user
-	 * @param string                                          $ability
-	 * @param array                                           $arguments
-	 * @return bool|null
-	 * @throws \ReflectionException
+	 * @param mixed  $user
+	 * @param string $ability
+	 * @param array  $arguments
+	 * @return bool|void
 	 */
 	protected function callBeforeCallbacks($user, $ability, array $arguments){
 		foreach($this->beforeCallbacks as $before){
@@ -424,12 +414,12 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Call all of the after callbacks with check result.
+	 * 检查结果调用所有after回调
 	 *
-	 * @param \Illuminate\Contracts\Auth\Authenticatable $user
-	 * @param string                                     $ability
-	 * @param array                                      $arguments
-	 * @param bool                                       $result
+	 * @param mixed  $user
+	 * @param string $ability
+	 * @param array  $arguments
+	 * @param bool   $result
 	 * @return bool|null
 	 */
 	protected function callAfterCallbacks($user, $ability, array $arguments, $result){
@@ -447,11 +437,11 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Resolve the callable for the given ability and arguments.
+	 * 解决给定的能力和参数解析回调
 	 *
-	 * @param \Illuminate\Contracts\Auth\Authenticatable|null $user
-	 * @param string                                          $ability
-	 * @param array                                           $arguments
+	 * @param mixed  $user
+	 * @param string $ability
+	 * @param array  $arguments
 	 * @return callable
 	 */
 	protected function resolveAuthCallback($user, $ability, array $arguments){
@@ -479,11 +469,10 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Get a policy instance for a given class.
+	 * 获取给定类的策略实例
 	 *
 	 * @param object|string $class
-	 * @return mixed
-	 * @throws \Illuminate\Contracts\Container\BindingResolutionException
+	 * @return mixed|void
 	 */
 	public function getPolicyFor($class){
 		if(is_object($class)){
@@ -512,7 +501,7 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Guess the policy name for the given class.
+	 * 猜测给定类的策略名称
 	 *
 	 * @param string $class
 	 * @return array
@@ -524,11 +513,11 @@ class Gate implements GateContract{
 		
 		$classDirname = str_replace('/', '\\', dirname(str_replace('\\', '/', $class)));
 		
-		return [$classDirname.'\\Policies\\'.class_basename($class).'Policy'];
+		return [$classDirname.'\\policies\\'.class_basename($class).'Policy'];
 	}
 	
 	/**
-	 * Specify a callback to be used to guess policy names.
+	 * 指定用于猜测策略名称的回调
 	 *
 	 * @param callable $callback
 	 * @return $this
@@ -552,10 +541,10 @@ class Gate implements GateContract{
 	/**
 	 * Resolve the callback for a policy check.
 	 *
-	 * @param \Illuminate\Contracts\Auth\Authenticatable $user
-	 * @param string                                     $ability
-	 * @param array                                      $arguments
-	 * @param mixed                                      $policy
+	 * @param mixed  $user
+	 * @param string $ability
+	 * @param array  $arguments
+	 * @param mixed  $policy
 	 * @return bool|callable
 	 */
 	protected function resolvePolicyCallback($user, $ability, array $arguments, $policy){
@@ -585,13 +574,13 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Call the "before" method on the given policy, if applicable.
+	 * 如果适用，请对给定策略调用“before”方法
 	 *
-	 * @param mixed                                      $policy
-	 * @param \Illuminate\Contracts\Auth\Authenticatable $user
-	 * @param string                                     $ability
-	 * @param array                                      $arguments
-	 * @return mixed
+	 * @param mixed  $policy
+	 * @param mixed  $user
+	 * @param string $ability
+	 * @param array  $arguments
+	 * @return mixed|void
 	 */
 	protected function callPolicyBefore($policy, $user, $ability, $arguments){
 		if(!method_exists($policy, 'before')){
@@ -606,10 +595,10 @@ class Gate implements GateContract{
 	/**
 	 * Call the appropriate method on the given policy.
 	 *
-	 * @param mixed                                           $policy
-	 * @param string                                          $method
-	 * @param \Illuminate\Contracts\Auth\Authenticatable|null $user
-	 * @param array                                           $arguments
+	 * @param mixed  $policy
+	 * @param string $method
+	 * @param mixed  $user
+	 * @param array  $arguments
 	 * @return mixed
 	 */
 	protected function callPolicyMethod($policy, $method, $user, array $arguments){
@@ -632,7 +621,7 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Format the policy ability into a method name.
+	 * 将策略功能格式化为方法名
 	 *
 	 * @param string $ability
 	 * @return string
@@ -642,9 +631,9 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Get a gate instance for the given user.
+	 * 获取给定用户的gate实例
 	 *
-	 * @param \Illuminate\Contracts\Auth\Authenticatable|mixed $user
+	 * @param mixed $user
 	 * @return static
 	 */
 	public function forUser($user){
@@ -660,7 +649,7 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Resolve the user from the user resolver.
+	 * 从用户解析程序解析用户
 	 *
 	 * @return mixed
 	 */
@@ -669,7 +658,7 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Get all of the defined abilities.
+	 * 获得所有定义的能力
 	 *
 	 * @return array
 	 */
@@ -678,7 +667,7 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 * Get all of the defined policies.
+	 * 获取所有已定义的策略
 	 *
 	 * @return array
 	 */

@@ -5,9 +5,11 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Auth;
+namespace Xin\Contracts\Bus;
 
-interface Balance{
+use Xin\Contracts\Foundation\Repository as BaseRepository;
+
+interface BalanceRepository extends BaseRepository{
 	
 	/**
 	 * 获取用户余额数据

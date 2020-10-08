@@ -71,7 +71,12 @@ class Setting extends Model{
 			self::updateCache();
 		}
 		
-		return Cache::get(self::CACHE_KEY) ?: [];
+		$config = Cache::get(self::CACHE_KEY);
+		if(empty($config)){
+			$config = self::updateCache();
+		}
+		
+		return $config;
 	}
 	
 	/**
@@ -178,8 +183,12 @@ class Setting extends Model{
 		if(strpos($string, ':')){
 			$value = [];
 			foreach($array as $val){
-				[$k, $v] = explode(':', $val);
-				$value[$k] = $v;
+				$val = explode(':', $val);
+				if(isset($val[1]) && $val[0] !== ''){
+					$value[$val[0]] = $val[1];
+				}else{
+					$value[] = $val[0];
+				}
 			}
 		}else{
 			$value = $array;
@@ -204,6 +213,10 @@ class Setting extends Model{
 	
 	/**
 	 * 更新缓存
+	 *
+	 * @return array
+	 * @noinspection PhpUnhandledExceptionInspection
+	 * @noinspection PhpDocMissingThrowsInspection
 	 */
 	public static function updateCache(){
 		$data = self::field('type,name,value')
@@ -225,5 +238,7 @@ class Setting extends Model{
 		}
 		
 		Cache::set(Setting::CACHE_KEY, $settings);
+		
+		return $settings;
 	}
 }
