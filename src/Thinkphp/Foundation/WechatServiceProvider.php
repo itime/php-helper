@@ -13,7 +13,7 @@ class WechatServiceProvider extends ServiceProvider{
 	 * 启动器
 	 */
 	public function register(){
-		$this->app->bind('hash', function(){
+		$this->app->bind('wechat', function(){
 			return new Wechat(
 				$this->app->config->get('wechat')
 			);

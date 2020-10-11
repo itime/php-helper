@@ -11,7 +11,6 @@ use think\facade\Route;
 use Xin\Thinkphp\Plugin\PluginDispatch;
 
 /**
- * Class Plugin
  * @method bool has($plugin) static
  * @method \Xin\Contracts\Plugin\Plugin plugin($plugin) static
  * @method string pluginClass($plugin) static

@@ -10,7 +10,6 @@ namespace Xin\Thinkphp\Facade;
 use think\Facade;
 
 /**
- * Class Hash
  * @method string make($value, array $options = []) static
  * @method bool check($value, $hashedValue, array $options = []) static
  * @method bool needsRehash($hashedValue, array $options = []) static

@@ -8,8 +8,9 @@
 namespace Xin\Thinkphp\Filesystem;
 
 use Xin\Support\Arr;
+use Xin\Support\Manager;
 
-class FilesystemManager{
+class FilesystemManager extends Manager{
 	
 	/**
 	 * @var array
@@ -31,34 +32,6 @@ class FilesystemManager{
 	 */
 	public function disk(string $name = null){
 		return $this->driver($name);
-	}
-	
-	/**
-	 * 获取驱动实例
-	 *
-	 * @param null|string $name
-	 * @return mixed
-	 */
-	protected function driver(string $name = null){
-		$name = $name ?: $this->getDefaultDriver();
-		
-		if(is_null($name)){
-			throw new \InvalidArgumentException(sprintf(
-				'Unable to resolve NULL driver for [%s].', static::class
-			));
-		}
-		
-		return $this->drivers[$name] = $this->getDriver($name);
-	}
-	
-	/**
-	 * 获取驱动实例
-	 *
-	 * @param string $name
-	 * @return mixed
-	 */
-	protected function getDriver(string $name){
-		return $this->drivers[$name] ?? $this->createDriver($name);
 	}
 	
 	/**

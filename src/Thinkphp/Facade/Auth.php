@@ -9,7 +9,6 @@ namespace Xin\Thinkphp\Facade;
 use think\Facade;
 
 /**
- * Class Auth
  * @method \Xin\Contracts\Auth\Guard|\Xin\Contracts\Auth\StatefulGuard guard($name = null) static
  * @method void shouldUse($name = null) static
  *

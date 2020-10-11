@@ -99,4 +99,15 @@ class Faker extends Facade{
 		
 		return self::$instance;
 	}
+	
+	/**
+	 * 带参数实例化当前Facade类
+	 *
+	 * @access public
+	 * @param array $args
+	 * @return FakerGenerator
+	 */
+	public static function instance(...$args){
+		return static::createFacade('', $args);
+	}
 }

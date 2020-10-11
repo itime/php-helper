@@ -9,9 +9,12 @@ namespace Xin\Thinkphp\Facade;
 use think\Facade;
 
 /**
- * Class Storage
+ * @method static \EasyWeChat\OpenPlatform\Application defaultOpenPlatform($options = [])
+ * @method static \EasyWeChat\OfficialAccount\Application defaultOfficial($options = [])
+ * @method static \EasyWeChat\MiniProgram\Application defaultMiniProgram($options = [])
+ * @mixin \Xin\Thinkphp\Foundation\Wechat
  */
-class Storage extends Facade{
+class Wechat extends Facade{
 	
 	/**
 	 * 获取当前Facade对应类名（或者已经绑定的容器对象标识）
@@ -20,6 +23,7 @@ class Storage extends Facade{
 	 * @return string
 	 */
 	protected static function getFacadeClass(){
-		return 'NewFilesystem';
+		return 'wechat';
 	}
+	
 }

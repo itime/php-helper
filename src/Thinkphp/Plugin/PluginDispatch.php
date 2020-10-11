@@ -167,10 +167,11 @@ class PluginDispatch extends Controller{
 			return;
 		}
 		
+		$viewLayer = $appName != $this->getDefaultAppName() ? "{$appName}view" : 'view';
+		
 		/** @var \think\View $view */
 		$view = $this->app->make('view');
-		
-		$viewPath = $this->pluginManager->path($this->plugin)."{$appName}view".DIRECTORY_SEPARATOR;
+		$viewPath = $this->pluginManager->path($this->plugin).$viewLayer.DIRECTORY_SEPARATOR;
 		$view->engine()->config([
 			"view_path" => $viewPath,
 		]);

@@ -10,7 +10,6 @@ namespace Xin\Thinkphp\Facade;
 use think\Facade;
 
 /**
- * Class Hint
  * @method \Xin\Hint\HintManager shouldUseApi() static
  * @method \Xin\Hint\HintManager shouldUseWeb() static
  * @method \think\Response success($msg, $url = null, $data = null, array $extend = []) static

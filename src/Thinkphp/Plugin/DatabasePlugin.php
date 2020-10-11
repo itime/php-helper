@@ -9,6 +9,6 @@ namespace Xin\Thinkphp\Plugin;
 
 use Think\Model;
 
-class Plugin extends Model{
+class DatabasePlugin extends Model{
 
 }

@@ -19,6 +19,7 @@ class FilesystemServiceProvider extends ServiceProvider{
 		$config = $this->config->get('filesystem');
 		
 		$fs = new FilesystemManager($config);
+		
 		thinkphp60_if(function() use ($fs){
 			$this->app->bind([
 				'NewFilesystem'                => $fs,
