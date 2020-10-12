@@ -10,5 +10,9 @@ namespace Xin\Thinkphp\Plugin;
 use Think\Model;
 
 class DatabasePlugin extends Model{
-
+	
+	/**
+	 * @var string
+	 */
+	protected $name = 'plugin';
 }

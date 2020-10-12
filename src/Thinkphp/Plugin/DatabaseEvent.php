@@ -17,6 +17,11 @@ use think\Model;
 class DatabaseEvent extends Model{
 	
 	/**
+	 * @var string
+	 */
+	protected $name = 'event';
+	
+	/**
 	 * @var string[]
 	 */
 	protected $schema = [
