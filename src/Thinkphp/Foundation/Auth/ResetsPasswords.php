@@ -7,6 +7,7 @@
 
 namespace Xin\Thinkphp\Foundation\Auth;
 
+use think\exception\ValidateException;
 use think\Request;
 use think\Validate;
 use Xin\Auth\Events\PasswordReset;
@@ -29,10 +30,15 @@ trait ResetsPasswords{
 			return $this->showResetForm($request);
 		}
 		
-		$this->validateReset($request);
+		// 验证请求数据是否正确
+		$credentials = $this->validateReset($request);
 		
-		$credentials = $this->credentials($request);
 		$user = $this->guard()->getUser();
+		
+		// 验证原始密码是否正确
+		$this->validateOriginalPassword($user, $credentials);
+		
+		// 重新设置新密码
 		if($this->resetPassword($user, $credentials)){
 			return $this->sendResetResponse($request, $credentials);
 		}
@@ -49,6 +55,7 @@ trait ResetsPasswords{
 	 *
 	 * @param \think\Request $request
 	 * @return \think\response\View
+	 * @noinspection PhpUnusedParameterInspection
 	 */
 	public function showResetForm(Request $request){
 		return view('auth/password_reset');
@@ -58,23 +65,50 @@ trait ResetsPasswords{
 	 * Validate the user login request.
 	 *
 	 * @param Request $request
-	 * @return void
+	 * @return array
 	 */
 	protected function validateReset(Request $request){
 		$validate = new Validate();
 		$validate->failException(true);
 		
+		$passwordField = $this->password();
+		$newPasswordField = $this->newPassword();
+		$confirmPasswordField = $this->confirmPassword();
+		
 		$validate->rule([
-			'password'    => 'require|alphaDash',
-			'repassword'  => 'require|confirm:password',
-			'newpassword' => 'require|alphaDash|different:password',
+			$passwordField        => 'require|alphaDash',
+			$newPasswordField     => "require|alphaDash|different:{$passwordField}",
+			$confirmPasswordField => "require|confirm:{$newPasswordField}",
 		], [
-			'password'    => '旧密码',
-			'repassword'  => '确认密码',
-			'newpassword' => '新密码',
+			'password'         => '旧密码',
+			'new_password'     => '新密码',
+			'confirm_password' => '确认密码',
+		]);
+		$validate->message([
+			"{$newPasswordField}.different"   => '新密码不能与旧密码一样',
+			"{$confirmPasswordField}.confirm" => '新密码与确认密码不一致',
 		]);
 		
-		$validate->check($request->param());
+		$credentials = $this->credentials($request);
+		$validate->check($credentials);
+		
+		return $credentials;
+	}
+	
+	/**
+	 * 验证原始密码是否正确
+	 *
+	 * @param mixed $user
+	 * @param array $credentials
+	 */
+	protected function validateOriginalPassword($user, $credentials){
+		$originalPassword = $credentials[$this->password()];
+		
+		$authPasswordField = $this->authPassword();
+		
+		if(!Hash::check($originalPassword, $user[$authPasswordField])){
+			throw new ValidateException("原始密码不一致");
+		}
 	}
 	
 	/**
@@ -85,9 +119,9 @@ trait ResetsPasswords{
 	 */
 	protected function credentials(Request $request){
 		return $request->only([
-			'password',
-			'repassword',
-			'newpassword',
+			$this->password(),
+			$this->newPassword(),
+			$this->confirmPassword(),
 		]);
 	}
 	
@@ -99,7 +133,12 @@ trait ResetsPasswords{
 	 * @return bool
 	 */
 	protected function resetPassword($user, array $credentials){
-		$user->password = Hash::make($credentials['newpassword']);
+		$authPasswordField = $this->authPassword();
+		
+		$user[$authPasswordField] = Hash::make(
+			$credentials[$this->newPassword()]
+		);
+		
 		if($user->save() === false){
 			return false;
 		}
@@ -117,6 +156,7 @@ trait ResetsPasswords{
 	 * @param \think\Request $request
 	 * @param array          $credentials
 	 * @return \think\Response
+	 * @noinspection PhpUnusedParameterInspection
 	 */
 	protected function sendResetResponse(Request $request, array $credentials){
 		return $request->isJson() || $request->isAjax()
@@ -130,9 +170,46 @@ trait ResetsPasswords{
 	 * @param \think\Request $request
 	 * @param array          $credentials
 	 * @return \think\Response
+	 * @noinspection PhpUnusedParameterInspection
 	 */
 	protected function sendResetFailedResponse(Request $request, array $credentials){
 		return Hint::error('修改失败！');
+	}
+	
+	/**
+	 * 守卫者密码字段
+	 *
+	 * @return string
+	 */
+	protected function authPassword(){
+		return 'password';
+	}
+	
+	/**
+	 * 旧密码
+	 *
+	 * @return string
+	 */
+	protected function password(){
+		return 'password';
+	}
+	
+	/**
+	 * 新密码
+	 *
+	 * @return string
+	 */
+	protected function newPassword(){
+		return 'new_password';
+	}
+	
+	/**
+	 * 确认密码
+	 *
+	 * @return string
+	 */
+	protected function confirmPassword(){
+		return 'confirm_password';
 	}
 	
 	/**

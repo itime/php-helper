@@ -49,14 +49,12 @@ class Weight{
 		$this->config = $app['config'];
 		
 		$this->view = new View($app);
-		thinkphp60_if(function(){
-			$this->view->engine()->config([
-				"view_dir_name" => "view",
-				"view_path"     => root_path(dirname(get_class($this))),
-			]);
-		}, function(){
-			$this->view->init($this->config->pull('template'));
-		});
+		
+		$classPath = str_replace("\\", "/", get_class($this));
+		$this->view->engine()->config([
+			"view_dir_name" => "view",
+			"view_path"     => root_path(dirname($classPath)),
+		]);
 	}
 	
 }
