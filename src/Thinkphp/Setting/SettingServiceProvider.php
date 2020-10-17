@@ -33,9 +33,10 @@ class SettingServiceProvider extends ServiceProvider{
 	 */
 	public function boot(){
 		$this->app->event->listen('HttpRun', function(){
-			$this->app->config->set(
-				Setting::load()
-			);
+			$config = DatabaseSetting::load();
+			foreach($config as $key => $value){
+				$this->app->config->set($value, $key);
+			}
 		});
 	}
 	

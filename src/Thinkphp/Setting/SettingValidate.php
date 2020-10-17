@@ -20,7 +20,7 @@ class SettingValidate extends Validate{
 	 * @var array
 	 */
 	protected $rule = [
-		'name'  => 'require|alphaDash|length:3,32|unique:setting',
+		'name'  => 'require|regex:/^[A-Za-z0-9\-\_\.]+$/|length:3,32|unique:setting',
 		'title' => 'require|length:2,12',
 		'group' => 'alphaDash',
 		'type'  => 'alphaDash',

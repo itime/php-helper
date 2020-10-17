@@ -10,10 +10,10 @@ namespace Xin\Thinkphp\Setting\Command;
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
-use Xin\Thinkphp\Setting\Setting;
+use Xin\Thinkphp\Setting\DatabaseSetting;
 
 class Show extends Command{
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -21,14 +21,14 @@ class Show extends Command{
 		$this->setName('setting:show')
 			->setDescription('查看站点配置');
 	}
-	
+
 	/**
 	 * @param \think\console\Input  $input
 	 * @param \think\console\Output $output
 	 */
 	protected function execute(Input $input, Output $output){
 		$output->highlight(
-			json_encode(Setting::load(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+			json_encode(DatabaseSetting::load(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
 		);
 		$output->newLine();
 	}

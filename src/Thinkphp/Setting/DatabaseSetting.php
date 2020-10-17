@@ -22,12 +22,17 @@ use think\Model;
  * @property string extra
  * @property int    group
  */
-class Setting extends Model{
+class DatabaseSetting extends Model{
 	
 	/**
 	 * 缓存数据的key
 	 */
 	const CACHE_KEY = '__SYS_SETTING__';
+	
+	/**
+	 * @var string
+	 */
+	protected $name = 'setting';
 	
 	/**
 	 * 禁止写入创建时间
@@ -55,7 +60,7 @@ class Setting extends Model{
 	/**
 	 * 加载数据库设置信息
 	 *
-	 * @param array $settings
+	 * @param array|null $settings
 	 * @return array
 	 */
 	public static function load(array $settings = null){
@@ -237,7 +242,7 @@ class Setting extends Model{
 			unset($data[$key]);
 		}
 		
-		Cache::set(Setting::CACHE_KEY, $settings);
+		Cache::set(DatabaseSetting::CACHE_KEY, $settings);
 		
 		return $settings;
 	}

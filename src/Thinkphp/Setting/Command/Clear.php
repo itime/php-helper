@@ -11,10 +11,10 @@ use think\console\Command;
 use think\console\Input;
 use think\console\Output;
 use think\facade\Cache;
-use Xin\Thinkphp\Setting\Setting;
+use Xin\Thinkphp\Setting\DatabaseSetting;
 
 class Clear extends Command{
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -22,14 +22,14 @@ class Clear extends Command{
 		$this->setName('setting:clear')
 			->setDescription('清除站点配置');
 	}
-	
+
 	/**
 	 * @param \think\console\Input  $input
 	 * @param \think\console\Output $output
 	 */
 	protected function execute(Input $input, Output $output){
-		Cache::delete(Setting::CACHE_KEY);
-		
+		Cache::delete(DatabaseSetting::CACHE_KEY);
+
 		$output->highlight("已更新配置！");
 		$output->newLine();
 	}

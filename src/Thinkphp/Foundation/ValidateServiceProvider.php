@@ -17,7 +17,7 @@ class ValidateServiceProvider extends ServiceProvider{
 	public function register(){
 		Validate::maker(function(Validate $v){
 			$v->extend('alphaDash2', function($value) use ($v){
-				return $v->regex($value, '/^[A-Za-z0-9\-\_\\\]+$/');
+				return $v->regex($value, '/^[A-Za-z0-9\.\-\_\\\]+$/');
 			}, ':attribute只能是字母、数字和下划线_破折号-反斜杠\\');
 			
 			$v->extend('chsDash2', function($value) use ($v){
