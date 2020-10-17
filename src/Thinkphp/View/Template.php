@@ -282,6 +282,9 @@ class Template{
 		$cacheFile = $this->config['cache_path'].$this->config['cache_prefix'].md5($this->config['layout_on'].$this->config['layout_name'].$template).'.'.ltrim($this->config['cache_suffix'], '.');
 		
 		if(!$this->checkCache($cacheFile)){
+			// 记录模板文件的更新时间
+			$this->includeFile[$template] = filemtime($template);
+			
 			// 缓存无效 重新模板编译
 			$content = file_get_contents($template);
 			$this->compiler($content, $cacheFile);
