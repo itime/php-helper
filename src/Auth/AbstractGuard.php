@@ -33,11 +33,16 @@ abstract class AbstractGuard implements GuardContract{
 	protected $provider;
 	
 	/**
+	 * @var \Closure
+	 */
+	protected $preCheckCallback;
+	
+	/**
 	 * AbstractGuard constructor.
 	 *
-	 * @param string               $name
-	 * @param array                $config
-	 * @param UserProviderContract $provider
+	 * @param string                    $name
+	 * @param array                     $config
+	 * @param UserProviderContract|null $provider
 	 */
 	public function __construct($name, array $config, UserProviderContract $provider = null){
 		$this->name = $name;
@@ -62,7 +67,24 @@ abstract class AbstractGuard implements GuardContract{
 			);
 		}
 		
+		if($abort){
+			$this->preCheck($this->user);
+		}
+		
 		return empty($field) ? $this->user : (isset($this->user[$field]) ? $this->user[$field] : $default);
+	}
+	
+	/**
+	 * 预检查数据
+	 *
+	 * @param mixed $user
+	 */
+	protected function preCheck($user){
+		if(!$this->preCheckCallback){
+			return;
+		}
+		
+		call_user_func($this->preCheckCallback, $user);
 	}
 	
 	/**
@@ -110,4 +132,12 @@ abstract class AbstractGuard implements GuardContract{
 		return $this->config;
 	}
 	
+	/**
+	 * 设置预检查回调
+	 *
+	 * @param callable $preCheckCallback
+	 */
+	public function setPreCheck(callable $preCheckCallback){
+		$this->preCheckCallback = $preCheckCallback;
+	}
 }

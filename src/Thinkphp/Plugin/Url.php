@@ -7,6 +7,7 @@
 namespace Xin\Thinkphp\Plugin;
 
 use think\app\Url as UrlBuild;
+use Xin\Support\Str;
 
 /**
  * 路由地址生成
@@ -42,11 +43,14 @@ class Url extends UrlBuild{
 			// 解析到控制器
 			$url = substr($url, 1);
 		}elseif('' === $url){
-			$url = $this->getAppName().'/'.($plugin ? "plugin/".$plugin."/" : "").$request->controller().'/'.$request->action();
+			$url = $this->getAppName().'/'
+				.($plugin ? "plugin/".$plugin."/" : "")
+				.Str::snake($request->controller()).'/'
+				.$request->action();
 		}else{
 			// 解析到 应用/控制器/操作
 			$app = $this->getAppName();
-			$controller = $request->controller();
+			$controller = Str::snake($request->controller());
 			
 			$path = explode('/', $url);
 			$action = array_pop($path);

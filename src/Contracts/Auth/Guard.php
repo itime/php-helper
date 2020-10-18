@@ -10,9 +10,9 @@ interface Guard{
 	/**
 	 * 获取用户信息
 	 *
-	 * @param string $field
-	 * @param mixed  $default
-	 * @param bool   $abort
+	 * @param string|null $field
+	 * @param mixed|null  $default
+	 * @param bool        $abort
 	 * @return mixed
 	 */
 	public function getUser($field = null, $default = null, $abort = true);
