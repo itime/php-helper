@@ -7,6 +7,7 @@
 
 namespace Xin\Thinkphp\Auth;
 
+use think\App;
 use Xin\Auth\Access\Gate;
 use Xin\Auth\AuthManager;
 use Xin\Contracts\Auth\Access\Gate as GateContract;
@@ -122,10 +123,17 @@ class AuthServiceProvider extends ServiceProvider{
 	 * @return void
 	 */
 	protected function registerAccessGate(){
-		$this->app->bind(GateContract::class, function($app){
-			return new Gate($app, function() use ($app){
+		$this->app->bind('gate', GateContract::class);
+		$this->app->bind(GateContract::class, function(App $app){
+			$gate = new Gate($app, function() use ($app){
 				return $app['auth']->guard()->getUser(null, null, false);
 			});
+			
+			$routeClass = \Xin\Thinkphp\Auth\Access\Abilities\RouteCheck::class;
+			$app->bind('ability_route', $routeClass);
+			$gate->define('route', "ability_route@handle");
+			
+			return $gate;
 		});
 	}
 	

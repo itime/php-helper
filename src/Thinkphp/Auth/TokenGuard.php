@@ -34,11 +34,11 @@ class TokenGuard extends AbstractStatefulGuard{
 	protected $cache;
 	
 	/**
-	 * TokenUser constructor.
+	 * TokenGuard constructor.
 	 *
-	 * @param string                           $name
-	 * @param array                            $config
-	 * @param \Xin\Contracts\Auth\UserProvider $provider
+	 * @param string               $name
+	 * @param array                $config
+	 * @param UserProviderContract $provider
 	 */
 	public function __construct($name, array $config, UserProviderContract $provider){
 		parent::__construct($name, $config, $provider);

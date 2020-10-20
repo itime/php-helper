@@ -12,18 +12,18 @@ interface Guard{
 	 *
 	 * @param string|null $field
 	 * @param mixed|null  $default
-	 * @param bool        $abort
+	 * @param int         $verifyType
 	 * @return mixed
 	 */
-	public function getUser($field = null, $default = null, $abort = true);
+	public function getUser($field = null, $default = null, $verifyType = AuthVerifyType::BASE);
 	
 	/**
 	 * 获取用户id
 	 *
-	 * @param bool $abort
+	 * @param int $verifyType
 	 * @return int
 	 */
-	public function getUserId($abort = true);
+	public function getUserId($verifyType = AuthVerifyType::BASE);
 	
 	/**
 	 * 暂存用户信息
@@ -42,10 +42,17 @@ interface Guard{
 	public function check();
 	
 	/**
-	 * Determine if the current user is a guest.
+	 * 检查当前是否是游客模式
 	 *
 	 * @return bool
 	 */
 	public function guest();
+	
+	/**
+	 * 设置获取用户信息预检查回调
+	 *
+	 * @param \Closure $preCheckCallback
+	 */
+	public function setPreCheckCallback(\Closure $preCheckCallback);
 	
 }

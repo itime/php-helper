@@ -13,15 +13,15 @@ use Xin\Contracts\Auth\Guard as GuardContract;
 
 /**
  * Class AuthManager
- * @method static mixed getUser($field = null, $default = null, $abort = true)
- * @method static int getUserId($abort = true)
- * @method static mixed saveUser(array $data, $abort = true)
- * @method static mixed temporaryUser($user)
- * @method static bool check()
- * @method static bool guest()
- * @method static bool login($user)
- * @method static bool loginUsingId($id)
- * @method static bool loginUsingCredential(array $credentials, \Closure $notExistCallback = null)
+ * @method mixed getUser($field = null, $default = null, $verifyType = 1)
+ * @method int getUserId($verifyType = 1)
+ * @method mixed temporaryUser($user)
+ * @method bool check()
+ * @method bool guest()
+ * @method bool login($user)
+ * @method bool loginUsingId($id)
+ * @method bool loginUsingCredential(array $credentials, \Closure $notExistCallback = null)
+ * @method void setPreCheckCallback(\Closure $preCheckCallback)
  */
 class AuthManager implements FactoryContract{
 	
@@ -218,6 +218,12 @@ class AuthManager implements FactoryContract{
 	 * @return array
 	 */
 	public function getGuardConfig($name){
+		if(!isset($this->config['guards'][$name])){
+			throw new \RuntimeException(
+				"not configure [{$name}] guard."
+			);
+		}
+		
 		return $this->config['guards'][$name];
 	}
 	
@@ -253,7 +259,7 @@ class AuthManager implements FactoryContract{
 	 * @return mixed
 	 */
 	public function user(){
-		return $this->getUser(null, null, false);
+		return $this->getUser(null, null, 0);
 	}
 	
 	/**
@@ -262,7 +268,7 @@ class AuthManager implements FactoryContract{
 	 * @return int
 	 */
 	public function id(){
-		return $this->getUserId(false);
+		return $this->getUserId(0);
 	}
 	
 	/**

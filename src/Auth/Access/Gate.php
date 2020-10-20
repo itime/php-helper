@@ -113,7 +113,7 @@ class Gate implements GateContract{
 	}
 	
 	/**
-	 *定义一个新的能力
+	 * 定义一个新的能力
 	 *
 	 * @param string          $ability
 	 * @param callable|string $callback
@@ -250,7 +250,7 @@ class Gate implements GateContract{
 	 * @return bool
 	 */
 	public function check($abilities, $arguments = []){
-		return Arr::every($abilities, function($ability) use ($arguments){
+		return Arr::every(Arr::wrap($abilities), function($ability) use ($arguments){
 			try{
 				return (bool)$this->raw($ability, $arguments);
 			}catch(AuthorizationException $e){

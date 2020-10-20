@@ -38,9 +38,9 @@ class SessionTokenGuard extends AbstractStatefulGuard{
 	/**
 	 * SessionTokenGuard constructor.
 	 *
-	 * @param string               $name
-	 * @param array                $config
-	 * @param UserProviderContract $provider
+	 * @param string                    $name
+	 * @param array                     $config
+	 * @param UserProviderContract|null $provider
 	 */
 	public function __construct($name, array $config, UserProviderContract $provider = null){
 		parent::__construct($name, $config, $provider);
@@ -53,7 +53,6 @@ class SessionTokenGuard extends AbstractStatefulGuard{
 	
 	/**
 	 * @inheritDoc
-	 * @throws \think\Exception
 	 */
 	protected function updateSession($user){
 		$this->session()->set('user', $user);
@@ -61,7 +60,6 @@ class SessionTokenGuard extends AbstractStatefulGuard{
 	
 	/**
 	 * @inheritDoc
-	 * @throws \think\Exception
 	 */
 	protected function resolveUser(){
 		return $this->session()->get('user');
@@ -69,7 +67,6 @@ class SessionTokenGuard extends AbstractStatefulGuard{
 	
 	/**
 	 * @inheritDoc
-	 * @throws \think\Exception
 	 */
 	public function logout(){
 		parent::logout();
