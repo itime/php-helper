@@ -118,4 +118,22 @@ trait RequestValidate{
 		
 		return $int;
 	}
+	
+	/**
+	 * 获取字符串数据并验证
+	 *
+	 * @param string $field
+	 * @param mixed  $default
+	 * @param string $filter
+	 * @return int
+	 */
+	public function stringWithValid($field, $default = null, $filter = ''){
+		$value = $this->param("{$field}", $default, $filter);
+		
+		if(empty($value)){
+			throw new ValidateException("param {$field} invalid.");
+		}
+		
+		return $value;
+	}
 }
