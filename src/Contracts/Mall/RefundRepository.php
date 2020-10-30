@@ -9,13 +9,6 @@ namespace Xin\Contracts\Mall;
 
 use Xin\Contracts\Foundation\Repository;
 
-interface Goods extends Repository{
-	
-	/**
-	 * get one product by sku.
-	 *
-	 * @param $sku
-	 * @return mixed
-	 */
-	public function findOneBySku($sku);
+interface RefundRepository extends Repository{
+
 }

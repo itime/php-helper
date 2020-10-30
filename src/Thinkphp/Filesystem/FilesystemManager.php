@@ -7,23 +7,25 @@
 
 namespace Xin\Thinkphp\Filesystem;
 
+use think\App;
 use Xin\Support\Arr;
 use Xin\Support\Manager;
 
 class FilesystemManager extends Manager{
 	
 	/**
-	 * @var array
+	 * @var \think\Config
 	 */
-	protected $config = [];
+	protected $config;
 	
 	/**
 	 * FilesystemManager constructor.
 	 *
-	 * @param array $config
+	 * @param \think\App $app
 	 */
-	public function __construct(array $config){
-		$this->config = $config;
+	public function __construct(App $app){
+		parent::__construct($app);
+		$this->config = $app['config'];
 	}
 	
 	/**
@@ -45,7 +47,7 @@ class FilesystemManager extends Manager{
 	public function getConfig(string $name = null, $default = null){
 		if(!is_null($name)){
 			return Arr::get(
-				$this->config,
+				$this->config->get('filesystem.'),
 				$name,
 				$default
 			);

@@ -9,7 +9,7 @@ namespace Xin\Contracts\Saas;
 
 use Xin\Contracts\Foundation\Wechat as BaseWechat;
 
-interface Wechat extends BaseWechat{
+interface WechatRepository extends BaseWechat{
 	
 	/**
 	 * 获取id微信开放平台实例

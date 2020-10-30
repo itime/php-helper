@@ -11,9 +11,9 @@ interface FavoriteRepository{
 	/**
 	 * 根据用户和数据类型获取收藏数据
 	 *
-	 * @param int $userId
-	 * @param int $type
-	 * @param int $limit
+	 * @param int      $userId
+	 * @param int      $type
+	 * @param int|null $limit
 	 * @return mixed
 	 */
 	public function getByUserAndType($userId, $type, $limit = null);
@@ -45,5 +45,5 @@ interface FavoriteRepository{
 	 * @param array $ids
 	 * @return mixed
 	 */
-	public function delFavorites($userId, array $ids);
+	public function unFavorites($userId, array $ids);
 }

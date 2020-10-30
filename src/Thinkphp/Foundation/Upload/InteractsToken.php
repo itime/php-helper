@@ -5,10 +5,8 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Mall;
+namespace Xin\Thinkphp\Foundation\Upload;
 
-use Xin\Contracts\Foundation\Repository;
-
-interface ShoppingCart extends Repository{
-
+trait InteractsToken{
+	
 }

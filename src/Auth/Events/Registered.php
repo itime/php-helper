@@ -11,14 +11,14 @@ class Registered{
 	/**
 	 * The authenticated user.
 	 *
-	 * @var \Xin\Contracts\Auth\Guard
+	 * @var mixed
 	 */
 	public $user;
 	
 	/**
 	 * Create a new event instance.
 	 *
-	 * @param \Xin\Contracts\Auth\Guard $user
+	 * @param mixed $user
 	 * @return void
 	 */
 	public function __construct($user){

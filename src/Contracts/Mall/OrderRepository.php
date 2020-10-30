@@ -12,7 +12,7 @@ use Xin\Contracts\Foundation\Repository;
 /**
  * Interface Order
  */
-interface Order extends Repository{
+interface OrderRepository extends Repository{
 	
 	/**
 	 * 根据订单编号获得订单数据.
