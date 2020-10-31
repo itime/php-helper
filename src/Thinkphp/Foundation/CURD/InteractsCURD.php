@@ -34,17 +34,45 @@ trait InteractsCURD{
 	}
 	
 	/**
+	 * 列表条件处理
+	 *
+	 * @param \think\db\Query $query
+	 * @return \think\db\Query
+	 */
+	protected function querySelect(Query $query){
+		return $query;
+	}
+	
+	/**
+	 * 列表处理
+	 *
+	 * @param mixed $list
+	 * @return mixed
+	 */
+	protected function listHandle($list){
+		return $list;
+	}
+	
+	/**
 	 * 数据列表
 	 *
 	 * @return mixed
 	 * @throws \think\db\exception\DbException
 	 */
 	public function index(){
-		$data = $this->model()->order('id desc')->paginate(
-			$this->request->limit(), false, [
-			'page'  => $this->request->page(),
-			'query' => $this->request->get(),
-		]);
+		/** @var Query $query */
+		$query = $this->model()->order('id desc');
+		
+		$tempQuery = call_user_func([$this, 'querySelect'], $query);
+		if($tempQuery instanceof Query){
+			$query = $tempQuery;
+		}elseif(is_array($tempQuery)){
+			$query->where($tempQuery);
+		}
+		
+		$data = $query->paginate($this->request->paginate());
+		
+		$data = $this->listHandle($data);
 		
 		return $this->showListView($data);
 	}
@@ -372,7 +400,7 @@ trait InteractsCURD{
 	/**
 	 * 根据id获取数据，如果为空将中断执行
 	 *
-	 * @param int $id
+	 * @param int|null $id
 	 * @return array|string|\think\Model
 	 */
 	protected function findIsEmptyAssert($id = null){

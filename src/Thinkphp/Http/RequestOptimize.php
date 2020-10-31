@@ -41,6 +41,24 @@ trait RequestOptimize{
 	}
 	
 	/**
+	 * 获取分页参数
+	 *
+	 * @param bool $withQuery
+	 * @return array
+	 */
+	public function paginate($withQuery = true){
+		$param = [
+			'page' => $this->request->page(),
+		];
+		
+		if($withQuery){
+			$param['query'] = $this->request->get();
+		}
+		
+		return $param;
+	}
+	
+	/**
 	 * 获取页码
 	 *
 	 * @return int

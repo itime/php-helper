@@ -13,7 +13,7 @@ use think\facade\Env;
  *
  * @mixin \think\migration\Seeder
  */
-trait Seeder{
+trait FakerSeeder{
 	
 	/**
 	 * 构建数据

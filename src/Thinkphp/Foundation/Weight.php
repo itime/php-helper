@@ -16,7 +16,7 @@ use think\View;
  * @property-read \think\Config  $config
  * @property-read \think\View    $view
  */
-class Weight{
+abstract class Weight{
 	
 	/**
 	 * @var \think\App
@@ -57,4 +57,54 @@ class Weight{
 		]);
 	}
 	
+	/**
+	 * 中控入口
+	 */
+	public function handle(){
+		echo call_user_func_array([$this, 'render'], func_get_args());
+	}
+	
+	/**
+	 * 渲染
+	 *
+	 * @return string
+	 */
+	abstract protected function render();
+	
+	/**
+	 * 渲染模板
+	 *
+	 * @param string $template
+	 * @param array  $vars
+	 * @return string
+	 * @noinspection PhpUnhandledExceptionInspection
+	 * @noinspection PhpDocMissingThrowsInspection
+	 */
+	protected function fetch($template = '', $vars = []){
+		return $this->view->fetch($template, $vars);
+	}
+	
+	/**
+	 * 渲染内容
+	 *
+	 * @param string $content
+	 * @param array  $vars
+	 * @return string
+	 */
+	protected function display($content, $vars = []){
+		return $this->view->display($content, $vars);
+	}
+	
+	/**
+	 * 模板变量赋值
+	 *
+	 * @access public
+	 * @param string|array $name 模板变量
+	 * @param mixed        $value 变量值
+	 * @return $this
+	 */
+	protected function assign($name, $value = null){
+		$this->view->assign($name, $value);
+		return $this;
+	}
 }
