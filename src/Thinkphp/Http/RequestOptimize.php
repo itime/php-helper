@@ -48,11 +48,11 @@ trait RequestOptimize{
 	 */
 	public function paginate($withQuery = true){
 		$param = [
-			'page' => $this->request->page(),
+			'page' => $this->page(),
 		];
 		
 		if($withQuery){
-			$param['query'] = $this->request->get();
+			$param['query'] = $this->get();
 		}
 		
 		return $param;

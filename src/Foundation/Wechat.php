@@ -91,7 +91,7 @@ class Wechat implements WechatContract{
 			'strict' => true,
 		], $options);
 		
-		$sc->events->dispatch();
+		//		$sc->events->dispatch();
 		
 		return $sc;
 	}

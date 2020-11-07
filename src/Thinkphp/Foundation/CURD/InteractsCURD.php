@@ -60,8 +60,15 @@ trait InteractsCURD{
 	 * @throws \think\db\exception\DbException
 	 */
 	public function index(){
+		$keywordField = $this->property('keywordField');
+		$keywords = $this->request->keywordsSql();
+		
 		/** @var Query $query */
-		$query = $this->model()->order('id desc');
+		$query = $this->model()
+			->when($keywordField && $keywords, [
+				[$keywordField, 'like', $keywords],
+			])
+			->order('id desc');
 		
 		$tempQuery = call_user_func([$this, 'querySelect'], $query);
 		if($tempQuery instanceof Query){
@@ -322,7 +329,7 @@ trait InteractsCURD{
 		
 		$fieldStudly = Str::studly($field);
 		$this->invokeMethod("beforeSet{$fieldStudly}", [&$ids, $field, $value]);
-		if($this->model()::update($data, [
+		if($this->model()->update($data, [
 				['id', 'IN', $ids],
 			]) === false){
 			return Hint::error("更新失败！");

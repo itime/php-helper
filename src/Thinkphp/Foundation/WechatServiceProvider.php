@@ -7,6 +7,8 @@
 
 namespace Xin\Thinkphp\Foundation;
 
+use Xin\Foundation\Wechat;
+
 class WechatServiceProvider extends ServiceProvider{
 	
 	/**

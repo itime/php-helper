@@ -7,6 +7,8 @@
 
 namespace Xin\Thinkphp\View;
 
+use think\Exception;
+
 /**
  * Trait Parser
  *
@@ -433,7 +435,6 @@ trait TemplateParser{
 	 */
 	protected function parseTag(string &$content):void{
 		$regex = $this->getRegex('tag');
-		
 		if(preg_match_all($regex, $content, $matches, PREG_SET_ORDER)){
 			foreach($matches as $match){
 				$str = stripslashes($match[1]);
@@ -553,6 +554,23 @@ trait TemplateParser{
 				}
 				
 				$content = str_replace($match[0], $str, $content);
+			}
+			
+			unset($matches);
+		}
+		
+		$sRegex = $this->getRegex('@');
+		if(preg_match_all($sRegex, $content, $matches, PREG_SET_ORDER)){
+			foreach($matches as $match){
+				$directive = stripslashes($match[1]);
+				
+				// 指令
+				if(isset($this->directive[$directive])){
+					$callback = $this->directive[$directive];
+					$parseStr = $callback($match[2]);
+					
+					$content = str_replace($match[0], $parseStr, $content);
+				}
 			}
 			
 			unset($matches);
@@ -804,6 +822,9 @@ trait TemplateParser{
 			}else{
 				$regex = $begin.'((?:[\$]{1,2}[a-wA-w_]|[\:\~][\$a-wA-w_]|[+]{2}[\$][a-wA-w_]|[-]{2}[\$][a-wA-w_]|\/[\*\/])(?>(?:(?!'.$end.').)*))'.$end;
 			}
+		}elseif('@' == $tagName){
+			$regex = '\@([a-wA-w_]*)\(([\$a-wA-w_]*)\)';
+			// $regex = '\@([a-wA-w_]*\([\$a-wA-w_]*\))';
 		}else{
 			$begin = $this->config['taglib_begin'];
 			$end = $this->config['taglib_end'];

@@ -76,6 +76,13 @@ class Template{
 	];
 	
 	/**
+	 * 扩展指令解析规则
+	 *
+	 * @var array
+	 */
+	protected $directive = [];
+	
+	/**
 	 * 扩展解析规则
 	 *
 	 * @var array
@@ -177,6 +184,11 @@ class Template{
 			}
 			
 			return 'app(\'request\')->'.$method.'('.$params.')';
+		});
+		
+		// 扩展常用指令
+		$this->directive('json', function($vars){
+			return '<?php echo json_encode('.$vars.')?>';
 		});
 	}
 	
@@ -399,12 +411,24 @@ class Template{
 	 * 扩展模板解析规则
 	 *
 	 * @access public
-	 * @param string   $rule 解析规则
-	 * @param callable $callback 解析规则
+	 * @param string        $rule 解析规则
+	 * @param callable|null $callback 解析规则
 	 * @return void
 	 */
 	public function extend(string $rule, callable $callback = null):void{
 		$this->extend[$rule] = $callback;
+	}
+	
+	/**
+	 * 扩展模板指令解析规则
+	 *
+	 * @access public
+	 * @param string        $rule 解析规则
+	 * @param callable|null $callback 解析规则
+	 * @return void
+	 */
+	public function directive(string $rule, callable $callback = null):void{
+		$this->directive[$rule] = $callback;
 	}
 	
 	/**

@@ -105,7 +105,7 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	
 	/**
 	 * @param array|\Closure $credentials
-	 * @param \Closure       $notExistCallback
+	 * @param \Closure|null  $notExistCallback
 	 * @return mixed
 	 */
 	protected function credentials(array $credentials, \Closure $notExistCallback = null){
