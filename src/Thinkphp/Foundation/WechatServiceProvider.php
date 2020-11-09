@@ -7,6 +7,7 @@
 
 namespace Xin\Thinkphp\Foundation;
 
+use Xin\Contracts\Foundation\Wechat as WechatContract;
 use Xin\Foundation\Wechat;
 
 class WechatServiceProvider extends ServiceProvider{
@@ -15,7 +16,8 @@ class WechatServiceProvider extends ServiceProvider{
 	 * 启动器
 	 */
 	public function register(){
-		$this->app->bind('wechat', function(){
+		$this->app->bind('wechat', WechatContract::class);
+		$this->app->bind(WechatContract::class, function(){
 			return new Wechat(
 				$this->app->config->get('wechat')
 			);
