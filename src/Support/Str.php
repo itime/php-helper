@@ -334,16 +334,21 @@ final class Str{
 		$datetime = date('YmdHis');
 		$microtime = explode(' ', microtime());
 		$microtime = intval($microtime[0] ? $microtime[0] * 100000 : 100000);
-		$nonceStr = substr(implode(null, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+		
+		$nonceStr = substr(uniqid(), 7, 13);
+		$nonceStr = str_split($nonceStr, 1);
+		$nonceStr = array_map('ord', $nonceStr);
+		$nonceStr = substr(implode(null, $nonceStr), -8);
+		
 		return $prefix.$datetime.$microtime.$nonceStr;
 	}
 	
 	/**
 	 * 创建一个随机名字
 	 *
-	 * @param string $firstName
-	 * @param int    $lastNameLength 名字字数
-	 * @param string $delimiter
+	 * @param string|null $firstName
+	 * @param int         $lastNameLength 名字字数
+	 * @param string      $delimiter
 	 * @return string
 	 */
 	public static function createName($firstName = null, $lastNameLength = 2, $delimiter = ''){
