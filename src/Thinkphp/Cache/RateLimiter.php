@@ -3,7 +3,7 @@
 namespace Xin\Thinkphp\Cache;
 
 use think\Cache;
-use Xin\Support\InteractsWithTime;
+use Xin\Support\Traits\InteractsWithTime;
 
 class RateLimiter{
 	

@@ -7,7 +7,7 @@
 
 namespace Xin\Cache;
 
-class MemcachedLock extends Lock{
+class MemcachedLock extends AbstractLock{
 	
 	/**
 	 * The Memcached instance.

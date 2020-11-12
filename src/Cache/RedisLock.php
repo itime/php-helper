@@ -7,7 +7,7 @@
 
 namespace Xin\Cache;
 
-class RedisLock extends Lock{
+class RedisLock extends AbstractLock{
 	
 	/**
 	 * The Redis factory implementation.
@@ -39,11 +39,11 @@ class RedisLock extends Lock{
 	public function acquire(){
 		$result = $this->redis->setnx($this->name, $this->owner);
 		
-		if($result === 1 && $this->seconds > 0){
+		if($result != 0 && $this->seconds > 0){
 			$this->redis->expire($this->name, $this->seconds);
 		}
 		
-		return $result === 1;
+		return $result != 0;
 	}
 	
 	/**

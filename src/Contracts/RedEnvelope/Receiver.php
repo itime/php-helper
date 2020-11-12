@@ -7,12 +7,12 @@
 
 namespace Xin\Contracts\RedEnvelope;
 
-interface Dispenser{
+interface Receiver{
 	
 	/**
 	 * 领取红包
 	 *
-	 * @return bool
+	 * @return array
 	 */
-	public function giveOut();
+	public function receive();
 }

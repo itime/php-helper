@@ -31,6 +31,13 @@ abstract class Manager{
 	protected $drivers = [];
 	
 	/**
+	 * Driver Suffix.
+	 *
+	 * @var string
+	 */
+	protected $driverSuffix = 'Driver';
+	
+	/**
 	 * Create a new manager instance.
 	 *
 	 * @param \Psr\Container\ContainerInterface $app
@@ -50,7 +57,7 @@ abstract class Manager{
 	/**
 	 * Get a driver instance.
 	 *
-	 * @param string $driver
+	 * @param string|null $driver
 	 * @return mixed
 	 * @throws \InvalidArgumentException
 	 */
@@ -87,7 +94,7 @@ abstract class Manager{
 		if(isset($this->customCreators[$driver])){
 			return $this->callCustomCreator($driver);
 		}else{
-			$method = 'create'.Str::studly($driver).'Driver';
+			$method = 'create'.Str::studly($driver).$this->driverSuffix;
 			
 			if(method_exists($this, $method)){
 				return $this->$method();

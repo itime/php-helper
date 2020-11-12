@@ -12,7 +12,7 @@ use Xin\Contracts\Cache\LockTimeoutException;
 use Xin\Support\Str;
 use Xin\Support\Traits\InteractsWithTime;
 
-abstract class Lock implements LockContract{
+abstract class AbstractLock implements LockContract{
 	
 	use InteractsWithTime;
 	
