@@ -22,12 +22,12 @@ interface BalanceRepository extends BaseRepository{
 	/**
 	 * 获取用户余额数据
 	 *
-	 * @param int    $userId
-	 * @param string $type
-	 * @param array  $options
+	 * @param int      $userId
+	 * @param int|null $type
+	 * @param array    $options
 	 * @return mixed
 	 */
-	public function getUserBalanceListByType($userId, $type = 'recharge', array $options = []);
+	public function getBalanceListByType($userId, $type = null, array $options = []);
 	
 	/**
 	 * 充值

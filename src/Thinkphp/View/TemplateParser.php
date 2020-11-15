@@ -188,7 +188,7 @@ trait TemplateParser{
 	 *
 	 * @access private
 	 * @param string $content 要解析的模板内容
-	 * @return void
+	 * @throws \Exception
 	 */
 	protected function parseExtend(string &$content):void{
 		$regex = $this->getRegex('extend');

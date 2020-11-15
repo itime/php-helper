@@ -45,8 +45,8 @@ if(!function_exists('thinkphp51_if')){
 	/**
 	 * 如果ThinkPHP版本是5.1执行第一个回调，如果不是执行第二个回调
 	 *
-	 * @param callable $resolve
-	 * @param callable $reject
+	 * @param callable      $resolve
+	 * @param callable|null $reject
 	 * @return mixed
 	 */
 	function thinkphp51_if($resolve, $reject = null){
@@ -64,8 +64,8 @@ if(!function_exists('thinkphp60_if')){
 	/**
 	 * 如果ThinkPHP版本是6.0执行第一个回调，如果不是执行第二个回调
 	 *
-	 * @param callable $resolve
-	 * @param callable $reject
+	 * @param callable      $resolve
+	 * @param callable|null $reject
 	 * @return mixed|null
 	 */
 	function thinkphp60_if($resolve, $reject = null){
@@ -83,8 +83,8 @@ if(!function_exists('event')){
 	/**
 	 * 监听行为
 	 *
-	 * @param string $event
-	 * @param array  $params
+	 * @param string     $event
+	 * @param array|null $params
 	 */
 	function listen($event, $params = null){
 		if(is_object($event)){
@@ -210,7 +210,11 @@ if(!function_exists('table_rows')){
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	function table_rows($table, $where = [], $field = '*', $order = '', $page = ''){
-		return \think\Db::name($table)->field($field)->where($where)->order($order)->page($page)->select();
+		return thinkphp60_if(function() use ($table, $where, $field, $order, $page){
+			return \think\facade\Db::name($table)->field($field)->where($where)->order($order)->page(intval($page))->select();
+		}, function() use ($table, $where, $field, $order, $page){
+			return \think\Db::name($table)->field($field)->where($where)->order($order)->page($page)->select();
+		});
 	}
 }
 
@@ -227,7 +231,11 @@ if(!function_exists('table_column')){
 	 * @return array
 	 */
 	function table_column($table, $field, $where = [], $key = '', $order = '', $page = ''){
-		return \think\Db::name($table)->where($where)->order($order)->page($page)->column($field, $key);
+		return thinkphp60_if(function() use ($table, $field, $where, $key, $order, $page){
+			return \think\facade\Db::name($table)->where($where)->order($order)->page(intval($page))->column($field, $key);
+		}, function() use ($table, $field, $where, $key, $order, $page){
+			return \think\Db::name($table)->where($where)->order($order)->page($page)->column($field, $key);
+		});
 	}
 }
 
@@ -242,7 +250,11 @@ if(!function_exists('table_value')){
 	 * @return mixed
 	 */
 	function table_value($table, $field, $where, $default = null){
-		return \think\Db::name($table)->where($where)->value($field, $default);
+		return thinkphp60_if(function() use ($table, $field, $where, $default){
+			return \think\facade\Db::name($table)->where($where)->value($field, $default);
+		}, function() use ($table, $field, $where, $default){
+			return \think\Db::name($table)->where($where)->value($field, $default);
+		});
 	}
 }
 
