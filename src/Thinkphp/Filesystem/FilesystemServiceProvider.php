@@ -16,20 +16,20 @@ class FilesystemServiceProvider extends ServiceProvider{
 	 * 注册对象存储提供者
 	 */
 	public function register(){
-		$config = $this->config->get('filesystem');
-		
-		$fs = new FilesystemManager($config);
-		
-		thinkphp60_if(function() use ($fs){
+		thinkphp60_if(function(){
 			$this->app->bind([
-				'NewFilesystem'                => $fs,
-				FilesystemInterface::class     => $fs,
-				BaseFilesystemInterface::class => $fs,
+				'filesystem'                   => BaseFilesystemInterface::class,
+				BaseFilesystemInterface::class => FilesystemInterface::class,
+				FilesystemInterface::class     => function(){
+					return new FilesystemManager($this->app);
+				},
 			]);
-		}, function() use ($fs){
-			$this->app->bindTo('NewFilesystem', $fs);
-			$this->app->bindTo(FilesystemInterface::class, $fs);
-			$this->app->bindTo(BaseFilesystemInterface::class, $fs);
+		}, function(){
+			$this->app->bindTo('filesystem', BaseFilesystemInterface::class);
+			$this->app->bindTo(BaseFilesystemInterface::class, FilesystemInterface::class);
+			$this->app->bindTo(FilesystemInterface::class, function(){
+				return new FilesystemManager($this->app);
+			});
 		});
 	}
 }

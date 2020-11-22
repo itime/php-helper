@@ -7,6 +7,9 @@
 
 namespace Xin\Support;
 
+/**
+ * Class Manager
+ */
 abstract class Manager{
 	
 	/**
@@ -57,60 +60,102 @@ abstract class Manager{
 	/**
 	 * Get a driver instance.
 	 *
-	 * @param string|null $driver
+	 * @param string|null $name
 	 * @return mixed
 	 * @throws \InvalidArgumentException
 	 */
-	public function driver($driver = null){
-		$driver = $driver ?: $this->getDefaultDriver();
+	public function driver($name = null){
+		$name = $name ?: $this->getDefaultDriver();
 		
-		if(is_null($driver)){
+		if(is_null($name)){
 			throw new \InvalidArgumentException(sprintf(
 				'Unable to resolve NULL driver for [%s].', static::class
 			));
 		}
 		
-		// If the given driver has not been created before, we will create the instances
-		// here and cache it so we can return it next time very quickly. If there is
-		// already a driver created by this name, we'll just return that instance.
-		if(!isset($this->drivers[$driver])){
-			$this->drivers[$driver] = $this->createDriver($driver);
-		}
-		
-		return $this->drivers[$driver];
+		return $this->drivers[$name] = $this->getDriver($name);
+	}
+	
+	/**
+	 * 获取驱动实例
+	 *
+	 * @param string $name
+	 * @return mixed
+	 */
+	protected function getDriver($name){
+		return $this->drivers[$name] ?? $this->createDriver($name);
+	}
+	
+	/**
+	 * 获取驱动类型
+	 *
+	 * @param string $name
+	 * @return mixed
+	 */
+	protected function resolveType($name){
+		return $name;
+	}
+	
+	/**
+	 * 获取驱动配置
+	 *
+	 * @param string $name
+	 * @return mixed
+	 */
+	protected function resolveConfig($name){
+		return $name;
+	}
+	
+	/**
+	 * 获取驱动参数
+	 *
+	 * @param $name
+	 * @return array
+	 */
+	protected function resolveParams($name):array{
+		$config = $this->resolveConfig($name);
+		return [$config];
 	}
 	
 	/**
 	 * Create a new driver instance.
 	 *
-	 * @param string $driver
+	 * @param string $name
 	 * @return mixed
 	 * @throws \InvalidArgumentException
 	 */
-	protected function createDriver($driver){
+	protected function createDriver($name){
+		$type = $this->resolveType($name);
+		$params = $this->resolveParams($name);
+		
 		// First, we will determine if a custom driver creator exists for the given driver and
 		// if it does not we will check for a creator method for the driver. Custom creator
 		// callbacks allow developers to build their own "drivers" easily using Closures.
-		if(isset($this->customCreators[$driver])){
-			return $this->callCustomCreator($driver);
+		if(isset($this->customCreators[$type])){
+			return $this->callCustomCreator($type, $params);
 		}else{
-			$method = 'create'.Str::studly($driver).$this->driverSuffix;
+			$method = 'create'.Str::studly($type).$this->driverSuffix;
 			
 			if(method_exists($this, $method)){
-				return $this->$method();
+				return call_user_func_array([$this, $method], $params);
 			}
 		}
-		throw new \InvalidArgumentException("Driver [$driver] not supported.");
+		
+		throw new \InvalidArgumentException("Driver [$type] not supported.");
 	}
 	
 	/**
 	 * Call a custom driver creator.
 	 *
-	 * @param string $driver
+	 * @param string $name
+	 * @param array  $params
 	 * @return mixed
 	 */
-	protected function callCustomCreator($driver){
-		return $this->customCreators[$driver]($this->app);
+	protected function callCustomCreator($name, $params){
+		return call_user_func_array(
+			$this->customCreators[$name],
+			$params
+		);
 	}
 	
 	/**

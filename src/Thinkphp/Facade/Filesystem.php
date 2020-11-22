@@ -10,8 +10,10 @@ use think\Facade;
 
 /**
  * Class Storage
+ *
+ * @mixin \Xin\Thinkphp\Filesystem\FilesystemManager
  */
-class Storage extends Facade{
+class Filesystem extends Facade{
 	
 	/**
 	 * 获取当前Facade对应类名（或者已经绑定的容器对象标识）
@@ -20,6 +22,6 @@ class Storage extends Facade{
 	 * @return string
 	 */
 	protected static function getFacadeClass(){
-		return 'NewFilesystem';
+		return 'filesystem';
 	}
 }

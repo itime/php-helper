@@ -40,8 +40,6 @@ class ApiHint implements HintContract{
 	 * @inheritDoc
 	 */
 	public function success($msg, $url = null, $data = null, array $extend = []){
-		$extend['url'] = $this->resolveSuccessUrl($url);
-		
 		return $this->resolve(1, $msg, $data, $extend);
 	}
 	
@@ -54,8 +52,6 @@ class ApiHint implements HintContract{
 			$msg = $msg->getMessage();
 			$extend = is_array($code) ? $code : [];
 		}
-		
-		$extend['url'] = $this->resolveErrorUrl($url);
 		
 		return $this->resolve($code, $msg, null, $extend);
 	}

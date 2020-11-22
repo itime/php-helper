@@ -7,32 +7,27 @@
 
 namespace Xin\Thinkphp\Filesystem;
 
-use think\App;
+use think\File;
+use think\filesystem\driver\Local;
+use Xin\Filesystem\Adapter\Aliyun\Aliyun;
+use Xin\Filesystem\Adapter\QCloud\QCloud;
+use Xin\Filesystem\Adapter\Qiniu\Qiniu;
+use Xin\Filesystem\Filesystem;
 use Xin\Support\Arr;
 use Xin\Support\Manager;
 
+/**
+ * Class FilesystemManager
+ *
+ * @property-read \think\App app
+ */
 class FilesystemManager extends Manager{
-	
-	/**
-	 * @var \think\Config
-	 */
-	protected $config;
-	
-	/**
-	 * FilesystemManager constructor.
-	 *
-	 * @param \think\App $app
-	 */
-	public function __construct(App $app){
-		parent::__construct($app);
-		$this->config = $app['config'];
-	}
 	
 	/**
 	 * @param null|string $name
 	 * @return \Xin\Filesystem\Filesystem
 	 */
-	public function disk(string $name = null){
+	public function disk($name = null){
 		return $this->driver($name);
 	}
 	
@@ -44,16 +39,12 @@ class FilesystemManager extends Manager{
 	 * @param mixed       $default 默认值
 	 * @return mixed
 	 */
-	public function getConfig(string $name = null, $default = null){
+	public function getConfig($name = null, $default = null){
 		if(!is_null($name)){
-			return Arr::get(
-				$this->config->get('filesystem.'),
-				$name,
-				$default
-			);
+			return $this->app->config->get('filesystem.'.$name, $default);
 		}
 		
-		return $this->config;
+		return $this->app->config->get('filesystem');
 	}
 	
 	/**
@@ -73,6 +64,22 @@ class FilesystemManager extends Manager{
 	}
 	
 	/**
+	 * @param string $name
+	 * @return array|mixed|string
+	 */
+	protected function resolveType($name){
+		return $this->getDiskConfig($name, 'type', 'local');
+	}
+	
+	/**
+	 * @param string $name
+	 * @return array|mixed|string
+	 */
+	protected function resolveConfig($name){
+		return $this->getDiskConfig($name);
+	}
+	
+	/**
 	 * 默认驱动
 	 *
 	 * @return string|null
@@ -82,13 +89,86 @@ class FilesystemManager extends Manager{
 	}
 	
 	/**
-	 * 动态调用
+	 * 保存文件
 	 *
-	 * @param string $method
-	 * @param array  $parameters
+	 * @param string               $path 路径
+	 * @param File                 $file 文件
+	 * @param null|string|\Closure $rule 文件名规则
+	 * @param array                $options 参数
+	 * @return bool|string
+	 */
+	public function putFile(string $path, File $file, $rule = null, array $options = []){
+		return $this->putFileAs($path, $file, $file->hashName($rule), $options);
+	}
+	
+	/**
+	 * 指定文件名保存文件
+	 *
+	 * @param string $path 路径
+	 * @param File   $file 文件
+	 * @param string $name 文件名
+	 * @param array  $options 参数
+	 * @return bool|string
+	 */
+	public function putFileAs(string $path, File $file, string $name, array $options = []){
+		$stream = fopen($file->getRealPath(), 'r');
+		$path = trim($path.'/'.$name, '/');
+		
+		$result = $this->putStream($path, $stream, $options);
+		
+		if(is_resource($stream)){
+			fclose($stream);
+		}
+		
+		return $result ? $path : false;
+	}
+	
+	/**
+	 * 本地驱动器
+	 *
+	 * @param array $config
 	 * @return mixed
 	 */
-	public function __call($method, $parameters){
-		return $this->driver()->$method(...$parameters);
+	protected function createLocalDriver(array $config){
+		return $this->app->make(Local::class, [$config]);
+	}
+	
+	/**
+	 * 七牛驱动器
+	 *
+	 * @param array $config
+	 * @return mixed
+	 * @throws \Xin\Filesystem\FilesystemException
+	 */
+	protected function createQiniuDriver(array $config){
+		return new FilesystemProxy(
+			new Filesystem(new Qiniu($config))
+		);
+	}
+	
+	/**
+	 * 阿里云OSS驱动器
+	 *
+	 * @param array $config
+	 * @return mixed
+	 * @throws \Xin\Filesystem\FilesystemException
+	 */
+	protected function createAliyunDriver(array $config){
+		return new FilesystemProxy(
+			new Filesystem(new Aliyun($config))
+		);
+	}
+	
+	/**
+	 * 腾讯云COS驱动器
+	 *
+	 * @param array $config
+	 * @return mixed
+	 * @throws \Xin\Filesystem\FilesystemException
+	 */
+	protected function createQCloudDriver(array $config){
+		return new FilesystemProxy(
+			new Filesystem(new QCloud($config))
+		);
 	}
 }

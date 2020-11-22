@@ -52,7 +52,7 @@ class ExceptionHandle extends Handle{
 			'message' => $this->getMessage($exception),
 			'code'    => $this->getCode($exception),
 		];
-		$log = "[{$data['code']}]{$data['message']}[{$data['file']}:{$data['line']}]";
+		$log = "[{$data['code']}]{$data['message']}[{$data['file']}:{$data['line']}]\n".$exception->getTraceAsString();
 		
 		if($this->app->config->get('log.record_trace')){
 			$log .= PHP_EOL.$exception->getTraceAsString();
