@@ -6,7 +6,6 @@
  */
 namespace Xin\Thinkphp\Http;
 
-use think\facade\App;
 use Xin\Support\Str;
 use Xin\Support\Time;
 
@@ -184,7 +183,7 @@ trait RequestOptimize{
 	 * @return string
 	 */
 	public function appName(){
-		return App::getInstance()->get('http')->getName();
+		return \app()->http->getName();
 	}
 	
 	/**

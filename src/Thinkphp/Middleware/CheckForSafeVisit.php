@@ -8,10 +8,11 @@ namespace Xin\Thinkphp\Middleware;
 
 use think\App;
 use think\exception\HttpException;
-use think\exception\HttpResponseException;
 use think\Request;
 
-class SafeVisitCheck{
+class CheckForSafeVisit{
+	
+	use LimitRoute;
 	
 	/**
 	 * @var \think\App
@@ -24,7 +25,12 @@ class SafeVisitCheck{
 	protected $config;
 	
 	/**
-	 * CheckSiteState constructor.
+	 * @var array
+	 */
+	protected $except = [];
+	
+	/**
+	 * CheckForSafeVisit constructor.
 	 *
 	 * @param \think\App $app
 	 */
@@ -42,9 +48,14 @@ class SafeVisitCheck{
 	 * @throws \Exception
 	 */
 	public function handle(Request $request, \Closure $next){
-		$safeKey = $this->safeKey($request);
+		$safeKey = $this->localSafeKey($request);
 		
 		if($safeKey != $this->resolveSafeKey($request)){
+			// 要排除的URL
+			if($this->isExcept($request)){
+				return $next($request);
+			}
+			
 			throw new HttpException(404, '页面不存在！');
 		}
 		
@@ -52,28 +63,29 @@ class SafeVisitCheck{
 	}
 	
 	/**
-	 * 获取本地的 safe_key
+	 * 获取本地的[safe_key]
 	 *
 	 * @param \think\Request $request
 	 * @return string
 	 */
-	protected function safeKey(Request $request){
+	protected function localSafeKey(Request $request){
 		return $this->config->get('app.safe_key');
 	}
 	
 	/**
-	 * 解析 safe_key
+	 * 获取当前请求的[safe_key]
 	 *
 	 * @param \think\Request $request
 	 * @return string
 	 */
 	protected function resolveSafeKey(Request $request){
-		$safeKey = $request->cookie($this->safeKeyKey());
-		if(empty($safeKey)){
-			$safeKey = $request->param('_safe_key', '', 'trim');
+		$safeKey = $request->cookie($this->cookieSafeKeyName());
 		
+		if(empty($safeKey)){
+			$safeKey = $request->param($this->requestSafeKeyName(), '', 'trim');
+			
 			if($safeKey){
-				$this->app->cookie->set($this->safeKeyKey(), $safeKey);
+				$this->app->cookie->set($this->cookieSafeKeyName(), $safeKey);
 			}
 		}
 		
@@ -81,12 +93,21 @@ class SafeVisitCheck{
 	}
 	
 	/**
-	 * store safe_key key
+	 * 获取 cookie 存储的[safe_key]名称
 	 *
 	 * @return string
 	 */
-	protected function safeKeyKey(){
+	protected function cookieSafeKeyName(){
 		return '__safe_key__';
+	}
+	
+	/**
+	 * 获取 当前请求的存储的[safe_key]参数名称
+	 *
+	 * @return string
+	 */
+	protected function requestSafeKeyName(){
+		return '_safe_key';
 	}
 	
 }

@@ -13,6 +13,8 @@ use Xin\Contracts\Auth\Factory as Auth;
 
 class Authenticate{
 	
+	use LimitRoute;
+	
 	/**
 	 * @var \think\App
 	 */
@@ -30,9 +32,7 @@ class Authenticate{
 	 *
 	 * @var array
 	 */
-	protected $except = [
-		//
-	];
+	protected $except = [];
 	
 	/**
 	 * Create a new middleware instance.
@@ -85,7 +85,7 @@ class Authenticate{
 		
 		$config = $this->auth->guard()->getConfig();
 		throw new AuthenticationException(
-			$guards,
+			$guards[0],
 			$this->redirectTo($request),
 			$config
 		);
@@ -103,22 +103,4 @@ class Authenticate{
 		}
 	}
 	
-	/**
-	 * The route operation to exclude is not authorized
-	 *
-	 * @param \think\Request $request
-	 * @return bool|void
-	 */
-	protected function isExcept($request){
-		$appName = $this->app->http->getName();
-		
-		$path = $request->pathinfo();
-		if($dotIndex = stripos($path, '.')){
-			$path = substr($path, 0, $dotIndex);
-		}
-		
-		$path = $appName."/".$path;
-		
-		return in_array($path, $this->except);
-	}
 }
