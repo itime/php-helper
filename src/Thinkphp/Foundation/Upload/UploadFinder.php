@@ -60,9 +60,10 @@ trait UploadFinder{
 			throw new HttpException(500, "文件保存失败！");
 		}
 		
-		$data['id'] = $id;
-		
-		return $data;
+		return [
+			'id'   => $id,
+			'path' => $data['path'],
+		];
 	}
 	
 	/**

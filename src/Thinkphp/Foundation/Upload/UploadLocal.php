@@ -39,7 +39,10 @@ trait UploadLocal{
 		// 文件是否已存在
 		$info = $this->findByFile($type, $file);
 		if(!empty($info)){
-			return Hint::result($info);
+			return Hint::result([
+				'id'   => $info['id'],
+				'path' => $info['path'],
+			]);
 		}
 		
 		// 保存文件
@@ -64,7 +67,7 @@ trait UploadLocal{
 		
 		return $this->saveDb($type, [
 			'path' => $publicPath,
-			//			'md5'  => $file->md5(),
+			'md5'  => $file->md5(),
 			'sha1' => $file->sha1(),
 			'size' => $file->getSize(),
 			'type' => $file->getMime(),
