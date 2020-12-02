@@ -9,6 +9,12 @@ namespace Xin\Thinkphp\Plugin;
 
 use Think\Model;
 
+/**
+ * Class DatabasePlugin
+ *
+ * @property-read string name
+ * @property-read int    install
+ */
 class DatabasePlugin extends Model{
 	
 	/**

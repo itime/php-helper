@@ -38,17 +38,11 @@ trait UploadLocal{
 		
 		// 文件是否已存在
 		$info = $this->findByFile($type, $file);
-		if(!empty($info)){
-			return Hint::result([
-				'id'   => $info['id'],
-				'path' => $info['path'],
-			]);
+		if(empty($info)){
+			$info = $this->putFile($type, $file);
 		}
 		
-		// 保存文件
-		$info = $this->putFile($type, $file);
-		
-		return Hint::result($info);
+		return Hint::success("已上传！", null, $info);
 	}
 	
 	/**
@@ -106,12 +100,12 @@ trait UploadLocal{
 			if($w > 0 && $h > 0){
 				$imageArea = ":{$w},{$h}";
 			}
-			
+			// size：2m
 			return 'fileSize:2097152|fileExt:jpg,png|fileMime:image/png,image/jpeg|image'.$imageArea;
-		}elseif($type === 'video'){
-			return "fileSize:2097152|fileExt:mp4|fileMime:video/mp4";
-		}elseif($type === 'audio'){
-			return "fileSize:2097152|fileExt:mp3,wma,ogg|fileMime:audio/mp3,audio/wma,audio/ogg";
+		}elseif($type === 'video'){ // size：10m
+			return "fileSize:104488960|fileExt:mp4|fileMime:video/mp4";
+		}elseif($type === 'audio'){ // size：4m
+			return "fileSize:4194304|fileExt:mp3,wma,ogg|fileMime:audio/mp3,audio/wma,audio/ogg";
 		}
 		
 		throw new ValidateException("不支持的文件类型");

@@ -134,12 +134,11 @@ class PluginDispatch extends Controller{
 		$appName = $this->app->http->getName();
 		
 		$controllerLayer = $appName != $this->getDefaultAppName() ? "{$appName}controller" : 'controller';
-		
 		$emptyController = $this->rule->config('empty_controller') ?: 'Error';
 		
 		$class = $this->pluginManager->controllerClass(
 			$this->plugin,
-			$controller,
+			$controller = str_replace(['/', '.'], '\\', $controller),
 			$controllerLayer
 		);
 		

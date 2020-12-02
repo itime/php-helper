@@ -27,7 +27,7 @@ class DatabaseSetting extends Model{
 	/**
 	 * 缓存数据的key
 	 */
-	const CACHE_KEY = '__SYS_SETTING__';
+	const CACHE_KEY = 'sys_setting';
 	
 	/**
 	 * @var string

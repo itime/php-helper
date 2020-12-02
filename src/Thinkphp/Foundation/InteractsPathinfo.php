@@ -27,6 +27,7 @@ trait InteractsPathinfo{
 		if($complete){
 			$pathinfo = $request->root().'/'.$pathinfo;
 		}
+		$pathinfo = trim($pathinfo, '/');
 		
 		if(false === $suffix){
 			// 禁止伪静态访问

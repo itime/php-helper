@@ -13,6 +13,7 @@ use think\helper\Str;
 use think\Request;
 use Xin\Thinkphp\Facade\Filesystem;
 use Xin\Thinkphp\Facade\Hint;
+use function Qiniu\base64_urlSafeDecode;
 
 /**
  * Trait UploadToken
@@ -72,7 +73,7 @@ trait UploadToken{
 		if($uploadType === 'qiniu'){
 			$policy = [
 				'callbackUrl'      => $this->callbackUrl($request),
-				'callbackBody'     => $this->callbackBody(),
+				'callbackBody'     => $this->callbackBody($type),
 				'callbackBodyType' => 'application/json',
 			];
 			
@@ -143,11 +144,22 @@ trait UploadToken{
 	}
 	
 	/**
+	 * @param string $type
 	 * @return string
 	 */
-	protected function callbackBody(){
+	protected function callbackBody($type){
 		$url = config('filesystem.disks.'.$this->disk().'.url');
-		return '{"url":"'.$url.'/$(key)","key":"$(key)","hash":"$(etag)","fsize":$(fsize)}';
+		return json_encode([
+			"type" => $type,
+			"url"  => "{$url}/$(key)",
+			"key"  => "$(key)",
+			"hash" => "$(etag)",
+			"size" => "$(fsize)",
+			"sha1" => "$(bodySha1)",
+			"mime" => "$(mimeType)",
+		], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+		// return '{"type":"'.$type.'","url":"'.$url.'/$(key)","key":"$(key)","hash":"$(etag)","size":$(fsize),"sha1":"$
+		//(bodySha1)","mime":"$(mimeType)"}';
 	}
 	
 	/**
@@ -158,21 +170,38 @@ trait UploadToken{
 		Hint::shouldUseApi();
 		
 		$data = $request->post();
-		//		$id = DB::table('images')->insertGetId([
-		//			'app_id'     => $data['app_id'],
-		//			'url'        => $data['url'],
-		//			'size'       => $data['fsize'],
-		//			'hash'       => $data['hash'],
-		//			'created_at' => now(),
-		//		]);
-		//
-		//		$result = [
-		//			'id'   => $id,
-		//			'url'  => $data['url'],
-		//			'hash' => $data['hash'],
-		//		];
+		
+		$type = $data['type'];
+		$sha1 = $data['sha1'];
+		$str = base64_urlSafeDecode($data['hash']);
+		$str = substr($str, 1);
+		$sha1 = $this->String2Hex($str);
+		
+		$info = $this->findBySHA1($type, $sha1);
+		if(!empty($info)){
+			return Hint::result([
+				'id'   => $info['id'],
+				'path' => $info['path'],
+			]);
+		}
+		
+		$data = $this->saveDb($type, [
+			'path' => $data['url'],
+			'md5'  => '',
+			'sha1' => $sha1,
+			'size' => $data['size'],
+			'type' => $data['mime'],
+		]);
 		
 		return Hint::result($data);
+	}
+	
+	function String2Hex($string){
+		$hex = '';
+		for($i = 0; $i < strlen($string); $i++){
+			$hex .= dechex(ord($string[$i]));
+		}
+		return $hex;
 	}
 	
 	/**
@@ -195,6 +224,8 @@ trait UploadToken{
 		if($method === $this->callbackAction()){
 			return $this->saveByToken(app()->request);
 		}
+		
+		return Hint::result();
 		
 		throw new HttpException(404);
 	}

@@ -7,8 +7,6 @@
 
 namespace Xin\Thinkphp\Foundation\Upload;
 
-use think\facade\Filesystem;
-use think\file\UploadedFile;
 use think\Request;
 
 /**
@@ -37,8 +35,6 @@ trait UploadFile{
 		
 		return $request->request('type', 'image', 'trim');
 	}
-	
-
 	
 	/**
 	 * 使用的驱动器

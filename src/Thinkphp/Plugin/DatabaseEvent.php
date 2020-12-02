@@ -108,22 +108,42 @@ class DatabaseEvent extends Model{
 	}
 	
 	/**
-	 * 挂载事件
+	 * 获取事件列表
 	 *
-	 * @param array  $events
-	 * @param string $name
+	 * @param array|null $names
+	 * @return \think\Collection
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function puts(array $events, $name){
-		$eventCollection = static::where('name', 'in', $events)->select();
+	protected static function resolveList($names){
+		if($names === null){
+			$eventCollection = static::select();
+		}else{
+			$names = is_array($names) ? $names : [$names];
+			$eventCollection = static::where('name', 'in', $names)->select();
+		}
+		
+		return $eventCollection;
+	}
+	
+	/**
+	 * 挂载插件
+	 *
+	 * @param string     $addon
+	 * @param array|null $names
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
+	 */
+	public static function mountAddon($addon, $names){
+		$eventCollection = static::resolveList($names);
 		
 		/** @var static $event */
 		foreach($eventCollection as $event){
 			$addons = $event->addons;
-			if(!in_array($name, $addons)){
-				$addons[] = $name;
+			if(!in_array($addon, $addons)){
+				$addons[] = $addon;
 				$addons = array_filter($addons);
 				$event->addons = $addons;
 				$event->save();
@@ -132,22 +152,23 @@ class DatabaseEvent extends Model{
 	}
 	
 	/**
-	 * 移除事件
+	 * 取消挂载插件
 	 *
-	 * @param array  $events
-	 * @param string $name
+	 * @param array|null $names
+	 * @param string     $addon
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function removes($events, $name){
-		$eventCollection = static::where('name', 'in', $events)->select();
+	public static function unmountAddon($addon, $names = null){
+		$eventCollection = static::resolveList($names);
+		
 		/** @var static $event */
 		foreach($eventCollection as $event){
 			$addons = $event->addons;
-			if(in_array($name, $addons)){
-				$addons = array_filter($addons, function($it) use ($name){
-					return !empty($it) && $it != $name;
+			if(in_array($addon, $addons)){
+				$addons = array_filter($addons, function($it) use ($addon){
+					return !empty($it) && $it != $addon;
 				});
 				$event->addons = $addons;
 				$event->save();

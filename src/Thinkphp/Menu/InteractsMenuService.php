@@ -46,7 +46,13 @@ trait InteractsMenuService{
 	 * @return string
 	 */
 	protected function currentRouteRule($request){
-		$controller = Str::snake($request->controller());
+		$controller = $request->controller();
+		if($pos = strrpos($controller, '.')){
+			$controller = substr($controller, 0, $pos).".".Str::snake(substr($controller, $pos + 1));
+		}else{
+			$controller = Str::snake($controller);
+		}
+		
 		$action = $request->action(false);
 		$rule = "{$controller}/{$action}";
 		

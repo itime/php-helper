@@ -24,11 +24,27 @@ trait UploadFinder{
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	protected function findByFile($type, UploadedFile $file){
-		return $this->findByMD5($type, $file->md5());
+		return $this->findBySHA1($type, $file->sha1());
 	}
 	
 	/**
-	 * 查找文件
+	 * 查找文件 - SHA1
+	 *
+	 * @param string $type
+	 * @param string $sha1
+	 * @return array|\think\Model|null
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
+	 */
+	protected function findBySHA1($type, $sha1){
+		return $this->db($type)->where([
+			'sha1' => $sha1,
+		])->find();
+	}
+	
+	/**
+	 * 查找文件 - MD5
 	 *
 	 * @param string $type
 	 * @param string $md5
