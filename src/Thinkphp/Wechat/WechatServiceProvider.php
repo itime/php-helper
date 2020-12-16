@@ -5,10 +5,11 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Foundation;
+namespace Xin\Thinkphp\Wechat;
 
 use Xin\Contracts\Foundation\Wechat as WechatContract;
 use Xin\Foundation\Wechat;
+use Xin\Thinkphp\Foundation\ServiceProvider;
 
 class WechatServiceProvider extends ServiceProvider{
 	

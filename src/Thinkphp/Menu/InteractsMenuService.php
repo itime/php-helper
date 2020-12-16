@@ -8,65 +8,82 @@
 namespace Xin\Thinkphp\Menu;
 
 use Xin\Menu\MenuManager;
-use Xin\Support\Str;
+use Xin\Thinkphp\Facade\Auth;
 
 trait InteractsMenuService{
 	
 	/**
 	 * 菜单初始化
 	 *
-	 * @param \think\Request $request
+	 * @param \think\Request|\Xin\Thinkphp\Http\RequestOptimize $request
 	 */
 	protected function menuInit($request){
-		bind('menu', function() use ($request){
-			$rule = $this->currentRouteRule($request);
-			
-			/** @var MenuManager $manager */
-			$manager = app(MenuManager::class, [
-				'app' => app(),
-			]);
-			
-			[$menus, $breads] = $manager->generate([
-				'rule'  => $rule,
-				'query' => $request->get() + $request->route(),
-				'menus' => $this->menus(),
-			]);
-			
-			return tap(new \stdClass(), function($std) use ($menus, $breads){
-				$std->menus = $menus;
-				$std->breads = $breads;
-			});
-		});
+		bind([
+			'menu'        => function(){
+				return new MenuManager($this->app, config('menu'));
+			},
+			'menu.driver' => function(){
+				return $this->app['menu']->menu();
+			},
+			'menu.show'   => function() use ($request){
+				/** @var \Xin\Menu\MenuManager $manager */
+				$manager = $this->app->menu;
+				[$menus, $breads] = $manager->generate($request->user(), [
+					'rule'             => $this->getCurrentPathRule($request),
+					'query'            => $request->get() + $request->route(),
+					'is_administrator' => $this->isAdministrator(),
+					'is_develop'       => $this->isDevMode(),
+				]);
+				
+				return tap(new \stdClass(), function($std) use ($menus, $breads){
+					$std->menus = $menus;
+					$std->breads = $breads;
+				});
+			},
+		]);
 	}
 	
 	/**
 	 * 获取生成规则
 	 *
-	 * @param \think\Request $request
+	 * @param \Xin\Thinkphp\Http\RequestOptimize $request
 	 * @return string
 	 */
-	protected function currentRouteRule($request){
-		$controller = $request->controller();
-		if($pos = strrpos($controller, '.')){
-			$controller = substr($controller, 0, $pos).".".Str::snake(substr($controller, $pos + 1));
-		}else{
-			$controller = Str::snake($controller);
-		}
+	protected function getCurrentPathRule($request){
+		//		$controller = $request->controller();
+		//		if($pos = strrpos($controller, '.')){
+		//			$controller = substr($controller, 0, $pos).".".Str::snake(substr($controller, $pos + 1));
+		//		}else{
+		//			$controller = Str::snake($controller);
+		//		}
+		//
+		//		$action = $request->action(false);
+		//		$rule = "{$controller}/{$action}";
+		//
+		//		if(method_exists($request, 'plugin') && $plugin = $request->plugin()){
+		//			$rule = "{$plugin}>{$rule}";
+		//		}
+		//
+		//		return $rule;
 		
-		$action = $request->action(false);
-		$rule = "{$controller}/{$action}";
-		
-		if(method_exists($request, 'plugin') && $plugin = $request->plugin()){
-			$rule = "{$plugin}>{$rule}";
-		}
-		
-		return $rule;
+		return $request->path();
 	}
 	
 	/**
-	 * @return array
+	 * 是否是超管
+	 *
+	 * @return bool
 	 */
-	protected function menus(){
-		return config('menus');
+	protected function isAdministrator(){
+		return Auth::isAdministrator();
+	}
+	
+	/**
+	 * 是否是开发模式
+	 *
+	 * @return bool
+	 */
+	protected function isDevMode(){
+		return config('web.develop_mode') == 1;
 	}
 }

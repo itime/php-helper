@@ -6,12 +6,10 @@
  */
 namespace Xin\Thinkphp\Http;
 
+use Illuminate\Support\Arr;
 use Xin\Support\Str;
 use Xin\Support\Time;
 
-/**
- * Trait RequestOptimize
- */
 trait RequestOptimize{
 	
 	/**
@@ -29,6 +27,11 @@ trait RequestOptimize{
 	protected $plugin;
 	
 	/**
+	 * @var string
+	 */
+	protected $path = null;
+	
+	/**
 	 * 获取 ID list
 	 *
 	 * @param string $field
@@ -36,7 +39,7 @@ trait RequestOptimize{
 	 */
 	public function ids($field = 'ids'):array{
 		$ids = $this->only([$field]);
-		return Str::explode($ids[$field]);
+		return isset($ids[$field]) ? Str::explode($ids[$field]) : [];
 	}
 	
 	/**
@@ -62,12 +65,13 @@ trait RequestOptimize{
 	 *
 	 * @return int
 	 */
-	public function page(){
+	public function page():int{
 		if(!isset($this->data['page'])){
 			$page = $this->param('page/d', 0);
 			$this->data['page'] = $page < 1 ? 1 : $page;
 		}
-		return $this->data['page'];
+		
+		return (int)$this->data['page'];
 	}
 	
 	/**
@@ -77,7 +81,7 @@ trait RequestOptimize{
 	 * @param int $default
 	 * @return int
 	 */
-	public function limit(int $max = 100, int $default = 20){
+	public function limit(int $max = 100, int $default = 20):int{
 		if(!isset($this->data['limit'])){
 			$limit = $this->param('limit/d', 0);
 			if($limit < 1){
@@ -86,7 +90,8 @@ trait RequestOptimize{
 				$this->data['limit'] = $limit > $max ? $max : $limit;
 			}
 		}
-		return $this->data['limit'];
+		
+		return (int)$this->data['limit'];
 	}
 	
 	/**
@@ -94,12 +99,13 @@ trait RequestOptimize{
 	 *
 	 * @return int
 	 */
-	public function offset(){
+	public function offset():int{
 		if(!isset($this->data['offset'])){
 			$offset = $this->param('offset/d', 0);
 			$this->data['offset'] = $offset < 1 ? 1 : $offset;
 		}
-		return $this->data['offset'];
+		
+		return (int)$this->data['offset'];
 	}
 	
 	/**
@@ -178,27 +184,133 @@ trait RequestOptimize{
 	}
 	
 	/**
-	 * 当前应用名称
+	 * Normalizes a query string.
+	 * It builds a normalized query string, where keys/value pairs are alphabetized,
+	 * have consistent escaping and unneeded delimiters are removed.
 	 *
-	 * @return string
+	 * @param string $qs Query string
+	 * @return string A normalized query string for the Request
 	 */
-	public function appName(){
-		return \app()->http->getName();
+	public static function normalizeQueryString($qs){
+		if('' === ($qs ?? '')){
+			return '';
+		}
+		
+		parse_str($qs, $qs);
+		
+		/** @var array $qs */
+		ksort($qs);
+		
+		return http_build_query($qs, '', '&', \PHP_QUERY_RFC3986);
 	}
 	
 	/**
-	 * 前进地址
+	 * Generates the normalized query string for the Request.
+	 * It builds a normalized query string, where keys/value pairs are alphabetized
+	 * and have consistent escaping.
 	 *
-	 * @param mixed $default
+	 * @return string|null A normalized query string for the Request
+	 */
+	public function getQueryString(){
+		$qs = static::normalizeQueryString($this->query());
+		
+		return '' === $qs ? null : $qs;
+	}
+	
+	/**
+	 * 获取当前请求的全路径地址
+	 *
 	 * @return string
 	 */
-	public function forwardUrl($default = ''){
-		$referer = $this->param("http_referer", '');
+	public function fullUrl(){
+		$query = $this->getQueryString();
 		
-		if(empty($referer)){
-			$referer = $this->server('HTTP_REFERER');
+		// $question = $this->baseUrl().$this->pathinfo() === '/' ? '/?' : '?';
+		$question = '?';
+		
+		return $query ? $this->url(true).$question.$query : $this->url(true);
+	}
+	
+	/**
+	 * 包含自定义参数的全路径地址
+	 *
+	 * @param array $query
+	 * @return string
+	 */
+	public function fullUrlWithQuery(array $query){
+		$question = '?';
+		// $question = $this->getBaseUrl().$this->getPathInfo() === '/' ? '/?' : '?';
+		
+		return count($this->get()) > 0
+			? $this->url().$question.http_build_query(array_merge($this->get(), $query), null, '&', PHP_QUERY_RFC3986)
+			: $this->fullUrl().$question.http_build_query($query, null, '&', PHP_QUERY_RFC3986);
+	}
+	
+	/**
+	 * Determine if the request is the result of an prefetch call.
+	 *
+	 * @return bool
+	 */
+	public function prefetch(){
+		return strcasecmp($this->server('HTTP_X_MOZ'), 'prefetch') === 0 ||
+			strcasecmp($this->header('Purpose'), 'prefetch') === 0;
+	}
+	
+	/**
+	 * 从Cookie中获取前一个地址
+	 *
+	 * @param string $fallback
+	 * @return string
+	 */
+	public function previousUrl($fallback = null){
+		$url = $this->cookie('_previous_url');
+		
+		if(!$url){
+			$url = (string)url($fallback);
 		}
 		
-		return $referer ?: (string)$default;
+		return $url;
+	}
+	
+	/**
+	 * 获取当前请求路径（是否包含应用名称）
+	 *
+	 * @param bool $complete
+	 * @return string
+	 */
+	public function path($complete = false){
+		if(is_null($this->path) === false){
+			return $this->path;
+		}
+		
+		$pathinfo = $this->pathinfo();
+		if($complete){
+			$pathinfo = $this->root().'/'.$pathinfo;
+		}
+		$pathinfo = trim($pathinfo, '/');
+		
+		$suffix = app()->route->config('url_html_suffix');
+		if(false === $suffix){
+			// 禁止伪静态访问
+			$path = $pathinfo;
+		}elseif($suffix){
+			// 去除正常的URL后缀
+			$path = preg_replace('/\.('.ltrim($suffix, '.').')$/i', '', $pathinfo);
+		}else{
+			// 允许任何后缀访问
+			$path = preg_replace('/\.'.$this->ext().'$/i', '', $pathinfo);
+		}
+		
+		return $path;
+	}
+	
+	/**
+	 * 验证当前路由地址是否是给定的规则
+	 *
+	 * @param string|array $patterns
+	 * @return bool
+	 */
+	public function pathIs($patterns){
+		return Str::is($patterns, $this->path());
 	}
 }

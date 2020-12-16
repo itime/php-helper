@@ -272,6 +272,18 @@ class AuthManager implements FactoryContract{
 	}
 	
 	/**
+	 * 当前用户是否为超级管理员
+	 *
+	 * @return bool
+	 */
+	public function isAdministrator(){
+		$config = $this->getGuardConfig(
+			$this->getDefaultDriver()
+		);
+		return $this->id() === $config['administrator_id'];
+	}
+	
+	/**
 	 * 动态调用默认驱动的方法
 	 *
 	 * @param string $method

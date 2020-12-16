@@ -58,6 +58,22 @@ abstract class Manager{
 	abstract public function getDefaultDriver();
 	
 	/**
+	 * 获取驱动类型
+	 *
+	 * @param string $name
+	 * @return mixed
+	 */
+	abstract protected function resolveType($name);
+	
+	/**
+	 * 获取驱动配置
+	 *
+	 * @param string $name
+	 * @return mixed
+	 */
+	abstract protected function resolveConfig($name);
+	
+	/**
 	 * Get a driver instance.
 	 *
 	 * @param string|null $name
@@ -87,32 +103,12 @@ abstract class Manager{
 	}
 	
 	/**
-	 * 获取驱动类型
-	 *
-	 * @param string $name
-	 * @return mixed
-	 */
-	protected function resolveType($name){
-		return $name;
-	}
-	
-	/**
-	 * 获取驱动配置
-	 *
-	 * @param string $name
-	 * @return mixed
-	 */
-	protected function resolveConfig($name){
-		return $name;
-	}
-	
-	/**
 	 * 获取驱动参数
 	 *
 	 * @param $name
 	 * @return array
 	 */
-	protected function resolveParams($name):array{
+	protected function resolveParams($name){
 		$config = $this->resolveConfig($name);
 		return [$config];
 	}

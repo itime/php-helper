@@ -8,23 +8,18 @@
 namespace Xin\Thinkphp\Middleware;
 
 use think\Request;
-use Xin\Thinkphp\Foundation\InteractsPathinfo;
 
 /**
- * Class LimitRoute
- *
  * @property array $except
  */
-trait LimitRoute{
-	
-	use InteractsPathinfo;
+trait InteractsExcept{
 	
 	/**
-	 * @param \think\Request $request
+	 * @param \Xin\Thinkphp\Http\RequestOptimize $request
 	 * @return bool
 	 */
 	protected function isExcept(Request $request){
 		$except = property_exists($this, 'except') ? $this->except : [];
-		return $this->pathIs($except);
+		return $request->pathIs($except);
 	}
 }

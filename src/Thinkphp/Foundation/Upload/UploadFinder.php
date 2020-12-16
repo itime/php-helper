@@ -24,7 +24,7 @@ trait UploadFinder{
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	protected function findByFile($type, UploadedFile $file){
-		return $this->findBySHA1($type, $file->sha1());
+		return $this->findBySHA1($type, $file->md5());
 	}
 	
 	/**

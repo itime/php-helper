@@ -2,7 +2,7 @@
 	"name":"xin/helper",
 	"description":"PHP项目日常开发必备基础库，数组工具类、字符串工具类、数字工具类、函数工具类、服务器工具类、加密工具类",
 	"type":"library",
-	"version":"3.0.5",
+	"version":"3.1.28",
 	"authors":[
 		{
 			"name":"晋",
@@ -12,6 +12,7 @@
 	"license":"Apache-2.0",
 	"minimum-stability":"stable",
 	"require":{
+		"php":">=7.1.9",
 		"nesbot/carbon":"^1.26.3 || ^2.0",
 		"ext-json":"*",
 		"ext-openssl":"*",
@@ -20,7 +21,7 @@
 		"ext-ctype":"*",
 		"ext-libxml":"*",
 		"ext-simplexml":"*",
-		"swiftmailer/swiftmailer": "^6.2"
+		"swiftmailer/swiftmailer":"^6.2"
 	},
 	"require-dev":{
 		"xin/oss":"^2.0"

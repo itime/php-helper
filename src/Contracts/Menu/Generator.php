@@ -7,14 +7,15 @@
 
 namespace Xin\Contracts\Menu;
 
-interface Menu{
+interface Generator{
 	
 	/**
 	 * 生成菜单
 	 *
+	 * @param array $menus
 	 * @param array $options
 	 * @return array
 	 */
-	public function generate(array $options = []);
+	public function generate(array $menus, array $options = []);
 	
 }

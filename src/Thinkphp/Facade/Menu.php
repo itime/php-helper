@@ -9,9 +9,9 @@ namespace Xin\Thinkphp\Facade;
 use think\Facade;
 
 /**
- * @mixin \Xin\Thinkphp\Filesystem\FilesystemManager
+ * @mixin \Xin\Menu\MenuManager
  */
-class Filesystem extends Facade{
+class Menu extends Facade{
 	
 	/**
 	 * 获取当前Facade对应类名（或者已经绑定的容器对象标识）
@@ -20,6 +20,6 @@ class Filesystem extends Facade{
 	 * @return string
 	 */
 	protected static function getFacadeClass(){
-		return 'filesystem';
+		return 'menu';
 	}
 }

@@ -307,7 +307,7 @@ trait InteractsCURD{
 		}
 		
 		$ids = $this->request->idsWithValid();
-		$value = $this->request->param("{$field}/d");
+		$value = $this->request->param("{$field}");
 		
 		$data = [
 			$field => $value,
@@ -421,17 +421,11 @@ trait InteractsCURD{
 	/**
 	 * 跳转地址
 	 *
-	 * @param mixed $default
+	 * @param string $fallback
 	 * @return mixed
 	 */
-	protected function jumpUrl($default){
-		$referer = $this->request->param("http_referer", '');
-		
-		if(empty($referer)){
-			$referer = $this->request->server('HTTP_REFERER');
-		}
-		
-		return $referer ?: $default;
+	protected function jumpUrl($fallback = 'index'){
+		return $this->request->previousUrl($fallback);
 	}
 	
 }

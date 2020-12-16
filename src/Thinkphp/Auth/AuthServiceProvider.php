@@ -129,9 +129,9 @@ class AuthServiceProvider extends ServiceProvider{
 				return $app['auth']->guard()->getUser(null, null, false);
 			});
 			
-			$routeClass = \Xin\Thinkphp\Auth\Access\Abilities\RouteCheck::class;
-			$app->bind('ability_route', $routeClass);
-			$gate->define('route', "ability_route@handle");
+			//			$routeClass = \Xin\Thinkphp\Auth\Access\Abilities\RouteCheck::class;
+			//			$app->bind('ability_route', $routeClass);
+			//			$gate->define('route', "ability_route@handle");
 			
 			return $gate;
 		});

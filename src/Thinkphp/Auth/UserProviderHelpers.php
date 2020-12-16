@@ -10,7 +10,6 @@ namespace Xin\Thinkphp\Auth;
 /**
  * Class UserProvider
  *
- * @mixin \think\Model
  * @mixin \Xin\Contracts\Auth\UserProvider
  */
 trait UserProviderHelpers{

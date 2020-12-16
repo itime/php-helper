@@ -8,8 +8,6 @@
 namespace Xin\Thinkphp\Http;
 
 /**
- * Trait RequestBrowser
- *
  * @mixin RequestOptimize
  */
 trait RequestPlatform{

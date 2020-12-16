@@ -125,7 +125,6 @@ class Gate implements GateContract{
 			$this->abilities[$ability] = $callback;
 		}elseif(is_string($callback)){
 			$this->stringCallbacks[$ability] = $callback;
-			
 			$this->abilities[$ability] = $this->buildAbilityCallback($ability, $callback);
 		}else{
 			throw new \InvalidArgumentException("Callback must be a callable or a 'Class@method' string.");
@@ -177,7 +176,7 @@ class Gate implements GateContract{
 			$policy = $this->resolvePolicy($class);
 			
 			$arguments = func_get_args();
-			
+
 			$user = array_shift($arguments);
 			
 			$result = $this->callPolicyBefore(

@@ -13,7 +13,7 @@ use think\Response;
 
 class CheckForMaintenanceMode{
 	
-	use LimitRoute;
+	use InteractsExcept;
 	
 	/**
 	 * @var \think\App
@@ -29,6 +29,13 @@ class CheckForMaintenanceMode{
 	 * @var \think\View
 	 */
 	protected $view;
+	
+	/**
+	 * The route operation to exclude is not authorized
+	 *
+	 * @var array
+	 */
+	protected $except = [];
 	
 	/**
 	 * CheckForMaintenanceMode constructor.

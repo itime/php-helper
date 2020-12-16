@@ -7,9 +7,9 @@
 
 namespace Xin\Menu;
 
-use Xin\Contracts\Menu\Menu;
+use Xin\Contracts\Menu\Generator as GeneratorContract;
 
-class ArrayMenu implements Menu{
+class Generator implements GeneratorContract{
 	
 	/**
 	 * @var array
@@ -27,11 +27,23 @@ class ArrayMenu implements Menu{
 	protected $query = [];
 	
 	/**
+	 * @var bool
+	 */
+	protected $isAdministrator = false;
+	
+	/**
+	 * @var bool
+	 */
+	protected $isDevelop = false;
+	
+	/**
 	 * @inheritDoc
 	 */
-	public function generate(array $options = []){
+	public function generate(array $menus, array $options = []){
+		$this->menus = $menus;
 		$this->query = isset($options['query']) ? $options['query'] : [];
-		$this->menus = isset($options['menus']) ? $options['menus'] : [];
+		$this->isAdministrator = isset($options['is_administrator']) ? $options['is_administrator'] : false;
+		$this->isDevelop = isset($options['is_develop']) ? $options['is_develop'] : false;
 		
 		$this->tree($options['rule'], $this->menus);
 		
@@ -55,17 +67,12 @@ class ArrayMenu implements Menu{
 		
 		foreach($menus as &$menu){
 			$menu['active'] = false;
-			
-			if(isset($menu['show'])){
-				$menu['show'] = value($menu['show']);
-			}else{
-				$menu['show'] = false;
-			}
+			$menu['show'] = $this->resolveIshow($menu);
 			
 			if(isset($menu['child']) && $this->tree($rule, $menu['child'])){
 				$menu['active'] = $isActive = true;
-			}elseif($menu['name'] != ''){
-				$menuRule = explode("?", $menu['name'], 2);
+			}elseif($menu['url'] != ''){
+				$menuRule = explode("?", $menu['url'], 2);
 				if($menuRule[0] != $rule){
 					continue;
 				}
@@ -89,14 +96,36 @@ class ArrayMenu implements Menu{
 	}
 	
 	/**
+	 * 解析菜单是否显示
+	 *
+	 * @param array $menu
+	 * @return bool
+	 */
+	protected function resolveIshow(array $menu){
+		if(isset($menu['only_admin']) && $menu['only_admin']){
+			if(!$this->isAdministrator){
+				return false;
+			}
+		}
+		
+		if(isset($menu['only_dev']) && $menu['only_dev']){
+			if(!$this->isDevelop){
+				return false;
+			}
+		}
+		
+		return isset($menu['show']) ? (bool)value($menu['show']) : false;
+	}
+	
+	/**
 	 * 获取子菜单第一个url地址
 	 *
 	 * @param array $menu
 	 * @return string
 	 */
 	protected function getFirstUrl($menu){
-		if(isset($menu['name']) && strpos($menu['name'], '/')){
-			return $menu['name'];
+		if(isset($menu['url']) && strpos($menu['url'], '/')){
+			return $menu['url'];
 		}
 		
 		if(isset($menu['child']) && isset($menu['child'][0])){

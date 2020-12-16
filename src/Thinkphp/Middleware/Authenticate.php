@@ -13,7 +13,7 @@ use Xin\Contracts\Auth\Factory as Auth;
 
 class Authenticate{
 	
-	use LimitRoute;
+	use InteractsExcept;
 	
 	/**
 	 * @var \think\App

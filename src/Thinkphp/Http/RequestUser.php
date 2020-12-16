@@ -7,6 +7,8 @@
 
 namespace Xin\Thinkphp\Http;
 
+use Xin\Thinkphp\Facade\Auth;
+
 trait RequestUser{
 	
 	/**
@@ -31,7 +33,13 @@ trait RequestUser{
 	 * @param bool   $abort
 	 * @return mixed
 	 */
-	public function user($field = null, $default = null, $abort = true){
-		return call_user_func($this->userResolverCallback, $field, $default, $abort);
+	public function user($field = null, $default = null, $verifyType = 1){
+		if(is_null($this->userResolverCallback)){
+			$this->userResolverCallback = function($field = null, $default = null, $verifyType = 1){
+				return Auth::getUser($field, $default, $verifyType);
+			};
+		}
+		
+		return call_user_func($this->userResolverCallback, $field, $default, $verifyType);
 	}
 }

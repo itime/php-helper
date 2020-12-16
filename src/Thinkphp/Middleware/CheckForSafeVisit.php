@@ -12,7 +12,7 @@ use think\Request;
 
 class CheckForSafeVisit{
 	
-	use LimitRoute;
+	use InteractsExcept;
 	
 	/**
 	 * @var \think\App
