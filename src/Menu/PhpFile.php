@@ -20,9 +20,8 @@ class PhpFile extends Driver{
 	protected function load(){
 		if(is_null($this->data)){
 			$targetPath = $this->config('target_path');
-			if(!file_exists($targetPath)){
+			if(empty($targetPath) || !file_exists($targetPath)){
 				$this->data = require_once $this->config('base_path');
-				$this->write();
 			}else{
 				$this->data = require_once $targetPath;
 			}
@@ -125,8 +124,16 @@ class PhpFile extends Driver{
 	/**
 	 * 写入数据
 	 */
-	protected function write(){
+	protected function write($ignoreError = false){
 		$targetPath = $this->config('target_path');
+		if(empty($targetPath)){
+			if(!$ignoreError){
+				throw new \RuntimeException("target_path not configutre.");
+			}
+			
+			return;
+		}
+		
 		$content = "<?php\nreturn ".var_export($this->data, true).";";
 		file_put_contents($targetPath, $content);
 	}

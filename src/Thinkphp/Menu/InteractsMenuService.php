@@ -66,7 +66,14 @@ trait InteractsMenuService{
 		//
 		//		return $rule;
 		
-		return $request->path();
+		$path = $request->path();
+		if(strpos($path, "plugin") === 0){
+			$pulgin = substr($path, 7, strpos($path, '/', 7) - 7);
+			$path = substr($path, strpos($path, '/', 7) + 1);
+			$path = $pulgin.">".$path;
+		}
+		
+		return $path;
 	}
 	
 	/**

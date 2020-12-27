@@ -7,6 +7,7 @@
 
 namespace Xin\Plugin;
 
+use think\Exception;
 use think\helper\Str;
 use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Support\Arr;

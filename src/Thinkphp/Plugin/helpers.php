@@ -57,7 +57,11 @@ if(!function_exists('plugin_url')){
 	 * @return \think\route\Url
 	 */
 	function plugin_url(string $url = '', array $vars = [], $suffix = true, $domain = false){
-		$url = strpos($url, '>') ? $url : request()->plugin().">".$url;
+		// 支持插件路由地址解析
+		if(request()->plugin()){
+			$url = strpos($url, '>') ? $url : request()->plugin().">".$url;
+		}
+		
 		return url($url, $vars, $suffix, $domain);
 	}
 }
