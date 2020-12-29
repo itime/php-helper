@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Setting\Command;
+namespace Xin\Thinkphp\Foundation\Setting\Command;
 
 use think\console\Command;
 use think\console\Input;
@@ -13,7 +13,7 @@ use think\console\Output;
 use Xin\Thinkphp\Setting\DatabaseSetting;
 
 class Show extends Command{
-
+	
 	/**
 	 * @inheritDoc
 	 */
@@ -21,7 +21,7 @@ class Show extends Command{
 		$this->setName('setting:show')
 			->setDescription('查看站点配置');
 	}
-
+	
 	/**
 	 * @param \think\console\Input  $input
 	 * @param \think\console\Output $output

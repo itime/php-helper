@@ -111,8 +111,14 @@ class Wechat implements WechatContract{
 			throw new \RuntimeException("wechat config 'appid' not defined.");
 		}
 		
-		if(!isset($config['secret']) || empty($config['secret'])){
-			throw new \RuntimeException("wechat config 'secret' not defined.");
+		if(!isset($config['mode']) || $config['mode'] == 0){
+			if(!isset($config['secret']) || empty($config['secret'])){
+				throw new \RuntimeException("wechat config 'secret' not defined.");
+			}
+		}else{
+			if(!isset($config['authorizer_refresh_token']) || empty($config['authorizer_refresh_token'])){
+				throw new \RuntimeException("wechat config 'authorizer_refresh_token' not defined.");
+			}
 		}
 		
 		return $config;

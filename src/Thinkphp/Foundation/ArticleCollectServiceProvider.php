@@ -38,7 +38,7 @@ class ArticleCollectServiceProvider extends ServiceProvider{
 			
 			try{
 				$result = ArticleCollect::url($url);
-				return Hash::result($result);
+				return Hint::result($result);
 			}catch(ArticleCollectException $e){
 				return Hash::error($e->getMessage(), $e->getCode());
 			}catch(\LogicException $e){

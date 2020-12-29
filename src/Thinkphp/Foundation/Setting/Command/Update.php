@@ -5,32 +5,30 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Setting\Command;
+namespace Xin\Thinkphp\Foundation\Setting\Command;
 
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
-use think\facade\Cache;
 use Xin\Thinkphp\Setting\DatabaseSetting;
 
-class Clear extends Command{
-
+class Update extends Command{
+	
 	/**
 	 * @inheritDoc
 	 */
 	protected function configure(){
-		$this->setName('setting:clear')
-			->setDescription('清除站点配置');
+		$this->setName('setting:update')
+			->setDescription('刷新站点配置');
 	}
-
+	
 	/**
 	 * @param \think\console\Input  $input
 	 * @param \think\console\Output $output
 	 */
 	protected function execute(Input $input, Output $output){
-		Cache::delete(DatabaseSetting::CACHE_KEY);
-
+		DatabaseSetting::updateCache();
+		
 		$output->highlight("已更新配置！");
-		$output->newLine();
 	}
 }

@@ -11,11 +11,11 @@ use Xin\Contracts\Saas\AppGuard as AppGuardContract;
 
 class AppGuard implements AppGuardContract{
 	
-	public function getAppInfo($field = null, $default = null, $abort = true){
+	public function getAppInfo($field = null, $default = null){
 		// TODO: Implement getAppInfo() method.
 	}
 	
-	public function getAppId($abort = true){
+	public function getAppId(){
 		// TODO: Implement getAppId() method.
 	}
 	

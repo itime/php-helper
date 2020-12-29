@@ -18,13 +18,15 @@ class PhpFile extends Driver{
 	 * 初始化加载文件
 	 */
 	protected function load(){
-		if(is_null($this->data)){
-			$targetPath = $this->config('target_path');
-			if(empty($targetPath) || !file_exists($targetPath)){
-				$this->data = require_once $this->config('base_path');
-			}else{
-				$this->data = require_once $targetPath;
-			}
+		if(!is_null($this->data)){
+			return;
+		}
+		
+		$targetPath = $this->config('target_path');
+		if(empty($targetPath) || !file_exists($targetPath)){
+			$this->data = require_once $this->config('base_path');
+		}else{
+			$this->data = require_once $targetPath;
 		}
 	}
 	

@@ -5,13 +5,13 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Setting;
+namespace Xin\Thinkphp\Foundation\Setting;
 
 use think\Console;
 use Xin\Thinkphp\Foundation\ServiceProvider;
-use Xin\Thinkphp\Setting\Command\Clear;
-use Xin\Thinkphp\Setting\Command\Show;
-use Xin\Thinkphp\Setting\Command\Update;
+use Xin\Thinkphp\Foundation\Setting\Command\Clear;
+use Xin\Thinkphp\Foundation\Setting\Command\Show;
+use Xin\Thinkphp\Foundation\Setting\Command\Update;
 
 class SettingServiceProvider extends ServiceProvider{
 	

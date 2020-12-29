@@ -5,8 +5,8 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Setting;
+namespace Xin\Saas;
 
-class InvalidConfigureException extends \Exception{
+class AppNotFoundException extends \Exception{
 
 }

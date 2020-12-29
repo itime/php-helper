@@ -7,25 +7,23 @@
 
 namespace Xin\Contracts\Saas;
 
-interface AppGuard{
+interface Factory{
 	
 	/**
 	 * 获取应用信息
 	 *
 	 * @param string|null $field
 	 * @param mixed       $default
-	 * @param bool        $abort
 	 * @return mixed
 	 */
-	public function getAppInfo($field = null, $default = null, $abort = true);
+	public function getAppInfo($field = null, $default = null);
 	
 	/**
 	 * 获取应用id
 	 *
-	 * @param bool $abort
 	 * @return int
 	 */
-	public function getAppId($abort = true);
+	public function getAppId();
 	
 	/**
 	 * 暂存应用信息

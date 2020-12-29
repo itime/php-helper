@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Pagination;
+namespace Xin\Thinkphp\Foundation\Pagination;
 
 use think\paginator\driver\Bootstrap;
 

@@ -7,9 +7,12 @@
 
 namespace Xin\Thinkphp\Http;
 
-use Xin\Thinkphp\Facade\Auth;
-
 trait RequestApp{
+	
+	/**
+	 * @var mixed
+	 */
+	protected $xApp;
 	
 	/**
 	 * @var \Closure
@@ -30,16 +33,26 @@ trait RequestApp{
 	 *
 	 * @param string $field
 	 * @param mixed  $default
-	 * @param bool   $abort
 	 * @return mixed
 	 */
-	public function app($field = null, $default = null, $abort = true){
+	public function app($field = null, $default = null){
 		if(is_null($this->appResolverCallback)){
-			$this->appResolverCallback = function($field = null, $default = null, $verifyType = 1){
-				return Auth::getUser($field, $default, $verifyType);
-			};
+			throw new \RuntimeException('not defined app getter.');
 		}
 		
-		return call_user_func($this->appResolverCallback, $field, $default, $abort);
+		if(is_null($this->xApp)){
+			$this->xApp = call_user_func($this->appResolverCallback, $this);
+		}
+		
+		return empty($field) ? $this->xApp : (isset($this->xApp[$field]) ? $this->xApp[$field] : $default);
+	}
+	
+	/**
+	 * 获取当前应用ID
+	 *
+	 * @return int
+	 */
+	public function appId(){
+		return $this->app('id', 0);
 	}
 }

@@ -133,7 +133,7 @@ class PluginDispatch extends Controller{
 	public function controller(string $controller){
 		$appName = $this->app->http->getName();
 		
-		$controllerLayer = $appName != $this->getDefaultAppName() ? "{$appName}controller" : 'controller';
+		$controllerLayer = "{$appName}controller";
 		$emptyController = $this->rule->config('empty_controller') ?: 'Error';
 		
 		$class = $this->pluginManager->controllerClass(
@@ -166,23 +166,12 @@ class PluginDispatch extends Controller{
 			return;
 		}
 		
-		$viewLayer = $appName != $this->getDefaultAppName() ? "{$appName}view" : 'view';
-		
 		/** @var \think\View $view */
 		$view = $this->app->make('view');
+		$viewLayer = "{$appName}view";
 		$viewPath = $this->pluginManager->path($this->plugin).$viewLayer.DIRECTORY_SEPARATOR;
 		$view->engine()->config([
 			"view_path" => $viewPath,
 		]);
 	}
-	
-	/**
-	 * 默认的应用名称
-	 *
-	 * @return string
-	 */
-	public function getDefaultAppName(){
-		return $this->pluginManager->config('default.app_name', 'admin');
-	}
-	
 }

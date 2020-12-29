@@ -7,7 +7,7 @@
  * @author        <657306123@qq.com> LXSEA
  */
 
-namespace Xin\Thinkphp\Setting;
+namespace Xin\Thinkphp\Foundation\Setting;
 
 use think\facade\Cache;
 use think\facade\Config;

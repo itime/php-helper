@@ -4,7 +4,7 @@
  *
  * @author: 晋<657306123@qq.com>
  */
-namespace Xin\Thinkphp\Setting;
+namespace Xin\Thinkphp\Foundation\Setting;
 
 use think\facade\Config;
 use think\Validate;

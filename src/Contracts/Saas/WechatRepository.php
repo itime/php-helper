@@ -23,11 +23,11 @@ interface WechatRepository extends BaseWechat{
 	/**
 	 * 获取应用id微信开放平台实例
 	 *
-	 * @param int   $id
+	 * @param int   $appId
 	 * @param array $options
 	 * @return \EasyWeChat\OpenPlatform\Application
 	 */
-	public function openPlatformOfAppId($id, array $options = []);
+	public function openPlatformOfAppId($appId, array $options = []);
 	
 	/**
 	 * 根据id获取微信公众号实例
