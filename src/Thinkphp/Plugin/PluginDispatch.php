@@ -133,13 +133,15 @@ class PluginDispatch extends Controller{
 	public function controller(string $controller){
 		$appName = $this->app->http->getName();
 		
-		$controllerLayer = "{$appName}controller";
+		$suffix = $this->rule->config('controller_suffix') ? 'Controller' : '';
+		$controllerLayer = $this->rule->config('controller_layer') ?: 'controller';
 		$emptyController = $this->rule->config('empty_controller') ?: 'Error';
 		
+		$pluginControllerLayer = "{$appName}controller";
 		$class = $this->pluginManager->controllerClass(
 			$this->plugin,
 			$controller = str_replace(['/', '.'], '\\', $controller),
-			$controllerLayer
+			$pluginControllerLayer
 		);
 		
 		if(class_exists($class)){
@@ -148,7 +150,13 @@ class PluginDispatch extends Controller{
 				$emptyClass = $this->pluginManager->controllerClass(
 					$this->plugin,
 					$emptyController,
-					$controllerLayer
+					$pluginControllerLayer
+				)
+			)){
+			return $this->app->make($emptyClass, [], true);
+		}elseif($emptyController && class_exists(
+				$emptyClass = $this->app->parseClass(
+					$controllerLayer, $emptyController.$suffix
 				)
 			)){
 			return $this->app->make($emptyClass, [], true);

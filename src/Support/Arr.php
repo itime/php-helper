@@ -137,6 +137,7 @@ final class Arr{
 	
 	/**
 	 * 数组去重-二维数组
+	 *
 	 * @param array  $array
 	 * @param string $key
 	 * @return array
@@ -159,37 +160,66 @@ final class Arr{
 	/**
 	 * 无极限分类
 	 *
-	 * @param array    $list 数据源
-	 * @param callable $callback 额外处理回调函数
-	 * @param int      $pid 父id
-	 * @param string   $idName 检索对比的键名
-	 * @param string   $parent 检索归属的键名
-	 * @param string   $child 存放在哪？
+	 * @param array         $list 数据源
+	 * @param callable|null $itemHandler 额外处理回调函数
+	 * @param int           $pid 父id
+	 * @param array         $options
 	 * @return array
 	 */
-	public static function tree(array $list, callable $callback = null, $pid = 0, $idName = 'id', $parent = 'pid', $child = 'child'){
+	public static function tree(array $list, callable $itemHandler = null, $pid = 0, array $options = []){
+		$options = array_merge([
+			'id'           => 'id', // 要检索的ID键名
+			'parent'       => 'pid', // 要检索的parent键名
+			'child'        => 'child', // 要存放的子结果集
+			'with_unknown' => false, // 是否把未知的上级当成1级返回
+		], $options);
+		
+		if(is_null($itemHandler)){
+			$itemHandler = function($level, &$value){ };
+		}
+		
 		$level = 0;
-		$handler = function(array &$list, callable $callback, $pid, $idName, $parent, $child) use (&$handler, &$level){
+		$handler = function(array &$list, $pid) use (&$handler, &$level, &$itemHandler, &$options){
 			$level++;
-			$array = [];
+			$idKey = $options['id'];
+			$parentKey = $options['parent'];
+			$childKey = $options['child'];
+			
+			$result = [];
 			foreach($list as $key => $value){
-				if($value [$parent] == $pid){
-					unset ($list [$key]);
-					$callback($level, $value);
+				if($value[$parentKey] == $pid){
+					unset ($list[$key]);
 					
-					$childList = $handler($list, $callback, $value [$idName], $idName, $parent, $child);
-					if(!empty($childList)) $value [$child] = $childList;
+					$itemHandler($level, $value);
 					
-					$array [] = $value;
+					$childList = $handler($list, $value[$idKey]);
+					if(!empty($childList)){
+						$value[$childKey] = $childList;
+					}
+					
+					$result[] = $value;
 					reset($list);
 				}
 			}
 			$level--;
-			return $array;
+			
+			return $result;
 		};
 		
-		is_null($callback) && $callback = function(){ };
-		return $handler($list, $callback, $pid, $idName, $parent, $child);
+		$result = $handler($list, $pid);
+		
+		// 是否把未知的上级当成1级返回
+		if(!empty($list) && $options['with_unknown']){
+			$level = 1;
+			foreach($list as &$value){
+				$itemHandler($level, $value);
+			}
+			unset($value);
+			
+			$result = array_merge($result, array_values($list));
+		}
+		
+		return $result;
 	}
 	
 	/**

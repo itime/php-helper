@@ -140,7 +140,7 @@ trait InteractsCURD{
 		
 		$this->afterCreate($model, $data);
 		
-		return Hint::success("添加成功！", $this->jumpUrl('index'));
+		return Hint::success("添加成功！", $this->jumpUrl());
 	}
 	
 	/**
@@ -227,7 +227,7 @@ trait InteractsCURD{
 		
 		$this->afterUpdate($model, $data);
 		
-		return Hint::success("更新成功！", $this->jumpUrl('index'));
+		return Hint::success("更新成功！", $this->jumpUrl());
 	}
 	
 	/**
@@ -237,7 +237,6 @@ trait InteractsCURD{
 	 * @param mixed                            $data
 	 * @param bool                             $isUpdate
 	 * @return mixed
-	 * @noinspection PhpUndefinedMethodInspection
 	 */
 	protected function writeAllowField($model, &$data, $isUpdate = false){
 		if(method_exists($model, 'allowField')){
@@ -338,14 +337,14 @@ trait InteractsCURD{
 		$this->afterSetField($ids, $field, $value);
 		$this->invokeMethod("afterSet{$fieldStudly}", [$ids, $field, $value]);
 		
-		return Hint::success("更新成功！", $this->jumpUrl('index'));
+		return Hint::success("更新成功！", $this->jumpUrl());
 	}
 	
 	/**
 	 * 数据删除之前操作
 	 *
-	 * @param array $ids
-	 * @param array $where
+	 * @param array      $ids
+	 * @param array|null $where
 	 */
 	protected function beforeDelete(&$ids, array &$where = null){
 	}
@@ -409,6 +408,8 @@ trait InteractsCURD{
 	 *
 	 * @param int|null $id
 	 * @return array|string|\think\Model
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	protected function findIsEmptyAssert($id = null){
 		if(is_null($id)){
