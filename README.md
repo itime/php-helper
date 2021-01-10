@@ -9,12 +9,6 @@ PHP项目日常开发必备基础库，集合工具类、字符串工具类、�
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+composer require xin/helper
 
 #### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
