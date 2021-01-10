@@ -7,6 +7,7 @@
 
 namespace Xin\Plugin;
 
+use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Contracts\Plugin\Plugin as PluginContract;
 
 abstract class AbstractPlugin implements PluginContract{
@@ -15,6 +16,25 @@ abstract class AbstractPlugin implements PluginContract{
 	 * @var array
 	 */
 	protected $config = [];
+	
+	/**
+	 * @var PluginFactory
+	 */
+	protected $factory;
+	
+	/**
+	 * AbstractPlugin constructor.
+	 *
+	 * @param \Xin\Contracts\Plugin\Factory $factory
+	 */
+	public function __construct(PluginFactory $factory){ $this->factory = $factory; }
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function getName(){
+		return $this->getInfo()['name'];
+	}
 	
 	/**
 	 * @inheritDoc
@@ -45,7 +65,8 @@ abstract class AbstractPlugin implements PluginContract{
 	 * @inheritDoc
 	 */
 	public function pluginPath($path = ''){
-		return basename(__DIR__).($path ? $path.DIRECTORY_SEPARATOR : $path);
+		$rootPath = $this->factory->path($this->getName());
+		return $rootPath.($path ? $path.DIRECTORY_SEPARATOR : $path);
 	}
 	
 	/**

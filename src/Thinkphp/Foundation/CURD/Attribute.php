@@ -99,16 +99,19 @@ trait Attribute{
 	 *
 	 * @param array  $data
 	 * @param string $scene
+	 * @return array
 	 */
 	protected function validateData($data, $scene){
 		$validator = $this->validator($scene);
 		if(!$validator){
-			return;
+			return $data;
 		}
 		
 		if(!$validator->check($data)){
 			throw new ValidateException($validator->getError());
 		}
+		
+		return $data;
 	}
 	
 	/**

@@ -76,7 +76,7 @@ class Wechat implements WechatContract{
 		);
 		
 		return $this->initApplication(
-			Factory::openPlatform($config),
+			Factory::miniProgram($config),
 			$options
 		);
 	}

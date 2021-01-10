@@ -126,7 +126,7 @@ trait InteractsCURD{
 		$data = $this->request->param();
 		unset($data['id']);
 		
-		$this->validateData($data, 'create');
+		$data = $this->validateData($data, 'create');
 		
 		$model = $this->model();
 		
@@ -210,7 +210,8 @@ trait InteractsCURD{
 		}
 		
 		$data = $this->request->param();
-		$this->validateData($data, 'update');
+		
+		$data = $this->validateData($data, 'update');
 		
 		// 数组转换成模型
 		if(is_array($model)){
@@ -337,7 +338,7 @@ trait InteractsCURD{
 		$this->afterSetField($ids, $field, $value);
 		$this->invokeMethod("afterSet{$fieldStudly}", [$ids, $field, $value]);
 		
-		return Hint::success("更新成功！", $this->jumpUrl());
+		return Hint::success("更新成功！");
 	}
 	
 	/**

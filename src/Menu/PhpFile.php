@@ -136,6 +136,14 @@ class PhpFile extends Driver{
 			return;
 		}
 		
+		// 数组排序
+		usort($this->data, function($it1, $it2){
+			$sort1 = isset($it1['sort']) ? $it1['sort'] : 0;
+			$sort2 = isset($it2['sort']) ? $it2['sort'] : 0;
+			
+			return $sort1 == $sort2 ? 0 : ($sort1 > $sort2 ? 1 : -1);
+		});
+		
 		$content = "<?php\nreturn ".var_export($this->data, true).";";
 		file_put_contents($targetPath, $content);
 	}

@@ -35,6 +35,10 @@ trait InteractsMenuService{
 					'is_develop'       => $this->isDevMode(),
 				]);
 				
+				if(property_exists($this, 'shouldUserMenu')){
+					$manager->shouldUse($this->shouldUserMenu);
+				}
+				
 				return tap(new \stdClass(), function($std) use ($menus, $breads){
 					$std->menus = $menus;
 					$std->breads = $breads;

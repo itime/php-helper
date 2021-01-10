@@ -17,7 +17,7 @@ trait InteractsAppDefaultMode{
 	protected function saasAppDefaultInit($request){
 		$request->setAppResolver(function(){
 			return new Fluent([
-				'id'    => 0,
+				'id'    => 1,
 				'title' => '默认应用',
 			]);
 		});

@@ -12,6 +12,13 @@ namespace Xin\Contracts\Plugin;
 interface Plugin{
 	
 	/**
+	 * 获取插件名字
+	 *
+	 * @return string
+	 */
+	public function getName();
+	
+	/**
 	 * 获取插件信息
 	 *
 	 * @return array

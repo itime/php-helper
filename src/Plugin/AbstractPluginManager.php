@@ -84,7 +84,7 @@ abstract class AbstractPluginManager implements PluginFactory{
 			throw new PluginNotFoundException($plugin);
 		}
 		
-		return new $class();
+		return new $class($this);
 	}
 	
 	/**
