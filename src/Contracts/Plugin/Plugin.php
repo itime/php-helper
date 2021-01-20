@@ -26,12 +26,19 @@ interface Plugin{
 	public function getInfo();
 	
 	/**
-	 * 获取扩展配置
+	 * 获取配置模板
 	 *
-	 * @param string $name
-	 * @return mixed
+	 * @param array $config
+	 * @return array
 	 */
-	public function getExtraConfig($name);
+	public function getConfigTemplate($config = []);
+	
+	/**
+	 * 获取配置字段类型
+	 *
+	 * @return array
+	 */
+	public function getConfigTypeList();
 	
 	/**
 	 * 当前插件路径

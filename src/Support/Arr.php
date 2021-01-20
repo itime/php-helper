@@ -593,4 +593,50 @@ final class Arr{
 		
 		return true;
 	}
+	
+	/**
+	 * 解析字符串为数组
+	 *
+	 * @param string $string
+	 * @return array
+	 */
+	public static function parse($string){
+		$array = preg_split('/[,;\r\n]+/', trim($string, ",;\r\n"));
+		
+		if(strpos($string, ':')){
+			$value = [];
+			foreach($array as $val){
+				$val = explode(':', $val);
+				if(isset($val[1]) && $val[0] !== ''){
+					$value[$val[0]] = $val[1];
+				}else{
+					$value[] = $val[0];
+				}
+			}
+		}else{
+			$value = $array;
+		}
+		
+		return $value;
+	}
+	
+	/**
+	 * 数组解析为字符串
+	 *
+	 * @param array $array
+	 * @return string
+	 */
+	public static function stringOf($array){
+		$result = '';
+		
+		if(self::isAssoc($array)){
+			foreach($array as $key => $val){
+				$result .= "{$key}:$val\n";
+			}
+		}else{
+			$result = implode("\n", $array);
+		}
+		
+		return $result;
+	}
 }

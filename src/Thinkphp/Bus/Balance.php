@@ -9,6 +9,7 @@ namespace Xin\Thinkphp\Bus;
 
 use think\facade\Db;
 use think\Model;
+use Xin\Bus\Balance\SceneEnum;
 use Xin\Contracts\Bus\BalanceRepository;
 use Xin\Support\Str;
 use Xin\Thinkphp\Foundation\InteractsRepository;
@@ -38,6 +39,16 @@ class Balance extends Model implements BalanceRepository{
 		$this->config = $config;
 		
 		parent::__construct([]);
+	}
+	
+	/**
+	 * 余额消费场景
+	 *
+	 * @return string
+	 */
+	protected function getSceneTextAttr(){
+		$val = $this->getOrigin('scene');
+		return SceneEnum::data()[$val]['title'];
 	}
 	
 	/**

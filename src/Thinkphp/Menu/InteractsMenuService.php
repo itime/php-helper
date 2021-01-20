@@ -28,16 +28,17 @@ trait InteractsMenuService{
 			'menu.show'   => function() use ($request){
 				/** @var \Xin\Menu\MenuManager $manager */
 				$manager = $this->app->menu;
+				
+				if(property_exists($this, 'shouldUserMenu')){
+					$manager->shouldUse($this->shouldUserMenu);
+				}
+				
 				[$menus, $breads] = $manager->generate($request->user(), [
 					'rule'             => $this->getCurrentPathRule($request),
 					'query'            => $request->get() + $request->route(),
 					'is_administrator' => $this->isAdministrator(),
 					'is_develop'       => $this->isDevMode(),
 				]);
-				
-				if(property_exists($this, 'shouldUserMenu')){
-					$manager->shouldUse($this->shouldUserMenu);
-				}
 				
 				return tap(new \stdClass(), function($std) use ($menus, $breads){
 					$std->menus = $menus;

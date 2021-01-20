@@ -12,6 +12,7 @@ namespace Xin\Thinkphp\Foundation\Setting;
 use think\facade\Cache;
 use think\facade\Config;
 use think\Model;
+use Xin\Support\Arr;
 
 /**
  * 配置模型
@@ -88,7 +89,7 @@ class DatabaseSetting extends Model{
 	 * 获取分组
 	 *
 	 * @return array
-	 * @throws \Xin\Thinkphp\Setting\InvalidConfigureException
+	 * @throws \Xin\Thinkphp\Foundation\Setting\InvalidConfigureException
 	 */
 	public static function getGroupList(){
 		$groups = Config::get('web.config_group_list');
@@ -112,7 +113,7 @@ class DatabaseSetting extends Model{
 	 * 获取数据分组
 	 *
 	 * @return mixed
-	 * @throws \Xin\Thinkphp\Setting\InvalidConfigureException
+	 * @throws \Xin\Thinkphp\Foundation\Setting\InvalidConfigureException
 	 */
 	protected function getGroupTextAttr(){
 		$groups = static::getGroupList();
@@ -124,7 +125,7 @@ class DatabaseSetting extends Model{
 	 * 获取分组
 	 *
 	 * @return array
-	 * @throws \Xin\Thinkphp\Setting\InvalidConfigureException
+	 * @throws \Xin\Thinkphp\Foundation\Setting\InvalidConfigureException
 	 */
 	public static function getTypeList(){
 		$types = Config::get('web.config_type_list');
@@ -142,7 +143,7 @@ class DatabaseSetting extends Model{
 	 * 获取数据类型
 	 *
 	 * @return string
-	 * @throws \Xin\Thinkphp\Setting\InvalidConfigureException
+	 * @throws \Xin\Thinkphp\Foundation\Setting\InvalidConfigureException
 	 */
 	protected function getTypeTextAttr(){
 		$types = static::getTypeList();
@@ -157,49 +158,25 @@ class DatabaseSetting extends Model{
 	 * @return array
 	 */
 	protected function getExtraAttr($string){
-		return self::stringToArray($string);
+		return Arr::parse($string);
 	}
 	
 	/**
 	 * 根据配置类型解析配置
 	 *
-	 * @param mixed $val
-	 * @return array
+	 * @param string $val
+	 * @return mixed
 	 */
 	protected function getValueAttr($val){
 		$type = $this->getData('type');
 		
 		if($type == 'array'){
-			return self::stringToArray($val);
+			return Arr::parse($val);
+		}elseif($type == 'switch'){
+			return (int)$val;
 		}
 		
 		return $val;
-	}
-	
-	/**
-	 * 解析配置值字符串为数字
-	 *
-	 * @param string $string
-	 * @return array
-	 */
-	protected static function stringToArray($string){
-		$array = preg_split('/[,;\r\n]+/', trim($string, ",;\r\n"));
-		
-		if(strpos($string, ':')){
-			$value = [];
-			foreach($array as $val){
-				$val = explode(':', $val);
-				if(isset($val[1]) && $val[0] !== ''){
-					$value[$val[0]] = $val[1];
-				}else{
-					$value[] = $val[0];
-				}
-			}
-		}else{
-			$value = $array;
-		}
-		
-		return $value;
 	}
 	
 	/**

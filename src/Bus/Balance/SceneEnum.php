@@ -32,22 +32,18 @@ class SceneEnum{
 		return [
 			self::RECHARGE => [
 				'name'     => '用户充值',
-				'value'    => self::RECHARGE,
 				'describe' => '用户充值：%s',
 			],
 			self::CONSUME  => [
 				'name'     => '用户消费',
-				'value'    => self::CONSUME,
 				'describe' => '用户消费：%s',
 			],
 			self::ADMIN    => [
 				'name'     => '管理员操作',
-				'value'    => self::ADMIN,
 				'describe' => '后台管理员 [%s] 操作',
 			],
 			self::REFUND   => [
 				'name'     => '订单退款',
-				'value'    => self::REFUND,
 				'describe' => '订单退款：%s',
 			],
 		];

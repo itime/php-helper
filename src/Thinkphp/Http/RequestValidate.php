@@ -108,10 +108,11 @@ trait RequestValidate{
 	 *
 	 * @param string $field
 	 * @param array  $array
+	 * @param mixed  $default
 	 * @return mixed
 	 */
-	public function intWithValidArray($field, $array){
-		$int = $this->param("{$field}/d");
+	public function intWithValidArray($field, $array, $default = null){
+		$int = $this->param("{$field}/d", $default);
 		if(!in_array($int, $array)){
 			throw new ValidateException("param {$field} invalid.");
 		}

@@ -119,7 +119,7 @@ class DatabaseWeapp extends Model{
 	 * 快速创建
 	 *
 	 * @param array $data
-	 * @return \plugin\miniprogram\model\WechatWeapp|\think\Model
+	 * @return \plugin\fastminiprogram\model\WechatWeapp|\think\Model
 	 */
 	public static function fastCreate(array $data = []){
 		if(isset($data['authorization_type']) && $data['authorization_type'] == 1){

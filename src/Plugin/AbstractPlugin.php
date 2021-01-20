@@ -15,7 +15,7 @@ abstract class AbstractPlugin implements PluginContract{
 	/**
 	 * @var array
 	 */
-	protected $config = [];
+	protected $configTemplate = null;
 	
 	/**
 	 * @var PluginFactory
@@ -39,8 +39,80 @@ abstract class AbstractPlugin implements PluginContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function getExtraConfig($name){
-		return $this->loadConfig($name);
+	public function getConfigTemplate($config = []){
+		$template = $this->loadConfigTemplate();
+		
+		foreach($template as &$item){
+			foreach($item['config'] as &$value){
+				$name = $value['name'];
+				if(isset($config[$name])){
+					$value['value'] = $config[$name];
+				}else{
+					$value['value'] = value(isset($value['value']) ? $value['value'] : null);
+				}
+			}
+			unset($value);
+		}
+		unset($item);
+		
+		return $template;
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function getConfigTypeList(){
+		$template = $this->loadConfigTemplate();
+		
+		$typeMap = [
+			'switch' => 'int',
+			'number' => 'int',
+			'array'  => 'array',
+		];
+		
+		$result = [];
+		foreach($template as $item){
+			foreach($item['config'] as $value){
+				if(isset($value['typeof'])){
+					$result[$value['name']] = $value['typeof'];
+				}else{
+					if(isset($typeMap[$value['type']])){
+						$result[$value['name']] = $typeMap[$value['type']];
+					}
+				}
+			}
+		}
+		
+		return $result;
+	}
+	
+	/**
+	 * 解析值
+	 *
+	 * @param mixed $value
+	 * @return mixed
+	 */
+	protected function resolveValue($value){
+		return $value instanceof \Closure ? $value() : $value;
+	}
+	
+	/**
+	 * 加载配置信息模板
+	 *
+	 * @return array
+	 * @noinspection PhpIncludeInspection
+	 */
+	protected function loadConfigTemplate(){
+		if(is_null($this->configTemplate)){
+			$configTemplatePath = $this->pluginPath()."config.php";
+			if(file_exists($configTemplatePath)){
+				$this->configTemplate = require_once $configTemplatePath;
+			}else{
+				$this->configTemplate = [];
+			}
+		}
+		
+		return $this->configTemplate;
 	}
 	
 	/**
@@ -69,21 +141,4 @@ abstract class AbstractPlugin implements PluginContract{
 		return $rootPath.($path ? $path.DIRECTORY_SEPARATOR : $path);
 	}
 	
-	/**
-	 * 加载配置信息
-	 *
-	 * @param string $name
-	 * @return mixed
-	 * @noinspection PhpIncludeInspection
-	 */
-	protected function loadConfig($name){
-		if(!isset($this->config[$name])){
-			$path = $this->pluginPath("config".DIRECTORY_SEPARATOR.$name."php");
-			if(file_exists($path)){
-				$this->config[$name] = require_once $path;
-			}
-		}
-		
-		return isset($this->config[$name]) ? $this->config[$name] : null;
-	}
 }

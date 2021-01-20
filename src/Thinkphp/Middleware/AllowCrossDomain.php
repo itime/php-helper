@@ -79,7 +79,7 @@ class AllowCrossDomain{
 		$header = array_merge([
 			'Access-Control-Allow-Origin'      => $httpOrigin,
 			'Access-Control-Allow-Credentials' => 'true',
-			'Access-Control-Allow-Methods'     => 'GET, POST, PATCH, PUT, DELETE',
+			'Access-Control-Allow-Methods'     => 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
 			'Access-Control-Allow-Headers'     => 'Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since, X-Requested-With',
 			'Access-Control-Max-Age'           => '3600',
 		], $this->headers($request));
