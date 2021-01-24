@@ -123,7 +123,7 @@ trait InteractsCURD{
 			return $this->showCreateView();
 		}
 		
-		$data = $this->request->param();
+		$data = $this->request->post();
 		unset($data['id']);
 		
 		$data = $this->validateData($data, 'create');
@@ -159,6 +159,8 @@ trait InteractsCURD{
 	 * 查看详情
 	 *
 	 * @return mixed
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	public function show(){
 		$model = $this->findIsEmptyAssert();
@@ -201,6 +203,8 @@ trait InteractsCURD{
 	 * 更新行为
 	 *
 	 * @return mixed
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	public function update(){
 		$model = $this->findIsEmptyAssert();
@@ -209,7 +213,7 @@ trait InteractsCURD{
 			return $this->showUpdateView($model);
 		}
 		
-		$data = $this->request->param();
+		$data = $this->request->post();
 		
 		$data = $this->validateData($data, 'update');
 		

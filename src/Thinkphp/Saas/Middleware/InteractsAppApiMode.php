@@ -5,15 +5,15 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Saas;
+namespace Xin\Thinkphp\Saas\Middleware;
 
-use app\common\model\XApp;
 use app\Request;
+use Xin\Thinkphp\Saas\Model\DatabaseApp;
 
 trait InteractsAppApiMode{
 	
 	/**
-	 * @param \Xin\Thinkphp\Http\RequestApp $request
+	 * @param \Xin\Thinkphp\Saas\Http\RequestApp $request
 	 */
 	protected function saasAppInit($request){
 		$request->setAppResolver(function(Request $request){
@@ -22,7 +22,7 @@ trait InteractsAppApiMode{
 				throw new \LogicException('access_id param invalid.');
 			}
 			
-			return XApp::where('access_id', $accessId)->findOrFail();
+			return DatabaseApp::where('access_id', $accessId)->findOrFail();
 		});
 	}
 }

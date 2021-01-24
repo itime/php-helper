@@ -5,13 +5,13 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Saas;
+namespace Xin\Thinkphp\Saas\Model;
 
 /**
  * @method $this app(int $appId)
  * @mixin \think\Model
  */
-trait Appable{
+trait MultiApp{
 	
 	/**
 	 * @var int
@@ -69,7 +69,7 @@ trait Appable{
 	public static function enableApp($appId){
 		static::$globalAppId = $appId;
 		
-		static::maker(function(/**@var Appable $model */ $model){
+		static::maker(function(/**@var MultiApp $model */ $model){
 			if(static::$globalAppId !== null){
 				$model->withGlobalAppScope();
 			}
@@ -84,5 +84,4 @@ trait Appable{
 			$model['app_id'] = static::$globalAppId;
 		}
 	}
-	
 }

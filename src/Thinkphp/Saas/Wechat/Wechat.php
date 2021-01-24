@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Saas;
+namespace Xin\Thinkphp\Saas\Wechat;
 
 use EasyWeChat\Factory;
 use Xin\Contracts\Saas\WechatRepository;
@@ -99,7 +99,7 @@ class Wechat extends WechatBase implements WechatRepository{
 	/**
 	 * 解析公众号实例
 	 *
-	 * @param \Xin\Thinkphp\Saas\DatabaseWeapp $weapp
+	 * @param \Xin\Thinkphp\Saas\Wechat\DatabaseWeapp $weapp
 	 * @param array                            $options
 	 * @return \EasyWeChat\MiniProgram\Application|\EasyWeChat\OpenPlatform\Authorizer\MiniProgram\Application
 	 */
@@ -154,8 +154,8 @@ class Wechat extends WechatBase implements WechatRepository{
 	/**
 	 * 解析小程序实例
 	 *
-	 * @param \Xin\Thinkphp\Saas\DatabaseWeapp $weapp
-	 * @param array                            $options
+	 * @param \Xin\Thinkphp\Saas\Wechat\DatabaseWeapp $weapp
+	 * @param array                                   $options
 	 * @return \EasyWeChat\MiniProgram\Application|\EasyWeChat\OpenPlatform\Authorizer\MiniProgram\Application
 	 */
 	protected function newMiniProgramInstance(DatabaseWeapp $weapp, array $options){
@@ -174,7 +174,7 @@ class Wechat extends WechatBase implements WechatRepository{
 	/**
 	 * 解析应用配置信息
 	 *
-	 * @param \Xin\Thinkphp\Saas\DatabaseWeapp $weapp
+	 * @param \Xin\Thinkphp\Saas\Wechat\DatabaseWeapp $weapp
 	 * @return array
 	 */
 	protected function resolveWeappConfig(DatabaseWeapp $weapp){

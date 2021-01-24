@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Http;
+namespace Xin\Thinkphp\Saas\Http;
 
 trait RequestApp{
 	
@@ -33,7 +33,7 @@ trait RequestApp{
 	 *
 	 * @param string $field
 	 * @param mixed  $default
-	 * @return mixed
+	 * @return \Xin\Thinkphp\Saas\Model\DatabaseApp|mixed
 	 */
 	public function app($field = null, $default = null){
 		if(is_null($this->appResolverCallback)){

@@ -5,9 +5,10 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Saas;
+namespace Xin\Thinkphp\Saas\Wechat;
 
 use think\Model;
+use Xin\Thinkphp\Saas\Model\MultiApp;
 
 /**
  * @property-read int    app_type 应用类型：0 小程序，1 公众号
@@ -21,6 +22,8 @@ use think\Model;
  * @property-read int    closed 是否解除授权
  */
 class DatabaseWeapp extends Model{
+	
+	use MultiApp;
 	
 	/**
 	 * @var string
@@ -119,7 +122,7 @@ class DatabaseWeapp extends Model{
 	 * 快速创建
 	 *
 	 * @param array $data
-	 * @return \plugin\fastminiprogram\model\WechatWeapp|\think\Model
+	 * @return static|\think\Model
 	 */
 	public static function fastCreate(array $data = []){
 		if(isset($data['authorization_type']) && $data['authorization_type'] == 1){

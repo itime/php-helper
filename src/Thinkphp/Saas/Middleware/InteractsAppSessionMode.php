@@ -5,18 +5,18 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Saas;
+namespace Xin\Thinkphp\Saas\Middleware;
 
-use app\common\model\XApp;
+use Xin\Thinkphp\Saas\Model\DatabaseApp;
 
 trait InteractsAppSessionMode{
 	
 	/**
-	 * @param \Xin\Thinkphp\Http\RequestApp|\think\Request $request
+	 * @param \Xin\Thinkphp\Saas\Http\RequestApp|\think\Request $request
 	 */
 	protected function saasAppInit($request){
 		$request->setAppResolver(function($request){
-			/** @var \Xin\Thinkphp\Http\RequestApp|\think\Request $request */
+			/** @var \Xin\Thinkphp\Saas\Http\RequestApp|\think\Request $request */
 			
 			$appId = $request->session('app_id');
 			if(empty($appId)){
@@ -26,7 +26,7 @@ trait InteractsAppSessionMode{
 				}
 			}
 			
-			return XApp::where('id', $appId)->findOrFail();
+			return DatabaseApp::where('id', $appId)->findOrFail();
 		});
 	}
 	

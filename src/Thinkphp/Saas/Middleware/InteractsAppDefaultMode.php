@@ -5,14 +5,14 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Saas;
+namespace Xin\Thinkphp\Saas\Middleware;
 
 use Xin\Support\Fluent;
 
 trait InteractsAppDefaultMode{
 	
 	/**
-	 * @param \Xin\Thinkphp\Http\RequestApp $request
+	 * @param \Xin\Thinkphp\Saas\Http\RequestApp $request
 	 */
 	protected function saasAppDefaultInit($request){
 		$request->setAppResolver(function(){
