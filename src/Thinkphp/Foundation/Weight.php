@@ -59,17 +59,19 @@ abstract class Weight{
 	
 	/**
 	 * 中控入口
+	 *
+	 * @param mixed ...$args
 	 */
-	public function handle(){
-		echo call_user_func_array([$this, 'render'], func_get_args());
+	public function handle(...$args){
+		echo call_user_func_array([$this, 'render'], $args);
 	}
 	
-	/**
-	 * 渲染
-	 *
-	 * @return string
-	 */
-	abstract protected function render();
+	//	/**
+	//	 * 渲染
+	//	 *
+	//	 * @return string
+	//	 */
+	//	abstract protected function render();
 	
 	/**
 	 * 渲染模板

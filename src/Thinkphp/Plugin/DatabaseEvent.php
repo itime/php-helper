@@ -238,12 +238,13 @@ class DatabaseEvent extends Model{
 	 * @param int $type
 	 * @return string
 	 */
-	public static function getSuffixOfType($type){
+	public static function getLayerOfType($type){
 		switch($type){
 			case 0:
-				return "Weight";
+				return "weight";
+			case 1:
+				return "event";
 		}
-		
 		return "";
 	}
 	

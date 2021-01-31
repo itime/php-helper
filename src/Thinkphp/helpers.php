@@ -79,7 +79,7 @@ if(!function_exists('thinkphp60_if')){
 	}
 }
 
-if(!function_exists('event')){
+if(!function_exists('listen')){
 	/**
 	 * 监听行为
 	 *
@@ -121,13 +121,16 @@ if(!function_exists('controller')){
 	 * @return mixed
 	 */
 	function controller($url, $layer = 'controller', $appendSuffix = true){
-		$info = explode("/", $url, 2);
-		$controller = array_pop($info);
-		$controller = str_replace(".", "/", $controller);
-		$appName = array_pop($info) ?: app()->http->getName();
-		
-		$suffix = $appendSuffix ? Str::studly($layer) : '';
-		$class = "app\\{$appName}\\{$layer}\\{$controller}{$suffix}";
+		if(strpos($url, '\\') === false){
+			$info = explode("/", $url, 2);
+			$controller = array_pop($info);
+			$controller = str_replace(".", "/", $controller);
+			$appName = array_pop($info) ?: app()->http->getName();
+			$suffix = $appendSuffix ? Str::studly($layer) : '';
+			$class = "app\\{$appName}\\{$layer}\\{$controller}{$suffix}";
+		}else{
+			$class = $url;
+		}
 		
 		return app($class);
 	}
@@ -144,10 +147,12 @@ if(!function_exists('action')){
 	 * @return mixed
 	 */
 	function action($url, array $vars = [], $layer = 'controller', $appendSuffix = true){
-		$info = explode("/", $url, 2);
-		$action = array_pop($info);
+		$actionIndex = strrpos($url, "/");
+		if(!$actionIndex || empty($action = substr($url, $actionIndex + 1))){
+			throw new \LogicException("url parse action no exist.");
+		}
 		
-		$controller = array_pop($info);
+		$controller = substr($url, 0, $actionIndex);
 		$controller = controller($controller, $layer, $appendSuffix);
 		
 		return call([$controller, $action], $vars);
@@ -164,7 +169,7 @@ if(!function_exists('weight')){
 	 * @return mixed
 	 */
 	function weight($url, $vars = [], $appendSuffix = false){
-		return action($url, $vars, 'weight', $appendSuffix);
+		return action($url."/handle", $vars, 'weight', $appendSuffix);
 	}
 }
 

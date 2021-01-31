@@ -13,7 +13,7 @@ namespace Xin\Support;
  * 系统相关操作工具类
  */
 final class Server{
-
+	
 	/**
 	 * 获取客户的IP地址
 	 *
@@ -29,10 +29,10 @@ final class Server{
 		}else{
 			$ip = "0.0.0.0";
 		}
-
+		
 		return $ip;
 	}
-
+	
 	/**
 	 * 获取客户端端口号
 	 *
@@ -50,10 +50,10 @@ final class Server{
 		}elseif(isset($_GET ["REMOTE_PORT"])){
 			$port = $_GET ["REMOTE_PORT"];
 		}
-
+		
 		return $port;
 	}
-
+	
 	/**
 	 * 获取主机名称
 	 *
@@ -62,7 +62,7 @@ final class Server{
 	public static function getHostName(){
 		return $_SERVER ['SERVER_NAME'];
 	}
-
+	
 	/**
 	 * 获取当前访问的文件
 	 *
@@ -72,7 +72,7 @@ final class Server{
 		$urls = explode('/', strip_tags($_SERVER ['REQUEST_URI']), 2);
 		return count($urls) > 1 ? $urls [1] : '';
 	}
-
+	
 	/**
 	 * 获取所有请求头信息
 	 *
@@ -96,10 +96,10 @@ final class Server{
 		if(isset ($_SERVER ['CONTENT_TYPE'])){
 			$headers ['CONTENT-TYPE'] = $_SERVER ['CONTENT_TYPE'];
 		}
-
+		
 		return $headers;
 	}
-
+	
 	/**
 	 * 获取终端名称
 	 *
@@ -114,7 +114,7 @@ final class Server{
 			$len = $len ? $len - $pos : strlen($str) - $pos;
 			return substr($str, $pos, $len);
 		};
-
+		
 		$info = self::getClientInfo();
 		if(strpos($info ['info_str'], 'windows phone') !== false){
 			if(!$isVersion) return "windows phone";
@@ -142,7 +142,7 @@ final class Server{
 			}
 		}
 	}
-
+	
 	/**
 	 * 获取终端信息
 	 *
@@ -159,7 +159,7 @@ final class Server{
 		$user_agent2 = substr($user_agents [1], 1);
 		$info ['info'] = explode("; ", $user_agent2);
 		$info ['info_str'] = $user_agent2;
-
+		
 		// applewebkit/537.36
 		$user_agent2 = substr($user_agent, $firstSpilt + 2, strlen($user_agent) - $firstSpilt);
 		$user_agent2 = preg_replace('/(\(.*\))\s/', "", $user_agent2);
@@ -169,10 +169,10 @@ final class Server{
 			$temps = explode("/", $user_agents [$i], 2);
 			$info [$temps [0]] = $temps [1];
 		}
-
+		
 		return $info;
 	}
-
+	
 	/**
 	 * 获取序列化参数
 	 *
@@ -195,7 +195,7 @@ final class Server{
 			"[SESSION=".http_build_query($_SESSION, false)."],".
 			"[SERVER=".http_build_query($_SERVER, false)."]";
 	}
-
+	
 	/**
 	 * 是否移动端访问访问
 	 *
@@ -238,17 +238,17 @@ final class Server{
 				return true;
 			}
 		}
-
+		
 		return false;
 	}
-
+	
 	/**
 	 * 调用客户端回掉函数
 	 *
 	 * @param $callback
 	 * @param $param
 	 */
-	public static function flushScriptCall($callback, $param = ''){
+	public static function javascriptCall($callback, $param = ''){
 		if(is_string($param)){
 			$param = '"'.addslashes($param).'"';
 		}else{
@@ -266,20 +266,20 @@ final class Server{
 				}
 			}
 		}
-		self::flushScript("{$callback} ( ".json_encode($param)." )");
+		self::sendJavascript("{$callback} ( ".json_encode($param)." )");
 	}
-
+	
 	/**
 	 * 发送到客户端script
 	 *
 	 * @param string $script
 	 */
-	public static function flushScript($script){
+	public static function sendJavascript($script){
 		echo "<script type=\"text/javascript\">{$script}</script>";
 		flush();
 		ob_flush();
 	}
-
+	
 	/**
 	 * URL重定向
 	 *
@@ -294,7 +294,7 @@ final class Server{
 		if(empty($msg)){
 			$msg = "系统将在{$time}秒之后自动跳转到{$url}！";
 		}
-
+		
 		if(!headers_sent()){
 			// redirect
 			if(0 === $time){

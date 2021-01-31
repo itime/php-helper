@@ -7,6 +7,7 @@
 
 namespace Xin\Thinkphp\Bus;
 
+use Guzzle\Service\Exception\ValidationException;
 use think\facade\Db;
 use think\Model;
 use Xin\Bus\Balance\SceneEnum;
@@ -109,6 +110,11 @@ class Balance extends Model implements BalanceRepository{
 	 * @inheritDoc
 	 */
 	public function consume($userId, $amount, $remark = '', $attributes = []){
+		$balance = $this->balanceValue($userId);
+		if($balance < $amount){
+			throw new ValidationException("余额不足！");
+		}
+		
 		$result = $this->where('id', $userId)->dec($this->balanceKey, $amount)->update($attributes);
 		if(!$result){
 			throw new \LogicException("余额变更失败！");
@@ -119,6 +125,16 @@ class Balance extends Model implements BalanceRepository{
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * 获取用户的余额
+	 *
+	 * @param int $userId
+	 * @return float
+	 */
+	public function balanceValue($userId){
+		return (float)$this->where('id', $userId)->value($this->balanceKey, 0);
 	}
 	
 	/**

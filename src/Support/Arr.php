@@ -282,9 +282,7 @@ final class Arr{
 			if(!is_array($item)){
 				$result[] = $item;
 			}else{
-				$values = $depth === 1
-					? array_values($item)
-					: static::flatten($item, $depth - 1);
+				$values = $depth === 1 ? array_values($item) : self::flatten($item, $depth - 1);
 				
 				foreach($values as $value){
 					$result[] = $value;
@@ -319,7 +317,7 @@ final class Arr{
 	 * @return mixed
 	 */
 	public static function get($array, $key, $default = null){
-		if(!static::accessible($array)){
+		if(!self::accessible($array)){
 			return value($default);
 		}
 		
@@ -327,7 +325,7 @@ final class Arr{
 			return $array;
 		}
 		
-		if(static::exists($array, $key)){
+		if(self::exists($array, $key)){
 			return $array[$key];
 		}
 		
@@ -336,7 +334,7 @@ final class Arr{
 		}
 		
 		foreach(explode('.', $key) as $segment){
-			if(static::accessible($array) && static::exists($array, $segment)){
+			if(self::accessible($array) && self::exists($array, $segment)){
 				$array = $array[$segment];
 			}else{
 				return value($default);
@@ -363,12 +361,12 @@ final class Arr{
 		foreach($keys as $key){
 			$subKeyArray = $array;
 			
-			if(static::exists($array, $key)){
+			if(self::exists($array, $key)){
 				continue;
 			}
 			
 			foreach(explode('.', $key) as $segment){
-				if(static::accessible($subKeyArray) && static::exists($subKeyArray, $segment)){
+				if(self::accessible($subKeyArray) && self::exists($subKeyArray, $segment)){
 					$subKeyArray = $subKeyArray[$segment];
 				}else{
 					return false;
@@ -514,7 +512,7 @@ final class Arr{
 		
 		foreach($array as $key => $value){
 			if(is_array($value) && !empty($value)){
-				$results = array_merge($results, static::dot($value, $prepend.$key.'.'));
+				$results = array_merge($results, self::dot($value, $prepend.$key.'.'));
 			}else{
 				$results[$prepend.$key] = $value;
 			}
@@ -574,7 +572,7 @@ final class Arr{
 			return empty($array) ? value($default) : end($array);
 		}
 		
-		return static::first(array_reverse($array, true), $callback, $default);
+		return self::first(array_reverse($array, true), $callback, $default);
 	}
 	
 	/**

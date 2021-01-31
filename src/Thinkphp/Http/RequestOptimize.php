@@ -6,7 +6,6 @@
  */
 namespace Xin\Thinkphp\Http;
 
-use Illuminate\Support\Arr;
 use Xin\Support\Str;
 use Xin\Support\Time;
 
@@ -126,7 +125,7 @@ trait RequestOptimize{
 	 * @param string $delimiter
 	 * @return array
 	 */
-	public function rangeTime(string $field = 'datetime', int $maxRange = 0, string $delimiter = ' - '):array{
+	public function rangeTime(string $field = 'datetime', int $maxRange = 0, string $delimiter = ' ~ '):array{
 		$rangeTime = $this->param($field, '');
 		return Time::parseRange($rangeTime, $maxRange, $delimiter);
 	}

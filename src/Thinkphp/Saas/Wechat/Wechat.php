@@ -9,7 +9,8 @@ namespace Xin\Thinkphp\Saas\Wechat;
 
 use EasyWeChat\Factory;
 use Xin\Contracts\Saas\WechatRepository;
-use Xin\Foundation\Wechat as WechatBase;
+use Xin\Foundation\Wechat\Wechat as WechatBase;
+use Xin\Foundation\Wechat\WechatNotConfigureException;
 
 class Wechat extends WechatBase implements WechatRepository{
 	
@@ -62,16 +63,18 @@ class Wechat extends WechatBase implements WechatRepository{
 	
 	/**
 	 * @inheritDoc
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\ModelNotFoundException
+	 * @throws \think\db\exception\DbException
 	 */
 	public function officialOfId($id, array $options = []){
-		// TODO: Implement officialOfId() method.
 		if($id == 0){
 			return $this->defaultOfficial($options);
 		}
 		
 		$weapp = DatabaseWeapp::where('id', $id)->find();
 		if(empty($weapp)){
-			throw new \LogicException("未配置或授权公众号！");
+			throw new WechatNotConfigureException("未配置或授权公众号！");
 		}
 		
 		return $this->newOfficialInstance($weapp, $options);
@@ -79,6 +82,9 @@ class Wechat extends WechatBase implements WechatRepository{
 	
 	/**
 	 * @inheritDoc
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\ModelNotFoundException
+	 * @throws \think\db\exception\DbException
 	 */
 	public function officialOfAppId($appId, array $options = []){
 		if($appId == 0){
@@ -90,7 +96,7 @@ class Wechat extends WechatBase implements WechatRepository{
 			'type'   => 1,
 		])->find();
 		if(empty($weapp)){
-			throw new \LogicException("未配置或授权公众号！");
+			throw new WechatNotConfigureException("未配置或授权公众号！");
 		}
 		
 		return $this->newOfficialInstance($weapp, $options);
@@ -100,7 +106,7 @@ class Wechat extends WechatBase implements WechatRepository{
 	 * 解析公众号实例
 	 *
 	 * @param \Xin\Thinkphp\Saas\Wechat\DatabaseWeapp $weapp
-	 * @param array                            $options
+	 * @param array                                   $options
 	 * @return \EasyWeChat\MiniProgram\Application|\EasyWeChat\OpenPlatform\Authorizer\MiniProgram\Application
 	 */
 	protected function newOfficialInstance(DatabaseWeapp $weapp, array $options){
@@ -118,6 +124,9 @@ class Wechat extends WechatBase implements WechatRepository{
 	
 	/**
 	 * @inheritDoc
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\ModelNotFoundException
+	 * @throws \think\db\exception\DbException
 	 */
 	public function miniProgramOfId($id, array $options = []){
 		if($id == 0){
@@ -126,7 +135,7 @@ class Wechat extends WechatBase implements WechatRepository{
 		
 		$weapp = DatabaseWeapp::where('id', $id)->find();
 		if(empty($weapp)){
-			throw new \LogicException("未配置或授权小程序！");
+			throw new WechatNotConfigureException("未配置或授权小程序！");
 		}
 		
 		return $this->newMiniProgramInstance($weapp, $options);
@@ -134,6 +143,9 @@ class Wechat extends WechatBase implements WechatRepository{
 	
 	/**
 	 * @inheritDoc
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\ModelNotFoundException
+	 * @throws \think\db\exception\DbException
 	 */
 	public function miniProgramOfAppId($appId, array $options = []){
 		if($appId == 0){
@@ -145,7 +157,7 @@ class Wechat extends WechatBase implements WechatRepository{
 			'type'   => 0,
 		])->find();
 		if(empty($weapp)){
-			throw new \LogicException("未配置或授权小程序！");
+			throw new WechatNotConfigureException("未配置或授权小程序！");
 		}
 		
 		return $this->newMiniProgramInstance($weapp, $options);

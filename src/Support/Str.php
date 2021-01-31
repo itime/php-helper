@@ -153,17 +153,17 @@ final class Str{
 	public static function snake($value, $delimiter = '_', $isCache = true){
 		$key = $value;
 		
-		if(isset(static::$snakeCache[$key][$delimiter])){
-			return static::$snakeCache[$key][$delimiter];
+		if(isset(self::$snakeCache[$key][$delimiter])){
+			return self::$snakeCache[$key][$delimiter];
 		}
 		
 		if(!ctype_lower($value)){
 			$value = preg_replace('/\s+/u', '', $value);
 			
-			$value = static::lower(preg_replace('/(.)(?=[A-Z])/u', '$1'.$delimiter, $value));
+			$value = self::lower(preg_replace('/(.)(?=[A-Z])/u', '$1'.$delimiter, $value));
 		}
 		
-		return $isCache ? static::$snakeCache[$key][$delimiter] = $value : $value;
+		return $isCache ? self::$snakeCache[$key][$delimiter] = $value : $value;
 	}
 	
 	/**
@@ -181,12 +181,12 @@ final class Str{
 	 * @return string
 	 */
 	public static function camel($value, $isCache = true){
-		if(isset(static::$camelCache[$value])){
-			return static::$camelCache[$value];
+		if(isset(self::$camelCache[$value])){
+			return self::$camelCache[$value];
 		}
 		
-		$value = lcfirst(static::studly($value));
-		return $isCache ? static::$camelCache[$value] = $value : $value;
+		$value = lcfirst(self::studly($value));
+		return $isCache ? self::$camelCache[$value] = $value : $value;
 	}
 	
 	/**
@@ -206,14 +206,14 @@ final class Str{
 	public static function studly($value, $isCache = true){
 		$key = $value;
 		
-		if(isset(static::$studlyCache[$key])){
-			return static::$studlyCache[$key];
+		if(isset(self::$studlyCache[$key])){
+			return self::$studlyCache[$key];
 		}
 		
 		$value = ucwords(str_replace(['-', '_'], ' ', $value));
 		$value = str_replace(' ', '', $value);
 		
-		return $isCache ? static::$studlyCache[$key] = $value : $value;
+		return $isCache ? self::$studlyCache[$key] = $value : $value;
 	}
 	
 	/**
@@ -344,35 +344,6 @@ final class Str{
 	}
 	
 	/**
-	 * 创建一个随机名字
-	 *
-	 * @param string|null $firstName
-	 * @param int         $lastNameLength 名字字数
-	 * @param string      $delimiter
-	 * @return string
-	 */
-	public static function createName($firstName = null, $lastNameLength = 2, $delimiter = ''){
-		static $data = null;
-		if(is_null($data)){
-			$data = require_once './name_config.php';
-		}
-		
-		//姓氏
-		if(empty($firstName)){
-			$len = count($data['first_name_list']);
-			$firstName = $data['first_name_list'][rand(0, $len - 1)];
-		}
-		
-		//名字
-		$len = count($data['chars']);
-		$lastName = '';
-		for($i = 0; $i < $lastNameLength; $i++){
-			$lastName .= $data [rand(0, $len - 1)];
-		}
-		return $firstName.$delimiter.$lastName;
-	}
-	
-	/**
 	 * 解析Url Query
 	 *
 	 * @param string $url url地址或URL query参数
@@ -439,6 +410,7 @@ final class Str{
 	
 	/**
 	 * 安全处理-字符串或数组转数组
+	 *
 	 * @param mixed         $value
 	 * @param string        $format
 	 * @param string        $delimiter
@@ -478,6 +450,7 @@ final class Str{
 	
 	/**
 	 * 安全处理-数组转字符串
+	 *
 	 * @param mixed  $value
 	 * @param string $format
 	 * @param string $delimiter

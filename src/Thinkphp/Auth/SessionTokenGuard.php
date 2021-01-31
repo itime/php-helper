@@ -49,6 +49,8 @@ class SessionTokenGuard extends AbstractStatefulGuard{
 		
 		$this->request = $this->app['request'];
 		$this->session = $this->app['session'];
+		
+		$this->authTokenResolver = $this->getDefaultAuthTokenResolver();
 	}
 	
 	/**
@@ -89,5 +91,12 @@ class SessionTokenGuard extends AbstractStatefulGuard{
 		}
 		
 		return $this->session;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getSessionId(){
+		return $this->session()->getId();
 	}
 }

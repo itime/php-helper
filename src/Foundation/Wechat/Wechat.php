@@ -4,8 +4,7 @@
  *
  * @author: 晋<657306123@qq.com>
  */
-
-namespace Xin\Foundation;
+namespace Xin\Foundation\Wechat;
 
 use EasyWeChat\Factory;
 use EasyWeChat\Kernel\ServiceContainer;
@@ -31,12 +30,12 @@ class Wechat implements WechatContract{
 	 * @inheritDoc
 	 */
 	public function defaultOpenPlatform(array $options = []){
-		if(!isset($this->config['open']) || empty($this->config['open'])){
-			throw new \RuntimeException("wechat config 'open' not defined.");
+		if(!isset($this->config['open_platform']) || empty($this->config['open_platform'])){
+			throw new WechatNotConfigureException("wechat config 'open_platform' not defined.");
 		}
 		
 		$config = $this->checkConfig(
-			$this->getConfig('open')
+			$this->getConfig('open_platform')
 		);
 		
 		return $this->initApplication(
@@ -50,7 +49,7 @@ class Wechat implements WechatContract{
 	 */
 	public function defaultOfficial(array $options = []){
 		if(!isset($this->config['official']) || empty($this->config['official'])){
-			throw new \RuntimeException("wechat config 'official' not defined.");
+			throw new WechatNotConfigureException("wechat config 'official' not defined.");
 		}
 		
 		$config = $this->checkConfig(
@@ -68,7 +67,7 @@ class Wechat implements WechatContract{
 	 */
 	public function defaultMiniProgram(array $options = []){
 		if(!isset($this->config['miniprogram']) || empty($this->config['miniprogram'])){
-			throw new \RuntimeException("wechat config 'mini_program' not defined.");
+			throw new WechatNotConfigureException("wechat config 'miniprogram' not defined.");
 		}
 		
 		$config = $this->checkConfig(
@@ -87,11 +86,18 @@ class Wechat implements WechatContract{
 	 * @return mixed
 	 */
 	protected function initApplication(ServiceContainer $sc, array $options){
-		$options = array_merge([
-			'strict' => true,
-		], $options);
+		$sc->config['response_type'] = AgileType::class;
 		
-		//		$sc->events->dispatch();
+		//// 监听微信响应数据
+		//$sc->events->addListener(HttpResponseCreated::class, function(HttpResponseCreated $event){
+		//	$response = $event->response;
+		//
+		//	if(false !== stripos($response->getHeaderLine('Content-disposition'), 'attachment')){
+		//		$response = StreamResponse::buildFromPsrResponse($response);
+		//	}else{
+		//		$response = Response::buildFromPsrResponse($response);
+		//	}
+		//});
 		
 		return $sc;
 	}
@@ -104,20 +110,20 @@ class Wechat implements WechatContract{
 	 */
 	protected function checkConfig(array $config){
 		if(empty($config)){
-			throw new \RuntimeException("wechat config is invalid.");
+			throw new WechatInvalidConfigException("wechat config is invalid.");
 		}
 		
-		if(!isset($config['appid']) || empty($config['appid'])){
-			throw new \RuntimeException("wechat config 'appid' not defined.");
+		if(!isset($config['app_id']) || empty($config['app_id'])){
+			throw new WechatInvalidConfigException("wechat config 'app_id' not defined.");
 		}
 		
 		if(!isset($config['mode']) || $config['mode'] == 0){
 			if(!isset($config['secret']) || empty($config['secret'])){
-				throw new \RuntimeException("wechat config 'secret' not defined.");
+				throw new WechatInvalidConfigException("wechat config 'secret' not defined.");
 			}
 		}else{
 			if(!isset($config['authorizer_refresh_token']) || empty($config['authorizer_refresh_token'])){
-				throw new \RuntimeException("wechat config 'authorizer_refresh_token' not defined.");
+				throw new WechatInvalidConfigException("wechat config 'authorizer_refresh_token' not defined.");
 			}
 		}
 		

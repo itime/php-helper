@@ -28,9 +28,8 @@ trait InteractsCURD{
 	 * @return string
 	 */
 	protected function showListView($data){
-		$this->view->assign('data', $data);
-		
-		return $this->view->fetch($this->property('listTpl', 'index'));
+		$this->assign('data', $data);
+		return $this->fetch($this->property('listTpl', 'index'));
 	}
 	
 	/**
@@ -90,7 +89,7 @@ trait InteractsCURD{
 	 * @return string
 	 */
 	protected function showCreateView(){
-		return $this->view->fetch($this->property('createTpl', 'edit'));
+		return $this->fetch($this->property('createTpl', 'edit'));
 	}
 	
 	/**
@@ -150,17 +149,14 @@ trait InteractsCURD{
 	 * @return string
 	 */
 	protected function showDetailView($model){
-		$this->view->assign('info', $model);
-		
-		return $this->view->fetch($this->property('detailTpl', 'edit'));
+		$this->assign('info', $model);
+		return $this->fetch($this->property('detailTpl', 'edit'));
 	}
 	
 	/**
 	 * 查看详情
 	 *
 	 * @return mixed
-	 * @throws \think\db\exception\DataNotFoundException
-	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	public function show(){
 		$model = $this->findIsEmptyAssert();
@@ -175,8 +171,8 @@ trait InteractsCURD{
 	 * @return string
 	 */
 	protected function showUpdateView($model){
-		$this->view->assign('info', $model);
-		return $this->view->fetch($this->property('updateTpl', 'edit'));
+		$this->assign('info', $model);
+		return $this->fetch($this->property('updateTpl', 'edit'));
 	}
 	
 	/**
@@ -203,8 +199,6 @@ trait InteractsCURD{
 	 * 更新行为
 	 *
 	 * @return mixed
-	 * @throws \think\db\exception\DataNotFoundException
-	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	public function update(){
 		$model = $this->findIsEmptyAssert();
@@ -413,8 +407,6 @@ trait InteractsCURD{
 	 *
 	 * @param int|null $id
 	 * @return array|string|\think\Model
-	 * @throws \think\db\exception\DataNotFoundException
-	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	protected function findIsEmptyAssert($id = null){
 		if(is_null($id)){

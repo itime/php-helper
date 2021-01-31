@@ -15,6 +15,7 @@ use think\exception\HttpResponseException;
 use think\exception\ValidateException;
 use think\Response;
 use Xin\Auth\AuthenticationException;
+use Xin\Foundation\Wechat\WechatException;
 use Xin\Thinkphp\Facade\Hint;
 
 class ExceptionHandle extends Handle{
@@ -83,6 +84,8 @@ class ExceptionHandle extends Handle{
 			$e = new HttpException(404, ($title ?: '数据')."不存在！");
 		}elseif($e instanceof DataNotFoundException){
 			$e = new HttpException(404, "数据不存在！");
+		}elseif($e instanceof WechatException){
+			return Hint::error($e->getMessage(), $e->getCode());
 		}
 		
 		// 其他错误交给系统处理

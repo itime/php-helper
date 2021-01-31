@@ -8,7 +8,7 @@
 namespace Xin\Thinkphp\Wechat;
 
 use Xin\Contracts\Foundation\Wechat as WechatContract;
-use Xin\Foundation\Wechat;
+use Xin\Foundation\Wechat\Wechat;
 use Xin\Thinkphp\Foundation\ServiceProvider;
 
 class WechatServiceProvider extends ServiceProvider{

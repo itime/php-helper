@@ -115,7 +115,11 @@ if(!function_exists('build_mysql_distance_field')){
 	 * @return string
 	 */
 	function build_mysql_distance_field($longitude, $latitude, $lng_name = 'longitude', $lat_name = 'latitude', $as_name = 'distance'){
-		return "ROUND(6378.138*2*ASIN(SQRT(POW(SIN(({$latitude}*PI()/180-{$lat_name}*PI()/180)/2),2)+COS({$latitude}*PI()/180)*COS({$lat_name}*PI()/180)*POW(SIN(({$longitude}*PI()/180-{$lng_name}*PI()/180)/2),2)))*1000) AS {$as_name}";
+		$sql = "ROUND(6378.138*2*ASIN(SQRT(POW(SIN(({$latitude}*PI()/180-{$lat_name}*PI()/180)/2),2)+COS({$latitude}*PI()/180)*COS({$lat_name}*PI()/180)*POW(SIN(({$longitude}*PI()/180-{$lng_name}*PI()/180)/2),2)))*1000)";
+		if($as_name){
+			$sql .= " AS {$as_name}";
+		}
+		return $sql;
 	}
 }
 
