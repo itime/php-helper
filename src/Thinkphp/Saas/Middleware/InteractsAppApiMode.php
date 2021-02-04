@@ -13,7 +13,7 @@ use Xin\Thinkphp\Saas\Model\DatabaseApp;
 trait InteractsAppApiMode{
 	
 	/**
-	 * @param \Xin\Thinkphp\Saas\Http\RequestApp $request
+	 * @param \Xin\Thinkphp\Saas\Http\HasApp $request
 	 */
 	protected function saasAppInit($request){
 		$request->setAppResolver(function(Request $request){

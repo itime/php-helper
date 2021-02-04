@@ -13,7 +13,7 @@ interface PlugLazyCollection{
 	 * 获取插件
 	 *
 	 * @param string $plugin
-	 * @return \Xin\Contracts\Plugin\Plugin
+	 * @return \Xin\Contracts\Plugin\PluginInfo
 	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
 	public function plugin($plugin);
@@ -23,5 +23,5 @@ interface PlugLazyCollection{
 	 *
 	 * @return array
 	 */
-	public function lists();
+	public function all();
 }

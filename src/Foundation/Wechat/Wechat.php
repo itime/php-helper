@@ -29,7 +29,7 @@ class Wechat implements WechatContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function defaultOpenPlatform(array $options = []){
+	public function openPlatform(array $options = []){
 		if(!isset($this->config['open_platform']) || empty($this->config['open_platform'])){
 			throw new WechatNotConfigureException("wechat config 'open_platform' not defined.");
 		}
@@ -47,7 +47,7 @@ class Wechat implements WechatContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function defaultOfficial(array $options = []){
+	public function official(array $options = []){
 		if(!isset($this->config['official']) || empty($this->config['official'])){
 			throw new WechatNotConfigureException("wechat config 'official' not defined.");
 		}
@@ -65,7 +65,7 @@ class Wechat implements WechatContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function defaultMiniProgram(array $options = []){
+	public function miniProgram(array $options = []){
 		if(!isset($this->config['miniprogram']) || empty($this->config['miniprogram'])){
 			throw new WechatNotConfigureException("wechat config 'miniprogram' not defined.");
 		}

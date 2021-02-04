@@ -160,10 +160,10 @@ final class Arr{
 	/**
 	 * 无极限分类
 	 *
-	 * @param array         $list 数据源
-	 * @param callable|null $itemHandler 额外处理回调函数
-	 * @param int           $pid 父id
-	 * @param array         $options
+	 * @param array $list 数据源
+	 * @param callable|null   $itemHandler 额外处理回调函数
+	 * @param int             $pid 父id
+	 * @param array           $options
 	 * @return array
 	 */
 	public static function tree(array $list, callable $itemHandler = null, $pid = 0, array $options = []){

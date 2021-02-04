@@ -144,4 +144,13 @@ abstract class AbstractGuard implements GuardContract{
 		
 		$this->preCheckCallback = $preCheckCallback;
 	}
+	
+	/**
+	 * 获取用户提供者
+	 *
+	 * @return \Xin\Contracts\Auth\UserProvider|null
+	 */
+	public function getProvider(){
+		return $this->provider;
+	}
 }

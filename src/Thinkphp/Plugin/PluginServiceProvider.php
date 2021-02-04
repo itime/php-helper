@@ -7,8 +7,8 @@
 
 namespace Xin\Thinkphp\Plugin;
 
-use think\App;
 use Xin\Contracts\Plugin\Factory as PluginFactory;
+use Xin\Plugin\PluginManager;
 use Xin\Thinkphp\Foundation\ServiceProvider;
 
 class PluginServiceProvider extends ServiceProvider{
@@ -38,8 +38,8 @@ class PluginServiceProvider extends ServiceProvider{
 	 */
 	protected function registerPluginManager(){
 		$this->app->bind("PluginManager", PluginFactory::class);
-		$this->app->bind(PluginFactory::class, function(App $app){
-			return new PluginManager($app, array_merge([
+		$this->app->bind(PluginFactory::class, function(){
+			return new PluginManager(array_merge([
 				'default' => [
 					'app_name' => 'admin',
 				],
@@ -58,7 +58,7 @@ class PluginServiceProvider extends ServiceProvider{
 			$this->app->middleware->add(function($request, \Closure $next){
 				/** @var PluginFactory $pm */
 				$pm = $this->app['PluginManager'];
-				$pm->boot();
+				$pm->pluginBoot();
 				
 				return $next($request);
 			});

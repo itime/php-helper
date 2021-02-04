@@ -226,7 +226,5 @@ trait UploadToken{
 		}
 		
 		return Hint::result();
-		
-		throw new HttpException(404);
 	}
 }

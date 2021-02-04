@@ -13,11 +13,8 @@ use think\Model;
 use Xin\Bus\Balance\SceneEnum;
 use Xin\Contracts\Bus\BalanceRepository;
 use Xin\Support\Str;
-use Xin\Thinkphp\Foundation\InteractsRepository;
 
 class Balance extends Model implements BalanceRepository{
-	
-	use InteractsRepository;
 	
 	/**
 	 * @var string

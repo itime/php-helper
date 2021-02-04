@@ -7,9 +7,7 @@
 
 namespace Xin\Contracts\Bus;
 
-use Xin\Contracts\Foundation\Repository as BaseRepository;
-
-interface BalanceRepository extends BaseRepository{
+interface BalanceRepository{
 	
 	/**
 	 * 获取用户余额数据

@@ -10,6 +10,29 @@ namespace Xin\Contracts\Plugin;
 interface Factory{
 	
 	/**
+	 * 插件根路径
+	 *
+	 * @param string $path
+	 * @return string
+	 */
+	public function rootPath($path = '');
+	
+	/**
+	 * 插件列表
+	 *
+	 * @return \Xin\Contracts\Plugin\PlugLazyCollection
+	 */
+	public function lists();
+	
+	/**
+	 * 获取插件目录
+	 *
+	 * @param string $plugin
+	 * @return string
+	 */
+	public function pluginPath($plugin);
+	
+	/**
 	 * 插件是否存在
 	 *
 	 * @param string $plugin
@@ -25,6 +48,40 @@ interface Factory{
 	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
 	public function plugin($plugin);
+	
+	/**
+	 * 获取插件信息
+	 *
+	 * @param string $plugin
+	 * @return \Xin\Contracts\Plugin\PluginInfo
+	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
+	 */
+	public function pluginInfo($plugin);
+	
+	/**
+	 * 安装插件
+	 *
+	 * @param string $plugin
+	 * @return \Xin\Contracts\Plugin\PluginInfo
+	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
+	 */
+	public function installPlugin($plugin);
+	
+	/**
+	 * 卸载插件
+	 *
+	 * @param string $plugin
+	 * @return \Xin\Contracts\Plugin\PluginInfo
+	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
+	 */
+	public function uninstallPlugin($plugin);
+	
+	/**
+	 * 启动相关插件
+	 *
+	 * @param array $plugins
+	 */
+	public function pluginBoot(array $plugins = []);
 	
 	/**
 	 * 获取插件下的类路径
@@ -46,38 +103,10 @@ interface Factory{
 	public function controllerClass($plugin, $controller, $layer = 'controller');
 	
 	/**
-	 * 插件列表
-	 *
-	 * @return \Xin\Contracts\Plugin\PlugLazyCollection
-	 */
-	public function lists();
-	
-	/**
-	 * 启动所有插件
-	 */
-	public function boot();
-	
-	/**
-	 * 插件根路径
-	 *
-	 * @param string $path
-	 * @return string
-	 */
-	public function rootPath($path = '');
-	
-	/**
-	 * 获取插件目录
-	 *
-	 * @param string $plugin
-	 * @return string
-	 */
-	public function path($plugin);
-	
-	/**
 	 * 获取配置信息
 	 *
 	 * @param string $name
-	 * @param mixed   $default
+	 * @param mixed  $default
 	 * @return mixed
 	 */
 	public function config($name, $default = null);

@@ -14,44 +14,6 @@ use Xin\Support\Str;
 trait Attribute{
 	
 	/**
-	 * 获取属性
-	 *
-	 * @param string $property
-	 * @param mixed  $default
-	 * @return mixed
-	 */
-	protected function property($property, $default = null){
-		if(property_exists($this, $property)){
-			return $this->{$property};
-		}
-		
-		return $default;
-	}
-	
-	/**
-	 * 获取公共类库下的类
-	 *
-	 * @param string $baseClass
-	 * @param string $layer
-	 * @param bool   $appendSuffix
-	 * @return string|null
-	 */
-	private function resolveCommonClass($baseClass, $layer, $appendSuffix = true){
-		if(strpos($baseClass, "\\") !== false){
-			return $baseClass;
-		}
-		
-		$baseClass = $baseClass.($appendSuffix ? Str::studly($layer) : '');
-		$class = "\\app\\common\\{$layer}\\{$baseClass}";
-		
-		if(!class_exists($class)){
-			return null;
-		}
-		
-		return $class;
-	}
-	
-	/**
 	 * 获取模型实例
 	 *
 	 * @param array $data
@@ -138,6 +100,44 @@ trait Attribute{
 		$class = explode('\\', get_class($this));
 		$class = end($class);
 		$class = substr($class, 0, strpos($class, "Controller"));
+		return $class;
+	}
+	
+	/**
+	 * 获取属性
+	 *
+	 * @param string $property
+	 * @param mixed  $default
+	 * @return mixed
+	 */
+	protected function property($property, $default = null){
+		if(property_exists($this, $property)){
+			return $this->{$property};
+		}
+		
+		return $default;
+	}
+	
+	/**
+	 * 解析公共类库下的类
+	 *
+	 * @param string $baseClass
+	 * @param string $layer
+	 * @param bool   $appendSuffix
+	 * @return string|null
+	 */
+	private function resolveCommonClass($baseClass, $layer, $appendSuffix = true){
+		if(strpos($baseClass, "\\") !== false){
+			return $baseClass;
+		}
+		
+		$baseClass = $baseClass.($appendSuffix ? Str::studly($layer) : '');
+		$class = "\\app\\common\\{$layer}\\{$baseClass}";
+		
+		if(!class_exists($class)){
+			return null;
+		}
+		
 		return $class;
 	}
 }

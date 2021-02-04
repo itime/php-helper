@@ -4,69 +4,35 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Contracts\Plugin;
 
-/**
- * Interface PluginInterface
- */
 interface Plugin{
-	
-	/**
-	 * 获取插件名字
-	 *
-	 * @return string
-	 */
-	public function getName();
-	
-	/**
-	 * 获取插件信息
-	 *
-	 * @return array
-	 */
-	public function getInfo();
-	
-	/**
-	 * 获取配置模板
-	 *
-	 * @param array $config
-	 * @return array
-	 */
-	public function getConfigTemplate($config = []);
-	
-	/**
-	 * 获取配置字段类型
-	 *
-	 * @return array
-	 */
-	public function getConfigTypeList();
-	
-	/**
-	 * 当前插件路径
-	 *
-	 * @param string $path
-	 * @return string
-	 */
-	public function pluginPath($path = '');
 	
 	/**
 	 * 插件安装
 	 *
+	 * @param \Xin\Contracts\Plugin\PluginInfo $pluginInfo
+	 * @param \Xin\Contracts\Plugin\Factory    $factory
 	 * @return boolean
 	 */
-	public function install();
+	public function install(PluginInfo $pluginInfo, Factory $factory);
 	
 	/**
 	 * 插件卸载
 	 *
+	 * @param \Xin\Contracts\Plugin\PluginInfo $pluginInfo
+	 * @param \Xin\Contracts\Plugin\Factory    $factory
 	 * @return boolean
 	 */
-	public function uninstall();
+	public function uninstall(PluginInfo $pluginInfo, Factory $factory);
 	
 	/**
 	 * 启动插件
 	 *
+	 * @param \Xin\Contracts\Plugin\PluginInfo $pluginInfo
+	 * @param \Xin\Contracts\Plugin\Factory    $factory
 	 * @return mixed
 	 */
-	public function boot();
-	
+	public function boot(PluginInfo $pluginInfo, Factory $factory);
 }

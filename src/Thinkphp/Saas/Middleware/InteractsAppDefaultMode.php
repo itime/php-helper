@@ -12,7 +12,7 @@ use Xin\Support\Fluent;
 trait InteractsAppDefaultMode{
 	
 	/**
-	 * @param \Xin\Thinkphp\Saas\Http\RequestApp $request
+	 * @param \Xin\Thinkphp\Saas\Http\HasApp $request
 	 */
 	protected function saasAppDefaultInit($request){
 		$request->setAppResolver(function(){

@@ -10,7 +10,7 @@ namespace Xin\Plugin;
 use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Contracts\Plugin\PlugLazyCollection as PlugLazyCollectionContract;
 
-class PlugLazyCollection implements \ArrayAccess, PlugLazyCollectionContract{
+class PlugLazyCollection implements \ArrayAccess, \Iterator, PlugLazyCollectionContract{
 	
 	/**
 	 * @var PluginFactory
@@ -20,17 +20,36 @@ class PlugLazyCollection implements \ArrayAccess, PlugLazyCollectionContract{
 	/**
 	 * @var array
 	 */
-	protected $plugins;
+	protected $plugins = [];
+	
+	/**
+	 * @var \FilesystemIterator
+	 */
+	protected $fileIterator;
+	
+	/**
+	 * @var \Xin\Contracts\Plugin\PluginInfo
+	 */
+	protected $current;
+	
+	/**
+	 * @var int
+	 */
+	protected $key = 0;
+	
+	/**
+	 * @var bool
+	 */
+	protected $isValid = true;
 	
 	/**
 	 * PlugLazyCollection constructor.
 	 *
 	 * @param \Xin\Contracts\Plugin\Factory $factory
-	 * @param array                         $plugins
 	 */
-	public function __construct(PluginFactory $factory, array $plugins){
+	public function __construct(PluginFactory $factory){
 		$this->factory = $factory;
-		$this->plugins = $plugins;
+		$this->fileIterator = new \FilesystemIterator($factory->rootPath());
 	}
 	
 	/**
@@ -47,7 +66,7 @@ class PlugLazyCollection implements \ArrayAccess, PlugLazyCollectionContract{
 	 * 获取插件
 	 *
 	 * @param string $offset
-	 * @return \Xin\Contracts\Plugin\Plugin
+	 * @return \Xin\Contracts\Plugin\PluginInfo
 	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
 	public function offsetGet($offset){
@@ -83,7 +102,58 @@ class PlugLazyCollection implements \ArrayAccess, PlugLazyCollectionContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function lists(){
-		return array_keys($this->plugins);
+	public function all(){
+		while($plugin = $this->next()){
+		}
+		return $this->plugins;
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function current(){
+		return $this->current;
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function next(){
+		foreach($this->fileIterator as $file){
+			if(!$file->isDir()){
+				continue;
+			}
+			
+			$name = $file->getFilename();
+			if(!$this->factory->has($name)){
+				continue;
+			}
+			
+			$plugins[$name] = $this->factory->pluginClass($name, "Plugin");
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function key(){
+		return $this->key;
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function valid(){
+		return $this->isValid;
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function rewind(){
+		$this->plugins = [];
+		reset($this->plugins);
 	}
 }

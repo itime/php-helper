@@ -12,11 +12,11 @@ use Xin\Thinkphp\Saas\Model\DatabaseApp;
 trait InteractsAppSessionMode{
 	
 	/**
-	 * @param \Xin\Thinkphp\Saas\Http\RequestApp|\think\Request $request
+	 * @param \Xin\Thinkphp\Saas\Http\HasApp|\think\Request $request
 	 */
 	protected function saasAppInit($request){
 		$request->setAppResolver(function($request){
-			/** @var \Xin\Thinkphp\Saas\Http\RequestApp|\think\Request $request */
+			/** @var \Xin\Thinkphp\Saas\Http\HasApp|\think\Request $request */
 			
 			$appId = $request->session('app_id');
 			if(empty($appId)){

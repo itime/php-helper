@@ -28,7 +28,8 @@ trait TokenGuardHelpers{
 	 */
 	protected function getDefaultAuthTokenResolver(){
 		return function(Request $request){
-			return $request->param('session_id');
+			$varSessionId = $this->app->config->get('session.var_session_id');
+			return $request->request($varSessionId);
 		};
 	}
 }

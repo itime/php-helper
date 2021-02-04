@@ -6,9 +6,6 @@
  */
 namespace Xin\Contracts\Hint;
 
-/**
- * Interface HintInterface
- */
 interface Hint{
 	
 	/**
@@ -25,10 +22,10 @@ interface Hint{
 	/**
 	 * 提示失败消息
 	 *
-	 * @param string      $msg
-	 * @param int         $code
-	 * @param string|null $url
-	 * @param array       $extend
+	 * @param string|\Throwable $msg
+	 * @param int               $code
+	 * @param string|null       $url
+	 * @param array             $extend
 	 * @return \think\Response|\Symfony\Component\HttpFoundation\Response
 	 */
 	public function error($msg, $code = 0, $url = null, array $extend = []);

@@ -13,6 +13,7 @@ use think\App;
 use think\exception\ClassNotFoundException;
 use think\exception\HttpException;
 use think\route\dispatch\Controller;
+use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Support\Str;
 
 /**
@@ -28,7 +29,7 @@ class PluginDispatch extends Controller{
 	protected $plugin;
 	
 	/**
-	 * @var \Xin\Thinkphp\Plugin\PluginManager
+	 * @var PluginFactory
 	 */
 	protected $pluginManager;
 	
@@ -37,6 +38,8 @@ class PluginDispatch extends Controller{
 	 */
 	public function init(App $app){
 		$this->app = $app;
+		
+		$this->pluginManager = $this->app->get(PluginFactory::class);
 		
 		// 执行路由后置操作
 		$this->doRouteAfter();
@@ -54,17 +57,13 @@ class PluginDispatch extends Controller{
 		}
 		
 		// 获取操作名
-		$this->actionName = isset($this->param['action']) ? strip_tags($this->param['action'])
+		$this->actionName = isset($this->param['action'])
+			? strip_tags($this->param['action'])
 			: $this->rule->config('default_action');
 		
 		// 设置当前请求的插件、控制器、操作
 		$this->request->setPlugin($this->plugin);
-		$this->request
-			->setController($this->controller)
-			->setAction($this->actionName);
-		
-		/** @var \Xin\Thinkphp\Plugin\PluginManager $pluginManager */
-		$this->pluginManager = $this->app->get('PluginManager');
+		$this->request->setController($this->controller)->setAction($this->actionName);
 	}
 	
 	/**
@@ -126,11 +125,11 @@ class PluginDispatch extends Controller{
 	 * 实例化访问控制器
 	 *
 	 * @access public
-	 * @param string $controller 控制器名称
+	 * @param string $name 控制器名称
 	 * @return object
 	 * @throws ClassNotFoundException
 	 */
-	public function controller(string $controller){
+	public function controller(string $name){
 		$appName = $this->app->http->getName();
 		
 		$suffix = $this->rule->config('controller_suffix') ? 'Controller' : '';
@@ -140,7 +139,7 @@ class PluginDispatch extends Controller{
 		$pluginControllerLayer = "{$appName}controller";
 		$class = $this->pluginManager->controllerClass(
 			$this->plugin,
-			$controller = str_replace(['/', '.'], '\\', $controller),
+			$name = str_replace(['/', '.'], '\\', $name),
 			$pluginControllerLayer
 		);
 		
@@ -177,7 +176,7 @@ class PluginDispatch extends Controller{
 		/** @var \think\View $view */
 		$view = $this->app->make('view');
 		$viewLayer = "{$appName}view";
-		$viewPath = $this->pluginManager->path($this->plugin).$viewLayer.DIRECTORY_SEPARATOR;
+		$viewPath = $this->pluginManager->pluginPath($this->plugin).$viewLayer.DIRECTORY_SEPARATOR;
 		$view->engine()->config([
 			"view_path" => $viewPath,
 		]);

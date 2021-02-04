@@ -17,7 +17,7 @@ use Xin\Thinkphp\Facade\Hint;
 
 trait AuthenticatesUsers{
 	
-	use RedirectsUsers;
+	use RedirectsUsers, AuthenticatesFields;
 	
 	/**
 	 * Handle a login request to the application.
@@ -85,13 +85,13 @@ trait AuthenticatesUsers{
 		
 		$validate->rule([
 			$this->username() => 'require|alphaDash',
-			'password'        => 'require|alphaDash',
+			$this->password() => 'require|alphaDash',
 		], [
 			$this->username() => '用户名',
-			'password'        => '密码',
+			$this->password() => '密码',
 		]);
 		
-		$validate->check($request->param());
+		$validate->check($request->post());
 	}
 	
 	/**
@@ -103,7 +103,7 @@ trait AuthenticatesUsers{
 	protected function credentials(Request $request){
 		return $request->only([
 			$this->username(),
-			'password',
+			$this->password(),
 		]);
 	}
 	
@@ -145,15 +145,6 @@ trait AuthenticatesUsers{
 	 * @return mixed|void
 	 */
 	protected function authenticated(Request $request, $user){
-	}
-	
-	/**
-	 * Get the login username to be used by the controller.
-	 *
-	 * @return string
-	 */
-	public function username(){
-		return 'username';
 	}
 	
 	/**

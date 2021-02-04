@@ -86,8 +86,8 @@ trait HintHelper{
 	/**
 	 * 直接输出
 	 *
-	 * @param mixed    $response
-	 * @param callable $callback
+	 * @param mixed         $response
+	 * @param callable|null $callback
 	 */
 	protected function output($response, callable $callback = null){
 		if(is_callable($callback)){

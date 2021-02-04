@@ -12,7 +12,7 @@ use Xin\Thinkphp\Plugin\PluginDispatch;
 
 /**
  * @method bool has($plugin) static
- * @method \Xin\Contracts\Plugin\Plugin plugin($plugin) static
+ * @method \Xin\Contracts\Plugin\PluginInfo plugin($plugin) static
  * @method string pluginClass($plugin) static
  * @method string controllerClass($plugin, $controller, $layer = 'controller') static
  * @method mixed invoke(\think\Request $request, $plugin, $controller, $action) static

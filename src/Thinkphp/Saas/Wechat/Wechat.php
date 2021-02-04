@@ -24,7 +24,7 @@ class Wechat extends WechatBase implements WechatRepository{
 	 */
 	public function openPlatformOfId($id, array $options = []){
 		if($id == 0){
-			return $this->defaultOpenPlatform($options);
+			return $this->openPlatform($options);
 		}
 		
 		if(!$this->openPlatformCallback){
@@ -45,7 +45,7 @@ class Wechat extends WechatBase implements WechatRepository{
 	 */
 	public function openPlatformOfAppId($appId, array $options = []){
 		if($appId == 0){
-			return $this->defaultMiniProgram($options);
+			return $this->miniProgram($options);
 		}
 		
 		if(!$this->openPlatformCallback){
@@ -69,7 +69,7 @@ class Wechat extends WechatBase implements WechatRepository{
 	 */
 	public function officialOfId($id, array $options = []){
 		if($id == 0){
-			return $this->defaultOfficial($options);
+			return $this->official($options);
 		}
 		
 		$weapp = DatabaseWeapp::where('id', $id)->find();
@@ -88,7 +88,7 @@ class Wechat extends WechatBase implements WechatRepository{
 	 */
 	public function officialOfAppId($appId, array $options = []){
 		if($appId == 0){
-			return $this->defaultOfficial($options);
+			return $this->official($options);
 		}
 		
 		$weapp = DatabaseWeapp::where([
@@ -130,7 +130,7 @@ class Wechat extends WechatBase implements WechatRepository{
 	 */
 	public function miniProgramOfId($id, array $options = []){
 		if($id == 0){
-			return $this->defaultMiniProgram($options);
+			return $this->miniProgram($options);
 		}
 		
 		$weapp = DatabaseWeapp::where('id', $id)->find();
@@ -149,7 +149,7 @@ class Wechat extends WechatBase implements WechatRepository{
 	 */
 	public function miniProgramOfAppId($appId, array $options = []){
 		if($appId == 0){
-			return $this->defaultMiniProgram($options);
+			return $this->miniProgram($options);
 		}
 		
 		$weapp = DatabaseWeapp::where([

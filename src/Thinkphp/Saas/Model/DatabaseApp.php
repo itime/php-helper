@@ -7,7 +7,9 @@
 
 namespace Xin\Thinkphp\Saas\Model;
 
-class DatabaseApp extends \think\Model{
+use think\Model;
+
+class DatabaseApp extends Model{
 	
 	const TITLE = '应用';
 	

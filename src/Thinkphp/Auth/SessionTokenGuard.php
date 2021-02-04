@@ -85,9 +85,9 @@ class SessionTokenGuard extends AbstractStatefulGuard{
 		if(!$this->sessionInit){
 			$this->session = $this->app['session'];
 			$this->session->setId($this->getAuthToken());
-			//			$this->session->init([
-			//				'id' => $this->getAuthToken(),
-			//			]);
+			//$this->session->init([
+			//	'id' => $this->getAuthToken(),
+			//]);
 		}
 		
 		return $this->session;
