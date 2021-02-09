@@ -2,138 +2,224 @@
 
 namespace Xin\Support;
 
-use ArrayAccess;
-use JsonSerializable;
+use Xin\Support\Contracts\Arrayable;
 
-class Fluent implements ArrayAccess, JsonSerializable{
+class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayable{
 	
 	/**
-	 * All of the attributes set on the fluent instance.
+	 * The collection data.
 	 *
 	 * @var array
 	 */
-	protected $attributes = [];
+	protected $items = [];
 	
 	/**
-	 * Create a new fluent instance.
+	 * set data.
 	 *
-	 * @param array|object $attributes
-	 * @return void
+	 * @param array $items
 	 */
-	public function __construct($attributes = []){
-		foreach($attributes as $key => $value){
-			$this->attributes[$key] = $value;
+	public function __construct(array $items = []){
+		foreach($items as $key => $value){
+			$this->set($key, $value);
 		}
 	}
 	
 	/**
-	 * Get an attribute from the fluent instance.
+	 * Return all items.
+	 *
+	 * @return array
+	 */
+	public function all(){
+		return $this->items;
+	}
+	
+	/**
+	 * Return specific items.
+	 *
+	 * @param array $keys
+	 * @return $this
+	 */
+	public function only(array $keys){
+		$return = [];
+		
+		foreach($keys as $key){
+			$value = $this->get($key);
+			
+			if(!is_null($value)){
+				$return[$key] = $value;
+			}
+		}
+		
+		return new static($return);
+	}
+	
+	/**
+	 * Get all items except for those with the specified keys.
+	 *
+	 * @param mixed $keys
+	 * @return static
+	 */
+	public function except($keys){
+		$keys = is_array($keys) ? $keys : func_get_args();
+		
+		return new static(Arr::except($this->items, $keys));
+	}
+	
+	/**
+	 * Merge data.
+	 *
+	 * @param Collection|array $items
+	 * @return $this
+	 */
+	public function merge($items){
+		$clone = new static($this->all());
+		
+		foreach($items as $key => $value){
+			$clone->set($key, $value);
+		}
+		
+		return $clone;
+	}
+	
+	/**
+	 * To determine Whether the specified element exists.
+	 *
+	 * @param string $key
+	 * @return bool
+	 */
+	public function has($key){
+		return !is_null(Arr::get($this->items, $key));
+	}
+	
+	/**
+	 * Retrieve the first item.
+	 *
+	 * @return mixed
+	 */
+	public function first(){
+		return reset($this->items);
+	}
+	
+	/**
+	 * Retrieve the last item.
+	 *
+	 * @return bool
+	 */
+	public function last(){
+		$end = end($this->items);
+		
+		reset($this->items);
+		
+		return $end;
+	}
+	
+	/**
+	 * add the item value.
+	 *
+	 * @param string $key
+	 * @param mixed  $value
+	 */
+	public function add($key, $value){
+		Arr::set($this->items, $key, $value);
+	}
+	
+	/**
+	 * Set the item value.
+	 *
+	 * @param string $key
+	 * @param mixed  $value
+	 */
+	public function set($key, $value){
+		Arr::set($this->items, $key, $value);
+	}
+	
+	/**
+	 * Retrieve item from Collection.
 	 *
 	 * @param string $key
 	 * @param mixed  $default
 	 * @return mixed
 	 */
 	public function get($key, $default = null){
-		if(array_key_exists($key, $this->attributes)){
-			return $this->attributes[$key];
-		}
-		
-		return value($default);
+		return Arr::get($this->items, $key, $default);
 	}
 	
 	/**
-	 * Get the attributes from the fluent instance.
+	 * Remove item form Collection.
 	 *
-	 * @return array
+	 * @param string $key
 	 */
-	public function getAttributes(){
-		return $this->attributes;
+	public function forget($key){
+		Arr::forget($this->items, $key);
 	}
 	
 	/**
-	 * Convert the fluent instance to an array.
+	 * Build to array.
 	 *
 	 * @return array
 	 */
 	public function toArray(){
-		return $this->attributes;
+		return $this->all();
 	}
 	
 	/**
-	 * Convert the object into something JSON serializable.
+	 * Build to json.
 	 *
-	 * @return array
-	 */
-	public function jsonSerialize(){
-		return $this->toArray();
-	}
-	
-	/**
-	 * Convert the fluent instance to JSON.
-	 *
-	 * @param int $options
+	 * @param int $option
 	 * @return string
 	 */
-	public function toJson($options = 0){
-		return json_encode($this->jsonSerialize(), $options);
+	public function toJson($option = JSON_UNESCAPED_UNICODE){
+		return json_encode($this->all(), $option);
 	}
 	
 	/**
-	 * Determine if the given offset exists.
+	 * To string.
 	 *
-	 * @param string $offset
-	 * @return bool
+	 * @return string
 	 */
-	public function offsetExists($offset){
-		return isset($this->attributes[$offset]);
+	public function __toString(){
+		return $this->toJson();
 	}
 	
 	/**
-	 * Get the value for a given offset.
+	 * (PHP 5 &gt;= 5.4.0)<br/>
+	 * Specify data which should be serialized to JSON.
 	 *
-	 * @param string $offset
-	 * @return mixed
+	 * @see http://php.net/manual/en/jsonserializable.jsonserialize.php
+	 * @return mixed data which can be serialized by <b>json_encode</b>,
+	 *               which is a value of any type other than a resource
 	 */
-	public function offsetGet($offset){
-		return $this->get($offset);
+	public function jsonSerialize(){
+		return $this->items;
 	}
 	
 	/**
-	 * Set the value at the given offset.
+	 * (PHP 5 &gt;= 5.1.0)<br/>
+	 * String representation of object.
 	 *
-	 * @param string $offset
-	 * @param mixed  $value
-	 * @return void
+	 * @see http://php.net/manual/en/serializable.serialize.php
+	 * @return string the string representation of the object or null
 	 */
-	public function offsetSet($offset, $value){
-		$this->attributes[$offset] = $value;
+	public function serialize(){
+		return serialize($this->items);
 	}
 	
 	/**
-	 * Unset the value at the given offset.
+	 * (PHP 5 &gt;= 5.1.0)<br/>
+	 * Constructs the object.
 	 *
-	 * @param string $offset
-	 * @return void
+	 * @see  http://php.net/manual/en/serializable.unserialize.php
+	 * @param string $serialized <p>
+	 *                           The string representation of the object.
+	 *                           </p>
+	 * @return mixed|void
 	 */
-	public function offsetUnset($offset){
-		unset($this->attributes[$offset]);
+	public function unserialize($serialized){
+		return $this->items = unserialize($serialized);
 	}
 	
 	/**
-	 * Handle dynamic calls to the fluent instance to set attributes.
-	 *
-	 * @param string $method
-	 * @param array  $parameters
-	 * @return $this
-	 */
-	public function __call($method, $parameters){
-		$this->attributes[$method] = count($parameters) > 0 ? $parameters[0] : true;
-		
-		return $this;
-	}
-	
-	/**
-	 * Dynamically retrieve the value of an attribute.
+	 * Get a data by key.
 	 *
 	 * @param string $key
 	 * @return mixed
@@ -143,33 +229,91 @@ class Fluent implements ArrayAccess, JsonSerializable{
 	}
 	
 	/**
-	 * Dynamically set the value of an attribute.
+	 * Assigns a value to the specified data.
 	 *
 	 * @param string $key
 	 * @param mixed  $value
-	 * @return void
 	 */
 	public function __set($key, $value){
-		$this->offsetSet($key, $value);
+		$this->set($key, $value);
 	}
 	
 	/**
-	 * Dynamically check if an attribute is set.
+	 * Whether or not an data exists by key.
 	 *
 	 * @param string $key
 	 * @return bool
 	 */
 	public function __isset($key){
-		return $this->offsetExists($key);
+		return $this->has($key);
 	}
 	
 	/**
-	 * Dynamically unset an attribute.
+	 * Unset an data by key.
 	 *
 	 * @param string $key
-	 * @return void
 	 */
 	public function __unset($key){
-		$this->offsetUnset($key);
+		$this->forget($key);
+	}
+	
+	/**
+	 * (PHP 5 &gt;= 5.0.0)<br/>
+	 * Whether a offset exists.
+	 *
+	 * @see http://php.net/manual/en/arrayaccess.offsetexists.php
+	 * @param mixed $offset <p>
+	 *                      An offset to check for.
+	 *                      </p>
+	 * @return bool true on success or false on failure.
+	 *              The return value will be casted to boolean if non-boolean was returned
+	 */
+	public function offsetExists($offset){
+		return $this->has($offset);
+	}
+	
+	/**
+	 * (PHP 5 &gt;= 5.0.0)<br/>
+	 * Offset to unset.
+	 *
+	 * @see http://php.net/manual/en/arrayaccess.offsetunset.php
+	 * @param mixed $offset <p>
+	 *                      The offset to unset.
+	 *                      </p>
+	 */
+	public function offsetUnset($offset){
+		if($this->offsetExists($offset)){
+			$this->forget($offset);
+		}
+	}
+	
+	/**
+	 * (PHP 5 &gt;= 5.0.0)<br/>
+	 * Offset to retrieve.
+	 *
+	 * @see http://php.net/manual/en/arrayaccess.offsetget.php
+	 * @param mixed $offset <p>
+	 *                      The offset to retrieve.
+	 *                      </p>
+	 * @return mixed Can return all value types
+	 */
+	public function offsetGet($offset){
+		return $this->offsetExists($offset) ? $this->get($offset) : null;
+	}
+	
+	/**
+	 * (PHP 5 &gt;= 5.0.0)<br/>
+	 * Offset to set.
+	 *
+	 * @see http://php.net/manual/en/arrayaccess.offsetset.php
+	 * @param mixed $offset <p>
+	 *                      The offset to assign the value to.
+	 *                      </p>
+	 * @param mixed $value <p>
+	 *                      The value to set.
+	 *                      </p>
+	 */
+	public function offsetSet($offset, $value){
+		$this->set($offset, $value);
 	}
 }

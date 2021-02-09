@@ -10,7 +10,7 @@ namespace Xin\Contracts\Foundation;
 interface ConfigRepository extends \ArrayAccess{
 	
 	/**
-	 * Determine if the given configuration value exists.
+	 * 检测指定的 key 是否存在
 	 *
 	 * @param string $key
 	 * @return bool

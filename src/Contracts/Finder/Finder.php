@@ -4,9 +4,9 @@
  *
  * @author: 晋<657306123@qq.com>
  */
-namespace Xin\Finder;
+namespace Xin\Contracts\Finder;
 
-interface FileFinderInterface{
+interface Finder{
 	
 	/**
 	 * Hint path delimiter value.

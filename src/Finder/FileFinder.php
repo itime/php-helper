@@ -6,9 +6,9 @@
  */
 namespace Xin\Finder;
 
-use InvalidArgumentException;
+use Xin\Contracts\Finder\Finder as FinderContract;
 
-class FileFinder implements FileFinderInterface{
+class FileFinder implements FinderContract{
 	
 	/**
 	 * The array of active file paths.
@@ -93,11 +93,11 @@ class FileFinder implements FileFinderInterface{
 		$segments = explode(static::HINT_PATH_DELIMITER, $name);
 		
 		if(count($segments) !== 2){
-			throw new InvalidArgumentException("File [{$name}] has an invalid name.");
+			throw new \InvalidArgumentException("File [{$name}] has an invalid name.");
 		}
 		
 		if(!isset($this->hints[$segments[0]])){
-			throw new InvalidArgumentException("No hint path defined for [{$segments[0]}].");
+			throw new \InvalidArgumentException("No hint path defined for [{$segments[0]}].");
 		}
 		
 		return $segments;
@@ -120,7 +120,7 @@ class FileFinder implements FileFinderInterface{
 			}
 		}
 		
-		throw new InvalidArgumentException("File [{$name}] not found.");
+		throw new \InvalidArgumentException("File [{$name}] not found.");
 	}
 	
 	/**
