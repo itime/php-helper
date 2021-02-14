@@ -19,6 +19,11 @@ class WechatResult implements \ArrayAccess{
 	protected $throw = null;
 	
 	/**
+	 * @var array
+	 */
+	protected $errorListeners = [];
+	
+	/**
 	 * @var \Throwable
 	 */
 	protected $exception = null;
@@ -112,12 +117,17 @@ class WechatResult implements \ArrayAccess{
 	/**
 	 * 抛出捕获的异常
 	 *
+	 * @param callable|null $callback
 	 * @return static
 	 * @throws \Throwable
 	 */
-	public function throwException(){
+	public function throwException(callable $callback = null){
 		if($this->exception){
-			throw $this->exception;
+			if($callback){
+				$callback($this->exception);
+			}else{
+				throw $this->exception;
+			}
 		}
 		
 		return $this;
@@ -136,6 +146,32 @@ class WechatResult implements \ArrayAccess{
 			$this->throw = $throw === true ? '\\LogicException' : $throw;
 		}
 		return $this;
+	}
+	
+	/**
+	 * 监听业务错误事件
+	 *
+	 * @param int|array $errCode
+	 * @param callable  $callback
+	 * @return $this
+	 */
+	public function onError($errCode, callable $callback){
+		$errCode = is_array($errCode) ? $errCode : [$errCode];
+		foreach($errCode as $code){
+			$this->errorListeners[$code] = $callback;
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * 监听是否AppId或者AppSecret是否无效错误
+	 *
+	 * @param callable $callback
+	 * @return $this
+	 */
+	public function onAppIdOrAppSecretInvalid(callable $callback){
+		return $this->onError(40125, $callback);
 	}
 	
 	/**

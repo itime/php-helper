@@ -70,7 +70,7 @@ class Balance extends Model implements BalanceRepository{
 		])->when($type !== null, ['type' => $type,])
 			->order('id desc');
 		
-		return $this->resolveOptions($query, $options)->paginate($paginate);
+		return self::applyOptions($query, $options)->paginate($paginate);
 	}
 	
 	/**
@@ -157,4 +157,28 @@ class Balance extends Model implements BalanceRepository{
 		return $this->logQuery()->insert($data);
 	}
 	
+	/**
+	 * 应用 options
+	 *
+	 * @param \think\Model|\think\db\Query $baseQuery
+	 * @param array                        $options
+	 * @return \think\Model|\think\db\Query
+	 */
+	protected static function applyOptions($baseQuery, $options = null){
+		if($options === null){
+			return $baseQuery;
+		}
+		
+		if(is_callable($options)){
+			return $options($baseQuery);
+		}else{
+			foreach($options as $method => $option){
+				if(method_exists($baseQuery, $method)){
+					$baseQuery->$method($option);
+				}
+			}
+		}
+		
+		return $baseQuery;
+	}
 }

@@ -64,6 +64,8 @@ class PluginManager implements PluginFactory{
 	public function installPlugin($plugin){
 		$pluginInfo = $this->pluginInfo($plugin);
 		$this->plugin($plugin)->install($pluginInfo, $this);
+		
+		return $pluginInfo;
 	}
 	
 	/**
@@ -72,6 +74,8 @@ class PluginManager implements PluginFactory{
 	public function uninstallPlugin($plugin){
 		$pluginInfo = $this->pluginInfo($plugin);
 		$this->plugin($plugin)->uninstall($pluginInfo, $this);
+		
+		return $pluginInfo;
 	}
 	
 	/**

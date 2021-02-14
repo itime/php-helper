@@ -66,7 +66,7 @@ class WebHint implements HintContract{
 	 * @inheritDoc
 	 */
 	public function error($msg, $code = 0, $url = null, array $extend = []){
-		$url = $this->resolveUrl($url);
+		$url = $this->resolveErrorUrl($url);
 		
 		$result = array_merge([
 			'code' => 0,
