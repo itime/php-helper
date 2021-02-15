@@ -8,7 +8,16 @@ namespace Xin\Thinkphp\Foundation;
 
 use think\App;
 use think\Container;
+use Xin\Thinkphp\Http\Requestable;
 
+/**
+ * @property-read \think\Request|Requestable request
+ * @property-read \think\Config              config
+ * @property-read \think\Session             session
+ * @property-read \think\View                view
+ * @property-read \think\Cache               cache
+ * @property-read \think\Route               route
+ */
 abstract class ServiceProvider{
 	
 	/**
@@ -17,49 +26,12 @@ abstract class ServiceProvider{
 	protected $app;
 	
 	/**
-	 * @var \think\Cache
-	 */
-	protected $cache;
-	
-	/**
-	 * @var \think\Session
-	 */
-	protected $session;
-	
-	/**
-	 * @var \Xin\Thinkphp\Http\RequestOptimize
-	 */
-	protected $request;
-	
-	/**
-	 * @var \think\Config
-	 */
-	protected $config;
-	
-	/**
-	 * @var \think\View
-	 */
-	protected $view;
-	
-	/**
-	 * @var \think\Route
-	 */
-	protected $route;
-	
-	/**
 	 * Service constructor.
 	 *
-	 * @param App $app
+	 * @param \think\App|null $app
 	 */
 	public function __construct(App $app = null){
 		$this->app = $app ?: Container::get('app');
-		
-		$this->cache = $this->app->cache;
-		$this->session = $this->app->session;
-		$this->request = $this->app->request;
-		$this->config = $this->app->config;
-		$this->view = $this->app->view;
-		$this->route = $this->app->route;
 	}
 	
 	/**
@@ -71,4 +43,12 @@ abstract class ServiceProvider{
 	 * 启动
 	 */
 	public function boot(){ }
+	
+	/**
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function __get($name){
+		return $this->app[$name];
+	}
 }

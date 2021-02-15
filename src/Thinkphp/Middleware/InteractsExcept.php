@@ -15,7 +15,7 @@ use think\Request;
 trait InteractsExcept{
 	
 	/**
-	 * @param \Xin\Thinkphp\Http\RequestOptimize $request
+	 * @param \Xin\Thinkphp\Http\Requestable $request
 	 * @return bool
 	 */
 	protected function isExcept(Request $request){

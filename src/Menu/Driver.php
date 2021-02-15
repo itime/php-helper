@@ -7,10 +7,10 @@
 
 namespace Xin\Menu;
 
-use Xin\Contracts\Menu\Writer;
+use Xin\Contracts\Menu\Repository;
 use Xin\Support\Arr;
 
-abstract class Driver implements Writer{
+abstract class Driver implements Repository{
 	
 	/**
 	 * @var $config
@@ -42,18 +42,17 @@ abstract class Driver implements Writer{
 	}
 	
 	/**
-	 * 遍历菜单
+	 * 遍历树形数据
 	 *
 	 * @param string $callback
 	 * @param array  $menus
 	 * @param mixed  $parent
 	 */
-	protected static function each($callback, &$menus, &$parent = null){
+	protected static function eachTree($callback, &$menus, &$parent = null){
 		foreach($menus as $key => &$menu){
-			$result = call_user_func_array($callback, [&$menu, &$parent]);
-			
+			call_user_func_array($callback, [&$menu, &$parent]);
 			if(isset($menu['child'])){
-				self::each($callback, $menu['child'], $result);
+				self::eachTree($callback, $menu['child'], $menu);
 			}
 		}
 		unset($menu);

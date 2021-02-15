@@ -19,7 +19,7 @@ use Xin\Support\Str;
 /**
  * Class PluginDispatch
  *
- * @property-read \think\Request|\Xin\Thinkphp\Http\RequestOptimize $request
+ * @property-read \think\Request|\Xin\Thinkphp\Http\Requestable $request
  */
 class PluginDispatch extends Controller{
 	

@@ -6,6 +6,8 @@
  */
 namespace Xin\Support;
 
+use EasyWeChat\Kernel\Exceptions\HttpException;
+
 class WechatResult implements \ArrayAccess{
 	
 	/**
@@ -38,8 +40,12 @@ class WechatResult implements \ArrayAccess{
 			try{
 				$result = call_user_func_array($result, []);
 			}catch(\Throwable $e){
-				$this->exception = $e;
-				$result = null;
+				if($e instanceof HttpException && $e->formattedResponse){
+					$result = $e->formattedResponse;
+				}else{
+					$this->exception = $e;
+					$result = null;
+				}
 			}
 		}elseif($result instanceof Retry){
 			try{
@@ -77,7 +83,7 @@ class WechatResult implements \ArrayAccess{
 	 */
 	public function getErrCode(){
 		if(!$this->result){
-			return -1;
+			return -10000;
 		}
 		
 		return $this->result['errcode'];
@@ -171,7 +177,7 @@ class WechatResult implements \ArrayAccess{
 	 * @return $this
 	 */
 	public function onAppIdOrAppSecretInvalid(callable $callback){
-		return $this->onError(40125, $callback);
+		return $this->onError([40125, 40013], $callback);
 	}
 	
 	/**
@@ -224,7 +230,11 @@ class WechatResult implements \ArrayAccess{
 				return isset($this->result[$fields]) ? $this->result[$fields] : null;
 			}
 		}, function() use ($default){
-			if($this->throw){
+			$errCode = $this->getErrCode();
+			if(isset($this->errorListeners[$errCode])){
+				$callback = $this->errorListeners[$errCode];
+				$callback($this->result);
+			}elseif($this->throw){
 				$exception = $this->throw;
 				$errMsg = $this->getErrMsg();
 				throw new $exception($errMsg ? $errMsg : '数据错误！');

@@ -7,24 +7,45 @@
 
 namespace Xin\Thinkphp\Menu;
 
-use app\admin\model\AdminMenu;
+use think\exception\ClassNotFoundException;
 use Xin\Menu\Driver;
+use Xin\Support\Arr;
 
 class Database extends Driver{
 	
 	/**
 	 * @inheritDoc
 	 */
-	public function puts($menus, $append = []){
-		self::each(function($item, $parent) use ($append){
-			return $this->insertDb($item, $parent ? $parent['id'] : 0, $append);
-		}, $menus);
+	public function all(){
+		return $this->model()->select();
 	}
 	
 	/**
 	 * @inheritDoc
 	 */
-	protected function insertDb($menu, $pid = 0, $append = []){
+	public function get($user){
+		return Arr::tree($this->model()->select()->toArray());
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function puts($menus, $append = []){
+		self::eachTree(function(&$item, &$parent) use ($append){
+			$id = $this->insert($item, $parent ? $parent['id'] : 0, $append);
+			$item['id'] = $id;
+		}, $menus);
+	}
+	
+	/**
+	 * 插入一个菜单
+	 *
+	 * @param array $menu
+	 * @param int   $pid
+	 * @param array $append
+	 * @return bool
+	 */
+	protected function insert($menu, $pid = 0, $append = []){
 		$data = [
 			'title'      => $menu['title'],
 			'url'        => $menu['url'] ?? $menu['name'] ?? '',
@@ -37,13 +58,42 @@ class Database extends Driver{
 		];
 		$data = array_merge($data, $append);
 		
-		return AdminMenu::create($data);
+		$model = $this->model($data);
+		$model->save();
+		
+		return $model['id'];
 	}
 	
 	/**
 	 * @inheritDoc
 	 */
-	public function forget($name){
-		// TODO: Implement forget() method.
+	public function forget($condition){
+		return $this->model()->where($condition)->delete();
+	}
+	
+	/**
+	 * 获取模型实例
+	 *
+	 * @param array $data
+	 * @return \think\Model
+	 */
+	protected function model(array $data = []){
+		$modelClass = $this->modelClass();
+		return new $modelClass($data);
+	}
+	
+	/**
+	 * 获取模型类
+	 *
+	 * @return string
+	 */
+	protected function modelClass(){
+		$class = $this->config('model');
+		
+		if(!class_exists($class)){
+			throw new ClassNotFoundException("[$class] not found!");
+		}
+		
+		return $class;
 	}
 }

@@ -86,8 +86,6 @@ class Wechat implements WechatContract{
 	 * @return mixed
 	 */
 	protected function initApplication(ServiceContainer $sc, array $options){
-		$sc->config['response_type'] = AgileType::class;
-		
 		//// 监听微信响应数据
 		//$sc->events->addListener(HttpResponseCreated::class, function(HttpResponseCreated $event){
 		//	$response = $event->response;

@@ -491,6 +491,91 @@ final class Arr{
 	}
 	
 	/**
+	 * 根据字段规则判断给定的数组是否满足条件
+	 *
+	 * @param mixed $array
+	 * @param array $condition
+	 * @param bool  $any
+	 * @return bool
+	 */
+	public static function where($array, $condition, $any = false){
+		if(self::isAssoc($condition)){
+			$temp = [];
+			foreach($condition as $key => $value){
+				$temp[] = [$key, '=', $value];
+			}
+			$condition = $temp;
+		}
+		
+		foreach($condition as $item){
+			[$field, $operator, $value] = $item;
+			
+			if(strpos($field, '.')){
+				$result = self::get($array, $field);
+			}else{
+				$result = $array[$field] ?? null;
+			}
+			
+			switch(strtolower($operator)){
+				case '===':
+					$flag = $result === $value;
+					break;
+				case '!==':
+					$flag = $result !== $value;
+					break;
+				case '!=':
+				case '<>':
+					$flag = $result != $value;
+					break;
+				case '>':
+					$flag = $result > $value;
+					break;
+				case '>=':
+					$flag = $result >= $value;
+					break;
+				case '<':
+					$flag = $result < $value;
+					break;
+				case '<=':
+					$flag = $result <= $value;
+					break;
+				case 'like':
+					$flag = is_string($result) && false !== strpos($result, $value);
+					break;
+				case 'not like':
+					$flag = is_string($result) && false === strpos($result, $value);
+					break;
+				case 'in':
+					$flag = is_scalar($result) && in_array($result, $value, true);
+					break;
+				case 'not in':
+					$flag = is_scalar($result) && !in_array($result, $value, true);
+					break;
+				case 'between':
+					[$min, $max] = is_string($value) ? explode(',', $value) : $value;
+					$flag = is_scalar($result) && $result >= $min && $result <= $max;
+					break;
+				case 'not between':
+					[$min, $max] = is_string($value) ? explode(',', $value) : $value;
+					$flag = is_scalar($result) && $result > $max || $result < $min;
+					break;
+				case '==':
+				case '=':
+				default:
+					$flag = $result == $value;
+			}
+			
+			if($any && $flag){
+				return true;
+			}elseif(!$any && !$flag){
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	/**
 	 * 除去数组中的空值和和附加键名
 	 *
 	 * @param array $params 要去除的数组

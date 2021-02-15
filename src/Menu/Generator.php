@@ -49,7 +49,6 @@ class Generator implements GeneratorContract{
 		
 		$this->breads = array_reverse($this->breads);
 		array_pop($this->breads);
-		//		$this->breads = Arr::multiUnique($this->breads, 'name');
 		
 		return [
 			$this->menus,

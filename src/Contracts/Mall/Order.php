@@ -64,4 +64,58 @@ interface Order{
 	 * @return bool
 	 */
 	public function isCompleted();
+	
+	/**
+	 * 设置订单取消
+	 *
+	 * @return bool
+	 */
+	public function setCancel();
+	
+	/**
+	 * 设置订单已关闭
+	 *
+	 * @return bool
+	 */
+	public function setClose();
+	
+	/**
+	 * 设置订单已支付
+	 *
+	 * @param string $payType
+	 * @param string $paySn
+	 * @return bool
+	 */
+	public function setPaid($payType, $paySn);
+	
+	/**
+	 * 设置订单发货
+	 *
+	 * @param string $expressId
+	 * @param string $expressNo
+	 * @return bool
+	 */
+	public function setDelivery($expressId, $expressNo);
+	
+	/**
+	 * 设置订单收货
+	 *
+	 * @return bool
+	 */
+	public function setReceipt();
+	
+	/**
+	 * 设置订单评价
+	 *
+	 * @return bool
+	 */
+	public function setEvaluate();
+	
+	/**
+	 * 核销订单
+	 *
+	 * @param int $verifierId
+	 * @return bool
+	 */
+	public function verification($verifierId = 0);
 }

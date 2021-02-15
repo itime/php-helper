@@ -9,7 +9,12 @@ namespace Xin\Thinkphp\Http;
 use Xin\Support\Str;
 use Xin\Support\Time;
 
-trait RequestOptimize{
+/**
+ * @mixin \think\Request
+ */
+trait Requestable{
+	
+	use HasValidate, HasPlatform, HasUser, HasApp;
 	
 	/**
 	 * 数据源
@@ -183,27 +188,6 @@ trait RequestOptimize{
 	}
 	
 	/**
-	 * Normalizes a query string.
-	 * It builds a normalized query string, where keys/value pairs are alphabetized,
-	 * have consistent escaping and unneeded delimiters are removed.
-	 *
-	 * @param string $qs Query string
-	 * @return string A normalized query string for the Request
-	 */
-	public static function normalizeQueryString($qs){
-		if('' === ($qs ?? '')){
-			return '';
-		}
-		
-		parse_str($qs, $qs);
-		
-		/** @var array $qs */
-		ksort($qs);
-		
-		return http_build_query($qs, '', '&', \PHP_QUERY_RFC3986);
-	}
-	
-	/**
 	 * Generates the normalized query string for the Request.
 	 * It builds a normalized query string, where keys/value pairs are alphabetized
 	 * and have consistent escaping.
@@ -311,5 +295,26 @@ trait RequestOptimize{
 	 */
 	public function pathIs($patterns){
 		return Str::is($patterns, $this->path());
+	}
+	
+	/**
+	 * Normalizes a query string.
+	 * It builds a normalized query string, where keys/value pairs are alphabetized,
+	 * have consistent escaping and unneeded delimiters are removed.
+	 *
+	 * @param string $qs Query string
+	 * @return string A normalized query string for the Request
+	 */
+	public static function normalizeQueryString($qs){
+		if('' === ($qs ?? '')){
+			return '';
+		}
+		
+		parse_str($qs, $qs);
+		
+		/** @var array $qs */
+		ksort($qs);
+		
+		return http_build_query($qs, '', '&', \PHP_QUERY_RFC3986);
 	}
 }

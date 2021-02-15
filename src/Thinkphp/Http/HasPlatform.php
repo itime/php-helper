@@ -8,10 +8,13 @@
 namespace Xin\Thinkphp\Http;
 
 /**
- * @mixin RequestOptimize
+ * @mixin Requestable
  */
 trait HasPlatform{
 	
+	/**
+	 * @var string
+	 */
 	protected $platform;
 	
 	/**
@@ -53,7 +56,7 @@ trait HasPlatform{
 	 *
 	 * @return bool
 	 */
-	public function isWechat(){
+	public function isFromWechat(){
 		return "wechat" === $this->platform();
 	}
 	
@@ -62,7 +65,7 @@ trait HasPlatform{
 	 *
 	 * @return bool
 	 */
-	public function isAlipay(){
+	public function isFromAlipay(){
 		return "alipay" === $this->platform();
 	}
 	
@@ -71,7 +74,7 @@ trait HasPlatform{
 	 *
 	 * @return bool
 	 */
-	public function isBaidu(){
+	public function isFromBaidu(){
 		return "baidu" === $this->platform();
 	}
 	
@@ -80,7 +83,7 @@ trait HasPlatform{
 	 *
 	 * @return bool
 	 */
-	public function isBrowser(){
+	public function isFromBrowser(){
 		return "browser" === $this->platform();
 	}
 }

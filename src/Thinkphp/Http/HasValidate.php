@@ -13,7 +13,7 @@ use think\Validate;
 /**
  * Trait RequestValidate
  *
- * @mixin RequestOptimize
+ * @mixin Requestable
  */
 trait HasValidate{
 	

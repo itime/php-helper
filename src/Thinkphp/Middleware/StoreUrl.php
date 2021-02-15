@@ -26,8 +26,8 @@ class StoreUrl{
 	}
 	
 	/**
-	 * @param \think\Request|\Xin\Thinkphp\Http\RequestOptimize $request
-	 * @param \Closure                                          $next
+	 * @param \think\Request|\Xin\Thinkphp\Http\Requestable $request
+	 * @param \Closure                                      $next
 	 * @return mixed
 	 */
 	public function handle(Request $request, \Closure $next){
@@ -41,7 +41,7 @@ class StoreUrl{
 	}
 	
 	/**
-	 * @param \think\Request|\Xin\Thinkphp\Http\RequestOptimize $request
+	 * @param \think\Request|\Xin\Thinkphp\Http\Requestable $request
 	 */
 	private function storeUrl($request){
 		$previousUrl = $this->cookie->get('_previous_url');

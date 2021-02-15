@@ -15,7 +15,7 @@ trait InteractsMenuService{
 	/**
 	 * 菜单初始化
 	 *
-	 * @param \think\Request|\Xin\Thinkphp\Http\RequestOptimize $request
+	 * @param \think\Request|\Xin\Thinkphp\Http\Requestable $request
 	 */
 	protected function menuInit($request){
 		bind([
@@ -51,7 +51,7 @@ trait InteractsMenuService{
 	/**
 	 * 获取生成规则
 	 *
-	 * @param \Xin\Thinkphp\Http\RequestOptimize $request
+	 * @param \Xin\Thinkphp\Http\Requestable $request
 	 * @return string
 	 */
 	protected function getCurrentPathRule($request){

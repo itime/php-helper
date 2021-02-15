@@ -30,7 +30,7 @@ trait HasUser{
 	 *
 	 * @param string $field
 	 * @param mixed  $default
-	 * @param bool   $abort
+	 * @param int    $verifyType
 	 * @return mixed
 	 */
 	public function user($field = null, $default = null, $verifyType = 1){

@@ -23,7 +23,7 @@ class Url extends UrlBuild{
 	 * @return string
 	 */
 	protected function parseUrl(string $url, &$domain):string{
-		/** @var \think\Request|\Xin\Thinkphp\Http\RequestOptimize $request */
+		/** @var \think\Request|\Xin\Thinkphp\Http\Requestable $request */
 		$request = $this->app->request;
 		
 		// 支持路由解析

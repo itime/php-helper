@@ -7,6 +7,8 @@
 
 namespace Xin\Menu;
 
+use Xin\Support\Arr;
+
 class PhpFile extends Driver{
 	
 	/**
@@ -28,6 +30,14 @@ class PhpFile extends Driver{
 		}else{
 			$this->data = require_once $targetPath;
 		}
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function all(){
+		$this->load();
+		return $this->data;
 	}
 	
 	/**
@@ -61,7 +71,7 @@ class PhpFile extends Driver{
 		$menu = array_merge($menu, $append);
 		
 		if(isset($menu['child'])){
-			self::each(function(&$item) use ($append){
+			self::eachTree(function(&$item) use ($append){
 				$item = array_merge($item, $append);
 			}, $menu['child']);
 		}
@@ -86,20 +96,21 @@ class PhpFile extends Driver{
 	/**
 	 * @inheritDoc
 	 */
-	public function forget($name){
+	public function forget($condition){
 		$this->load();
 		
-		if(is_numeric($name)){
-			unset($this->data[$name]);
-		}elseif(is_callable($name)){
-			$this->eachDelete($name, $this->data);
-		}elseif(is_string($name)){
-			$this->eachDelete(function($item) use ($name){
-				return $name == $item['name'];
+		if(is_numeric($condition)){
+			unset($this->data[$condition]);
+		}elseif(is_callable($condition)){
+			$this->eachDelete($condition, $this->data);
+		}elseif(is_string($condition)){
+			$this->eachDelete(function($item) use ($condition){
+				return $condition == $item['name'];
 			}, $this->data);
 		}else{
-			$this->eachDelete(function($item) use ($name){
-				return empty(array_diff_assoc($item, $name));
+			$this->eachDelete(function($item) use ($condition){
+				return Arr::where($item, $condition);
+				// return empty(array_diff_assoc($item, $condition));
 			}, $this->data);
 		}
 		
@@ -125,6 +136,8 @@ class PhpFile extends Driver{
 	
 	/**
 	 * 写入数据
+	 *
+	 * @param bool $ignoreError
 	 */
 	protected function write($ignoreError = false){
 		$targetPath = $this->config('target_path');
@@ -137,15 +150,29 @@ class PhpFile extends Driver{
 		}
 		
 		// 数组排序
-		usort($this->data, function($it1, $it2){
+		self::eachTree(function(&$item, &$parent = null){
+			if(isset($item['child'])){
+				$this->sort($item['child']);
+			}
+		}, $this->data);
+		$this->sort($this->data);
+		
+		$content = "<?php\nreturn ".var_export($this->data, true).";";
+		file_put_contents($targetPath, $content);
+	}
+	
+	/**
+	 * 数组排序
+	 *
+	 * @param array $list
+	 */
+	protected function sort(array &$list){
+		usort($list, function($it1, $it2){
 			$sort1 = isset($it1['sort']) ? $it1['sort'] : 0;
 			$sort2 = isset($it2['sort']) ? $it2['sort'] : 0;
 			
 			return $sort1 == $sort2 ? 0 : ($sort1 > $sort2 ? 1 : -1);
 		});
-		
-		$content = "<?php\nreturn ".var_export($this->data, true).";";
-		file_put_contents($targetPath, $content);
 	}
 	
 }
