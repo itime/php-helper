@@ -57,4 +57,15 @@ trait InteractsBalance{
 			$amount, $remark, $attributes
 		);
 	}
+	
+	/**
+	 * 获取当前用户余额
+	 *
+	 * @return float
+	 */
+	public function getBalance(){
+		return $this->balance()->getBalanceByUserId(
+			$this->getData('id')
+		);
+	}
 }
