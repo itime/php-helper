@@ -141,7 +141,8 @@ class ExceptionHandle extends Handle{
 		$msg = $this->getMessage($exception);
 		
 		// 不显示详细错误信息
-		if(!$this->app->isDebug() && !$this->app->config->get('app.show_error_msg')){
+		if(!$this->app->isDebug() && !$this->app->config->get('app.show_error_msg')
+			&& !$exception instanceof \LogicException){
 			$msg = $this->app->config->get('app.error_message');
 		}
 		
