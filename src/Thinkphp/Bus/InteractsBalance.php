@@ -38,7 +38,7 @@ trait InteractsBalance{
 	 */
 	public function recharge($amount, $remark = '', $attributes = []){
 		return $this->balance()->recharge(
-			$this->getData('id'),
+			$this->getOrigin('id'),
 			$amount, $remark, $attributes
 		);
 	}
@@ -53,7 +53,7 @@ trait InteractsBalance{
 	 */
 	public function consume($amount, $remark = '', $attributes = []){
 		return $this->balance()->consume(
-			$this->getData('id'),
+			$this->getOrigin('id'),
 			$amount, $remark, $attributes
 		);
 	}
@@ -65,7 +65,7 @@ trait InteractsBalance{
 	 */
 	public function getBalance(){
 		return $this->balance()->getBalanceByUserId(
-			$this->getData('id')
+			$this->getOrigin('id')
 		);
 	}
 }
