@@ -85,7 +85,7 @@ trait Requestable{
 	 * @param int $default
 	 * @return int
 	 */
-	public function limit(int $max = 100, int $default = 20):int{
+	public function limit(int $max = 100, int $default = 15):int{
 		if(!isset($this->data['limit'])){
 			$limit = $this->param('limit/d', 0);
 			if($limit < 1){
