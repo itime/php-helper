@@ -45,7 +45,7 @@ class Wechat extends WechatBase implements WechatRepository{
 	 */
 	public function openPlatformOfAppId($appId, array $options = []){
 		if($appId == 0){
-			return $this->miniProgram($options);
+			return $this->openPlatform($options);
 		}
 		
 		if(!$this->openPlatformCallback){

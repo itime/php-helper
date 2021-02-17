@@ -54,9 +54,11 @@ class ExceptionHandle extends Handle{
 			'code'    => $this->getCode($exception),
 		];
 		
-		$traces = $exception->getTrace();
-		$traces = array_splice($traces, 0, 10);
-		$log = "[{$data['code']}]{$data['message']}[{$data['file']}:{$data['line']}]\n".implode("\n", $traces);
+		$traceString = $exception->getTraceAsString();
+		if($find = strpos($traceString, "\n#11 ")){
+			$traceString = substr($traceString, 0, $find);
+		}
+		$log = "[{$data['code']}]{$data['message']}[{$data['file']}:{$data['line']}]\n{$traceString}";
 		
 		if($this->app->config->get('log.record_trace')){
 			$log .= PHP_EOL.$exception->getTraceAsString();

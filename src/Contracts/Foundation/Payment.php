@@ -13,7 +13,7 @@ interface Payment{
 	 * 微信支付
 	 *
 	 * @param array $options
-	 * @return mixed
+	 * @return \Yansongda\Pay\Gateways\Wechat
 	 */
 	public function wechat(array $options = []);
 	
@@ -21,7 +21,7 @@ interface Payment{
 	 * 支付宝支付
 	 *
 	 * @param array $options
-	 * @return mixed
+	 * @return \Yansongda\Pay\Gateways\Alipay
 	 */
 	public function alipay(array $options = []);
 }

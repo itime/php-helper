@@ -69,17 +69,22 @@ class DatabaseSetting extends Model{
 		if(is_array($settings)){
 			foreach($settings as $name => $value){
 				$map = ['name' => $name];
-				self::where($map)->save([
+				
+				if(is_array($value)){
+					$value = json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+				}
+				
+				static::where($map)->save([
 					'value' => $value,
 				]);
 			}
 			
-			self::updateCache();
+			static::updateCache();
 		}
 		
-		$config = Cache::get(self::CACHE_KEY);
+		$config = Cache::get(static::CACHE_KEY);
 		if(empty($config)){
-			$config = self::updateCache();
+			$config = static::updateCache();
 		}
 		
 		return $config;
@@ -158,6 +163,28 @@ class DatabaseSetting extends Model{
 	 * @return array
 	 */
 	protected function getExtraAttr($string){
+		$type = $this->getOrigin('type');
+		
+		if($type == 'object'){
+			$result = json_decode($string, true);
+			if($result === null){
+				$result = [];
+			}
+			
+			$values = $this->getAttr('value');
+			foreach($result as &$item){
+				$key = $item['name'];
+				if(isset($values[$key])){
+					$item['value'] = $values[$key];
+				}elseif(!isset($item['value'])){
+					$item['value'] = '';
+				}
+			}
+			unset($item);
+			
+			return $result;
+		}
+		
 		return Arr::parse($string);
 	}
 	
@@ -174,6 +201,8 @@ class DatabaseSetting extends Model{
 			return Arr::parse($val);
 		}elseif($type == 'switch'){
 			return (int)$val;
+		}elseif($type == 'object'){
+			return json_decode($val, true);
 		}
 		
 		return $val;
@@ -201,7 +230,7 @@ class DatabaseSetting extends Model{
 	 * @noinspection PhpDocMissingThrowsInspection
 	 */
 	public static function updateCache(){
-		$data = self::field('type,name,value')
+		$data = static::field('type,name,value')
 			->where('status', 1)
 			->select();
 		
@@ -219,7 +248,7 @@ class DatabaseSetting extends Model{
 			unset($data[$key]);
 		}
 		
-		Cache::set(DatabaseSetting::CACHE_KEY, $settings);
+		Cache::set(static::CACHE_KEY, $settings);
 		
 		return $settings;
 	}
