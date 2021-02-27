@@ -8,7 +8,7 @@
 namespace Xin\Thinkphp\Saas\Wechat;
 
 use think\Model;
-use Xin\Thinkphp\Saas\Model\MultiApp;
+use Xin\Thinkphp\Saas\Model\Appable;
 
 /**
  * @property-read int    app_type 应用类型：0 小程序，1 公众号
@@ -23,7 +23,7 @@ use Xin\Thinkphp\Saas\Model\MultiApp;
  */
 class DatabaseWeapp extends Model{
 	
-	use MultiApp;
+	use Appable;
 	
 	/**
 	 * @var string

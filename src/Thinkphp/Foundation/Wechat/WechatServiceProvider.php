@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Wechat;
+namespace Xin\Thinkphp\Foundation\Wechat;
 
 use Xin\Contracts\Foundation\Wechat as WechatContract;
 use Xin\Foundation\Wechat\Wechat;

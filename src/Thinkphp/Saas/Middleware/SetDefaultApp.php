@@ -9,17 +9,23 @@ namespace Xin\Thinkphp\Saas\Middleware;
 
 use Xin\Support\Fluent;
 
-trait InteractsAppDefaultMode{
+class SetDefaultApp{
 	
 	/**
-	 * @param \Xin\Thinkphp\Saas\Http\HasApp $request
+	 * api模式下检查当前应用是否合法
+	 *
+	 * @param \Xin\Thinkphp\Http\HasApp $request
+	 * @param \Closure                  $next
+	 * @return mixed
 	 */
-	protected function saasAppDefaultInit($request){
+	public function handle($request, \Closure $next){
 		$request->setAppResolver(function(){
 			return new Fluent([
 				'id'    => 0,
 				'title' => '默认应用',
 			]);
 		});
+		
+		return $next($request);
 	}
 }

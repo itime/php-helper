@@ -5,18 +5,13 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Saas\Model;
+namespace Xin\Thinkphp\Foundation\Model;
 
 /**
  * @method $this app(int $appId)
  * @mixin \think\Model
  */
-trait MultiApp{
-	
-	/**
-	 * @var int
-	 */
-	protected static $globalAppId = null;
+trait Appable{
 	
 	/**
 	 * 开启 app_id 全局约束
@@ -55,33 +50,19 @@ trait MultiApp{
 	 */
 	public function scopeApp($query, $appId = 0){
 		if(!$appId){
-			$appId = static::$globalAppId;
+			$appId = AppContext::getInstance()->getGlobalAppId();
 		}
 		
 		$query->where('app_id', $appId);
 	}
 	
 	/**
-	 * 启用 App
-	 *
-	 * @param int $appId
-	 */
-	public static function enableApp($appId){
-		static::$globalAppId = $appId;
-		
-		static::maker(function(/**@var MultiApp $model */ $model){
-			if(static::$globalAppId !== null){
-				$model->withGlobalAppScope();
-			}
-		});
-	}
-	
-	/**
 	 * @param \think\Model $model
 	 */
 	protected static function onBeforeWrite($model){
-		if(static::$globalAppId !== null){
-			$model['app_id'] = static::$globalAppId;
+		$appId = AppContext::getInstance()->getGlobalAppId();
+		if($appId !== null){
+			$model['app_id'] = $appId;
 		}
 	}
 }

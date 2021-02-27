@@ -42,4 +42,14 @@ trait HasUser{
 		
 		return call_user_func($this->userResolverCallback, $field, $default, $verifyType);
 	}
+	
+	/**
+	 * 获取当前用户ID
+	 *
+	 * @param int $verifyType
+	 * @return int
+	 */
+	public function userId($verifyType = 1){
+		return $this->user('id', 0, $verifyType);
+	}
 }
