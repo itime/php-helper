@@ -136,7 +136,7 @@ class PluginDispatch extends Controller{
 		$controllerLayer = $this->rule->config('controller_layer') ?: 'controller';
 		$emptyController = $this->rule->config('empty_controller') ?: 'Error';
 		
-		$pluginControllerLayer = "{$appName}controller";
+		$pluginControllerLayer = "{$appName}\\{$controllerLayer}";
 		$class = $this->pluginManager->controllerClass(
 			$this->plugin,
 			$name = str_replace(['/', '.'], '\\', $name),
@@ -175,7 +175,7 @@ class PluginDispatch extends Controller{
 		
 		/** @var \think\View $view */
 		$view = $this->app->make('view');
-		$viewLayer = "{$appName}view";
+		$viewLayer = $appName.DIRECTORY_SEPARATOR."view";
 		$viewPath = $this->pluginManager->pluginPath($this->plugin).$viewLayer.DIRECTORY_SEPARATOR;
 		$view->engine()->config([
 			"view_path" => $viewPath,

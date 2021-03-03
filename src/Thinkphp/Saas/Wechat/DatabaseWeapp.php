@@ -8,7 +8,7 @@
 namespace Xin\Thinkphp\Saas\Wechat;
 
 use think\Model;
-use Xin\Thinkphp\Saas\Model\Appable;
+use Xin\Thinkphp\Foundation\Model\Appable;
 
 /**
  * @property-read int    app_type 应用类型：0 小程序，1 公众号
@@ -42,7 +42,7 @@ class DatabaseWeapp extends Model{
 		$result = [];
 		foreach($funcInfo as $item){
 			$funcScopeId = $item['funcscope_category']['id'];
-			$result[] = array_merge(WeappAuthEnum::getDesc($funcScopeId), $item['confirm_info'] ?? []);
+			$result[] = array_merge(AuthEnum::getDesc($funcScopeId), $item['confirm_info'] ?? []);
 		}
 		
 		return $result;
@@ -54,7 +54,7 @@ class DatabaseWeapp extends Model{
 	 * @return $this
 	 */
 	public function sync(){
-		if($this->authorization_type){
+		if($this->getOrigin('authorization_type')){
 			$data = $this->authorizeInfo();
 			$this->save($data);
 		}
@@ -68,7 +68,7 @@ class DatabaseWeapp extends Model{
 	 * @return array
 	 */
 	public function authorizeInfo(){
-		return $this->getAuthorizerInfoByAppId($this->appid);
+		return $this->getAuthorizerInfoByAppId($this->getOrigin('appid'));
 	}
 	
 	/**

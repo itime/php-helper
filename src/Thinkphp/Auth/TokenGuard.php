@@ -56,7 +56,7 @@ class TokenGuard extends AbstractStatefulGuard{
 	 */
 	public function logout(){
 		parent::logout();
-		$this->cache->rm($this->getAuthToken());
+		$this->cache->delete($this->getAuthToken());
 	}
 	
 	/**
