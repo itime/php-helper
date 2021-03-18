@@ -123,7 +123,7 @@ class PhpFile extends Driver{
 	 * @param callable $callback
 	 * @param array    $menus
 	 */
-	protected static function eachDelete($callback, &$menus){
+	public static function eachDelete($callback, &$menus){
 		foreach($menus as $key => &$menu){
 			if(call_user_func_array($callback, [$menu]) === true){
 				unset($menus[$key]);

@@ -7,13 +7,19 @@
 namespace Xin\Support;
 
 use EasyWeChat\Kernel\Exceptions\HttpException;
+use EasyWeChat\Kernel\Http\StreamResponse;
 
 class WechatResult implements \ArrayAccess{
 	
 	/**
 	 * @var mixed
 	 */
-	protected $result = null;
+	protected $result;
+	
+	/**
+	 * @var bool
+	 */
+	protected $isStream;
 	
 	/**
 	 * @var \Throwable
@@ -57,6 +63,7 @@ class WechatResult implements \ArrayAccess{
 		}
 		
 		$this->result = $result;
+		$this->isStream = $result instanceof StreamResponse;
 	}
 	
 	/**
@@ -69,11 +76,20 @@ class WechatResult implements \ArrayAccess{
 			return false;
 		}
 		
-		if(!isset($this->result['errcode'])){
+		if($this->isStream || !isset($this->result['errcode'])){
 			return true;
 		}
 		
 		return $this->result['errcode'] == 0;
+	}
+	
+	/**
+	 * 是否是流数据
+	 *
+	 * @return bool
+	 */
+	public function isStream(){
+		return $this->isStream;
 	}
 	
 	/**
@@ -86,7 +102,7 @@ class WechatResult implements \ArrayAccess{
 			return -10000;
 		}
 		
-		return $this->result['errcode'];
+		return $this->isStream ? 0 : $this->result['errcode'];
 	}
 	
 	/**
@@ -99,7 +115,7 @@ class WechatResult implements \ArrayAccess{
 			return '';
 		}
 		
-		return $this->result['errmsg'];
+		return $this->isStream ? '' : $this->result['errmsg'];
 	}
 	
 	/**
@@ -210,6 +226,10 @@ class WechatResult implements \ArrayAccess{
 	 */
 	public function result($fields = null, $default = null){
 		return $this->then(function() use ($fields){
+			if($this->isStream){
+				return $this->result;
+			}
+			
 			if($fields === null){
 				$result = $this->result;
 				

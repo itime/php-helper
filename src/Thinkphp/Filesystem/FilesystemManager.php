@@ -20,6 +20,7 @@ use Xin\Support\Manager;
  * Class FilesystemManager
  *
  * @property-read \think\App app
+ * @mixin \Xin\Filesystem\Filesystem
  */
 class FilesystemManager extends Manager{
 	
@@ -121,6 +122,19 @@ class FilesystemManager extends Manager{
 		}
 		
 		return $result ? $path : false;
+	}
+	
+	/**
+	 * 获取公开路径
+	 *
+	 * @param string $savePath
+	 * @param string $disk
+	 * @return string
+	 */
+	public function publicPath($savePath, $disk = null){
+		$disk = $disk ?: $this->getDefaultDriver();
+		$domain = $this->getDiskConfig($disk, 'url');
+		return $domain.'/'.str_replace("\\", "/", $savePath);
 	}
 	
 	/**

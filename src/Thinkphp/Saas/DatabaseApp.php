@@ -16,13 +16,15 @@ use Xin\Support\Str;
  */
 class DatabaseApp extends Model{
 	
+	use AppPluginable;
+	
 	const TITLE = '应用';
 	
 	/**
 	 * @var string[]
 	 */
 	protected $readonly = [
-		'access_id', 'access_key',
+		'access_id',
 	];
 	
 	/**
@@ -30,6 +32,12 @@ class DatabaseApp extends Model{
 	 */
 	protected $name = 'app';
 	
+	/**
+	 * 插入数据
+	 *
+	 * @param \Xin\Thinkphp\Saas\DatabaseApp $model
+	 * @return mixed|void
+	 */
 	public static function onBeforeInsert(DatabaseApp $model){
 		$model->access_id = substr(md5(microtime().uniqid()), 0, 22);
 		$model->access_key = Str::random(32);

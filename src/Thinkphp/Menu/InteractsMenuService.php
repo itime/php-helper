@@ -40,6 +40,8 @@ trait InteractsMenuService{
 					'is_develop'       => $this->isDevMode(),
 				]);
 				
+				$menus = $this->menusHandle($menus);
+				
 				return tap(new \stdClass(), function($std) use ($menus, $breads){
 					$std->menus = $menus;
 					$std->breads = $breads;
@@ -97,5 +99,13 @@ trait InteractsMenuService{
 	 */
 	protected function isDevMode(){
 		return config('web.develop_mode') == 1;
+	}
+	
+	/**
+	 * @param array $menus
+	 * @return array
+	 */
+	protected function menusHandle($menus){
+		return $menus;
 	}
 }
