@@ -21,7 +21,7 @@ class SetDefaultApp{
 	public function handle($request, \Closure $next){
 		$request->setAppResolver(function(){
 			return new Fluent([
-				'id'    => 0,
+				'id'    => 1,
 				'title' => '默认应用',
 			]);
 		});

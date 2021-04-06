@@ -35,8 +35,12 @@ class Plugin extends Facade{
 	
 	/**
 	 * 路由到自定义调度对象
+	 *
+	 * @param callable $pluginBootCallback
 	 */
-	public static function routes(){
+	public static function routes($pluginBootCallback = null){
 		Route::any('plugin/:plugin/:controller/[:action]', PluginDispatch::class);
+		PluginDispatch::$pluginBootCallback = $pluginBootCallback;
 	}
+	
 }

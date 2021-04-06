@@ -24,6 +24,11 @@ use Xin\Support\Str;
 class PluginDispatch extends Controller{
 	
 	/**
+	 * @var callable
+	 */
+	public static $pluginBootCallback = null;
+	
+	/**
 	 * @var string
 	 */
 	protected $plugin;
@@ -72,6 +77,11 @@ class PluginDispatch extends Controller{
 	public function exec(){
 		if(!$this->pluginManager->has($this->plugin)){
 			throw new HttpException(404, "plugin {$this->plugin} not exist.");
+		}
+		
+		// 启动插件事件
+		if(static::$pluginBootCallback){
+			$this->app->invoke(static::$pluginBootCallback);
 		}
 		
 		try{

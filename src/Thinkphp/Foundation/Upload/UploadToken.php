@@ -175,7 +175,7 @@ trait UploadToken{
 		$sha1 = $data['sha1'];
 		$str = base64_urlSafeDecode($data['hash']);
 		$str = substr($str, 1);
-		$sha1 = $this->String2Hex($str);
+		$sha1 = $this->string2Hex($str);
 		
 		$info = $this->findBySHA1($type, $sha1);
 		if(!empty($info)){
@@ -196,7 +196,13 @@ trait UploadToken{
 		return Hint::result($data);
 	}
 	
-	function String2Hex($string){
+	/**
+	 * 字符串转16进制
+	 *
+	 * @param string $string
+	 * @return string
+	 */
+	private function string2Hex($string){
 		$hex = '';
 		for($i = 0; $i < strlen($string); $i++){
 			$hex .= dechex(ord($string[$i]));

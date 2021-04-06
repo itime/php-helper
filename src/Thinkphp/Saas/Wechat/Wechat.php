@@ -92,8 +92,8 @@ class Wechat extends WechatBase implements WechatRepository{
 		}
 		
 		$weapp = DatabaseWeapp::where([
-			'app_id' => $appId,
-			'type'   => 1,
+			'app_id'   => $appId,
+			'app_type' => 1,
 		])->find();
 		if(empty($weapp)){
 			throw new WechatNotConfigureException("未配置或授权公众号！");
@@ -153,8 +153,8 @@ class Wechat extends WechatBase implements WechatRepository{
 		}
 		
 		$weapp = DatabaseWeapp::where([
-			'app_id' => $appId,
-			'type'   => 0,
+			'app_id'   => $appId,
+			'app_type' => 0,
 		])->find();
 		if(empty($weapp)){
 			throw new WechatNotConfigureException("未配置或授权小程序！");
