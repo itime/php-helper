@@ -192,7 +192,7 @@ class Wechat extends WechatBase implements WechatRepository{
 	protected function resolveWeappConfig(DatabaseWeapp $weapp){
 		return $this->checkConfig([
 			'mode'                     => $weapp['mode'],
-			'appid'                    => $weapp['appid'],
+			'app_id'                   => $weapp['appid'],
 			'secret'                   => $weapp['appsecret'],
 			'authorizer_refresh_token' => $weapp['authorizer_refresh_token'],
 		]);
