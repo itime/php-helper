@@ -103,7 +103,7 @@ class CheckForMaintenanceMode{
 	protected function createMaintenanceModeResponse(Request $request){
 		$closeMsg = $this->config->get('web.site_close_msg');
 		$closeMsg = $closeMsg ? $closeMsg : '站点已关闭...';
-		$response = $this->view->fetch('public/close', [
+		$response = $this->view->fetch($this->config->get('app.site_close_template'), [
 			'msg' => $closeMsg,
 		]);
 		
