@@ -8,7 +8,7 @@
 namespace Xin\Cache;
 
 class LuaScripts{
-	
+
 	/**
 	 * Get the Lua script to atomically release a lock.
 	 * KEYS[1] - The name of the lock

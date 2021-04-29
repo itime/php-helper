@@ -18,29 +18,29 @@ use Think\Model;
  * @property array       config
  */
 class DatabasePlugin extends Model{
-	
+
 	// 缓存前缀
 	const CACHE_PREFIX = 'plugin_';
-	
+
 	/**
 	 * 插件配置缓存列表
 	 *
 	 * @var array
 	 */
 	protected static $pluginConfigCacheList = [];
-	
+
 	/**
 	 * @var string
 	 */
 	protected $name = 'plugin';
-	
+
 	/**
 	 * @var array
 	 */
 	protected $type = [
 		'config' => ['json', JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE],
 	];
-	
+
 	/**
 	 * 插件写入数据库后相关操作
 	 *
@@ -57,7 +57,7 @@ class DatabasePlugin extends Model{
 			}
 		}
 	}
-	
+
 	/**
 	 * 获取插件配置
 	 *
@@ -72,7 +72,7 @@ class DatabasePlugin extends Model{
 		}else{
 			$key = static::resolvePluginConfigKey($plugin);
 			$config = Cache::get($key);
-			
+
 			// 加载数据库数据
 			if(!$config){
 				$config = static::where('name', $plugin)->value('config');
@@ -80,20 +80,20 @@ class DatabasePlugin extends Model{
 				static::setPluginConfigCache($plugin, $config);
 			}
 		}
-		
+
 		if(is_null($config)){
 			$config = $default instanceof \Closure ? $default() : $default;
-			
+
 			static::$pluginConfigCacheList[$plugin] = $default;
-			
+
 			if($isUpdateCache){
 				static::setPluginConfigCache($plugin, $config);
 			}
 		}
-		
+
 		return $config;
 	}
-	
+
 	/**
 	 * 设置插件配置缓存
 	 *
@@ -102,10 +102,10 @@ class DatabasePlugin extends Model{
 	 */
 	public static function setPluginConfigCache($plugin, $config){
 		$key = static::resolvePluginConfigKey($plugin);
-		
+
 		Cache::set($key, $config instanceof \Closure ? $config() : $config);
 	}
-	
+
 	/**
 	 * 刷新插件配置缓存
 	 *
@@ -116,11 +116,11 @@ class DatabasePlugin extends Model{
 		if(!$config){
 			return;
 		}
-		
+
 		$config = json_decode($config, true);
 		static::setPluginConfigCache($plugin, $config);
 	}
-	
+
 	/**
 	 * 获取插件配置前缀
 	 *
@@ -130,5 +130,5 @@ class DatabasePlugin extends Model{
 	public static function resolvePluginConfigKey($plugin){
 		return static::CACHE_PREFIX.$plugin;
 	}
-	
+
 }

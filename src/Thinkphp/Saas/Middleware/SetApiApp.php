@@ -12,7 +12,7 @@ use Xin\Thinkphp\Saas\DatabaseApp;
 use Xin\Thinkphp\Saas\Exceptions\AppNotFoundException;
 
 class SetApiApp{
-	
+
 	/**
 	 * api模式下检查当前应用是否合法
 	 *
@@ -26,13 +26,13 @@ class SetApiApp{
 			if(empty($accessId)){
 				throw new \LogicException('access_id param invalid.');
 			}
-			
+
 			return $this->resolve($accessId);
 		});
-		
+
 		return $next($request);
 	}
-	
+
 	/**
 	 * 解析应用信息
 	 *
@@ -47,7 +47,7 @@ class SetApiApp{
 		if(!$xApp){
 			throw AppNotFoundException::ofAccessId($accessId);
 		}
-		
+
 		return $xApp;
 	}
 }

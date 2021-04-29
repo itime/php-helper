@@ -15,17 +15,17 @@ use Xin\Contracts\Bus\BalanceRepository;
 use Xin\Support\Str;
 
 class Balance extends Model implements BalanceRepository{
-	
+
 	/**
 	 * @var string
 	 */
 	protected $balanceKey = 'balance';
-	
+
 	/**
 	 * @var array
 	 */
 	protected $config = [];
-	
+
 	/**
 	 * Balance constructor.
 	 *
@@ -35,10 +35,10 @@ class Balance extends Model implements BalanceRepository{
 	public function __construct($name, $config = []){
 		$this->name = $name;
 		$this->config = $config;
-		
+
 		parent::__construct([]);
 	}
-	
+
 	/**
 	 * 余额消费场景
 	 *
@@ -48,7 +48,7 @@ class Balance extends Model implements BalanceRepository{
 		$val = $this->getOrigin('scene');
 		return SceneEnum::data()[$val]['title'];
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -57,22 +57,22 @@ class Balance extends Model implements BalanceRepository{
 			$this->balanceKey
 		);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function getBalanceListByType($userId, $type = null, array $options = []){
 		$paginate = $options['paginate'] ?? [];
 		unset($options['paginate']);
-		
+
 		$query = $this->logQuery()->where([
 			'user_id' => $userId,
 		])->when($type !== null, ['type' => $type,])
 			->order('id desc');
-		
+
 		return self::applyOptions($query, $options)->paginate($paginate);
 	}
-	
+
 	/**
 	 * @return \think\Db|\think\db\Query|\think\facade\Db
 	 */
@@ -80,13 +80,13 @@ class Balance extends Model implements BalanceRepository{
 		$config = $this->config['balance_log'];
 		if($config['type'] === 'model'){
 			$class = $config['model'];
-			
+
 			return new $class();
 		}
-		
+
 		return Db::name($config['table']);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -95,14 +95,14 @@ class Balance extends Model implements BalanceRepository{
 		if(!$result){
 			throw new \LogicException("余额变更失败！");
 		}
-		
+
 		if($this->insertLog($userId, 1, $amount, $remark, $attributes) === false){
 			throw new \LogicException("余额变更失败！");
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -111,19 +111,19 @@ class Balance extends Model implements BalanceRepository{
 		if($balance < $amount){
 			throw new ValidationException("余额不足！");
 		}
-		
+
 		$result = $this->where('id', $userId)->dec($this->balanceKey, $amount)->update($attributes);
 		if(!$result){
 			throw new \LogicException("余额变更失败！");
 		}
-		
+
 		if($this->insertLog($userId, 0, $amount, $remark, $attributes) === false){
 			throw new \LogicException("余额变更失败！");
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * 获取用户的余额
 	 *
@@ -133,7 +133,7 @@ class Balance extends Model implements BalanceRepository{
 	public function balanceValue($userId){
 		return (float)$this->where('id', $userId)->value($this->balanceKey, 0);
 	}
-	
+
 	/**
 	 * 插入记录
 	 *
@@ -153,10 +153,10 @@ class Balance extends Model implements BalanceRepository{
 			'remark'      => $remark,
 			'create_time' => time(),
 		]);
-		
+
 		return $this->logQuery()->insert($data);
 	}
-	
+
 	/**
 	 * 应用 options
 	 *
@@ -168,7 +168,7 @@ class Balance extends Model implements BalanceRepository{
 		if($options === null){
 			return $baseQuery;
 		}
-		
+
 		if(is_callable($options)){
 			return $options($baseQuery);
 		}else{
@@ -178,7 +178,7 @@ class Balance extends Model implements BalanceRepository{
 				}
 			}
 		}
-		
+
 		return $baseQuery;
 	}
 }

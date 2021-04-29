@@ -15,22 +15,22 @@ namespace Xin\Http;
  * @method Response upload($url, $data = null, $options = [])
  */
 class Client{
-	
+
 	/**
 	 * @var array
 	 */
 	protected $options = [];
-	
+
 	/**
 	 * @var \GuzzleHttp\Client
 	 */
 	protected $client = null;
-	
+
 	/**
 	 * @var static
 	 */
 	protected static $instance = null;
-	
+
 	/**
 	 * Client constructor.
 	 *
@@ -40,7 +40,7 @@ class Client{
 		$this->options = $options;
 		$this->client = new \GuzzleHttp\Client($options);
 	}
-	
+
 	/**
 	 * 发起请求
 	 *
@@ -53,7 +53,7 @@ class Client{
 	 */
 	public function request($method, $url, $data = null, $options = []){
 		$method = strtoupper($method);
-		
+
 		if($data){
 			if('POST' == $method){
 				$options['form_params'] = $data;
@@ -67,12 +67,12 @@ class Client{
 				$options['query'] = $data;
 			}
 		}
-		
+
 		$response = $this->client->request($method, $url, $options);
 
 		return new Response($response);
 	}
-	
+
 	/**
 	 * 获取默认实例
 	 *
@@ -92,10 +92,10 @@ class Client{
 				],
 			]);
 		}
-		
+
 		return static::$instance;
 	}
-	
+
 	/**
 	 * 动态方法
 	 *
@@ -107,7 +107,7 @@ class Client{
 		array_unshift($arguments, $name);
 		return call_user_func_array([$this, 'request'], $arguments);
 	}
-	
+
 	/**
 	 * 静态调用动态方法
 	 *
@@ -118,5 +118,5 @@ class Client{
 	public static function __callStatic($name, $arguments){
 		return call_user_func_array([static::instance(), $name], $arguments);
 	}
-	
+
 }

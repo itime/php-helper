@@ -13,7 +13,7 @@ use Xin\Support\Str;
  * 路由地址生成
  */
 class Url extends UrlBuild{
-	
+
 	/**
 	 * 直接解析URL地址
 	 *
@@ -25,14 +25,14 @@ class Url extends UrlBuild{
 	protected function parseUrl(string $url, &$domain):string{
 		/** @var \think\Request|\Xin\Thinkphp\Http\Requestable $request */
 		$request = $this->app->request;
-		
+
 		// 支持路由解析
 		if(strpos($url, '>')){
 			[$plugin, $url] = explode('>', $url, 2);
 		}else{
 			$plugin = '';
 		}
-		
+
 		if(0 === strpos($url, '/')){
 			// 直接作为路由地址解析
 			$url = substr($url, 1);
@@ -51,23 +51,23 @@ class Url extends UrlBuild{
 			// 解析到 应用/控制器/操作
 			$app = $this->getAppName();
 			$controller = Str::snake($request->controller());
-			
+
 			$path = explode('/', $url);
 			$action = array_pop($path);
 			$controller = empty($path) ? $controller : array_pop($path);
 			$app = empty($path) ? $app : array_pop($path);
-			
+
 			$bind = $this->app->config->get('app.domain_bind', []);
-			
+
 			if($key = array_search($this->app->http->getName(), $bind)){
 				isset($bind[$_SERVER['SERVER_NAME']]) && $domain = $_SERVER['SERVER_NAME'];
-				
+
 				$domain = is_bool($domain) ? $key : $domain;
 			}else{
 				$url = $app.'/'.($plugin ? "plugin/".$plugin."/" : "").$controller.'/'.$action;
 			}
 		}
-		
+
 		return $url;
 	}
 }

@@ -8,5 +8,5 @@
 namespace Xin\Contracts\Plugin;
 
 interface PluginNotFoundException{
-	
+
 }

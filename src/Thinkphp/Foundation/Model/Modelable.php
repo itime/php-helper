@@ -10,7 +10,7 @@ namespace Xin\Thinkphp\Foundation\Model;
  * @mixin \think\Model
  */
 trait Modelable{
-	
+
 	/**
 	 * 获取数据列表
 	 *
@@ -24,7 +24,7 @@ trait Modelable{
 	public static function getList($query = [], $options = []){
 		return static::newPlainQuery($query, $options)->select();
 	}
-	
+
 	/**
 	 * 获取数据分页
 	 *
@@ -38,7 +38,7 @@ trait Modelable{
 	public static function getPaginate($query, $options = [], $listRows = 15, $simple = false){
 		return static::newPlainQuery($query, $options)->paginate($listRows, $simple);
 	}
-	
+
 	/**
 	 * 获取简单的信息数据
 	 *
@@ -51,10 +51,10 @@ trait Modelable{
 	 */
 	public static function getPlain($query, $options = []){
 		$info = static::newPlainQuery($query, $options)->find();
-		
+
 		return static::resolvePlain($info, $options);
 	}
-	
+
 	/**
 	 * 获取简单的信息数据
 	 *
@@ -67,10 +67,10 @@ trait Modelable{
 	 */
 	public static function getPlainById($id, $options = []){
 		$info = static::newPlainQuery(null, $options)->find($id);
-		
+
 		return static::resolvePlain($info, $options);
 	}
-	
+
 	/**
 	 * 简单数据额外处理
 	 *
@@ -81,7 +81,7 @@ trait Modelable{
 	protected static function resolvePlain($info, $options = []){
 		return $info;
 	}
-	
+
 	/**
 	 * 获取数据详细信息
 	 *
@@ -95,12 +95,12 @@ trait Modelable{
 	 */
 	public static function getDetail($query, $with = [], $options = []){
 		$query = static::with($with)->where($query);
-		
+
 		$info = static::applyOptions($query, $options)->find();
-		
+
 		return static::resolveDetail($info, $options);
 	}
-	
+
 	/**
 	 * 根据主键ID获取数据详细信息
 	 *
@@ -114,10 +114,10 @@ trait Modelable{
 	 */
 	public static function getDetailById($id, $with = [], $options = []){
 		$info = static::applyOptions(static::with($with), $options)->find($id);
-		
+
 		return static::resolveDetail($info, $options);
 	}
-	
+
 	/**
 	 * 详细数据额外处理
 	 *
@@ -128,7 +128,7 @@ trait Modelable{
 	protected static function resolveDetail($info, $options = []){
 		return $info;
 	}
-	
+
 	/**
 	 * 解析基础查询对象
 	 *
@@ -146,16 +146,16 @@ trait Modelable{
 			}
 			unset($options['field']);
 		}
-		
+
 		$newQuery = static::field($fields);
-		
+
 		if($query){
 			$newQuery->where($query);
 		}
-		
+
 		return static::applyOptions($newQuery, $options);
 	}
-	
+
 	/**
 	 * 获取要查找的简单数据字段列表
 	 *
@@ -164,7 +164,7 @@ trait Modelable{
 	public static function getPlainFields(){
 		return [];
 	}
-	
+
 	/**
 	 * 应用 options
 	 *
@@ -176,7 +176,7 @@ trait Modelable{
 		if($options === null){
 			return $baseQuery;
 		}
-		
+
 		if(is_callable($options)){
 			return $options($baseQuery);
 		}else{
@@ -190,7 +190,7 @@ trait Modelable{
 				}
 			}
 		}
-		
+
 		return $baseQuery;
 	}
 }

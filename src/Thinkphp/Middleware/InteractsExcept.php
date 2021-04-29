@@ -13,7 +13,7 @@ use think\Request;
  * @property array $except
  */
 trait InteractsExcept{
-	
+
 	/**
 	 * @param \Xin\Thinkphp\Http\Requestable $request
 	 * @return bool

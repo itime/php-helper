@@ -12,14 +12,14 @@ use Xin\Cache\RedisLock;
 use Xin\Contracts\Cache\LockProvider;
 
 class Redis extends RedisDriver implements LockProvider{
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function lock($name, $seconds = 0, $owner = null){
 		return new RedisLock($this->handler, $this->getCacheKey($name), $seconds, $owner);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */

@@ -11,27 +11,27 @@ use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Contracts\Plugin\PluginInfo as PluginInfoContract;
 
 class PluginInfo implements PluginInfoContract{
-	
+
 	/**
 	 * @var PluginFactory
 	 */
 	protected $factory;
-	
+
 	/**
 	 * @var string
 	 */
 	protected $name;
-	
+
 	/**
 	 * @var array
 	 */
 	protected $info = null;
-	
+
 	/**
 	 * @var array
 	 */
 	protected $configTemplate = null;
-	
+
 	/**
 	 * AbstractPlugin constructor.
 	 *
@@ -42,7 +42,7 @@ class PluginInfo implements PluginInfoContract{
 		$this->name = $name;
 		$this->factory = $factory;
 	}
-	
+
 	/**
 	 * @return array
 	 */
@@ -51,23 +51,23 @@ class PluginInfo implements PluginInfoContract{
 			$path = $this->path().'manifest.php';
 			$this->info = require_once $path;
 		}
-		
+
 		return $this->info;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function getName(){
 		return $this->name;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function getConfigTemplate($config = []){
 		$template = $this->loadConfigTemplate();
-		
+
 		foreach($template as &$item){
 			foreach($item['config'] as &$value){
 				$name = $value['name'];
@@ -80,22 +80,22 @@ class PluginInfo implements PluginInfoContract{
 			unset($value);
 		}
 		unset($item);
-		
+
 		return $template;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function getConfigTypeList(){
 		$template = $this->loadConfigTemplate();
-		
+
 		$typeMap = [
 			'switch' => 'int',
 			'number' => 'int',
 			'array'  => 'array',
 		];
-		
+
 		$result = [];
 		foreach($template as $item){
 			foreach($item['config'] as $value){
@@ -108,10 +108,10 @@ class PluginInfo implements PluginInfoContract{
 				}
 			}
 		}
-		
+
 		return $result;
 	}
-	
+
 	/**
 	 * 解析值
 	 *
@@ -121,7 +121,7 @@ class PluginInfo implements PluginInfoContract{
 	protected function resolveValue($value){
 		return $value instanceof \Closure ? $value() : $value;
 	}
-	
+
 	/**
 	 * 加载配置信息模板
 	 *
@@ -137,10 +137,10 @@ class PluginInfo implements PluginInfoContract{
 				$this->configTemplate = [];
 			}
 		}
-		
+
 		return $this->configTemplate;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -148,7 +148,7 @@ class PluginInfo implements PluginInfoContract{
 		$rootPath = $this->factory->pluginPath($this->getName());
 		return $rootPath.($path ? $path.DIRECTORY_SEPARATOR : $path);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */

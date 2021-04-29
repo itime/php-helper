@@ -8,7 +8,7 @@
 namespace Xin\Contracts\Bus;
 
 interface BalanceRepository{
-	
+
 	/**
 	 * 获取用户余额数据
 	 *
@@ -16,7 +16,7 @@ interface BalanceRepository{
 	 * @return mixed
 	 */
 	public function getBalanceByUserId($userId);
-	
+
 	/**
 	 * 获取用户余额数据
 	 *
@@ -26,7 +26,7 @@ interface BalanceRepository{
 	 * @return mixed
 	 */
 	public function getBalanceListByType($userId, $type = null, array $options = []);
-	
+
 	/**
 	 * 充值
 	 *
@@ -37,7 +37,7 @@ interface BalanceRepository{
 	 * @return mixed
 	 */
 	public function recharge($userId, $amount, $remark = '', $attributes = []);
-	
+
 	/**
 	 * 消费
 	 *

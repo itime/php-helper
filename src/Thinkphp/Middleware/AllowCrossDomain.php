@@ -12,7 +12,7 @@ use think\Response;
  * Class AllowCrossDomain
  */
 class AllowCrossDomain{
-	
+
 	/**
 	 * 初始化应用
 	 *
@@ -22,7 +22,7 @@ class AllowCrossDomain{
 	 */
 	public function handle($request, \Closure $next){
 		$httpOrigin = $this->httpOrigin($request);
-		
+
 		if($request->isOptions()){
 			return $this->resolveResponse(
 				$request,
@@ -30,14 +30,14 @@ class AllowCrossDomain{
 				$httpOrigin
 			);
 		}
-		
+
 		return $this->resolveResponse(
 			$request,
 			$next($request),
 			$httpOrigin
 		);
 	}
-	
+
 	/**
 	 * 获取允许开放的来源地址
 	 *
@@ -49,10 +49,10 @@ class AllowCrossDomain{
 		if(empty($httpOrigin)){
 			$httpOrigin = '*';
 		}
-		
+
 		return $httpOrigin;
 	}
-	
+
 	/**
 	 * 跨域支持 header 数组
 	 *
@@ -62,7 +62,7 @@ class AllowCrossDomain{
 	protected function headers($request){
 		return [];
 	}
-	
+
 	/**
 	 * 响应内容增加跨域支持
 	 *
@@ -75,7 +75,7 @@ class AllowCrossDomain{
 		if(!$response instanceof Response){
 			return $response;
 		}
-		
+
 		$header = array_merge([
 			'Access-Control-Allow-Origin'      => $httpOrigin,
 			'Access-Control-Allow-Credentials' => 'true',
@@ -83,8 +83,8 @@ class AllowCrossDomain{
 			'Access-Control-Allow-Headers'     => 'Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since, X-Requested-With',
 			'Access-Control-Max-Age'           => '3600',
 		], $this->headers($request));
-		
+
 		return $response->header($header);
 	}
-	
+
 }

@@ -17,12 +17,12 @@ namespace Xin\Http;
  * @method \Psr\Http\Message\StreamInterface getBody(string $name)
  */
 class Response{
-	
+
 	/**
 	 * @var \Psr\Http\Message\ResponseInterface
 	 */
 	protected $response;
-	
+
 	/**
 	 * Response constructor.
 	 *
@@ -31,7 +31,7 @@ class Response{
 	public function __construct($response){
 		$this->response = $response;
 	}
-	
+
 	/**
 	 * 获取响应内容
 	 *
@@ -40,7 +40,7 @@ class Response{
 	public function getContents(){
 		return $this->response->getBody()->getContents();
 	}
-	
+
 	/**
 	 * 响应是否为200
 	 *
@@ -49,7 +49,7 @@ class Response{
 	public function isOk(){
 		return $this->getStatusCode() == 200;
 	}
-	
+
 	/**
 	 * json 解析
 	 *
@@ -59,7 +59,7 @@ class Response{
 	public function json($associative = true){
 		return json_decode($this->getContents(), $associative);
 	}
-	
+
 	/**
 	 * xml 解析
 	 *
@@ -71,7 +71,7 @@ class Response{
 		libxml_disable_entity_loader(true);
 		return json_decode(json_encode(simplexml_load_string($this->getContents(), 'SimpleXMLElement', LIBXML_NOCDATA)), $associative);
 	}
-	
+
 	/**
 	 * 获取相应内容类型
 	 *
@@ -80,7 +80,7 @@ class Response{
 	public function getContentType(){
 		return $this->getHeaderLine('Content-Type');
 	}
-	
+
 	/**
 	 * 响应是哪个类型
 	 *
@@ -90,7 +90,7 @@ class Response{
 	public function isContentType($contentType){
 		return stripos($this->getContentType(), $contentType) !== false;
 	}
-	
+
 	/**
 	 * 是否为JSON响应
 	 *
@@ -99,7 +99,7 @@ class Response{
 	public function isJson(){
 		return $this->isContentType("application/json");
 	}
-	
+
 	/**
 	 * 是否为XML响应
 	 *
@@ -108,7 +108,7 @@ class Response{
 	public function isXml(){
 		return $this->isContentType("application/xml");
 	}
-	
+
 	/**
 	 * 响应解析为数组
 	 *
@@ -118,10 +118,10 @@ class Response{
 		if($this->isXml()){
 			return (array)$this->xml();
 		}
-		
+
 		return (array)$this->json();
 	}
-	
+
 	/**
 	 * 获取原始的响应信息
 	 *
@@ -130,7 +130,7 @@ class Response{
 	public function getResponse(){
 		return $this->response;
 	}
-	
+
 	/**
 	 * 动态调用原始响应的方法
 	 *
@@ -141,5 +141,5 @@ class Response{
 	public function __call($name, $arguments){
 		return call_user_func_array([$this->response, $name], $arguments);
 	}
-	
+
 }

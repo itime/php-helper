@@ -27,7 +27,7 @@ use Xin\Contracts\Auth\Access\Gate as GateContract;
  * @see \Xin\Contracts\Auth\Access\Gate
  */
 class Gate extends Facade{
-	
+
 	/**
 	 * Get the registered name of the component.
 	 *

@@ -8,13 +8,13 @@
 namespace Xin\Contracts\Menu;
 
 interface Writer{
-	
+
 	/**
 	 * @param mixed $user
 	 * @return mixed
 	 */
 	public function get($user);
-	
+
 	/**
 	 * 写入一组菜单
 	 *
@@ -23,7 +23,7 @@ interface Writer{
 	 * @return bool
 	 */
 	public function puts($menus, $append = []);
-	
+
 	/**
 	 * 移除菜单
 	 *

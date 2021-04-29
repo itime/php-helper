@@ -10,14 +10,14 @@ namespace Xin\Thinkphp\Auth;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 
 class ModelUserProvider implements UserProviderContract{
-	
+
 	use UserProviderHelpers;
-	
+
 	/**
 	 * @var array
 	 */
 	protected $config;
-	
+
 	/**
 	 * Create a new model user provider.
 	 *
@@ -26,7 +26,7 @@ class ModelUserProvider implements UserProviderContract{
 	public function __construct($config){
 		$this->config = $config;
 	}
-	
+
 	/**
 	 * @return \think\Db|\think\db\Query
 	 */

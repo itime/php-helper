@@ -12,16 +12,16 @@ use Xin\Plugin\PluginManager;
 use Xin\Thinkphp\Foundation\ServiceProvider;
 
 class PluginServiceProvider extends ServiceProvider{
-	
+
 	/**
 	 * 注册插件管理器
 	 */
 	public function register(){
 		$this->registerPluginManager();
-		
+
 		$this->registerMiddleware();
 	}
-	
+
 	/**
 	 * 启动程序
 	 */
@@ -32,7 +32,7 @@ class PluginServiceProvider extends ServiceProvider{
 			]);
 		});
 	}
-	
+
 	/**
 	 * 注册插件管理器
 	 */
@@ -43,13 +43,13 @@ class PluginServiceProvider extends ServiceProvider{
 				'default' => [
 					'app_name' => 'admin',
 				],
-				
+
 				'namespace' => 'plugin',
 				'path'      => root_path('plugin'),
 			], config('plugin')));
 		});
 	}
-	
+
 	/**
 	 * 注册中间件
 	 */
@@ -59,10 +59,10 @@ class PluginServiceProvider extends ServiceProvider{
 				/** @var PluginFactory $pm */
 				$pm = $this->app['PluginManager'];
 				$pm->pluginBoot();
-				
+
 				return $next($request);
 			});
 		});
 	}
-	
+
 }

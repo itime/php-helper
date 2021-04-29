@@ -11,37 +11,37 @@ use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Contracts\Plugin\PlugLazyCollection as PlugLazyCollectionContract;
 
 class PlugLazyCollection implements \ArrayAccess, \Iterator, PlugLazyCollectionContract{
-	
+
 	/**
 	 * @var PluginFactory
 	 */
 	protected $factory;
-	
+
 	/**
 	 * @var array
 	 */
 	protected $plugins = [];
-	
+
 	/**
 	 * @var \FilesystemIterator
 	 */
 	protected $fileIterator;
-	
+
 	/**
 	 * @var \Xin\Contracts\Plugin\PluginInfo
 	 */
 	protected $current;
-	
+
 	/**
 	 * @var int
 	 */
 	protected $key = 0;
-	
+
 	/**
 	 * @var bool
 	 */
 	protected $isValid = true;
-	
+
 	/**
 	 * PlugLazyCollection constructor.
 	 *
@@ -51,7 +51,7 @@ class PlugLazyCollection implements \ArrayAccess, \Iterator, PlugLazyCollectionC
 		$this->factory = $factory;
 		$this->fileIterator = new \FilesystemIterator($factory->rootPath());
 	}
-	
+
 	/**
 	 * 插件是否存在
 	 *
@@ -61,7 +61,7 @@ class PlugLazyCollection implements \ArrayAccess, \Iterator, PlugLazyCollectionC
 	public function offsetExists($offset){
 		return isset($this->plugins[$offset]);
 	}
-	
+
 	/**
 	 * 获取插件
 	 *
@@ -72,7 +72,7 @@ class PlugLazyCollection implements \ArrayAccess, \Iterator, PlugLazyCollectionC
 	public function offsetGet($offset){
 		return $this->plugin($offset);
 	}
-	
+
 	/**
 	 * @param mixed $offset
 	 * @param mixed $value
@@ -80,14 +80,14 @@ class PlugLazyCollection implements \ArrayAccess, \Iterator, PlugLazyCollectionC
 	public function offsetSet($offset, $value){
 		throw new \RuntimeException('not allow set.');
 	}
-	
+
 	/**
 	 * @param mixed $offset
 	 */
 	public function offsetUnset($offset){
 		throw new \RuntimeException('not allow unset.');
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -95,10 +95,10 @@ class PlugLazyCollection implements \ArrayAccess, \Iterator, PlugLazyCollectionC
 		if(!isset($this->plugins[$plugin]) || empty($this->plugins[$plugin])){
 			throw new PluginNotFoundException($plugin);
 		}
-		
+
 		return $this->factory->plugin($plugin);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -107,14 +107,14 @@ class PlugLazyCollection implements \ArrayAccess, \Iterator, PlugLazyCollectionC
 		}
 		return $this->plugins;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function current(){
 		return $this->current;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -123,32 +123,32 @@ class PlugLazyCollection implements \ArrayAccess, \Iterator, PlugLazyCollectionC
 			if(!$file->isDir()){
 				continue;
 			}
-			
+
 			$name = $file->getFilename();
 			if(!$this->factory->has($name)){
 				continue;
 			}
-			
+
 			$plugins[$name] = $this->factory->pluginClass($name, "Plugin");
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function key(){
 		return $this->key;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function valid(){
 		return $this->isValid;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */

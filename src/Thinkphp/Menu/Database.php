@@ -12,21 +12,21 @@ use Xin\Menu\Driver;
 use Xin\Support\Arr;
 
 class Database extends Driver{
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function all(){
 		return $this->model()->select();
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function get($user){
 		return Arr::tree($this->model()->select()->toArray());
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -36,7 +36,7 @@ class Database extends Driver{
 			$item['id'] = $id;
 		}, $menus);
 	}
-	
+
 	/**
 	 * 插入一个菜单
 	 *
@@ -57,20 +57,20 @@ class Database extends Driver{
 			'icon'       => $menu['icon'] ?? '',
 		];
 		$data = array_merge($data, $append);
-		
+
 		$model = $this->model($data);
 		$model->save();
-		
+
 		return $model['id'];
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function forget($condition){
 		return $this->model()->where($condition)->delete();
 	}
-	
+
 	/**
 	 * 获取模型实例
 	 *
@@ -81,7 +81,7 @@ class Database extends Driver{
 		$modelClass = $this->modelClass();
 		return new $modelClass($data);
 	}
-	
+
 	/**
 	 * 获取模型类
 	 *
@@ -89,11 +89,11 @@ class Database extends Driver{
 	 */
 	protected function modelClass(){
 		$class = $this->config('model');
-		
+
 		if(!class_exists($class)){
 			throw new ClassNotFoundException("[$class] not found!");
 		}
-		
+
 		return $class;
 	}
 }

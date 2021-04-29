@@ -16,12 +16,12 @@ use think\App;
  * @package app\common\behavior
  */
 class ServiceProviderSupportBehavior{
-	
+
 	/**
 	 * @var \think\App
 	 */
 	private $app;
-	
+
 	/**
 	 * ServiceBehavior constructor.
 	 *
@@ -30,7 +30,7 @@ class ServiceProviderSupportBehavior{
 	public function __construct(App $app){
 		$this->app = $app;
 	}
-	
+
 	/**
 	 * 执行操作
 	 */
@@ -40,11 +40,11 @@ class ServiceProviderSupportBehavior{
 		if(!$serviceFile){
 			return;
 		}
-		
+
 		/** @noinspection PhpIncludeInspection */
 		$services = require_once $serviceFile;
 		$instances = [];
-		
+
 		// register
 		foreach($services as $service){
 			$instances[$service] = $instance = new $service();
@@ -52,7 +52,7 @@ class ServiceProviderSupportBehavior{
 				call_user_func([$instance, "register"]);
 			}
 		}
-		
+
 		// boot
 		foreach($instances as $instance){
 			if(method_exists($instance, "boot")){

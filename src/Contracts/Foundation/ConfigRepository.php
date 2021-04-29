@@ -8,7 +8,7 @@
 namespace Xin\Contracts\Foundation;
 
 interface ConfigRepository extends \ArrayAccess{
-	
+
 	/**
 	 * 检测指定的 key 是否存在
 	 *
@@ -16,7 +16,7 @@ interface ConfigRepository extends \ArrayAccess{
 	 * @return bool
 	 */
 	public function has($key);
-	
+
 	/**
 	 * 获取配置
 	 *
@@ -25,7 +25,7 @@ interface ConfigRepository extends \ArrayAccess{
 	 * @return mixed
 	 */
 	public function get($key, $default = null);
-	
+
 	/**
 	 * 设置配置
 	 *
@@ -35,14 +35,14 @@ interface ConfigRepository extends \ArrayAccess{
 	 * @return mixed
 	 */
 	public function set($key, $value, $isMerge = true);
-	
+
 	/**
 	 * 保存配置
 	 *
 	 * @return bool
 	 */
 	public function save();
-	
+
 	/**
 	 * 获取所有的配置
 	 *

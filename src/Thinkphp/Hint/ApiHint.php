@@ -12,14 +12,14 @@ use think\Response;
 use Xin\Contracts\Hint\Hint as HintContract;
 
 class ApiHint implements HintContract{
-	
+
 	use HintHelper;
-	
+
 	/**
 	 * @var \think\Request
 	 */
 	protected $request;
-	
+
 	/**
 	 * ApiHint constructor.
 	 *
@@ -28,14 +28,14 @@ class ApiHint implements HintContract{
 	public function __construct(Request $request){
 		$this->request = $request;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function result($data = [], array $extend = []){
 		return $this->success('OK', null, $data, $extend);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -44,10 +44,10 @@ class ApiHint implements HintContract{
 			$url = $this->resolveSuccessUrl($url);
 			$extend['url'] = $url;
 		}
-		
+
 		return $this->resolve(1, $msg, $data, $extend);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -57,10 +57,10 @@ class ApiHint implements HintContract{
 			$msg = $msg->getMessage();
 			$extend = is_array($code) ? $code : [];
 		}
-		
+
 		return $this->resolve($code, $msg, null, $extend);
 	}
-	
+
 	/**
 	 * make Response
 	 *
@@ -78,5 +78,5 @@ class ApiHint implements HintContract{
 			'time' => request()->time(),
 		], $extend), 'json');
 	}
-	
+
 }

@@ -10,7 +10,7 @@ namespace Xin\Thinkphp\Saas\Middleware;
 use Xin\Support\Fluent;
 
 class SetDefaultApp{
-	
+
 	/**
 	 * api模式下检查当前应用是否合法
 	 *
@@ -25,7 +25,7 @@ class SetDefaultApp{
 				'title' => '默认应用',
 			]);
 		});
-		
+
 		return $next($request);
 	}
 }

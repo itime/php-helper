@@ -19,12 +19,12 @@ use Xin\Thinkphp\Http\Requestable;
  * @property-read \think\Route               route
  */
 abstract class ServiceProvider{
-	
+
 	/**
 	 * @var \think\App
 	 */
 	protected $app;
-	
+
 	/**
 	 * Service constructor.
 	 *
@@ -33,17 +33,17 @@ abstract class ServiceProvider{
 	public function __construct(App $app = null){
 		$this->app = $app ?: Container::get('app');
 	}
-	
+
 	/**
 	 * 注册服务
 	 */
 	public function register(){ }
-	
+
 	/**
 	 * 启动
 	 */
 	public function boot(){ }
-	
+
 	/**
 	 * @param string $name
 	 * @return mixed

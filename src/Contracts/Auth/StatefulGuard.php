@@ -8,7 +8,7 @@
 namespace Xin\Contracts\Auth;
 
 interface StatefulGuard extends Guard{
-	
+
 	/**
 	 * 登录
 	 *
@@ -16,7 +16,7 @@ interface StatefulGuard extends Guard{
 	 * @return \Xin\Contracts\Auth\Guard
 	 */
 	public function login($user);
-	
+
 	/**
 	 * 根据ID登录
 	 *
@@ -24,7 +24,7 @@ interface StatefulGuard extends Guard{
 	 * @return \Xin\Contracts\Auth\Guard
 	 */
 	public function loginUsingId($id);
-	
+
 	/**
 	 * 根据属性登录
 	 *
@@ -38,7 +38,7 @@ interface StatefulGuard extends Guard{
 		\Closure $notExistCallback = null,
 		\Closure $preCheckCallback = null
 	);
-	
+
 	/**
 	 * 退出登录
 	 *

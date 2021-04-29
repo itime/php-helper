@@ -10,14 +10,14 @@ namespace Xin\Hint;
 use Xin\Contracts\Hint\Hint as HintContract;
 
 abstract class AbstractHint implements HintContract{
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function result($data = [], array $extend = []){
 		return $this->success('OK', null, $data, $extend);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -26,7 +26,7 @@ abstract class AbstractHint implements HintContract{
 			'tips_type' => 'alert',
 		], $extend));
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -36,7 +36,7 @@ abstract class AbstractHint implements HintContract{
 			$callback
 		);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -46,7 +46,7 @@ abstract class AbstractHint implements HintContract{
 			$callback
 		);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -56,7 +56,7 @@ abstract class AbstractHint implements HintContract{
 			$callback
 		);
 	}
-	
+
 	/**
 	 * 直接输出
 	 *

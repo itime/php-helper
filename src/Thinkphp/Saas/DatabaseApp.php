@@ -15,23 +15,23 @@ use Xin\Support\Str;
  * @property-read string access_key
  */
 class DatabaseApp extends Model{
-	
+
 	use AppPluginable;
-	
+
 	const TITLE = '应用';
-	
+
 	/**
 	 * @var string[]
 	 */
 	protected $readonly = [
 		'access_id',
 	];
-	
+
 	/**
 	 * @var string
 	 */
 	protected $name = 'app';
-	
+
 	/**
 	 * 插入数据
 	 *

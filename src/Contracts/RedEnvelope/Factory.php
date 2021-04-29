@@ -8,7 +8,7 @@
 namespace Xin\Contracts\RedEnvelope;
 
 interface Factory{
-	
+
 	/**
 	 * 生成红包金额记录
 	 *
@@ -16,7 +16,7 @@ interface Factory{
 	 * @return array
 	 */
 	public function generate(array $options);
-	
+
 	/**
 	 * 红包生成器是否存在
 	 *
@@ -24,7 +24,7 @@ interface Factory{
 	 * @return bool
 	 */
 	public function hasGenerator($type);
-	
+
 	/**
 	 * 领取红包
 	 *
@@ -32,7 +32,7 @@ interface Factory{
 	 * @return array
 	 */
 	public function receive(array $options);
-	
+
 	/**
 	 * 红包领取器是否存在
 	 *

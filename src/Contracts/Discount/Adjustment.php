@@ -11,11 +11,11 @@ namespace Xin\Contracts\Discount;
  * Interface AdjustmentContract.
  */
 interface Adjustment{
-	
+
 	const ORDER_DISCOUNT_ADJUSTMENT = 'order_discount';
-	
+
 	const ORDER_ITEM_DISCOUNT_ADJUSTMENT = 'order_item_discount';
-	
+
 	/**
 	 * create a adjustment.
 	 *

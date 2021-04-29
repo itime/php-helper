@@ -8,7 +8,7 @@
 namespace Xin\Contracts\Saas;
 
 interface Factory{
-	
+
 	/**
 	 * 获取应用信息
 	 *
@@ -17,14 +17,14 @@ interface Factory{
 	 * @return mixed
 	 */
 	public function getAppInfo($field = null, $default = null);
-	
+
 	/**
 	 * 获取应用id
 	 *
 	 * @return int
 	 */
 	public function getAppId();
-	
+
 	/**
 	 * 暂存应用信息
 	 *
@@ -32,7 +32,7 @@ interface Factory{
 	 * @return bool
 	 */
 	public function temporaryAppInfo($info);
-	
+
 	/**
 	 * 获取config实例
 	 *

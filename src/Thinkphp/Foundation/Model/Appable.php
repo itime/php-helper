@@ -12,7 +12,7 @@ namespace Xin\Thinkphp\Foundation\Model;
  * @mixin \think\Model
  */
 trait Appable{
-	
+
 	/**
 	 * 开启 app_id 全局约束
 	 *
@@ -22,10 +22,10 @@ trait Appable{
 		if(!in_array('app', $this->globalScope)){
 			$this->globalScope[] = 'app';
 		}
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * 关闭 app_id 全局约束
 	 *
@@ -33,14 +33,14 @@ trait Appable{
 	 */
 	public function withoutGlobalAppScope(){
 		$index = array_search('app_id', $this->globalScope);
-		
+
 		if($index !== false){
 			array_splice($this->globalScope, $index, 1);
 		}
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * App 作用域
 	 *
@@ -52,10 +52,10 @@ trait Appable{
 		if(!$appId){
 			$appId = AppContext::getInstance()->getGlobalAppId();
 		}
-		
+
 		$query->where('app_id', $appId);
 	}
-	
+
 	/**
 	 * @param \think\Model $model
 	 */

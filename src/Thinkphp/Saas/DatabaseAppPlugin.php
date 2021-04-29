@@ -11,19 +11,19 @@ use think\model\concern\SoftDelete;
 use think\model\Pivot;
 
 class DatabaseAppPlugin extends Pivot{
-	
+
 	use SoftDelete;
-	
+
 	/**
 	 * @var int
 	 */
 	protected $defaultSoftDelete = 0;
-	
+
 	/**
 	 * @var string
 	 */
 	protected $name = 'app_plugin';
-	
+
 	/**
 	 * @var bool
 	 */

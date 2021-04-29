@@ -7,14 +7,14 @@
 namespace Xin\Auth\Events;
 
 class Verified{
-	
+
 	/**
 	 * The verified user.
 	 *
 	 * @var \Xin\Contracts\Auth\MustVerifyEmail
 	 */
 	public $user;
-	
+
 	/**
 	 * Create a new event instance.
 	 *

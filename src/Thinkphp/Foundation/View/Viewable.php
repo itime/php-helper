@@ -11,7 +11,7 @@ namespace Xin\Thinkphp\Foundation\View;
  * @property-read \think\App app
  */
 trait Viewable{
-	
+
 	/**
 	 * 模板变量赋值
 	 *
@@ -21,10 +21,10 @@ trait Viewable{
 	 */
 	protected function assign($name, $value = null){
 		$this->app['view']->assign($name, $value);
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * 解析和获取模板内容 用于输出
 	 *
@@ -37,7 +37,7 @@ trait Viewable{
 	protected function fetch(string $template = '', array $vars = []){
 		return $this->app['view']->fetch($template, $vars);
 	}
-	
+
 	/**
 	 * 解析和获取模板内容 用于输出
 	 *

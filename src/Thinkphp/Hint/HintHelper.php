@@ -15,7 +15,7 @@ use think\exception\HttpResponseException;
  * @mixin \Xin\Contracts\Hint\Hint
  */
 trait HintHelper{
-	
+
 	/**
 	 * @param string $url
 	 * @return mixed|string
@@ -26,10 +26,10 @@ trait HintHelper{
 		}elseif($url){
 			$url = $this->resolveUrl($url);
 		}
-		
+
 		return $url;
 	}
-	
+
 	/**
 	 * @param string $url
 	 * @return mixed|string
@@ -42,7 +42,7 @@ trait HintHelper{
 		}
 		return $url;
 	}
-	
+
 	/**
 	 * 解决url问题
 	 *
@@ -52,7 +52,7 @@ trait HintHelper{
 	private function resolveUrl($url){
 		return (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : (string)url($url ?: '');
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -62,7 +62,7 @@ trait HintHelper{
 			$callback
 		);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -72,7 +72,7 @@ trait HintHelper{
 			$callback
 		);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -82,7 +82,7 @@ trait HintHelper{
 			$callback
 		);
 	}
-	
+
 	/**
 	 * 直接输出
 	 *
@@ -93,10 +93,10 @@ trait HintHelper{
 		if(is_callable($callback)){
 			call_user_func($callback, $response);
 		}
-		
+
 		throw new HttpResponseException($response);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */

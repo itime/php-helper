@@ -8,14 +8,14 @@
 namespace Xin\Contracts\Menu;
 
 interface Repository{
-	
+
 	/**
 	 * 获取所有菜单
 	 *
 	 * @return mixed
 	 */
 	public function all();
-	
+
 	/**
 	 * 获取菜单
 	 *
@@ -23,7 +23,7 @@ interface Repository{
 	 * @return mixed
 	 */
 	public function get($user);
-	
+
 	/**
 	 * 写入一组菜单
 	 *
@@ -32,12 +32,12 @@ interface Repository{
 	 * @return bool
 	 */
 	public function puts($menus, $append = []);
-	
+
 	/**
 	 * 移除菜单
 	 *
 	 * @param mixed $condition
 	 */
 	public function forget($condition);
-	
+
 }

@@ -11,7 +11,7 @@ namespace Xin\Contracts\Discount;
  * Interface RuleCheckerContract.
  */
 interface RuleChecker{
-	
+
 	/**
 	 * @param Subject  $subject
 	 * @param array    $configuration

@@ -11,7 +11,7 @@ namespace Xin\Contracts\Discount;
  * Interface DiscountActionContract.
  */
 interface Action{
-	
+
 	/**
 	 * @param Subject  $subject
 	 * @param array    $configuration
@@ -19,7 +19,7 @@ interface Action{
 	 * @return mixed
 	 */
 	public function execute(Subject $subject, array $configuration, Discount $discount);
-	
+
 	/**
 	 * @param Subject  $subject
 	 * @param array    $configuration

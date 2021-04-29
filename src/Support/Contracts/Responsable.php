@@ -8,7 +8,7 @@
 namespace Xin\Support\Contracts;
 
 interface Responsable{
-	
+
 	/**
 	 * Create an HTTP response that represents the object.
 	 *

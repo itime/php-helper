@@ -8,7 +8,7 @@
 namespace Xin\Thinkphp\Foundation\Auth;
 
 trait AuthenticatesFields{
-	
+
 	/**
 	 * Get the auth username to be used by the controller.
 	 *
@@ -17,7 +17,7 @@ trait AuthenticatesFields{
 	protected function username(){
 		return 'username';
 	}
-	
+
 	/**
 	 * Get the auth password to be used by the controller.
 	 *
@@ -26,7 +26,7 @@ trait AuthenticatesFields{
 	protected function password(){
 		return 'password';
 	}
-	
+
 	/**
 	 * Get the auth password to be used by the controller.
 	 *

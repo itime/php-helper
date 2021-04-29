@@ -23,7 +23,7 @@ use Xin\Support\Manager;
  * @mixin \Xin\Filesystem\Filesystem
  */
 class FilesystemManager extends Manager{
-	
+
 	/**
 	 * @param null|string $name
 	 * @return \Xin\Filesystem\Filesystem
@@ -31,7 +31,7 @@ class FilesystemManager extends Manager{
 	public function disk($name = null){
 		return $this->driver($name);
 	}
-	
+
 	/**
 	 * 获取缓存配置
 	 *
@@ -44,10 +44,10 @@ class FilesystemManager extends Manager{
 		if(!is_null($name)){
 			return $this->app->config->get('filesystem.'.$name, $default);
 		}
-		
+
 		return $this->app->config->get('filesystem');
 	}
-	
+
 	/**
 	 * 获取磁盘配置
 	 *
@@ -60,10 +60,10 @@ class FilesystemManager extends Manager{
 		if($config = $this->getConfig("disks.{$disk}")){
 			return Arr::get($config, $name, $default);
 		}
-		
+
 		throw new \InvalidArgumentException("Disk [$disk] not found.");
 	}
-	
+
 	/**
 	 * @param string $name
 	 * @return array|mixed|string
@@ -71,7 +71,7 @@ class FilesystemManager extends Manager{
 	protected function resolveType($name){
 		return $this->getDiskConfig($name, 'type', 'local');
 	}
-	
+
 	/**
 	 * @param string $name
 	 * @return array|mixed|string
@@ -79,7 +79,7 @@ class FilesystemManager extends Manager{
 	protected function resolveConfig($name){
 		return $this->getDiskConfig($name);
 	}
-	
+
 	/**
 	 * 默认驱动
 	 *
@@ -88,7 +88,7 @@ class FilesystemManager extends Manager{
 	public function getDefaultDriver(){
 		return $this->getConfig('default');
 	}
-	
+
 	/**
 	 * 保存文件
 	 *
@@ -101,7 +101,7 @@ class FilesystemManager extends Manager{
 	public function putFile(string $path, File $file, $rule = null, array $options = []){
 		return $this->putFileAs($path, $file, $file->hashName($rule), $options);
 	}
-	
+
 	/**
 	 * 指定文件名保存文件
 	 *
@@ -114,16 +114,16 @@ class FilesystemManager extends Manager{
 	public function putFileAs(string $path, File $file, string $name, array $options = []){
 		$stream = fopen($file->getRealPath(), 'r');
 		$path = trim($path.'/'.$name, '/');
-		
+
 		$result = $this->putStream($path, $stream, $options);
-		
+
 		if(is_resource($stream)){
 			fclose($stream);
 		}
-		
+
 		return $result ? $path : false;
 	}
-	
+
 	/**
 	 * 获取公开路径
 	 *
@@ -136,7 +136,7 @@ class FilesystemManager extends Manager{
 		$domain = $this->getDiskConfig($disk, 'url');
 		return $domain.'/'.str_replace("\\", "/", $savePath);
 	}
-	
+
 	/**
 	 * 本地驱动器
 	 *
@@ -146,7 +146,7 @@ class FilesystemManager extends Manager{
 	protected function createLocalDriver(array $config){
 		return $this->app->make(Local::class, [$config]);
 	}
-	
+
 	/**
 	 * 七牛驱动器
 	 *
@@ -159,7 +159,7 @@ class FilesystemManager extends Manager{
 			new Filesystem(new Qiniu($config))
 		);
 	}
-	
+
 	/**
 	 * 阿里云OSS驱动器
 	 *
@@ -172,7 +172,7 @@ class FilesystemManager extends Manager{
 			new Filesystem(new Aliyun($config))
 		);
 	}
-	
+
 	/**
 	 * 腾讯云COS驱动器
 	 *

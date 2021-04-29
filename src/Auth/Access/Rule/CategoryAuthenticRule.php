@@ -8,12 +8,12 @@
 namespace Xin\Auth\Access\Rule;
 
 class CategoryAuthenticRule extends AuthenticRule{
-	
+
 	/**
 	 * 规则方案
 	 */
 	const SCHEME_NAME = 'category';
-	
+
 	/**
 	 * CategoryAuthenticRule constructor.
 	 *

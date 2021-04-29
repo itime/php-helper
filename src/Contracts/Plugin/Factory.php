@@ -8,7 +8,7 @@
 namespace Xin\Contracts\Plugin;
 
 interface Factory{
-	
+
 	/**
 	 * 插件根路径
 	 *
@@ -16,14 +16,14 @@ interface Factory{
 	 * @return string
 	 */
 	public function rootPath($path = '');
-	
+
 	/**
 	 * 插件列表
 	 *
 	 * @return \Xin\Contracts\Plugin\PlugLazyCollection
 	 */
 	public function lists();
-	
+
 	/**
 	 * 获取插件目录
 	 *
@@ -31,7 +31,7 @@ interface Factory{
 	 * @return string
 	 */
 	public function pluginPath($plugin);
-	
+
 	/**
 	 * 插件是否存在
 	 *
@@ -39,7 +39,7 @@ interface Factory{
 	 * @return bool
 	 */
 	public function has($plugin);
-	
+
 	/**
 	 * 获取插件
 	 *
@@ -48,7 +48,7 @@ interface Factory{
 	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
 	public function plugin($plugin);
-	
+
 	/**
 	 * 获取插件信息
 	 *
@@ -57,7 +57,7 @@ interface Factory{
 	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
 	public function pluginInfo($plugin);
-	
+
 	/**
 	 * 安装插件
 	 *
@@ -66,7 +66,7 @@ interface Factory{
 	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
 	public function installPlugin($plugin);
-	
+
 	/**
 	 * 卸载插件
 	 *
@@ -75,14 +75,14 @@ interface Factory{
 	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
 	public function uninstallPlugin($plugin);
-	
+
 	/**
 	 * 启动相关插件
 	 *
 	 * @param array $plugins
 	 */
 	public function pluginBoot(array $plugins = []);
-	
+
 	/**
 	 * 获取插件下的类路径
 	 *
@@ -91,7 +91,7 @@ interface Factory{
 	 * @return string
 	 */
 	public function pluginClass($plugin, $class);
-	
+
 	/**
 	 * 获取插件下的控制器路径
 	 *
@@ -101,7 +101,7 @@ interface Factory{
 	 * @return string
 	 */
 	public function controllerClass($plugin, $controller, $layer = 'controller');
-	
+
 	/**
 	 * 获取配置信息
 	 *
@@ -110,5 +110,5 @@ interface Factory{
 	 * @return mixed
 	 */
 	public function config($name, $default = null);
-	
+
 }

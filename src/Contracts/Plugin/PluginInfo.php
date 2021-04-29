@@ -7,21 +7,21 @@
 namespace Xin\Contracts\Plugin;
 
 interface PluginInfo{
-	
+
 	/**
 	 * 获取插件名字
 	 *
 	 * @return string
 	 */
 	public function getName();
-	
+
 	/**
 	 * 获取插件信息
 	 *
 	 * @return array
 	 */
 	public function getInfo();
-	
+
 	/**
 	 * 获取配置模板
 	 *
@@ -29,14 +29,14 @@ interface PluginInfo{
 	 * @return array
 	 */
 	public function getConfigTemplate($config = []);
-	
+
 	/**
 	 * 获取配置字段类型
 	 *
 	 * @return array
 	 */
 	public function getConfigTypeList();
-	
+
 	/**
 	 * 当前插件路径
 	 *
@@ -44,7 +44,7 @@ interface PluginInfo{
 	 * @return string
 	 */
 	public function path($path = '');
-	
+
 	/**
 	 * 获取插件实例
 	 *

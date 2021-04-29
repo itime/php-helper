@@ -8,7 +8,7 @@
 namespace Xin\Contracts\Stat;
 
 interface StatProvider{
-	
+
 	/**
 	 * 获取缓存 key
 	 *
@@ -17,7 +17,7 @@ interface StatProvider{
 	 * @return string
 	 */
 	public function getCacheKey($name, array $options = []);
-	
+
 	/**
 	 * 根据时间获取统计ID
 	 *
@@ -27,7 +27,7 @@ interface StatProvider{
 	 * @return mixed
 	 */
 	public function getIdByTime($name, $time, array $options = []);
-	
+
 	/**
 	 * 根据时间获取统计的值
 	 *
@@ -37,7 +37,7 @@ interface StatProvider{
 	 * @return int
 	 */
 	public function getValueByTime($name, $time = null, array $options = []);
-	
+
 	/**
 	 * 根据ID获取统计的值
 	 *
@@ -46,7 +46,7 @@ interface StatProvider{
 	 * @return int
 	 */
 	public function getValueById($id, array $options = []);
-	
+
 	/**
 	 * 获取统计总值
 	 *
@@ -55,7 +55,7 @@ interface StatProvider{
 	 * @return int
 	 */
 	public function getTotal($name, array $options = []);
-	
+
 	/**
 	 * 插入数据
 	 *
@@ -64,7 +64,7 @@ interface StatProvider{
 	 * @return int
 	 */
 	public function insert($data, array $options = []);
-	
+
 	/**
 	 * 更新计数器
 	 *
@@ -74,7 +74,7 @@ interface StatProvider{
 	 * @return int
 	 */
 	public function incById($id, $step = 1, array $options = []);
-	
+
 	/**
 	 * 根据实际获取统计IP数据
 	 *
@@ -84,7 +84,7 @@ interface StatProvider{
 	 * @return int
 	 */
 	public function getIPIdByTime($ip, $time, array $options = []);
-	
+
 	/**
 	 * 插入IP访问记录数据
 	 *

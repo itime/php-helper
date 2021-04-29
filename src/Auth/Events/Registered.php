@@ -7,14 +7,14 @@
 namespace Xin\Auth\Events;
 
 class Registered{
-	
+
 	/**
 	 * The authenticated user.
 	 *
 	 * @var mixed
 	 */
 	public $user;
-	
+
 	/**
 	 * Create a new event instance.
 	 *

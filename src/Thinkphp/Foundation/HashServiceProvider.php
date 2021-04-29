@@ -13,7 +13,7 @@ use Xin\Support\Hasher;
  * Class HintServiceProvider
  */
 class HashServiceProvider extends ServiceProvider{
-	
+
 	/**
 	 * 启动器
 	 */
@@ -22,5 +22,5 @@ class HashServiceProvider extends ServiceProvider{
 			return new Hasher();
 		});
 	}
-	
+
 }

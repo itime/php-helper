@@ -8,7 +8,7 @@
 namespace Xin\Contracts\Plugin;
 
 interface Plugin{
-	
+
 	/**
 	 * 插件安装
 	 *
@@ -17,7 +17,7 @@ interface Plugin{
 	 * @return boolean
 	 */
 	public function install(PluginInfo $pluginInfo, Factory $factory);
-	
+
 	/**
 	 * 插件卸载
 	 *
@@ -26,7 +26,7 @@ interface Plugin{
 	 * @return boolean
 	 */
 	public function uninstall(PluginInfo $pluginInfo, Factory $factory);
-	
+
 	/**
 	 * 启动插件
 	 *

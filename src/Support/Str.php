@@ -12,28 +12,28 @@ namespace Xin\Support;
  * 字符串工具类
  */
 final class Str{
-	
+
 	/**
 	 * 驼峰转下划线缓存
 	 *
 	 * @var array
 	 */
 	protected static $snakeCache = [];
-	
+
 	/**
 	 * 下划线转驼峰(首字母小写) 缓存
 	 *
 	 * @var array
 	 */
 	protected static $camelCache = [];
-	
+
 	/**
 	 * 下划线转驼峰(首字母大写)
 	 *
 	 * @var array
 	 */
 	protected static $studlyCache = [];
-	
+
 	/**
 	 * 检查字符串中是否包含某些字符串
 	 *
@@ -49,7 +49,7 @@ final class Str{
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 检查字符串是否以某些字符串结尾
 	 *
@@ -65,7 +65,7 @@ final class Str{
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 字符串截取，支持中文和其他编码
 	 *
@@ -95,7 +95,7 @@ final class Str{
 		}
 		return $slice;
 	}
-	
+
 	/**
 	 * 检查字符串是否以某些字符串开头
 	 *
@@ -111,7 +111,7 @@ final class Str{
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 字符串转小写
 	 *
@@ -121,7 +121,7 @@ final class Str{
 	public static function lower($value){
 		return mb_strtolower($value, 'UTF-8');
 	}
-	
+
 	/**
 	 * 字符串转大写
 	 *
@@ -131,7 +131,7 @@ final class Str{
 	public static function upper($value){
 		return mb_strtoupper($value, 'UTF-8');
 	}
-	
+
 	/**
 	 * 获取字符串的长度
 	 *
@@ -141,7 +141,7 @@ final class Str{
 	public static function length($value){
 		return mb_strlen($value);
 	}
-	
+
 	/**
 	 * 驼峰转下划线
 	 *
@@ -152,27 +152,27 @@ final class Str{
 	 */
 	public static function snake($value, $delimiter = '_', $isCache = true){
 		$key = $value;
-		
+
 		if(isset(self::$snakeCache[$key][$delimiter])){
 			return self::$snakeCache[$key][$delimiter];
 		}
-		
+
 		if(!ctype_lower($value)){
 			$value = preg_replace('/\s+/u', '', $value);
-			
+
 			$value = self::lower(preg_replace('/(.)(?=[A-Z])/u', '$1'.$delimiter, $value));
 		}
-		
+
 		return $isCache ? self::$snakeCache[$key][$delimiter] = $value : $value;
 	}
-	
+
 	/**
 	 * 清除驼峰转下划线缓存
 	 */
 	public static function clearSnakeCache(){
 		self::$snakeCache = [];
 	}
-	
+
 	/**
 	 * 下划线转驼峰(首字母小写)
 	 *
@@ -184,18 +184,18 @@ final class Str{
 		if(isset(self::$camelCache[$value])){
 			return self::$camelCache[$value];
 		}
-		
+
 		$value = lcfirst(self::studly($value));
 		return $isCache ? self::$camelCache[$value] = $value : $value;
 	}
-	
+
 	/**
 	 * 清除下划线转驼峰(首字母小写)缓存
 	 */
 	public static function clearCamelCache(){
 		self::$snakeCache = [];
 	}
-	
+
 	/**
 	 * 下划线转驼峰(首字母大写)
 	 *
@@ -205,24 +205,24 @@ final class Str{
 	 */
 	public static function studly($value, $isCache = true){
 		$key = $value;
-		
+
 		if(isset(self::$studlyCache[$key])){
 			return self::$studlyCache[$key];
 		}
-		
+
 		$value = ucwords(str_replace(['-', '_'], ' ', $value));
 		$value = str_replace(' ', '', $value);
-		
+
 		return $isCache ? self::$studlyCache[$key] = $value : $value;
 	}
-	
+
 	/**
 	 * 清除下划线转驼峰(首字母大写)缓存
 	 */
 	public static function clearStudlyCache(){
 		self::$snakeCache = [];
 	}
-	
+
 	/**
 	 * 转为首字母大写的标题格式
 	 *
@@ -232,7 +232,7 @@ final class Str{
 	public static function title($value){
 		return mb_convert_case($value, MB_CASE_TITLE, 'UTF-8');
 	}
-	
+
 	/**
 	 * 实现多种字符编码方式
 	 *
@@ -255,7 +255,7 @@ final class Str{
 		}
 		return $output;
 	}
-	
+
 	/**
 	 * 实现多种字符解码方式
 	 *
@@ -276,7 +276,7 @@ final class Str{
 		}
 		return $output;
 	}
-	
+
 	/**
 	 * 获取随机字符串
 	 *
@@ -290,7 +290,7 @@ final class Str{
 			1 => 'abcdefghijklmnopqrstuvwxyz',
 			2 => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
 		];
-		
+
 		$poolStr = '';
 		if(0 == $type) $poolStr = $pool[0];
 		if(1 == $type) $poolStr = $pool[1];
@@ -298,10 +298,10 @@ final class Str{
 		if(3 == $type) $poolStr = $pool[0].$pool[1];
 		if(4 == $type) $poolStr = $pool[1].$pool[2];
 		if(5 == $type) $poolStr = $pool[0].$pool[1].$pool[2];
-		
+
 		return self::substr(str_shuffle(str_repeat($poolStr, $length)), 0, $length);
 	}
-	
+
 	/**
 	 * 截取字符串
 	 *
@@ -313,7 +313,7 @@ final class Str{
 	public static function substr($string, $start, $length = null){
 		return mb_substr($string, $start, $length, 'UTF-8');
 	}
-	
+
 	/**
 	 * 生成随机字符串
 	 *
@@ -323,7 +323,7 @@ final class Str{
 	public static function nonceHash32($factor = ''){
 		return md5(uniqid(md5(microtime(true).$factor), true));
 	}
-	
+
 	/**
 	 * 创建订单编号
 	 *
@@ -334,15 +334,15 @@ final class Str{
 		$datetime = date('YmdHis');
 		$microtime = explode(' ', microtime());
 		$microtime = intval($microtime[0] ? $microtime[0] * 100000 : 100000);
-		
+
 		$nonceStr = substr(uniqid(), 7, 13);
 		$nonceStr = str_split($nonceStr, 1);
 		$nonceStr = array_map('ord', $nonceStr);
 		$nonceStr = substr(implode(null, $nonceStr), -8);
-		
+
 		return $prefix.$datetime.$microtime.$nonceStr;
 	}
-	
+
 	/**
 	 * 解析Url Query
 	 *
@@ -380,7 +380,7 @@ final class Str{
 		//		}
 		//		return $result;
 	}
-	
+
 	/**
 	 * 把数组所有元素按照“参数=参数值”的模式用“&”字符拼接成字符串
 	 *
@@ -392,11 +392,11 @@ final class Str{
 		if(!is_callable($handleFunc)) $handleFunc = function($key, $val){
 			$type = gettype($val);
 			if($type == 'object' || $type == 'array') return '';
-			
+
 			$val = urlencode($val);
 			return $key.'='.$val;
 		};
-		
+
 		$result = '';
 		$i = 0;
 		foreach($params as $key => $val){
@@ -407,7 +407,7 @@ final class Str{
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * 安全处理-字符串或数组转数组
 	 *
@@ -421,7 +421,7 @@ final class Str{
 		if(!is_array($value)){
 			$value = is_string($value) ? explode($delimiter, $value) : [$value];
 		}
-		
+
 		//		foreach($value as $k => &$v){
 		//			if('intval' == $format){
 		//				$v = intval($v);
@@ -434,9 +434,9 @@ final class Str{
 		//			}
 		//		}
 		//		unset($v);
-		
+
 		$value = array_map($format, $value);
-		
+
 		if($filter !== false){
 			if($filter === true){
 				$value = array_filter($value);
@@ -444,10 +444,10 @@ final class Str{
 				$value = array_filter($value, $filter);
 			}
 		}
-		
+
 		return array_values($value);
 	}
-	
+
 	/**
 	 * 安全处理-数组转字符串
 	 *
@@ -459,14 +459,14 @@ final class Str{
 	public static function implode($value, $format = 'intval', $delimiter = ','){
 		//先转换为数组，进行安全过滤
 		$value = self::explode($value, $format, $delimiter);
-		
+
 		//去除重复
 		$value = array_unique($value);
-		
+
 		//再次转换为字符串
 		return implode(",", $value);
 	}
-	
+
 	/**
 	 * Determine if a given string matches a given pattern.
 	 *
@@ -476,11 +476,11 @@ final class Str{
 	 */
 	public static function is($pattern, $value){
 		$patterns = Arr::wrap($pattern);
-		
+
 		if(empty($patterns)){
 			return false;
 		}
-		
+
 		foreach($patterns as $pattern){
 			// If the given value is an exact match we can of course return true right
 			// from the beginning. Otherwise, we will translate asterisks and do an
@@ -488,19 +488,19 @@ final class Str{
 			if($pattern == $value){
 				return true;
 			}
-			
+
 			$pattern = preg_quote($pattern, '#');
-			
+
 			// Asterisks are translated into zero-or-more regular expression wildcards
 			// to make it convenient to check if the strings starts with the given
 			// pattern such as "library/*", making any string check convenient.
 			$pattern = str_replace('\*', '.*', $pattern);
-			
+
 			if(preg_match('#^'.$pattern.'\z#u', $value) === 1){
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 }

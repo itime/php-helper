@@ -19,9 +19,9 @@ use think\Request;
  * @property string uploadType
  */
 trait UploadFile{
-	
+
 	use UploadFinder, UploadLocal, UploadToken;
-	
+
 	/**
 	 * 要上传的文件类型
 	 *
@@ -32,10 +32,10 @@ trait UploadFile{
 		if(property_exists($this, 'uploadType')){
 			return $this->uploadType;
 		}
-		
+
 		return $request->request('type', 'image', 'trim');
 	}
-	
+
 	/**
 	 * 使用的驱动器
 	 *
@@ -45,10 +45,10 @@ trait UploadFile{
 		if(property_exists($this, 'disk')){
 			return $this->disk;
 		}
-		
+
 		return config('filesystem.default');
 	}
-	
+
 	/**
 	 * 保存路径
 	 *
@@ -59,10 +59,10 @@ trait UploadFile{
 		if(property_exists($this, 'savePath')){
 			return $this->savePath;
 		}
-		
+
 		return $type;
 	}
-	
+
 	/**
 	 * 生成文件规则
 	 *
@@ -72,10 +72,10 @@ trait UploadFile{
 		if(property_exists($this, 'saveRule')){
 			return $this->saveRule;
 		}
-		
+
 		return "md5";
 	}
-	
+
 	/**
 	 * 获取上传文件名
 	 *
@@ -85,7 +85,7 @@ trait UploadFile{
 		if(property_exists($this, 'uploadName')){
 			return $this->uploadName;
 		}
-		
+
 		return "file";
 	}
 }

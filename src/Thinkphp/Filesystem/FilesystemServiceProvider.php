@@ -11,7 +11,7 @@ use Xin\Filesystem\FilesystemInterface;
 use Xin\Thinkphp\Foundation\ServiceProvider;
 
 class FilesystemServiceProvider extends ServiceProvider{
-	
+
 	/**
 	 * 注册对象存储提供者
 	 */

@@ -8,7 +8,7 @@
 namespace Xin\Contracts\Plugin;
 
 interface PlugLazyCollection{
-	
+
 	/**
 	 * 获取插件
 	 *
@@ -17,7 +17,7 @@ interface PlugLazyCollection{
 	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
 	public function plugin($plugin);
-	
+
 	/**
 	 * 获取列表
 	 *

@@ -19,9 +19,9 @@ if(!function_exists('tap')){
 		if(is_null($callback)){
 			return new HigherOrderTapProxy($value);
 		}
-		
+
 		$callback($value);
-		
+
 		return $value;
 	}
 }
@@ -49,19 +49,19 @@ if(!function_exists('blank')){
 		if(is_null($value)){
 			return true;
 		}
-		
+
 		if(is_string($value)){
 			return trim($value) === '';
 		}
-		
+
 		if(is_numeric($value) || is_bool($value)){
 			return false;
 		}
-		
+
 		if($value instanceof Countable){
 			return count($value) === 0;
 		}
-		
+
 		return empty($value);
 	}
 }
@@ -90,15 +90,15 @@ if(!function_exists('object_get')){
 		if(is_null($key) || trim($key) == ''){
 			return $object;
 		}
-		
+
 		foreach(explode('.', $key) as $segment){
 			if(!is_object($object) || !isset($object->{$segment})){
 				return value($default);
 			}
-			
+
 			$object = $object->{$segment};
 		}
-		
+
 		return $object;
 	}
 }
@@ -151,7 +151,7 @@ if(!function_exists('get_class_const_list')){
 			return $ref->getConstants();
 		}catch(\ReflectionException $e){
 		}
-		
+
 		return false;
 	}
 }
@@ -170,11 +170,11 @@ if(!function_exists('get_const_value')){
 			if(!$ref->hasConstant($name)){
 				return null;
 			}
-			
+
 			return $ref->getConstant($name);
 		}catch(\ReflectionException $e){
 		}
-		
+
 		return false;
 	}
 }
@@ -193,7 +193,7 @@ if(!function_exists('const_exist')){
 			return $ref->hasConstant($name);
 		}catch(\ReflectionException $e){
 		}
-		
+
 		return false;
 	}
 }

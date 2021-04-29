@@ -11,12 +11,12 @@ use Xin\Contracts\Foundation\Payment as PaymentContract;
 use Yansongda\Pay\Pay;
 
 class Payment implements PaymentContract{
-	
+
 	/**
 	 * @var array
 	 */
 	protected $config = [];
-	
+
 	/**
 	 * Payment constructor.
 	 *
@@ -25,7 +25,7 @@ class Payment implements PaymentContract{
 	public function __construct(array $config){
 		$this->config = $config;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -33,15 +33,15 @@ class Payment implements PaymentContract{
 		if(!isset($this->config['wechat']) || empty($this->config['wechat'])){
 			throw new PaymentNotConfigureException("payment config 'wechat' not defined.");
 		}
-		
+
 		$config = $this->config['alipay'];
-		
+
 		return $this->initApplication(
 			Pay::wechat($config),
 			$options
 		);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -49,15 +49,15 @@ class Payment implements PaymentContract{
 		if(!isset($this->config['alipay']) || empty($this->config['alipay'])){
 			throw new PaymentNotConfigureException("payment config 'alipay' not defined.");
 		}
-		
+
 		$config = $this->config['alipay'];
-		
+
 		return $this->initApplication(
 			Pay::alipay($config),
 			$options
 		);
 	}
-	
+
 	/**
 	 * 初始化
 	 *

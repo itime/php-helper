@@ -15,12 +15,12 @@ use think\Model;
  * @property int   status
  */
 class DatabaseEvent extends Model{
-	
+
 	/**
 	 * @var string
 	 */
 	protected $name = 'event';
-	
+
 	/**
 	 * @var string[]
 	 */
@@ -35,12 +35,12 @@ class DatabaseEvent extends Model{
 		'update_time' => 'int',
 		'create_time' => 'int',
 	];
-	
+
 	/**
 	 * 缓存前缀
 	 */
 	const CACHE_PREFIX = 'event:';
-	
+
 	/**
 	 * @var array
 	 */
@@ -48,7 +48,7 @@ class DatabaseEvent extends Model{
 		'0' => '视图',
 		'1' => '控制器',
 	];
-	
+
 	/**
 	 * 获取类型说明
 	 *
@@ -58,7 +58,7 @@ class DatabaseEvent extends Model{
 		$type = $this->getData('type');
 		return self::$TYPE_TEXT_LIST[$type] ?? '';
 	}
-	
+
 	/**
 	 * 获取附件列表
 	 *
@@ -68,7 +68,7 @@ class DatabaseEvent extends Model{
 	public function getAddonsAttr($addons){
 		return empty($addons) ? [] : explode(",", $addons);
 	}
-	
+
 	/**
 	 * 设置附件列表
 	 *
@@ -78,7 +78,7 @@ class DatabaseEvent extends Model{
 	public function setAddonsAttr($addons){
 		return implode(",", $addons);
 	}
-	
+
 	/**
 	 * 数据写入之后
 	 *
@@ -97,7 +97,7 @@ class DatabaseEvent extends Model{
 			}
 		}
 	}
-	
+
 	/**
 	 * 数据删除之后
 	 *
@@ -106,7 +106,7 @@ class DatabaseEvent extends Model{
 	public static function onAfterDelete(self $event){
 		Cache::delete(self::CACHE_PREFIX.$event->name);
 	}
-	
+
 	/**
 	 * 获取事件列表
 	 *
@@ -123,10 +123,10 @@ class DatabaseEvent extends Model{
 			$names = is_array($names) ? $names : [$names];
 			$eventCollection = static::where('name', 'in', $names)->select();
 		}
-		
+
 		return $eventCollection;
 	}
-	
+
 	/**
 	 * 挂载插件
 	 *
@@ -138,7 +138,7 @@ class DatabaseEvent extends Model{
 	 */
 	public static function mountAddon($addon, $names){
 		$eventCollection = static::resolveList($names);
-		
+
 		/** @var static $event */
 		foreach($eventCollection as $event){
 			$addons = $event->addons;
@@ -150,7 +150,7 @@ class DatabaseEvent extends Model{
 			}
 		}
 	}
-	
+
 	/**
 	 * 取消挂载插件
 	 *
@@ -162,7 +162,7 @@ class DatabaseEvent extends Model{
 	 */
 	public static function unmountAddon($addon, $names = null){
 		$eventCollection = static::resolveList($names);
-		
+
 		/** @var static $event */
 		foreach($eventCollection as $event){
 			$addons = $event->addons;
@@ -175,7 +175,7 @@ class DatabaseEvent extends Model{
 			}
 		}
 	}
-	
+
 	/**
 	 * 自动更新事件缓存
 	 */
@@ -183,12 +183,12 @@ class DatabaseEvent extends Model{
 		if(Cache::get(self::CACHE_PREFIX)){
 			return;
 		}
-		
+
 		self::updateCache();
-		
+
 		Cache::set(self::CACHE_PREFIX, 1);
 	}
-	
+
 	/**
 	 * 更新数据缓存
 	 *
@@ -198,15 +198,15 @@ class DatabaseEvent extends Model{
 	 */
 	public static function updateCache(){
 		$eventCollection = static::where('status', 1)->select();
-		
+
 		/** @var static $event */
 		foreach($eventCollection as $event){
 			self::setCache($event);
 		}
-		
+
 		return $eventCollection;
 	}
-	
+
 	/**
 	 * 设置事件缓存
 	 *
@@ -215,13 +215,13 @@ class DatabaseEvent extends Model{
 	public static function setCache(self $event){
 		$addons = $event->status ? $event->addons : [];
 		$cacheKey = self::CACHE_PREFIX.$event->getData('name');
-		
+
 		Cache::set($cacheKey, [
 			'type'   => $event->getData('type'),
 			'addons' => $addons,
 		]);
 	}
-	
+
 	/**
 	 * 获取缓存数据
 	 *
@@ -231,7 +231,7 @@ class DatabaseEvent extends Model{
 	public static function getCache($name){
 		return Cache::get(self::CACHE_PREFIX.$name);
 	}
-	
+
 	/**
 	 * 根据事件类型获取事件后缀
 	 *
@@ -247,5 +247,5 @@ class DatabaseEvent extends Model{
 		}
 		return "";
 	}
-	
+
 }

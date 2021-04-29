@@ -7,7 +7,7 @@
 namespace Xin\Contracts\Bus;
 
 interface FavoriteRepository{
-	
+
 	/**
 	 * 根据用户和数据类型获取收藏数据
 	 *
@@ -17,7 +17,7 @@ interface FavoriteRepository{
 	 * @return mixed
 	 */
 	public function getByUserAndType($userId, $type, $limit = null);
-	
+
 	/**
 	 * 判断主题是否被收藏
 	 *
@@ -27,7 +27,7 @@ interface FavoriteRepository{
 	 * @return mixed
 	 */
 	public function isFavorite($userId, $favoriteId, $favoriteType);
-	
+
 	/**
 	 * 立即收藏
 	 *
@@ -37,7 +37,7 @@ interface FavoriteRepository{
 	 * @return mixed
 	 */
 	public function favorite($userId, $favoriteId, $favoriteType);
-	
+
 	/**
 	 * 删除收藏
 	 *

@@ -10,19 +10,19 @@ namespace Xin\Bus\Balance;
  * 余额变动场景枚举类
  */
 class SceneEnum{
-	
+
 	// 用户充值
 	const RECHARGE = 10;
-	
+
 	// 用户消费
 	const CONSUME = 20;
-	
+
 	// 管理员操作
 	const ADMIN = 30;
-	
+
 	// 订单退款
 	const REFUND = 40;
-	
+
 	/**
 	 * 获取订单类型值
 	 *
@@ -48,5 +48,5 @@ class SceneEnum{
 			],
 		];
 	}
-	
+
 }

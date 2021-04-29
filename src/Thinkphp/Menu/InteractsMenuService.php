@@ -11,7 +11,7 @@ use Xin\Menu\MenuManager;
 use Xin\Thinkphp\Facade\Auth;
 
 trait InteractsMenuService{
-	
+
 	/**
 	 * 菜单初始化
 	 *
@@ -28,20 +28,20 @@ trait InteractsMenuService{
 			'menu.show'   => function() use ($request){
 				/** @var \Xin\Menu\MenuManager $manager */
 				$manager = $this->app->menu;
-				
+
 				if(property_exists($this, 'shouldUserMenu')){
 					$manager->shouldUse($this->shouldUserMenu);
 				}
-				
+
 				[$menus, $breads] = $manager->generate($request->user(), [
 					'rule'             => $this->getCurrentPathRule($request),
 					'query'            => $request->get() + $request->route(),
 					'is_administrator' => $this->isAdministrator(),
 					'is_develop'       => $this->isDevMode(),
 				]);
-				
+
 				$menus = $this->menusHandle($menus);
-				
+
 				return tap(new \stdClass(), function($std) use ($menus, $breads){
 					$std->menus = $menus;
 					$std->breads = $breads;
@@ -49,7 +49,7 @@ trait InteractsMenuService{
 			},
 		]);
 	}
-	
+
 	/**
 	 * 获取生成规则
 	 *
@@ -72,17 +72,17 @@ trait InteractsMenuService{
 		//		}
 		//
 		//		return $rule;
-		
+
 		$path = $request->path();
 		if(strpos($path, "plugin") === 0){
 			$pulgin = substr($path, 7, strpos($path, '/', 7) - 7);
 			$path = substr($path, strpos($path, '/', 7) + 1);
 			$path = $pulgin.">".$path;
 		}
-		
+
 		return $path;
 	}
-	
+
 	/**
 	 * 是否是超管
 	 *
@@ -91,7 +91,7 @@ trait InteractsMenuService{
 	protected function isAdministrator(){
 		return Auth::isAdministrator();
 	}
-	
+
 	/**
 	 * 是否是开发模式
 	 *
@@ -100,7 +100,7 @@ trait InteractsMenuService{
 	protected function isDevMode(){
 		return config('web.develop_mode') == 1;
 	}
-	
+
 	/**
 	 * @param array $menus
 	 * @return array

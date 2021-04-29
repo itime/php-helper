@@ -14,7 +14,7 @@ use Xin\Thinkphp\Foundation\Setting\Command\Show;
 use Xin\Thinkphp\Foundation\Setting\Command\Update;
 
 class SettingServiceProvider extends ServiceProvider{
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -27,7 +27,7 @@ class SettingServiceProvider extends ServiceProvider{
 			]);
 		});
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -39,5 +39,5 @@ class SettingServiceProvider extends ServiceProvider{
 			}
 		});
 	}
-	
+
 }

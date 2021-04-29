@@ -8,14 +8,14 @@
 namespace Xin\Cache;
 
 class MemcachedLock extends AbstractLock{
-	
+
 	/**
 	 * The Memcached instance.
 	 *
 	 * @var \Memcached
 	 */
 	protected $memcached;
-	
+
 	/**
 	 * Create a new lock instance.
 	 *
@@ -27,10 +27,10 @@ class MemcachedLock extends AbstractLock{
 	 */
 	public function __construct($memcached, $name, $seconds, $owner = null){
 		parent::__construct($name, $seconds, $owner);
-		
+
 		$this->memcached = $memcached;
 	}
-	
+
 	/**
 	 * Attempt to acquire the lock.
 	 *
@@ -41,7 +41,7 @@ class MemcachedLock extends AbstractLock{
 			$this->name, $this->owner, $this->seconds
 		);
 	}
-	
+
 	/**
 	 * Release the lock.
 	 *
@@ -52,7 +52,7 @@ class MemcachedLock extends AbstractLock{
 			$this->memcached->delete($this->name);
 		}
 	}
-	
+
 	/**
 	 * Releases this lock in disregard of ownership.
 	 *
@@ -61,7 +61,7 @@ class MemcachedLock extends AbstractLock{
 	public function forceRelease(){
 		$this->memcached->delete($this->name);
 	}
-	
+
 	/**
 	 * Returns the owner value written into the driver for this lock.
 	 *

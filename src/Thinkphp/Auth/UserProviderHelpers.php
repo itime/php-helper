@@ -13,12 +13,12 @@ namespace Xin\Thinkphp\Auth;
  * @mixin \Xin\Contracts\Auth\UserProvider
  */
 trait UserProviderHelpers{
-	
+
 	/**
 	 * @return \think\Db|\think\db\Query
 	 */
 	abstract protected function query();
-	
+
 	/**
 	 * @inheritDoc
 	 * @noinspection PhpUnhandledExceptionInspection
@@ -26,7 +26,7 @@ trait UserProviderHelpers{
 	public function getById($identifier){
 		return $this->query()->find($identifier);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 * @noinspection PhpUnhandledExceptionInspection
@@ -34,7 +34,7 @@ trait UserProviderHelpers{
 	public function getByCredentials($credentials){
 		return $this->query()->where($credentials)->find();
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -43,7 +43,7 @@ trait UserProviderHelpers{
 		$hashedPassword = $user[$passwordName];
 		return app('hash')->check($password, $hashedPassword);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */

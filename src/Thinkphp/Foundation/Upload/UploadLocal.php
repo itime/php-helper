@@ -14,7 +14,7 @@ use think\Request;
 use Xin\Thinkphp\Facade\Hint;
 
 trait UploadLocal{
-	
+
 	/**
 	 * 上传文件
 	 *
@@ -23,28 +23,28 @@ trait UploadLocal{
 	 */
 	public function upload(Request $request){
 		Hint::shouldUseApi();
-		
+
 		// 获取表单上传文件
 		$file = $request->file($this->uploadName());
 		if(empty($file)){
 			return Hint::error("没有上传文件");
 		}
-		
+
 		// 上传的文件类型
 		$type = $this->uploadType($request);
-		
+
 		// 验证文件合法性
 		$this->validateFile($type, $file);
-		
+
 		// 文件是否已存在
 		$info = $this->findByFile($type, $file);
 		if(empty($info)){
 			$info = $this->putFile($type, $file);
 		}
-		
+
 		return Hint::success("已上传！", null, $info);
 	}
-	
+
 	/**
 	 * 保存文件
 	 *
@@ -56,9 +56,9 @@ trait UploadLocal{
 		$savePath = Filesystem::disk($this->disk())->putFile(
 			$this->savePath($type), $file, $this->saveRule()
 		);
-		
+
 		$publicPath = config('filesystem.disks.'.$this->disk().'.url').'/'.str_replace("\\", "/", $savePath);
-		
+
 		return $this->saveDb($type, [
 			'path' => $publicPath,
 			'md5'  => $file->md5(),
@@ -67,7 +67,7 @@ trait UploadLocal{
 			'type' => $file->getMime(),
 		]);
 	}
-	
+
 	/**
 	 * 验证文件合法性
 	 *
@@ -85,7 +85,7 @@ trait UploadLocal{
 			$this->uploadName() => $file,
 		]);
 	}
-	
+
 	/**
 	 * 文件保存验证规则
 	 *
@@ -107,7 +107,7 @@ trait UploadLocal{
 		}elseif($type === 'audio'){ // size：4m
 			return "fileSize:4194304|fileExt:mp3,wma,ogg|fileMime:audio/mp3,audio/wma,audio/ogg";
 		}
-		
+
 		throw new ValidateException("不支持的文件类型");
 	}
 }

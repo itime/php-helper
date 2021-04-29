@@ -11,7 +11,7 @@ use Xin\Contracts\Foundation\Wechat as WechatContract;
 use Xin\Thinkphp\Foundation\ServiceProvider;
 
 class WechatServiceProvider extends ServiceProvider{
-	
+
 	/**
 	 * 启动器
 	 */

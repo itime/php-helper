@@ -10,7 +10,7 @@ namespace Xin\Auth;
 use Xin\Contracts\Auth\StatefulGuard as StatefulGuardContract;
 
 abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGuardContract{
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -18,25 +18,25 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 		if(!$this->check()){
 			return;
 		}
-		
+
 		$this->updateSession($user);
-		
+
 		parent::temporaryUser($user);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function login($user){
 		$this->updateSession($user);
-		
+
 		$this->user = $user;
-		
+
 		$this->fireLoginEvent($user);
-		
+
 		return $user;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -45,10 +45,10 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 		if(empty($user)){
 			throw new LoginException('用户不存在!', 40401);
 		}
-		
+
 		return $this->login($user);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -58,7 +58,7 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 		\Closure $preCheckCallback = null
 	){
 		$user = $this->credentials($credentials, $notExistCallback);
-		
+
 		// password field exist.
 		if($this->hasPasswordInCredential($credentials)){
 			$password = $this->resolvePasswordInCredential($credentials);
@@ -67,18 +67,18 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 				// may be notified of any suspicious attempts to access their account from
 				// an unrecognized user. A developer may listen to this event as needed.
 				$this->fireFailedEvent($user, $credentials);
-				
+
 				throw new LoginException('账号密码不正确', 40001);
 			}
 		}
-		
+
 		if(is_callable($preCheckCallback)){
 			call_user_func($preCheckCallback, $user);
 		}
-		
+
 		return $this->login($user);
 	}
-	
+
 	/**
 	 * 密码字段是否存在凭证信息里面
 	 *
@@ -87,10 +87,10 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	 */
 	protected function hasPasswordInCredential($credentials){
 		$passwordName = $this->provider->getPasswordName();
-		
+
 		return isset($credentials[$passwordName]);
 	}
-	
+
 	/**
 	 * 从凭证信息里面获取密码数据
 	 *
@@ -99,10 +99,10 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	 */
 	protected function resolvePasswordInCredential(array $credentials){
 		$passwordName = $this->provider->getPasswordName();
-		
+
 		return $credentials[$passwordName];
 	}
-	
+
 	/**
 	 * @param array|\Closure $credentials
 	 * @param \Closure|null  $notExistCallback
@@ -112,7 +112,7 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 		if(isset($credentials['password'])){
 			unset($credentials['password']);
 		}
-		
+
 		$user = $this->provider->getByCredentials($credentials);
 		if(empty($user)){
 			if(is_callable($notExistCallback)){
@@ -121,19 +121,19 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 				throw new LoginException("用户不存在！", 40402);
 			}
 		}
-		
+
 		return $user;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function logout(){
 		$this->fireLogoutEvent($this->user);
-		
+
 		$this->user = null;
 	}
-	
+
 	/**
 	 * 获取一个Session的唯一名称
 	 *
@@ -142,7 +142,7 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	public function getName(){
 		return 'login_'.$this->name.'_'.sha1(static::class);
 	}
-	
+
 	/**
 	 * 缓存用户模型
 	 *
@@ -152,7 +152,7 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	protected function makeAuthSign($user){
 		return sha1(md5($user['id']).time());
 	}
-	
+
 	/**
 	 * 更新用户 Session
 	 *
@@ -160,7 +160,7 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	 * @return mixed
 	 */
 	abstract protected function updateSession($user);
-	
+
 	/**
 	 * 触发登录事件
 	 *
@@ -168,7 +168,7 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	 * @param bool  $remember
 	 */
 	abstract protected function fireLoginEvent($user, $remember = false);
-	
+
 	/**
 	 * 触发登录失败的事件
 	 *
@@ -176,12 +176,12 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	 * @param array $credentials
 	 */
 	abstract protected function fireFailedEvent($user, array $credentials);
-	
+
 	/**
 	 * 触发退出登录事件
 	 *
 	 * @param mixed $user
 	 */
 	abstract protected function fireLogoutEvent($user);
-	
+
 }

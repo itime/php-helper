@@ -9,7 +9,7 @@ class Time{
 	 * @return array
 	 */
 	public static function today(){
-		list($y, $m, $d) = explode('-', date('Y-m-d'));
+		[$y, $m, $d] = explode('-', date('Y-m-d'));
 		return [
 			mktime(0, 0, 0, $m, $d, $y),
 			mktime(23, 59, 59, $m, $d, $y),
@@ -35,7 +35,7 @@ class Time{
 	 * @return array
 	 */
 	public static function week(){
-		list($y, $m, $d, $w) = explode('-', date('Y-m-d-w'));
+		[$y, $m, $d, $w] = explode('-', date('Y-m-d-w'));
 		if($w == 0) $w = 7; //修正周日的问题
 		return [
 			mktime(0, 0, 0, $m, $d - $w + 1, $y), mktime(23, 59, 59, $m, $d - $w + 7, $y),
@@ -61,7 +61,7 @@ class Time{
 	 * @return array
 	 */
 	public static function month(){
-		list($y, $m, $t) = explode('-', date('Y-m-t'));
+		[$y, $m, $t] = explode('-', date('Y-m-t'));
 		return [
 			mktime(0, 0, 0, $m, 1, $y),
 			mktime(23, 59, 59, $m, $t, $y),
@@ -118,7 +118,7 @@ class Time{
 	public static function dayToNow($day = 1, $now = true){
 		$end = time();
 		if(!$now){
-			list($foo, $end) = self::yesterday();
+			[$foo, $end] = self::yesterday();
 		}
 
 		return [

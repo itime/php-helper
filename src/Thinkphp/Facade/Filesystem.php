@@ -12,7 +12,7 @@ use think\Facade;
  * @mixin \Xin\Thinkphp\Filesystem\FilesystemManager
  */
 class Filesystem extends Facade{
-	
+
 	/**
 	 * 获取当前Facade对应类名（或者已经绑定的容器对象标识）
 	 *

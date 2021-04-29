@@ -10,12 +10,12 @@ namespace Xin\RedEnvelope;
 use Xin\Contracts\RedEnvelope\Generator as GeneratorContract;
 
 abstract class AbstractGenerator implements GeneratorContract{
-	
+
 	/**
 	 * @var array
 	 */
 	protected $config = [];
-	
+
 	/**
 	 * AbstractGenerator constructor.
 	 *
@@ -24,7 +24,7 @@ abstract class AbstractGenerator implements GeneratorContract{
 	public function __construct(array $config){
 		$this->config = array_merge($this->config, $config);
 	}
-	
+
 	/**
 	 * 浮点数随机数
 	 *

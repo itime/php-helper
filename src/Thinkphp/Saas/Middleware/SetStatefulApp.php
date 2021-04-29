@@ -14,7 +14,7 @@ use Xin\Thinkphp\Facade\Auth;
 use Xin\Thinkphp\Saas\DatabaseApp;
 
 class SetStatefulApp{
-	
+
 	/**
 	 * api模式下检查当前应用是否合法
 	 *
@@ -34,10 +34,10 @@ class SetStatefulApp{
 
 			return $xApp;
 		});
-		
+
 		return $next($request);
 	}
-	
+
 	/**
 	 * @param int $userId
 	 * @return array|\think\Model
@@ -47,13 +47,13 @@ class SetStatefulApp{
 	 */
 	protected function resolve($userId){
 		$xApp = DatabaseApp::where(['store_id' => $userId])->find();
-		
+
 		if(!$xApp){
 			throw new HttpResponseException(
 				Response::create(url('app/create'), 'redirect')
 			);
 		}
-		
+
 		return $xApp;
 	}
 }

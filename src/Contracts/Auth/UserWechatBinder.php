@@ -8,7 +8,7 @@
 namespace Xin\Contracts\Auth;
 
 interface UserWechatBinder{
-	
+
 	/**
 	 * get user bind model by openid.
 	 *
@@ -16,7 +16,7 @@ interface UserWechatBinder{
 	 * @return mixed
 	 */
 	public function getByOpenId($openid);
-	
+
 	/**
 	 * bind model to user.
 	 *

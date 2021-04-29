@@ -22,14 +22,14 @@ use Xin\Thinkphp\Foundation\Model\Appable;
  * @property-read int    closed 是否解除授权
  */
 class DatabaseWeapp extends Model{
-	
+
 	use Appable;
-	
+
 	/**
 	 * @var string
 	 */
 	protected $name = 'wechat_weapp';
-	
+
 	/**
 	 * 获取小程序权限信息
 	 *
@@ -38,16 +38,16 @@ class DatabaseWeapp extends Model{
 	protected function getAuthorizationFuncInfoArrAttr(){
 		$funcInfo = $this->getData('func_info');
 		$funcInfo = (array)json_decode($funcInfo, true);
-		
+
 		$result = [];
 		foreach($funcInfo as $item){
 			$funcScopeId = $item['funcscope_category']['id'];
 			$result[] = array_merge(AuthEnum::getDesc($funcScopeId), $item['confirm_info'] ?? []);
 		}
-		
+
 		return $result;
 	}
-	
+
 	/**
 	 * 同步当前小程序信息
 	 *
@@ -58,10 +58,10 @@ class DatabaseWeapp extends Model{
 			$data = $this->authorizeInfo();
 			$this->save($data);
 		}
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * 获取当前小程序授权信息
 	 *
@@ -70,7 +70,7 @@ class DatabaseWeapp extends Model{
 	public function authorizeInfo(){
 		return $this->getAuthorizerInfoByAppId($this->getOrigin('appid'));
 	}
-	
+
 	/**
 	 * 获取小程序授权信息
 	 *
@@ -81,7 +81,7 @@ class DatabaseWeapp extends Model{
 		/** @var \EasyWeChat\OpenPlatform\Application $openPlatform */
 		$openPlatform = app('wechat')->openPlatformOfAppId($appId);
 		$result = $openPlatform->getAuthorizer($appId);
-		
+
 		if(isset($result['errcode']) && $result['errcode'] != 0){
 			// 已取消授权
 			if(61003 == $result['errcode']){
@@ -90,14 +90,14 @@ class DatabaseWeapp extends Model{
 					'closed'      => 1,
 				];
 			}
-			
+
 			throw new \LogicException($result['errmsg']);
 		}
-		
+
 		$authorizerInfo = $result['authorizer_info'];
 		$authorizationInfo = $result['authorization_info'];
 		$authorizerRefreshToken = $authorizationInfo['authorizer_refresh_token'];
-		
+
 		return [
 			'third_id'                 => $authorizerInfo['user_name'],
 			'nick_name'                => $authorizerInfo['nick_name'] ?? '',
@@ -117,7 +117,7 @@ class DatabaseWeapp extends Model{
 			'closed'                   => 0,
 		];
 	}
-	
+
 	/**
 	 * 快速创建
 	 *
@@ -130,7 +130,7 @@ class DatabaseWeapp extends Model{
 				self::getAuthorizerInfoByAppId($data['appid']), $data
 			);
 		}
-		
+
 		$data = array_merge([
 			'third_id'                 => '',
 			'nick_name'                => '',
@@ -142,7 +142,7 @@ class DatabaseWeapp extends Model{
 			'authorizer_info'          => '',
 			'authorization_func_info'  => '',
 		], $data);
-		
+
 		return self::create($data);
 	}
 }

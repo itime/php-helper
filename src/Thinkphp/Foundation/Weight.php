@@ -17,27 +17,27 @@ use think\View;
  * @property-read \think\View    $view
  */
 abstract class Weight{
-	
+
 	/**
 	 * @var \think\App
 	 */
 	protected $app;
-	
+
 	/**
 	 * @var \think\Request
 	 */
 	protected $request;
-	
+
 	/**
 	 * @var \think\Config
 	 */
 	protected $config;
-	
+
 	/**
 	 * @var \think\View
 	 */
 	protected $view;
-	
+
 	/**
 	 * Weight constructor.
 	 *
@@ -47,16 +47,16 @@ abstract class Weight{
 		$this->app = $app;
 		$this->request = $app['request'];
 		$this->config = $app['config'];
-		
+
 		$this->view = new View($app);
-		
+
 		$classPath = str_replace("\\", "/", get_class($this));
 		$this->view->engine()->config([
 			"view_dir_name" => "view",
 			"view_path"     => root_path(dirname($classPath)),
 		]);
 	}
-	
+
 	/**
 	 * 中控入口
 	 *
@@ -65,14 +65,14 @@ abstract class Weight{
 	public function handle(...$args){
 		echo call_user_func_array([$this, 'render'], $args);
 	}
-	
+
 	//	/**
 	//	 * 渲染
 	//	 *
 	//	 * @return string
 	//	 */
 	//	abstract protected function render();
-	
+
 	/**
 	 * 渲染模板
 	 *
@@ -85,7 +85,7 @@ abstract class Weight{
 	protected function fetch($template = '', $vars = []){
 		return $this->view->fetch($template, $vars);
 	}
-	
+
 	/**
 	 * 渲染内容
 	 *
@@ -96,7 +96,7 @@ abstract class Weight{
 	protected function display($content, $vars = []){
 		return $this->view->display($content, $vars);
 	}
-	
+
 	/**
 	 * 模板变量赋值
 	 *

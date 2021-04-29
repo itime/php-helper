@@ -7,14 +7,14 @@
 namespace Xin\Auth\Events;
 
 class PasswordReset{
-	
+
 	/**
 	 * The user.
 	 *
 	 * @var mixed
 	 */
 	public $user;
-	
+
 	/**
 	 * Create a new event instance.
 	 *

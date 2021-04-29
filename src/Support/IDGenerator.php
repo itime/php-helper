@@ -11,22 +11,22 @@ namespace Xin\Support;
  * ID 生成器
  */
 class IDGenerator{
-	
+
 	/**
 	 * @var array
 	 */
 	protected $chars = [];
-	
+
 	/**
 	 * @var array
 	 */
 	protected $chars2 = [];
-	
+
 	/**
 	 * @var int
 	 */
 	protected $radix = 0;
-	
+
 	/**
 	 * IDGenerator constructor.
 	 *
@@ -37,7 +37,7 @@ class IDGenerator{
 		$this->chars2 = array_flip($this->chars);
 		$this->radix = strlen($sequence);
 	}
-	
+
 	/**
 	 * 数字转字符串
 	 *
@@ -48,24 +48,24 @@ class IDGenerator{
 		if(is_nan($num)){
 			return '';
 		}
-		
+
 		$value = +$num;
 		$result = [];
-		
+
 		do{
 			$mod = abs($value % $this->radix);
 			$value = ($value - $mod) / $this->radix;
-			
+
 			if($value < $this->radix){
 				$value = intval($value);
 			}
-			
+
 			array_unshift($result, $this->chars[$mod]);
 		}while($value);
-		
+
 		return implode('', $result);
 	}
-	
+
 	/**
 	 * 字符串转数字
 	 *
@@ -74,7 +74,7 @@ class IDGenerator{
 	 */
 	public function parse($str){
 		$strLastIndex = strlen($str) - 1;
-		
+
 		$pow = 0;
 		$result = 0;
 		do{
@@ -82,12 +82,12 @@ class IDGenerator{
 			if(!isset($this->chars2[$char])){
 				return 0;
 			}
-			
+
 			$value = $this->chars2[$char];
 			$result += $value * pow($this->radix, $pow);
 			$pow++;
 		}while(--$strLastIndex >= 0);
-		
+
 		return $result;
 	}
 }

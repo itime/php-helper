@@ -11,7 +11,7 @@ namespace Xin\Contracts\Auth;
  * Interface UserProvider
  */
 interface UserProvider{
-	
+
 	/**
 	 * 根据唯一ID取用户
 	 *
@@ -19,7 +19,7 @@ interface UserProvider{
 	 * @return mixed
 	 */
 	public function getById($identifier);
-	
+
 	/**
 	 * 根据凭证信息获取用户
 	 *
@@ -27,7 +27,7 @@ interface UserProvider{
 	 * @return mixed
 	 */
 	public function getByCredentials($credentials);
-	
+
 	/**
 	 * 验证密码是否正确
 	 *
@@ -36,7 +36,7 @@ interface UserProvider{
 	 * @return boolean
 	 */
 	public function validatePassword($user, $password);
-	
+
 	/**
 	 * 获取密码字段名称
 	 *

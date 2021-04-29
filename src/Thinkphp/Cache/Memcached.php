@@ -12,7 +12,7 @@ use Xin\Cache\MemcachedLock;
 use Xin\Contracts\Cache\LockProvider;
 
 class Memcached extends MemcachedDriver implements LockProvider{
-	
+
 	/**
 	 * @inheritDoc
 	 * @noinspection PhpParamsInspection
@@ -20,7 +20,7 @@ class Memcached extends MemcachedDriver implements LockProvider{
 	public function lock($name, $seconds = 0, $owner = null){
 		return new MemcachedLock($this->handler, $this->getCacheKey($name), $seconds, $owner);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */

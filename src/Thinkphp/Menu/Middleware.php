@@ -12,12 +12,12 @@ use Xin\Menu\MenuManager;
 use Xin\Thinkphp\Facade\Auth;
 
 class Middleware{
-	
+
 	/**
 	 * @var \think\App
 	 */
 	protected $app = null;
-	
+
 	/**
 	 * Middleware constructor.
 	 *
@@ -26,7 +26,7 @@ class Middleware{
 	public function __construct(App $app){
 		$this->app = $app;
 	}
-	
+
 	/**
 	 * 应用初始化
 	 *
@@ -36,12 +36,12 @@ class Middleware{
 	 */
 	public function handle($request, \Closure $next){
 		$this->registerServices($request);
-		
+
 		$this->registerDrivers();
-		
+
 		return $next($request);
 	}
-	
+
 	/**
 	 * 注册服务
 	 *
@@ -58,37 +58,37 @@ class Middleware{
 			'menu.show'   => function() use ($request){
 				/** @var \Xin\Menu\MenuManager $manager */
 				$manager = $this->app['menu'];
-				
+
 				$this->shouldUse($manager);
-				
+
 				[$menus, $breads] = $manager->generate($request->user(), [
 					'rule'             => $this->getPathRule($request),
 					'query'            => $request->get() + $request->route(),
 					'is_administrator' => $this->isAdministrator(),
 					'is_develop'       => $this->isDevMode(),
 				]);
-				
+
 				$std = new \stdClass();
 				$std->menus = $menus;
 				$std->breads = $breads;
-				
+
 				return $std;
 			},
 		]);
 	}
-	
+
 	/**
 	 * 注册菜单驱动
 	 */
 	protected function registerDrivers(){
 		/** @var MenuManager $manager */
 		$manager = $this->app['menu'];
-		
+
 		$manager->extend('model', function($config){
 			return new Database($config);
 		});
 	}
-	
+
 	/**
 	 * 应该使用哪个菜单
 	 *
@@ -97,7 +97,7 @@ class Middleware{
 	protected function shouldUse(MenuManager $manager){
 		$manager->shouldUse($this->app->http->getName());
 	}
-	
+
 	/**
 	 * 获取路径规则
 	 *
@@ -106,16 +106,16 @@ class Middleware{
 	 */
 	protected function getPathRule($request){
 		$path = $request->path();
-		
+
 		if(strpos($path, "plugin") === 0){
 			$pulgin = substr($path, 7, strpos($path, '/', 7) - 7);
 			$path = substr($path, strpos($path, '/', 7) + 1);
 			$path = $pulgin.">".$path;
 		}
-		
+
 		return $path;
 	}
-	
+
 	/**
 	 * 是否是超管
 	 *
@@ -124,7 +124,7 @@ class Middleware{
 	protected function isAdministrator(){
 		return Auth::isAdministrator();
 	}
-	
+
 	/**
 	 * 是否是开发模式
 	 *

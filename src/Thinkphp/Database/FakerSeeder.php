@@ -14,7 +14,7 @@ use think\facade\Env;
  * @mixin \think\migration\Seeder
  */
 trait FakerSeeder{
-	
+
 	/**
 	 * 构建数据
 	 *
@@ -24,18 +24,18 @@ trait FakerSeeder{
 	 */
 	protected function factory($callback, $num = 0, $locale = 'zh_CN'){
 		$faker = $this->faker(!empty($locale) ? $locale : Env::get('faker_locale', 'zh_CN'));
-		
+
 		if($num < 1){
 			$num = rand(1, 100);
 		}
-		
+
 		for($i = 0; $i < $num; $i++){
 			if(call_user_func($callback, $faker) === false){
 				break;
 			}
 		}
 	}
-	
+
 	/**
 	 * 构造数据并插入到对应的表
 	 *
@@ -49,15 +49,15 @@ trait FakerSeeder{
 		$this->factory(function($faker) use (&$table, &$callback){
 			$data = call_user_func($callback, $faker);
 			if($data === false) return false;
-			
+
 			if(is_array($data)){
 				$table->insert($data)->save();
 			}
-			
+
 			return true;
 		}, $num, $locale);
 	}
-	
+
 	/**
 	 * Faker
 	 *

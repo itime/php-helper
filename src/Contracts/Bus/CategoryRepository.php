@@ -10,7 +10,7 @@ namespace Xin\Contracts\Bus;
 use Xin\Contracts\Foundation\Repository as BaseRepository;
 
 interface CategoryRepository extends BaseRepository{
-	
+
 	/**
 	 * 根据id获取子分类ID列表
 	 *
@@ -18,9 +18,9 @@ interface CategoryRepository extends BaseRepository{
 	 * @param bool $excludeSelf
 	 * @return mixed
 	 */
-	
+
 	public function getSubIdsById($categoryId, $excludeSelf = false);
-	
+
 	/**
 	 * 获取分类列表
 	 *
@@ -29,7 +29,7 @@ interface CategoryRepository extends BaseRepository{
 	 * @return mixed
 	 */
 	public function getCategories($depth = 0, $isTree = false);
-	
+
 	/**
 	 * 获取子分类数据
 	 *
@@ -38,5 +38,5 @@ interface CategoryRepository extends BaseRepository{
 	 * @return mixed
 	 */
 	public function getSubCategoriesByNameOrId($catKeyword, $depth = 0);
-	
+
 }

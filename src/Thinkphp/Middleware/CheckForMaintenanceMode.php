@@ -12,31 +12,31 @@ use think\Request;
 use think\Response;
 
 class CheckForMaintenanceMode{
-	
+
 	use InteractsExcept;
-	
+
 	/**
 	 * @var \think\App
 	 */
 	protected $app;
-	
+
 	/**
 	 * @var \think\Config
 	 */
 	protected $config;
-	
+
 	/**
 	 * @var \think\View
 	 */
 	protected $view;
-	
+
 	/**
 	 * The route operation to exclude is not authorized
 	 *
 	 * @var array
 	 */
 	protected $except = [];
-	
+
 	/**
 	 * CheckForMaintenanceMode constructor.
 	 *
@@ -46,7 +46,7 @@ class CheckForMaintenanceMode{
 		$this->config = $app['config'];
 		$this->view = $app['view'];
 	}
-	
+
 	/**
 	 * 初始化站点状态
 	 *
@@ -61,20 +61,20 @@ class CheckForMaintenanceMode{
 			if(in_array($request->ip(), $this->getAllowIPs())){
 				return $next($request);
 			}
-			
+
 			// 允许正常访问的URL
 			if($this->isExcept($request)){
 				return $next($request);
 			}
-			
+
 			throw new HttpResponseException(
 				$this->createMaintenanceModeResponse($request)
 			);
 		}
-		
+
 		return $next($request);
 	}
-	
+
 	/**
 	 * 当前是否是维护模式
 	 *
@@ -83,7 +83,7 @@ class CheckForMaintenanceMode{
 	protected function isDownForMaintenance(){
 		return $this->config->get('web.site_close');
 	}
-	
+
 	/**
 	 * 允许访问的IP地址
 	 *
@@ -92,7 +92,7 @@ class CheckForMaintenanceMode{
 	protected function getAllowIPs(){
 		return [];
 	}
-	
+
 	/**
 	 * 创建维护模式要返回的响应
 	 *
@@ -106,7 +106,7 @@ class CheckForMaintenanceMode{
 		$response = $this->view->fetch($this->config->get('app.site_close_template'), [
 			'msg' => $closeMsg,
 		]);
-		
+
 		return Response::create($response);
 	}
 }

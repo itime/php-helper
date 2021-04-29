@@ -8,17 +8,17 @@
 namespace Xin\Thinkphp\Http;
 
 trait HasApp{
-	
+
 	/**
 	 * @var mixed
 	 */
 	protected $xApp;
-	
+
 	/**
 	 * @var \Closure
 	 */
 	protected $appResolverCallback;
-	
+
 	/**
 	 * 设置应用完成器
 	 *
@@ -27,7 +27,7 @@ trait HasApp{
 	public function setAppResolver(\Closure $resolverCallback){
 		$this->appResolverCallback = $resolverCallback;
 	}
-	
+
 	/**
 	 * 获取当前应用信息
 	 *
@@ -39,14 +39,14 @@ trait HasApp{
 		if(is_null($this->appResolverCallback)){
 			throw new \RuntimeException('not defined app getter.');
 		}
-		
+
 		if(is_null($this->xApp)){
 			$this->xApp = call_user_func($this->appResolverCallback, $this);
 		}
-		
+
 		return empty($field) ? $this->xApp : (isset($this->xApp[$field]) ? $this->xApp[$field] : $default);
 	}
-	
+
 	/**
 	 * 获取当前应用ID
 	 *

@@ -13,22 +13,22 @@ namespace Xin\Support;
  * @method static int parse(string $str)
  */
 class Radix62{
-	
+
 	/**
 	 * @return IDGenerator
 	 */
 	protected static function idGeneratorInstance(){
 		static $instance = null;
-		
+
 		if($instance === null){
 			$instance = new IDGenerator(
 				'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 			);
 		}
-		
+
 		return $instance;
 	}
-	
+
 	/**
 	 * @param string $name
 	 * @param array  $arguments

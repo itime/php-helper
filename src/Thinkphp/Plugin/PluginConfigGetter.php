@@ -10,12 +10,12 @@ namespace Xin\Thinkphp\Plugin;
 use Xin\Support\Arr;
 
 trait PluginConfigGetter{
-	
+
 	/**
 	 * @var string
 	 */
 	protected $pluginName = '';
-	
+
 	/**
 	 * 获取插件配置
 	 *
@@ -27,7 +27,7 @@ trait PluginConfigGetter{
 		$config = DatabasePlugin::getPluginConfig($this->getPluginName());
 		return Arr::get($config, $name, $default);
 	}
-	
+
 	/**
 	 * 获取插件名称
 	 *
@@ -40,7 +40,7 @@ trait PluginConfigGetter{
 			$endIndex = strpos($class, "\\", $startIndex + 1) - 1;
 			return substr($class, $startIndex + 1, $endIndex - $startIndex);
 		}
-		
+
 		return $this->pluginName;
 	}
 }

@@ -16,7 +16,7 @@ use think\Validate;
  * @mixin Requestable
  */
 trait HasValidate{
-	
+
 	/**
 	 * 验证数据
 	 *
@@ -31,7 +31,7 @@ trait HasValidate{
 				'rules' => $validate,
 			];
 		}
-		
+
 		if(is_array($validate['rules'])){
 			$v = new Validate();
 			$v->rule(
@@ -44,35 +44,35 @@ trait HasValidate{
 				// 支持场景
 				[$validator, $scene] = explode('.', $validator);
 			}
-			
+
 			/** @var Validate $v */
 			$v = app($validator);
-			
+
 			if(isset($scene)){
 				$v->scene($scene);
 			}
 		}
-		
+
 		if(isset($validate['messages'])){
 			$v->message($validate['messages']);
 		}
-		
+
 		// 是否批量验证
 		$v->batch($batch);
-		
+
 		if(empty($name)){
 			$data = $this->param();
 		}else{
 			$data = $this->only($name);
 		}
-		
+
 		if(!$v->check($data)){
 			throw new ValidateException($v->getError());
 		}
-		
+
 		return $data;
 	}
-	
+
 	/**
 	 * 获取ID 列表
 	 *
@@ -84,10 +84,10 @@ trait HasValidate{
 		if(empty($ids)){
 			throw new ValidateException("param {$field} invalid.");
 		}
-		
+
 		return $ids;
 	}
-	
+
 	/**
 	 * 获取ID并验证
 	 *
@@ -99,10 +99,10 @@ trait HasValidate{
 		if($id < 1){
 			throw new ValidateException("param {$field} invalid.");
 		}
-		
+
 		return $id;
 	}
-	
+
 	/**
 	 * 获取整形数据并验证
 	 *
@@ -116,10 +116,10 @@ trait HasValidate{
 		if(!in_array($int, $array)){
 			throw new ValidateException("param {$field} invalid.");
 		}
-		
+
 		return $int;
 	}
-	
+
 	/**
 	 * 获取字符串数据并验证
 	 *
@@ -130,11 +130,11 @@ trait HasValidate{
 	 */
 	public function stringWithValid($field, $default = null, $filter = ''){
 		$value = $this->param("{$field}", $default, $filter);
-		
+
 		if(empty($value)){
 			throw new ValidateException("param {$field} invalid.");
 		}
-		
+
 		return $value;
 	}
 }

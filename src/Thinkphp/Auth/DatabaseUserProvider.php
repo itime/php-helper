@@ -11,19 +11,19 @@ use think\Db;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 
 class DatabaseUserProvider implements UserProviderContract{
-	
+
 	use UserProviderHelpers;
-	
+
 	/**
 	 * @var \think\Db
 	 */
 	protected $db;
-	
+
 	/**
 	 * @var array
 	 */
 	protected $config;
-	
+
 	/**
 	 * Create a new database user provider.
 	 *
@@ -34,12 +34,12 @@ class DatabaseUserProvider implements UserProviderContract{
 		$this->db = $db;
 		$this->config = $config;
 	}
-	
+
 	/**
 	 * @return \think\Db|\think\db\Query
 	 */
 	protected function query(){
 		return $this->db->name($this->config['table']);
 	}
-	
+
 }

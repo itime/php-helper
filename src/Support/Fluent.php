@@ -5,14 +5,14 @@ namespace Xin\Support;
 use Xin\Support\Contracts\Arrayable;
 
 class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayable{
-	
+
 	/**
 	 * The collection data.
 	 *
 	 * @var array
 	 */
 	protected $items = [];
-	
+
 	/**
 	 * set data.
 	 *
@@ -23,7 +23,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 			$this->set($key, $value);
 		}
 	}
-	
+
 	/**
 	 * Return all items.
 	 *
@@ -32,7 +32,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function all(){
 		return $this->items;
 	}
-	
+
 	/**
 	 * Return specific items.
 	 *
@@ -41,18 +41,18 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 */
 	public function only(array $keys){
 		$return = [];
-		
+
 		foreach($keys as $key){
 			$value = $this->get($key);
-			
+
 			if(!is_null($value)){
 				$return[$key] = $value;
 			}
 		}
-		
+
 		return new static($return);
 	}
-	
+
 	/**
 	 * Get all items except for those with the specified keys.
 	 *
@@ -61,10 +61,10 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 */
 	public function except($keys){
 		$keys = is_array($keys) ? $keys : func_get_args();
-		
+
 		return new static(Arr::except($this->items, $keys));
 	}
-	
+
 	/**
 	 * Merge data.
 	 *
@@ -73,14 +73,14 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 */
 	public function merge($items){
 		$clone = new static($this->all());
-		
+
 		foreach($items as $key => $value){
 			$clone->set($key, $value);
 		}
-		
+
 		return $clone;
 	}
-	
+
 	/**
 	 * To determine Whether the specified element exists.
 	 *
@@ -90,7 +90,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function has($key){
 		return !is_null(Arr::get($this->items, $key));
 	}
-	
+
 	/**
 	 * Retrieve the first item.
 	 *
@@ -99,7 +99,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function first(){
 		return reset($this->items);
 	}
-	
+
 	/**
 	 * Retrieve the last item.
 	 *
@@ -107,12 +107,12 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 */
 	public function last(){
 		$end = end($this->items);
-		
+
 		reset($this->items);
-		
+
 		return $end;
 	}
-	
+
 	/**
 	 * add the item value.
 	 *
@@ -122,7 +122,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function add($key, $value){
 		Arr::set($this->items, $key, $value);
 	}
-	
+
 	/**
 	 * Set the item value.
 	 *
@@ -132,7 +132,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function set($key, $value){
 		Arr::set($this->items, $key, $value);
 	}
-	
+
 	/**
 	 * Retrieve item from Collection.
 	 *
@@ -143,7 +143,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function get($key, $default = null){
 		return Arr::get($this->items, $key, $default);
 	}
-	
+
 	/**
 	 * Remove item form Collection.
 	 *
@@ -152,7 +152,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function forget($key){
 		Arr::forget($this->items, $key);
 	}
-	
+
 	/**
 	 * Build to array.
 	 *
@@ -161,7 +161,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function toArray(){
 		return $this->all();
 	}
-	
+
 	/**
 	 * Build to json.
 	 *
@@ -171,7 +171,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function toJson($option = JSON_UNESCAPED_UNICODE){
 		return json_encode($this->all(), $option);
 	}
-	
+
 	/**
 	 * To string.
 	 *
@@ -180,7 +180,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function __toString(){
 		return $this->toJson();
 	}
-	
+
 	/**
 	 * (PHP 5 &gt;= 5.4.0)<br/>
 	 * Specify data which should be serialized to JSON.
@@ -192,7 +192,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function jsonSerialize(){
 		return $this->items;
 	}
-	
+
 	/**
 	 * (PHP 5 &gt;= 5.1.0)<br/>
 	 * String representation of object.
@@ -203,7 +203,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function serialize(){
 		return serialize($this->items);
 	}
-	
+
 	/**
 	 * (PHP 5 &gt;= 5.1.0)<br/>
 	 * Constructs the object.
@@ -217,7 +217,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function unserialize($serialized){
 		return $this->items = unserialize($serialized);
 	}
-	
+
 	/**
 	 * Get a data by key.
 	 *
@@ -227,7 +227,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function __get($key){
 		return $this->get($key);
 	}
-	
+
 	/**
 	 * Assigns a value to the specified data.
 	 *
@@ -237,7 +237,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function __set($key, $value){
 		$this->set($key, $value);
 	}
-	
+
 	/**
 	 * Whether or not an data exists by key.
 	 *
@@ -247,7 +247,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function __isset($key){
 		return $this->has($key);
 	}
-	
+
 	/**
 	 * Unset an data by key.
 	 *
@@ -256,7 +256,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function __unset($key){
 		$this->forget($key);
 	}
-	
+
 	/**
 	 * (PHP 5 &gt;= 5.0.0)<br/>
 	 * Whether a offset exists.
@@ -271,7 +271,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function offsetExists($offset){
 		return $this->has($offset);
 	}
-	
+
 	/**
 	 * (PHP 5 &gt;= 5.0.0)<br/>
 	 * Offset to unset.
@@ -286,7 +286,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 			$this->forget($offset);
 		}
 	}
-	
+
 	/**
 	 * (PHP 5 &gt;= 5.0.0)<br/>
 	 * Offset to retrieve.
@@ -300,7 +300,7 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	public function offsetGet($offset){
 		return $this->offsetExists($offset) ? $this->get($offset) : null;
 	}
-	
+
 	/**
 	 * (PHP 5 &gt;= 5.0.0)<br/>
 	 * Offset to set.

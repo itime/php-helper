@@ -8,7 +8,7 @@
 namespace Xin\Contracts\Saas;
 
 interface AppRepository{
-	
+
 	/**
 	 * 根据AccessId获取应用信息
 	 *
@@ -16,5 +16,5 @@ interface AppRepository{
 	 * @return mixed
 	 */
 	public function getByAccessId($accessId);
-	
+
 }

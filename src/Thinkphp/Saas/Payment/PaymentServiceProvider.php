@@ -11,7 +11,7 @@ use Xin\Contracts\Foundation\Payment as PaymentContract;
 use Xin\Thinkphp\Foundation\ServiceProvider;
 
 class PaymentServiceProvider extends ServiceProvider{
-	
+
 	/**
 	 * 启动器
 	 */

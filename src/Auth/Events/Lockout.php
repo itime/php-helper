@@ -7,12 +7,12 @@
 namespace Xin\Auth\Events;
 
 class Lockout{
-	
+
 	/**
 	 * The throttled request.
 	 */
 	public $request;
-	
+
 	/**
 	 * Create a new event instance.
 	 *

@@ -10,7 +10,7 @@ namespace Xin\Contracts\Mall;
 use Xin\Contracts\Foundation\Repository;
 
 interface GoodsRepository extends Repository{
-	
+
 	/**
 	 * get one product by sku.
 	 *

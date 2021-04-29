@@ -21,7 +21,7 @@ use function Qiniu\base64_urlSafeDecode;
  * @property string callbackAction
  */
 trait UploadToken{
-	
+
 	/**
 	 * 获取上传token
 	 *
@@ -30,34 +30,34 @@ trait UploadToken{
 	 */
 	public function token(Request $request){
 		Hint::shouldUseApi();
-		
+
 		if(!$request->isPost()){
 			throw new HttpException(404);
 		}
-		
+
 		// 上传的文件类型
 		$type = $this->uploadType($request);
-		
+
 		$file = $request->post('file/a');
 		if(empty($file) || !is_array($file)){
 			return Hint::error("没有上传文件");
 		}
-		
+
 		$ext = $this->resolveExt($type, $file);
 		$filename = date('YmdHis').Str::random(6);
 		$key = $this->savePath($type)."/{$filename}.{$ext}";
-		
+
 		$policy = $this->policy($request, $type);
 		$token = Filesystem::disk($this->disk())->getUploadToken(
 			$key, 300, $policy, true
 		);
-		
+
 		return Hint::result([
 			'key'   => $key,
 			'token' => $token,
 		]);
 	}
-	
+
 	/**
 	 * 上传策略
 	 *
@@ -68,7 +68,7 @@ trait UploadToken{
 	protected function policy(Request $request, $type){
 		// $returnBody = '{"url":"'.$domain.'/$(key)","key":"$(key)","hash":"$(etag)","fsize":$(fsize)}';
 		// '{"app_id":'.$appId.',"url":"'.$domain.'/$(key)","key":"$(key)","hash":"$(etag)","fsize":$(fsize)}';
-		
+
 		$uploadType = config('filesystem.disks.'.$this->disk().'.type', 'qiniu');
 		if($uploadType === 'qiniu'){
 			$policy = [
@@ -76,7 +76,7 @@ trait UploadToken{
 				'callbackBody'     => $this->callbackBody($type),
 				'callbackBodyType' => 'application/json',
 			];
-			
+
 			if($type == 'image'){
 				$policy['fsizeLimit'] = 1024 * 1024 * 2;
 				$policy['mimeLimit'] = 'image/*';
@@ -87,13 +87,13 @@ trait UploadToken{
 				$policy['fsizeLimit'] = 1024 * 1024 * 4;
 				$policy['mimeLimit'] = 'audio/*';
 			}
-			
+
 			return $policy;
 		}
-		
+
 		throw new HttpException(500, "暂未支持！");
 	}
-	
+
 	/**
 	 * @param string $type
 	 * @param array  $file
@@ -103,16 +103,16 @@ trait UploadToken{
 		if(!isset($file['type'])){
 			throw new ValidateException("文件类型不支持上传。");
 		}
-		
+
 		$fileType = $file['type'];
 		$maps = $this->extMaps();
 		if(!isset($maps[$type]) || !isset($maps[$type][$fileType])){
 			throw new ValidateException("文件类型不支持上传。");
 		}
-		
+
 		return $maps[$type][$fileType];
 	}
-	
+
 	/**
 	 * @return \string[][]
 	 */
@@ -134,7 +134,7 @@ trait UploadToken{
 			],
 		];
 	}
-	
+
 	/**
 	 * @param \think\Request $request
 	 * @return string
@@ -142,7 +142,7 @@ trait UploadToken{
 	protected function callbackUrl(Request $request){
 		return $request->domain().url($this->callbackAction());
 	}
-	
+
 	/**
 	 * @param string $type
 	 * @return string
@@ -161,22 +161,22 @@ trait UploadToken{
 		// return '{"type":"'.$type.'","url":"'.$url.'/$(key)","key":"$(key)","hash":"$(etag)","size":$(fsize),"sha1":"$
 		//(bodySha1)","mime":"$(mimeType)"}';
 	}
-	
+
 	/**
 	 * @param \think\Request $request
 	 * @return \think\Response
 	 */
 	protected function saveByToken(Request $request){
 		Hint::shouldUseApi();
-		
+
 		$data = $request->post();
-		
+
 		$type = $data['type'];
 		$sha1 = $data['sha1'];
 		$str = base64_urlSafeDecode($data['hash']);
 		$str = substr($str, 1);
 		$sha1 = $this->string2Hex($str);
-		
+
 		$info = $this->findBySHA1($type, $sha1);
 		if(!empty($info)){
 			return Hint::result([
@@ -184,7 +184,7 @@ trait UploadToken{
 				'path' => $info['path'],
 			]);
 		}
-		
+
 		$data = $this->saveDb($type, [
 			'path' => $data['url'],
 			'md5'  => '',
@@ -192,10 +192,10 @@ trait UploadToken{
 			'size' => $data['size'],
 			'type' => $data['mime'],
 		]);
-		
+
 		return Hint::result($data);
 	}
-	
+
 	/**
 	 * 字符串转16进制
 	 *
@@ -209,7 +209,7 @@ trait UploadToken{
 		}
 		return $hex;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -217,10 +217,10 @@ trait UploadToken{
 		if(property_exists($this, 'callbackAction')){
 			return $this->callbackAction;
 		}
-		
+
 		return "callback";
 	}
-	
+
 	/**
 	 * @param string $method
 	 * @param array  $args
@@ -230,7 +230,7 @@ trait UploadToken{
 		if($method === $this->callbackAction()){
 			return $this->saveByToken(app()->request);
 		}
-		
+
 		return Hint::result();
 	}
 }

@@ -7,21 +7,21 @@
 namespace Xin\Contracts\Hint;
 
 interface Factory{
-	
+
 	/**
 	 * 使用 Ajax 提示器
 	 *
 	 * @return static
 	 */
 	public function shouldUseApi();
-	
+
 	/**
 	 * 使用 Web 提示器
 	 *
 	 * @return static
 	 */
 	public function shouldUseWeb();
-	
+
 	/**
 	 * 获取提示器
 	 *

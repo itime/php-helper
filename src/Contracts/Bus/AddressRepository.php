@@ -10,7 +10,7 @@ namespace Xin\Contracts\Bus;
 use Xin\Contracts\Foundation\Repository as BaseRepository;
 
 interface AddressRepository extends BaseRepository{
-	
+
 	/**
 	 * 获取用户的收获地址列表
 	 *
@@ -18,7 +18,7 @@ interface AddressRepository extends BaseRepository{
 	 * @return mixed
 	 */
 	public function getByUser($userId);
-	
+
 	/**
 	 * 获取用户的默认收获地址
 	 *
@@ -26,7 +26,7 @@ interface AddressRepository extends BaseRepository{
 	 * @return mixed
 	 */
 	public function getDefaultByUser($userId);
-	
+
 	/**
 	 * 设置用户的默认收获地址
 	 *
@@ -34,7 +34,7 @@ interface AddressRepository extends BaseRepository{
 	 * @return mixed
 	 */
 	public function setDefaultByUser($userId);
-	
+
 	/**
 	 * 更新用户的收获地址信息
 	 *

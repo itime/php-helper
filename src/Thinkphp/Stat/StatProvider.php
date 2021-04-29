@@ -13,22 +13,22 @@ use Xin\Contracts\Stat\StatProvider as StatProviderContract;
 use Xin\Support\Time;
 
 class StatProvider implements StatProviderContract{
-	
+
 	/**
 	 * @var \think\Db
 	 */
 	protected $db;
-	
+
 	/**
 	 * @var StatRepository
 	 */
 	protected $stat;
-	
+
 	/**
 	 * @var array
 	 */
 	protected $config;
-	
+
 	/**
 	 * StatProvider constructor.
 	 *
@@ -39,11 +39,11 @@ class StatProvider implements StatProviderContract{
 	public function __construct(App $app, StatRepository $stat, array $config = []){
 		$this->app = $app;
 		$this->db = $app['db'];
-		
+
 		$this->stat = $stat;
 		$this->config = $config;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -52,7 +52,7 @@ class StatProvider implements StatProviderContract{
 		$prefix = md5(implode('_', array_keys($options)));
 		return "stat_{$name}_{$prefix}_{$todayBeginTime}";
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -62,7 +62,7 @@ class StatProvider implements StatProviderContract{
 			'create_time' => $time,
 		]))->value('id');
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -71,7 +71,7 @@ class StatProvider implements StatProviderContract{
 			->where('create_time', '>', $time - 1)
 			->where($options)->sum('value');
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -79,14 +79,14 @@ class StatProvider implements StatProviderContract{
 		return $this->query()->where('id', $id)->where($options)
 			->order('id desc')->value('value');
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function incById($id, $step = 1, array $options = []){
 		return $this->query()->where('id', $id)->inc('value')->save();
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -95,14 +95,14 @@ class StatProvider implements StatProviderContract{
 			->where($options)
 			->sum('value');
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function insert($data, array $options = []){
 		return $this->query()->insertGetId(array_merge($options, $data));
 	}
-	
+
 	/**
 	 * 获取查询对象
 	 *
@@ -113,10 +113,10 @@ class StatProvider implements StatProviderContract{
 			$model = $this->config['model'];
 			return new $model();
 		}
-		
+
 		return $this->db->name($this->config['table']);
 	}
-	
+
 	/**
 	 * 获取查询对象
 	 *
@@ -127,10 +127,10 @@ class StatProvider implements StatProviderContract{
 			$model = $this->config['ip_model'];
 			return new $model();
 		}
-		
+
 		return $this->db->name($this->config['ip_table']);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -140,7 +140,7 @@ class StatProvider implements StatProviderContract{
 			'time' => Time::today()[0],
 		])->where($options)->value('id');
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */

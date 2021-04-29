@@ -12,7 +12,7 @@ use think\facade\Db;
 use think\file\UploadedFile;
 
 trait UploadFinder{
-	
+
 	/**
 	 * 查找文件
 	 *
@@ -26,7 +26,7 @@ trait UploadFinder{
 	protected function findByFile($type, UploadedFile $file){
 		return $this->findBySHA1($type, $file->md5());
 	}
-	
+
 	/**
 	 * 查找文件 - SHA1
 	 *
@@ -42,7 +42,7 @@ trait UploadFinder{
 			'sha1' => $sha1,
 		])->find();
 	}
-	
+
 	/**
 	 * 查找文件 - MD5
 	 *
@@ -58,7 +58,7 @@ trait UploadFinder{
 			'md5' => $md5,
 		])->find();
 	}
-	
+
 	/**
 	 * 保存数据
 	 *
@@ -68,20 +68,20 @@ trait UploadFinder{
 	 */
 	protected function saveDb($type, $data){
 		$this->onSaveData($type, $data);
-		
+
 		$data['create_time'] = request()->time();
-		
+
 		$id = $this->db($type)->insertGetId($data);
 		if($id < 1){
 			throw new HttpException(500, "文件保存失败！");
 		}
-		
+
 		return [
 			'id'   => $id,
 			'path' => $data['path'],
 		];
 	}
-	
+
 	/**
 	 * 数据保存事件
 	 *
@@ -89,7 +89,7 @@ trait UploadFinder{
 	 * @param array  $data
 	 */
 	protected function onSaveData($type, &$data){ }
-	
+
 	/**
 	 * @param null $type
 	 * @return \think\facade\Db|\think\db\Query

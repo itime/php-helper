@@ -13,28 +13,28 @@ use Xin\Support\Time;
  * @mixin \think\Request
  */
 trait Requestable{
-	
+
 	use HasValidate, HasPlatform, HasUser, HasApp;
-	
+
 	/**
 	 * 数据源
 	 *
 	 * @var array
 	 */
 	protected $data = [];
-	
+
 	/**
 	 * 插件
 	 *
 	 * @var string
 	 */
 	protected $plugin;
-	
+
 	/**
 	 * @var string
 	 */
 	protected $path = null;
-	
+
 	/**
 	 * 获取 ID list
 	 *
@@ -45,7 +45,7 @@ trait Requestable{
 		$ids = $this->only([$field]);
 		return isset($ids[$field]) ? Str::explode($ids[$field]) : [];
 	}
-	
+
 	/**
 	 * 获取分页参数
 	 *
@@ -56,14 +56,14 @@ trait Requestable{
 		$param = [
 			'page' => $this->page(),
 		];
-		
+
 		if($withQuery){
 			$param['query'] = $this->get();
 		}
-		
+
 		return $param;
 	}
-	
+
 	/**
 	 * 获取页码
 	 *
@@ -74,10 +74,10 @@ trait Requestable{
 			$page = $this->param('page/d', 0);
 			$this->data['page'] = $page < 1 ? 1 : $page;
 		}
-		
+
 		return (int)$this->data['page'];
 	}
-	
+
 	/**
 	 * 获取分页条数
 	 *
@@ -94,10 +94,10 @@ trait Requestable{
 				$this->data['limit'] = $limit > $max ? $max : $limit;
 			}
 		}
-		
+
 		return (int)$this->data['limit'];
 	}
-	
+
 	/**
 	 * 获取记录偏移数
 	 *
@@ -108,10 +108,10 @@ trait Requestable{
 			$offset = $this->param('offset/d', 0);
 			$this->data['offset'] = $offset < 1 ? 1 : $offset;
 		}
-		
+
 		return (int)$this->data['offset'];
 	}
-	
+
 	/**
 	 * 获取排序的字段
 	 *
@@ -121,7 +121,7 @@ trait Requestable{
 		// todo 重新优化
 		return isset($_GET['sort']) ? trim($_GET['sort']) : '';
 	}
-	
+
 	/**
 	 * 获取范围时间
 	 *
@@ -134,7 +134,7 @@ trait Requestable{
 		$rangeTime = $this->param($field, '');
 		return Time::parseRange($rangeTime, $maxRange, $delimiter);
 	}
-	
+
 	/**
 	 * 获取筛选关键字
 	 *
@@ -154,7 +154,7 @@ trait Requestable{
 		}
 		return $this->data[$key];
 	}
-	
+
 	/**
 	 *  获取关键字SQL
 	 *
@@ -164,7 +164,7 @@ trait Requestable{
 	public function keywordsSql(string $field = 'keywords'):array{
 		return build_keyword_sql($this->keywords($field));
 	}
-	
+
 	/**
 	 * 获取当前的模块名
 	 *
@@ -174,7 +174,7 @@ trait Requestable{
 	public function plugin():string{
 		return $this->plugin ?: '';
 	}
-	
+
 	/**
 	 * 设置当前的插件名
 	 *
@@ -186,7 +186,20 @@ trait Requestable{
 		$this->plugin = $plugin;
 		return $this;
 	}
-	
+
+	/**
+	 * @param string $key
+	 * @return mixed|null
+	 */
+	public function postJSON(string $key){
+		if(!$this->has($key, 'post')){
+			return null;
+		}
+
+		$value = $this->post($key);
+		return json_decode($value, true, 512, JSON_PRESERVE_ZERO_FRACTION);
+	}
+
 	/**
 	 * Generates the normalized query string for the Request.
 	 * It builds a normalized query string, where keys/value pairs are alphabetized
@@ -196,10 +209,10 @@ trait Requestable{
 	 */
 	public function getQueryString(){
 		$qs = static::normalizeQueryString($this->query());
-		
+
 		return '' === $qs ? null : $qs;
 	}
-	
+
 	/**
 	 * 获取当前请求的全路径地址
 	 *
@@ -207,13 +220,13 @@ trait Requestable{
 	 */
 	public function fullUrl(){
 		$query = $this->getQueryString();
-		
+
 		// $question = $this->baseUrl().$this->pathinfo() === '/' ? '/?' : '?';
 		$question = '?';
-		
+
 		return $query ? $this->url(true).$question.$query : $this->url(true);
 	}
-	
+
 	/**
 	 * 包含自定义参数的全路径地址
 	 *
@@ -223,12 +236,12 @@ trait Requestable{
 	public function fullUrlWithQuery(array $query){
 		$question = '?';
 		// $question = $this->getBaseUrl().$this->getPathInfo() === '/' ? '/?' : '?';
-		
+
 		return count($this->get()) > 0
 			? $this->url().$question.http_build_query(array_merge($this->get(), $query), null, '&', PHP_QUERY_RFC3986)
 			: $this->fullUrl().$question.http_build_query($query, null, '&', PHP_QUERY_RFC3986);
 	}
-	
+
 	/**
 	 * Determine if the request is the result of an prefetch call.
 	 *
@@ -238,7 +251,7 @@ trait Requestable{
 		return strcasecmp($this->server('HTTP_X_MOZ'), 'prefetch') === 0 ||
 			strcasecmp($this->header('Purpose'), 'prefetch') === 0;
 	}
-	
+
 	/**
 	 * 从Cookie中获取前一个地址
 	 *
@@ -247,14 +260,14 @@ trait Requestable{
 	 */
 	public function previousUrl($fallback = null){
 		$url = $this->cookie('_previous_url');
-		
+
 		if(!$url){
 			$url = (string)url($fallback);
 		}
-		
+
 		return $url;
 	}
-	
+
 	/**
 	 * 获取当前请求路径（是否包含应用名称）
 	 *
@@ -265,13 +278,13 @@ trait Requestable{
 		if(is_null($this->path) === false){
 			return $this->path;
 		}
-		
+
 		$pathinfo = $this->pathinfo();
 		if($complete){
 			$pathinfo = $this->root().'/'.$pathinfo;
 		}
 		$pathinfo = trim($pathinfo, '/');
-		
+
 		$suffix = app()->route->config('url_html_suffix');
 		if(false === $suffix){
 			// 禁止伪静态访问
@@ -283,10 +296,10 @@ trait Requestable{
 			// 允许任何后缀访问
 			$path = preg_replace('/\.'.$this->ext().'$/i', '', $pathinfo);
 		}
-		
+
 		return $path;
 	}
-	
+
 	/**
 	 * 验证当前路由地址是否是给定的规则
 	 *
@@ -296,7 +309,7 @@ trait Requestable{
 	public function pathIs($patterns){
 		return Str::is($patterns, $this->path());
 	}
-	
+
 	/**
 	 * Normalizes a query string.
 	 * It builds a normalized query string, where keys/value pairs are alphabetized,
@@ -309,12 +322,12 @@ trait Requestable{
 		if('' === ($qs ?? '')){
 			return '';
 		}
-		
+
 		parse_str($qs, $qs);
-		
+
 		/** @var array $qs */
 		ksort($qs);
-		
+
 		return http_build_query($qs, '', '&', \PHP_QUERY_RFC3986);
 	}
 }

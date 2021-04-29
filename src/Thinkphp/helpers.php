@@ -15,15 +15,15 @@ if(!function_exists('thinkphp_version')){
 	 */
 	function thinkphp_version(){
 		static $version = null;
-		
+
 		if(empty($version)){
 			if(const_exist('\think\App', 'VERSION')){
 				$version = "5.1";
 			}
-			
+
 			$version = "6.0";
 		}
-		
+
 		return $version;
 	}
 }
@@ -55,7 +55,7 @@ if(!function_exists('thinkphp51_if')){
 		}elseif($reject){
 			return call_user_func($reject);
 		}
-		
+
 		return null;
 	}
 }
@@ -74,7 +74,7 @@ if(!function_exists('thinkphp60_if')){
 		}elseif($reject){
 			return call_user_func($reject);
 		}
-		
+
 		return null;
 	}
 }
@@ -91,7 +91,7 @@ if(!function_exists('listen')){
 			$params = $event;
 			$event = get_class($event);
 		}
-		
+
 		app('hook')->listen($event, $params);
 	}
 }
@@ -131,7 +131,7 @@ if(!function_exists('controller')){
 		}else{
 			$class = $url;
 		}
-		
+
 		return app($class);
 	}
 }
@@ -151,10 +151,10 @@ if(!function_exists('action')){
 		if(!$actionIndex || empty($action = substr($url, $actionIndex + 1))){
 			throw new \LogicException("url parse action no exist.");
 		}
-		
+
 		$controller = substr($url, 0, $actionIndex);
 		$controller = controller($controller, $layer, $appendSuffix);
-		
+
 		return call([$controller, $action], $vars);
 	}
 }
@@ -306,7 +306,7 @@ if(!function_exists('optimize_asset')){
 		}elseif(0 !== $index){
 			$uri = substr($uri, $index + 1);
 		}
-		
+
 		if($prefix){
 			if(is_bool($prefix)){
 				$uri = 'http:'.$uri;
@@ -314,7 +314,7 @@ if(!function_exists('optimize_asset')){
 				$uri = $prefix.':'.$uri;
 			}
 		}
-		
+
 		return $uri;
 	}
 }
@@ -331,14 +331,14 @@ if(!function_exists('analysis_words')){
 	function analysis_words($keyword, $num = 5, $holdLength = 48){
 		if($keyword === null || $keyword === "") return [];
 		if(mb_strlen($keyword) > $holdLength) $keyword = mb_substr($keyword, 0, 48);
-		
+
 		//执行分词
 		$pa = new \Xin\Analysis\Analysis('utf-8', 'utf-8');
 		$pa->setSource($keyword);
 		$pa->startAnalysis();
 		$result = $pa->getFinallyResult($num);
 		if(empty($result)) return [$keyword];
-		
+
 		return array_unique($result);
 	}
 }

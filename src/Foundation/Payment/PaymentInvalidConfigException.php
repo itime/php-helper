@@ -10,7 +10,7 @@ namespace Xin\Foundation\Payment;
 use Throwable;
 
 class PaymentInvalidConfigException extends \LogicException{
-	
+
 	/**
 	 * PaymentInvalidConfigException constructor.
 	 *

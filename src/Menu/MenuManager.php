@@ -19,17 +19,17 @@ use Xin\Support\Manager;
  * @method bool forget($name)
  */
 class MenuManager extends Manager{
-	
+
 	/**
 	 * @var array
 	 */
 	protected $customGenerator = [];
-	
+
 	/**
 	 * @var array
 	 */
 	protected $config = [];
-	
+
 	/**
 	 * MenuManager constructor.
 	 *
@@ -40,7 +40,7 @@ class MenuManager extends Manager{
 		parent::__construct($app);
 		$this->config = $config;
 	}
-	
+
 	/**
 	 * @param string $name
 	 * @return \Xin\Contracts\Menu\Writer
@@ -48,16 +48,16 @@ class MenuManager extends Manager{
 	public function menu($name = null){
 		return $this->driver($name);
 	}
-	
+
 	/**
 	 * @param string $name
 	 */
 	public function shouldUse($name){
 		$name = $name ?: $this->getDefaultDriver();
-		
+
 		$this->setDefaultDriver($name);
 	}
-	
+
 	/**
 	 * 设置默认的菜单器
 	 *
@@ -66,28 +66,28 @@ class MenuManager extends Manager{
 	public function setDefaultDriver($name){
 		Arr::set($this->config, 'defaults.menu', $name);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function getDefaultDriver(){
 		return $this->getConfig('defaults.menu', 'admin');
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	protected function resolveType($name){
 		return $this->getMenuConfig($name, 'type', 'phpfile');
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	protected function resolveConfig($name){
 		return $this->getMenuConfig($name);
 	}
-	
+
 	/**
 	 * 获取菜单配置
 	 *
@@ -100,10 +100,10 @@ class MenuManager extends Manager{
 		if($config = $this->getConfig("menus.{$menu}")){
 			return Arr::get($config, $name, $default);
 		}
-		
+
 		throw new \InvalidArgumentException("Menu [$menu] not found.");
 	}
-	
+
 	/**
 	 * 菜单配置是否存在
 	 *
@@ -113,7 +113,7 @@ class MenuManager extends Manager{
 	public function hasMenuConfig($name){
 		return Arr::has($this->config, 'menus.'.$name);
 	}
-	
+
 	/**
 	 * 获取缓存配置
 	 *
@@ -126,10 +126,10 @@ class MenuManager extends Manager{
 		if(is_null($name)){
 			return $this->config;
 		}
-		
+
 		return Arr::get($this->config, $name, $default);
 	}
-	
+
 	/**
 	 * 创建PHP文件菜单器
 	 *
@@ -139,7 +139,7 @@ class MenuManager extends Manager{
 	public function createPhpFileDriver(array $config){
 		return new PhpFile($config);
 	}
-	
+
 	/**
 	 * @param mixed $user
 	 * @param array $options
@@ -150,7 +150,7 @@ class MenuManager extends Manager{
 		$generator = new Generator();
 		return $generator->generate($menus, $options);
 	}
-	
+
 	/**
 	 * 扩展生成器
 	 *
@@ -160,7 +160,7 @@ class MenuManager extends Manager{
 	public function generator($name, $callback){
 		$this->customGenerator[$name] = $callback;
 	}
-	
+
 	/**
 	 * 调用生成器
 	 *
@@ -174,5 +174,5 @@ class MenuManager extends Manager{
 			$params
 		);
 	}
-	
+
 }

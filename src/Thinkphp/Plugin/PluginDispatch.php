@@ -22,36 +22,36 @@ use Xin\Support\Str;
  * @property-read \think\Request|\Xin\Thinkphp\Http\Requestable $request
  */
 class PluginDispatch extends Controller{
-	
+
 	/**
 	 * @var callable
 	 */
 	public static $pluginBootCallback = null;
-	
+
 	/**
 	 * @var string
 	 */
 	protected $plugin;
-	
+
 	/**
 	 * @var PluginFactory
 	 */
 	protected $pluginManager;
-	
+
 	/**
 	 * @param \think\App $app
 	 */
 	public function init(App $app){
 		$this->app = $app;
-		
+
 		$this->pluginManager = $this->app->get(PluginFactory::class);
-		
+
 		// 执行路由后置操作
 		$this->doRouteAfter();
-		
+
 		// 获取插件名
 		$this->plugin = strip_tags($this->param['plugin']);
-		
+
 		// 获取控制器名
 		$controller = strip_tags($this->param['controller']);
 		if(strpos($controller, '.')){
@@ -60,17 +60,17 @@ class PluginDispatch extends Controller{
 		}else{
 			$this->controller = Str::studly($controller);
 		}
-		
+
 		// 获取操作名
 		$this->actionName = isset($this->param['action'])
 			? strip_tags($this->param['action'])
 			: $this->rule->config('default_action');
-		
+
 		// 设置当前请求的插件、控制器、操作
 		$this->request->setPlugin($this->plugin);
 		$this->request->setController($this->controller)->setAction($this->actionName);
 	}
-	
+
 	/**
 	 * @return mixed
 	 */
@@ -78,32 +78,32 @@ class PluginDispatch extends Controller{
 		if(!$this->pluginManager->has($this->plugin)){
 			throw new HttpException(404, "plugin {$this->plugin} not exist.");
 		}
-		
+
 		// 启动插件事件
 		if(static::$pluginBootCallback){
 			$this->app->invoke(static::$pluginBootCallback);
 		}
-		
+
 		try{
 			// 实例化控制器
 			$instance = $this->controller($this->controller);
 		}catch(ClassNotFoundException $e){
 			throw new HttpException(404, 'controller not exists:'.$e->getClass());
 		}
-		
+
 		// 初始化视图
 		$this->initView();
-		
+
 		// 注册控制器中间件
 		$this->registerControllerMiddleware($instance);
-		
+
 		return $this->app->middleware->pipeline('controller')
 			->send($this->request)
 			->then(function() use ($instance){
 				// 获取当前操作名
 				$suffix = $this->rule->config('action_suffix');
 				$action = $this->actionName.$suffix;
-				
+
 				if(is_callable([$instance, $action])){
 					$vars = $this->request->param();
 					try{
@@ -113,7 +113,7 @@ class PluginDispatch extends Controller{
 						if($suffix){
 							$actionName = substr($actionName, 0, -strlen($suffix));
 						}
-						
+
 						$this->request->setAction($actionName);
 					}catch(ReflectionException $e){
 						$reflect = new ReflectionMethod($instance, '__call');
@@ -124,13 +124,13 @@ class PluginDispatch extends Controller{
 					// 操作不存在
 					throw new HttpException(404, 'method not exists:'.get_class($instance).'->'.$action.'()');
 				}
-				
+
 				$data = $this->app->invokeReflectMethod($instance, $reflect, $vars);
-				
+
 				return $this->autoResponse($data);
 			});
 	}
-	
+
 	/**
 	 * 实例化访问控制器
 	 *
@@ -141,18 +141,18 @@ class PluginDispatch extends Controller{
 	 */
 	public function controller(string $name){
 		$appName = $this->app->http->getName();
-		
+
 		$suffix = $this->rule->config('controller_suffix') ? 'Controller' : '';
 		$controllerLayer = $this->rule->config('controller_layer') ?: 'controller';
 		$emptyController = $this->rule->config('empty_controller') ?: 'Error';
-		
+
 		$pluginControllerLayer = "{$appName}\\{$controllerLayer}";
 		$class = $this->pluginManager->controllerClass(
 			$this->plugin,
 			$name = str_replace(['/', '.'], '\\', $name),
 			$pluginControllerLayer
 		);
-		
+
 		if(class_exists($class)){
 			return $this->app->make($class, [], true);
 		}elseif($emptyController && class_exists(
@@ -170,10 +170,10 @@ class PluginDispatch extends Controller{
 			)){
 			return $this->app->make($emptyClass, [], true);
 		}
-		
+
 		throw new ClassNotFoundException('class not exists:'.$class, $class);
 	}
-	
+
 	/**
 	 * 初始化视图
 	 */
@@ -182,7 +182,7 @@ class PluginDispatch extends Controller{
 		if($appName == "api"){
 			return;
 		}
-		
+
 		/** @var \think\View $view */
 		$view = $this->app->make('view');
 		$viewLayer = $appName.DIRECTORY_SEPARATOR."view";

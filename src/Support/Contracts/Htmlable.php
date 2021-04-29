@@ -8,7 +8,7 @@
 namespace Xin\Support\Contracts;
 
 interface Htmlable{
-	
+
 	/**
 	 * Get content as a string of HTML.
 	 *

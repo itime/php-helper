@@ -17,9 +17,9 @@ use Xin\Thinkphp\Facade\Auth;
  * Trait RegistersUsers
  */
 trait RegistersUsers{
-	
+
 	use RedirectsUsers, AuthenticatesFields;
-	
+
 	/**
 	 * Show the application registration form.
 	 *
@@ -29,7 +29,7 @@ trait RegistersUsers{
 	protected function showRegistrationForm(Request $request){
 		return view('auth/register');
 	}
-	
+
 	/**
 	 * Handle a registration request for the application.
 	 *
@@ -40,21 +40,21 @@ trait RegistersUsers{
 		if($request->isGet()){
 			return $this->showRegistrationForm($request);
 		}
-		
+
 		$data = $this->validateRegister($request);
-		
+
 		$data = $this->encryptPassword($data);
-		
+
 		$user = $this->create($data);
-		
+
 		event(new Registered($user));
-		
+
 		$this->guard()->login($user);
-		
+
 		return $this->registered($request, $user)
 			?: redirect($this->redirectPath());
 	}
-	
+
 	/**
 	 * Get the guard to be used during registration.
 	 *
@@ -63,7 +63,7 @@ trait RegistersUsers{
 	protected function guard(){
 		return Auth::guard();
 	}
-	
+
 	/**
 	 * The user has been registered.
 	 *
@@ -73,7 +73,7 @@ trait RegistersUsers{
 	 */
 	protected function registered(Request $request, $user){
 	}
-	
+
 	/**
 	 * 创建用户
 	 *
@@ -81,7 +81,7 @@ trait RegistersUsers{
 	 * @return mixed
 	 */
 	abstract protected function create($data);
-	
+
 	/**
 	 * 验证数据合法性
 	 *
@@ -91,7 +91,7 @@ trait RegistersUsers{
 	protected function validateRegister(Request $request){
 		$validate = new Validate();
 		$validate->failException(true);
-		
+
 		$validate->rule([
 			$this->username()        => 'require|alphaDash',
 			$this->password()        => 'require|alphaDash|confirm:'.$this->confirmPassword(),
@@ -101,10 +101,10 @@ trait RegistersUsers{
 			$this->password() => '密码',
 			$this->password() => '确认密码',
 		]);
-		
+
 		$data = $request->post();
 		$validate->check($data);
-		
+
 		// 验证账号是否被注册过
 		$username = $data[$this->username()];
 		/** @var \Xin\Contracts\Auth\UserProvider $provider */
@@ -115,10 +115,10 @@ trait RegistersUsers{
 		if(!empty($info)){
 			throw new ValidateException("该账号已被注册！");
 		}
-		
+
 		return $data;
 	}
-	
+
 	/**
 	 * 加密密码
 	 *
@@ -128,7 +128,7 @@ trait RegistersUsers{
 	protected function encryptPassword($data){
 		$passwordField = $this->password();
 		$data[$passwordField] = app('hash')->make($data[$passwordField]);
-		
+
 		return $data;
 	}
 }

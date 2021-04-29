@@ -12,7 +12,7 @@ namespace Xin\Thinkphp\Auth;
  * @mixin \Xin\Contracts\Auth\UserWechatBinder
  */
 trait UserWechatBinder{
-	
+
 	/**
 	 * @noinspection PhpUnhandledExceptionInspection
 	 */
@@ -21,7 +21,7 @@ trait UserWechatBinder{
 			->where($this->getOpenidFieldName(), $openid)
 			->find();
 	}
-	
+
 	/**
 	 * @noinspection PhpUnhandledExceptionInspection
 	 */
@@ -32,19 +32,19 @@ trait UserWechatBinder{
 		if(empty($info)){
 			return true;
 		}
-		
+
 		return $info->save([
 			$this->getOpenidFieldName() => $openId,
 		]);
 	}
-	
+
 	/**
 	 * @return $this
 	 */
 	protected function baseQueryOfWechatBinder(){
 		return $this;
 	}
-	
+
 	/**
 	 * @return string
 	 */

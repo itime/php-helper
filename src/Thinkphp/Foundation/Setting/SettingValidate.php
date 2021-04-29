@@ -13,7 +13,7 @@ use think\Validate;
  * 配置验证器
  */
 class SettingValidate extends Validate{
-	
+
 	/**
 	 * 验证规则
 	 *
@@ -25,7 +25,7 @@ class SettingValidate extends Validate{
 		'group' => 'alphaDash',
 		'type'  => 'alphaDash',
 	];
-	
+
 	/**
 	 * 字段信息
 	 *
@@ -37,14 +37,14 @@ class SettingValidate extends Validate{
 		'group' => '配置分组',
 		'type'  => '配置类型',
 	];
-	
+
 	/**
 	 * 情景模式
 	 *
 	 * @var array
 	 */
 	protected $scene = [];
-	
+
 	/**
 	 * SettingValidate constructor.
 	 */
@@ -53,12 +53,12 @@ class SettingValidate extends Validate{
 		if(!empty($typeList)){
 			$this->rule['type'] .= "|in:".implode(",", array_keys($typeList));
 		}
-		
+
 		$groupList = Config::get('web.config_group_list');
 		if(!empty($groupList)){
 			$this->rule['group'] .= "|in:".implode(",", array_keys($groupList));
 		}
-		
+
 		parent::__construct();
 	}
 }

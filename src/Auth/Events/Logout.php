@@ -7,21 +7,21 @@
 namespace Xin\Auth\Events;
 
 class Logout{
-	
+
 	/**
 	 * The authentication guard name.
 	 *
 	 * @var string
 	 */
 	public $guard;
-	
+
 	/**
 	 * The authenticated user.
 	 *
 	 * @var \Xin\Contracts\Auth\Guard
 	 */
 	public $user;
-	
+
 	/**
 	 * Create a new event instance.
 	 *

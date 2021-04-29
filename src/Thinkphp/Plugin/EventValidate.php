@@ -10,7 +10,7 @@ namespace Xin\Thinkphp\Plugin;
 use think\Validate;
 
 class EventValidate extends Validate{
-	
+
 	/**
 	 * 验证规则
 	 *
@@ -21,7 +21,7 @@ class EventValidate extends Validate{
 		'description' => 'require|length:3,255',
 		'type'        => 'require|in:0,1',
 	];
-	
+
 	/**
 	 * 字段信息
 	 *
@@ -32,7 +32,7 @@ class EventValidate extends Validate{
 		'description' => '描述',
 		'type'        => '类型',
 	];
-	
+
 	/**
 	 * 情景模式
 	 *

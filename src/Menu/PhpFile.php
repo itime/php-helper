@@ -10,12 +10,12 @@ namespace Xin\Menu;
 use Xin\Support\Arr;
 
 class PhpFile extends Driver{
-	
+
 	/**
 	 * @var array
 	 */
 	protected $data;
-	
+
 	/**
 	 * 初始化加载文件
 	 */
@@ -23,7 +23,7 @@ class PhpFile extends Driver{
 		if(!is_null($this->data)){
 			return;
 		}
-		
+
 		$targetPath = $this->config('target_path');
 		if(empty($targetPath) || !file_exists($targetPath)){
 			$this->data = require_once $this->config('base_path');
@@ -31,7 +31,7 @@ class PhpFile extends Driver{
 			$this->data = require_once $targetPath;
 		}
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -39,7 +39,7 @@ class PhpFile extends Driver{
 		$this->load();
 		return $this->data;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -47,20 +47,20 @@ class PhpFile extends Driver{
 		$this->load();
 		return $this->data;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function puts($menus, $append = []){
 		$this->load();
-		
+
 		foreach($menus as $menu){
 			$this->insert($menu, $append);
 		}
-		
+
 		$this->write();
 	}
-	
+
 	/**
 	 * 插入一个菜单
 	 *
@@ -69,20 +69,20 @@ class PhpFile extends Driver{
 	 */
 	protected function insert($menu, $append = []){
 		$menu = array_merge($menu, $append);
-		
+
 		if(isset($menu['child'])){
 			self::eachTree(function(&$item) use ($append){
 				$item = array_merge($item, $append);
 			}, $menu['child']);
 		}
-		
+
 		if(isset($menu['parent'])){
 			foreach($this->data as &$item){
 				if($item['name'] == $menu['parent']){
 					if(isset($item['child'])){
 						$item['child'] = [];
 					}
-					
+
 					$item['child'][] = $menu;
 					break;
 				}
@@ -92,13 +92,13 @@ class PhpFile extends Driver{
 			$this->data[] = $menu;
 		}
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function forget($condition){
 		$this->load();
-		
+
 		if(is_numeric($condition)){
 			unset($this->data[$condition]);
 		}elseif(is_callable($condition)){
@@ -113,10 +113,10 @@ class PhpFile extends Driver{
 				// return empty(array_diff_assoc($item, $condition));
 			}, $this->data);
 		}
-		
+
 		$this->write();
 	}
-	
+
 	/**
 	 * 遍历删除菜单
 	 *
@@ -133,7 +133,7 @@ class PhpFile extends Driver{
 		}
 		unset($menu);
 	}
-	
+
 	/**
 	 * 写入数据
 	 *
@@ -145,10 +145,10 @@ class PhpFile extends Driver{
 			if(!$ignoreError){
 				throw new \RuntimeException("target_path not configutre.");
 			}
-			
+
 			return;
 		}
-		
+
 		// 数组排序
 		self::eachTree(function(&$item, &$parent = null){
 			if(isset($item['child'])){
@@ -156,11 +156,11 @@ class PhpFile extends Driver{
 			}
 		}, $this->data);
 		$this->sort($this->data);
-		
+
 		$content = "<?php\nreturn ".var_export($this->data, true).";";
 		file_put_contents($targetPath, $content);
 	}
-	
+
 	/**
 	 * 数组排序
 	 *
@@ -170,9 +170,9 @@ class PhpFile extends Driver{
 		usort($list, function($it1, $it2){
 			$sort1 = isset($it1['sort']) ? $it1['sort'] : 0;
 			$sort2 = isset($it2['sort']) ? $it2['sort'] : 0;
-			
+
 			return $sort1 == $sort2 ? 0 : ($sort1 > $sort2 ? 1 : -1);
 		});
 	}
-	
+
 }

@@ -8,7 +8,7 @@
 namespace Xin\Contracts\Cache;
 
 interface LockProvider{
-	
+
 	/**
 	 * Get a lock instance.
 	 *
@@ -18,7 +18,7 @@ interface LockProvider{
 	 * @return \Xin\Contracts\Cache\Lock
 	 */
 	public function lock($name, $seconds = 0, $owner = null);
-	
+
 	/**
 	 * Restore a lock instance using the owner identifier.
 	 *

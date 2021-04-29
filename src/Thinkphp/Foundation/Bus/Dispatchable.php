@@ -10,14 +10,14 @@ namespace Xin\Thinkphp\Foundation\Bus;
 use think\facade\Queue;
 
 trait Dispatchable{
-	
+
 	//	/**
 	//	 * 默认队列
 	//	 *
 	//	 * @var string
 	//	 */
 	//	protected static $defaultQueue = '';
-	
+
 	/**
 	 * Dispatch the job with the given arguments.
 	 *
@@ -30,7 +30,7 @@ trait Dispatchable{
 		$queue = static::resolveQueue($queue);
 		return Queue::later($delay, static::class, $data, $queue);
 	}
-	
+
 	/**
 	 * Dispatch a command to its appropriate handler in the current process.
 	 *
@@ -42,7 +42,7 @@ trait Dispatchable{
 		$queue = static::resolveQueue($queue);
 		return Queue::push(static::class, $data, $queue);
 	}
-	
+
 	/**
 	 * 解析队列名称
 	 *
@@ -53,8 +53,8 @@ trait Dispatchable{
 		if(empty($queue) && property_exists(static::class, 'defaultQueue')){
 			$queue = static::$defaultQueue;
 		}
-		
+
 		return $queue;
 	}
-	
+
 }

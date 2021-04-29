@@ -10,7 +10,7 @@ namespace Xin\Contracts\Bus;
 use Xin\Contracts\Foundation\Repository as BaseRepository;
 
 interface CommentRepository extends BaseRepository{
-	
+
 	/**
 	 * get recommend comments by item id.
 	 *

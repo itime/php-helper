@@ -7,7 +7,7 @@
 namespace Xin\Contracts\Hint;
 
 interface Hint{
-	
+
 	/**
 	 * 提示成功消息
 	 *
@@ -18,7 +18,7 @@ interface Hint{
 	 * @return \think\Response|\Symfony\Component\HttpFoundation\Response
 	 */
 	public function success($msg, $url = null, $data = null, array $extend = []);
-	
+
 	/**
 	 * 提示失败消息
 	 *
@@ -29,7 +29,7 @@ interface Hint{
 	 * @return \think\Response|\Symfony\Component\HttpFoundation\Response
 	 */
 	public function error($msg, $code = 0, $url = null, array $extend = []);
-	
+
 	/**
 	 * 返回成功的数据
 	 *
@@ -38,7 +38,7 @@ interface Hint{
 	 * @return \think\Response|\Symfony\Component\HttpFoundation\Response
 	 */
 	public function result($data = [], array $extend = []);
-	
+
 	/**
 	 * 强错误提示
 	 *
@@ -49,7 +49,7 @@ interface Hint{
 	 * @return \think\Response|\Symfony\Component\HttpFoundation\Response
 	 */
 	public function alert($msg, $code = 0, $url = null, array $extend = []);
-	
+
 	/**
 	 * 直接提示成功消息
 	 *
@@ -60,7 +60,7 @@ interface Hint{
 	 * @param callable|null $callback
 	 */
 	public function outputSuccess($msg, $url = null, $data = null, array $extend = [], callable $callback = null);
-	
+
 	/**
 	 * 直接提示失败消息
 	 *
@@ -71,7 +71,7 @@ interface Hint{
 	 * @param callable|null $callback
 	 */
 	public function outputError($msg, $code = 0, $url = null, array $extend = [], callable $callback = null);
-	
+
 	/**
 	 * 直接输出强错误提示
 	 *
@@ -83,5 +83,5 @@ interface Hint{
 	 * @return \think\Response|\Symfony\Component\HttpFoundation\Response
 	 */
 	public function outputAlert($msg, $code = 0, $url = null, array $extend = [], callable $callback = null);
-	
+
 }

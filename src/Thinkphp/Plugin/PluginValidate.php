@@ -12,7 +12,7 @@ use think\Validate;
  * 配置验证器
  */
 class PluginValidate extends Validate{
-	
+
 	/**
 	 * 验证规则
 	 *
@@ -24,7 +24,7 @@ class PluginValidate extends Validate{
 		'author'  => 'require|length:2,12',
 		'version' => 'require',
 	];
-	
+
 	/**
 	 * 字段信息
 	 *
@@ -36,7 +36,7 @@ class PluginValidate extends Validate{
 		'author'  => '作者姓名',
 		'version' => '版本号',
 	];
-	
+
 	/**
 	 * 情景模式
 	 *

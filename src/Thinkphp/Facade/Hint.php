@@ -19,12 +19,11 @@ use think\Facade;
  * @method \think\Response outputSuccess($msg, $url = null, $data = null, array $extend = [], callable $callback = null) static
  * @method \think\Response outputError($msg, $code = 0, $url = null, array $extend = [], callable $callback = null) static
  * @method \think\Response outputAlert($msg, $code = 0, $url = null, array $extend = [], callable $callback = null) static
- *
  * @see \Xin\Contracts\Hint\Factory
  * @see \Xin\Contracts\Hint\Hint
  */
 class Hint extends Facade{
-	
+
 	/**
 	 * 获取当前Facade对应类名（或者已经绑定的容器对象标识）
 	 *

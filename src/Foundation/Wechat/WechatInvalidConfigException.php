@@ -10,7 +10,7 @@ namespace Xin\Foundation\Wechat;
 use Throwable;
 
 class WechatInvalidConfigException extends WechatException{
-	
+
 	/**
 	 * WechatInvalidConfigException constructor.
 	 *

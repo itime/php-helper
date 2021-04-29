@@ -8,7 +8,7 @@
 namespace Xin\Contracts\Foundation;
 
 interface Payment{
-	
+
 	/**
 	 * 微信支付
 	 *
@@ -16,7 +16,7 @@ interface Payment{
 	 * @return \Yansongda\Pay\Gateways\Wechat
 	 */
 	public function wechat(array $options = []);
-	
+
 	/**
 	 * 支付宝支付
 	 *

@@ -8,21 +8,21 @@
 namespace Xin\Support;
 
 class Hasher{
-	
+
 	/**
 	 * The default cost factor.
 	 *
 	 * @var int
 	 */
 	protected $rounds = 10;
-	
+
 	/**
 	 * Indicates whether to perform an algorithm check.
 	 *
 	 * @var bool
 	 */
 	protected $verifyAlgorithm = false;
-	
+
 	/**
 	 * Create a new hasher instance.
 	 *
@@ -33,7 +33,7 @@ class Hasher{
 		$this->rounds = $options['rounds'] ?? $this->rounds;
 		$this->verifyAlgorithm = $options['verify'] ?? $this->verifyAlgorithm;
 	}
-	
+
 	/**
 	 * Hash the given value.
 	 *
@@ -46,14 +46,14 @@ class Hasher{
 		$hash = password_hash($value, PASSWORD_BCRYPT, [
 			'cost' => $this->cost($options),
 		]);
-		
+
 		if($hash === false){
 			throw new \RuntimeException('Bcrypt hashing not supported.');
 		}
-		
+
 		return $hash;
 	}
-	
+
 	/**
 	 * Check the given plain value against a hash.
 	 *
@@ -67,14 +67,14 @@ class Hasher{
 		if($this->verifyAlgorithm && $this->info($hashedValue)['algoName'] !== 'bcrypt'){
 			throw new \RuntimeException('This password does not use the Bcrypt algorithm.');
 		}
-		
+
 		if(strlen($hashedValue) === 0){
 			return false;
 		}
-		
+
 		return password_verify($value, $hashedValue);
 	}
-	
+
 	/**
 	 * Check if the given hash has been hashed using the given options.
 	 *
@@ -87,7 +87,7 @@ class Hasher{
 			'cost' => $this->cost($options),
 		]);
 	}
-	
+
 	/**
 	 * Set the default password work factor.
 	 *
@@ -96,10 +96,10 @@ class Hasher{
 	 */
 	public function setRounds($rounds){
 		$this->rounds = (int)$rounds;
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * Extract the cost value from the options array.
 	 *
@@ -109,7 +109,7 @@ class Hasher{
 	protected function cost(array $options = []){
 		return $options['rounds'] ?? $this->rounds;
 	}
-	
+
 	/**
 	 * Get information about the given hashed value.
 	 *

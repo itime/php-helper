@@ -8,4 +8,5 @@
 namespace Xin\Auth\Access;
 
 class AuthorizationException extends \Exception{
+
 }

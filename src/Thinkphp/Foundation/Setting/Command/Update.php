@@ -13,7 +13,7 @@ use think\console\Output;
 use Xin\Thinkphp\Setting\DatabaseSetting;
 
 class Update extends Command{
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -21,14 +21,14 @@ class Update extends Command{
 		$this->setName('setting:update')
 			->setDescription('刷新站点配置');
 	}
-	
+
 	/**
 	 * @param \think\console\Input  $input
 	 * @param \think\console\Output $output
 	 */
 	protected function execute(Input $input, Output $output){
 		DatabaseSetting::updateCache();
-		
+
 		$output->highlight("已更新配置！");
 	}
 }

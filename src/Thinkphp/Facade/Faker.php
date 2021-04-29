@@ -74,12 +74,12 @@ use think\facade\Config;
  * @method static string randomHtml($maxDepth = 4, $maxWidth = 4)
  */
 class Faker extends Facade{
-	
+
 	/**
 	 * @var FakerGenerator
 	 */
 	protected static $instance;
-	
+
 	/**
 	 * 创建Facade实例
 	 *
@@ -96,10 +96,10 @@ class Faker extends Facade{
 				Config::get('app.faker_locale')
 			);
 		}
-		
+
 		return self::$instance;
 	}
-	
+
 	/**
 	 * 带参数实例化当前Facade类
 	 *

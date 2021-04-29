@@ -61,7 +61,7 @@ if(!function_exists('plugin_url')){
 		if(request()->plugin()){
 			$url = strpos($url, '>') ? $url : request()->plugin().">".$url;
 		}
-		
+
 		return url($url, $vars, $suffix, $domain);
 	}
 }

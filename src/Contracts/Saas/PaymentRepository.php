@@ -10,7 +10,7 @@ namespace Xin\Contracts\Saas;
 use Xin\Contracts\Foundation\Payment;
 
 interface PaymentRepository extends Payment{
-	
+
 	/**
 	 * 根据id获取微信支付的实例
 	 *
@@ -19,7 +19,7 @@ interface PaymentRepository extends Payment{
 	 * @return \Yansongda\Pay\Gateways\Wechat
 	 */
 	public function wechatOfId($id, array $options);
-	
+
 	/**
 	 * 根据应用id获取微信支付的实例
 	 *
@@ -28,7 +28,7 @@ interface PaymentRepository extends Payment{
 	 * @return \Yansongda\Pay\Gateways\Wechat
 	 */
 	public function wechatOfAppId($appId, array $options = []);
-	
+
 	/**
 	 * 根据应用id获取支付宝支付的实例
 	 *
@@ -37,7 +37,7 @@ interface PaymentRepository extends Payment{
 	 * @return \Yansongda\Pay\Gateways\Alipay
 	 */
 	public function alipayOfId($id, array $options = []);
-	
+
 	/**
 	 * 根据应用id获取支付宝支付的实例
 	 *
@@ -46,5 +46,5 @@ interface PaymentRepository extends Payment{
 	 * @return \Yansongda\Pay\Gateways\Alipay
 	 */
 	public function alipayOfAppId($appId, array $options = []);
-	
+
 }

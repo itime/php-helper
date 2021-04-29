@@ -14,9 +14,9 @@ namespace Xin\Thinkphp\View;
 use Exception;
 
 class Compiler{
-	
+
 	protected $cacheFile;
-	
+
 	/**
 	 * 写入编译缓存
 	 *
@@ -29,17 +29,17 @@ class Compiler{
 	public function write(string $cacheFile, string $content):void{
 		// 检测模板目录
 		$dir = dirname($cacheFile);
-		
+
 		if(!is_dir($dir)){
 			mkdir($dir, 0755, true);
 		}
-		
+
 		// 生成模板缓存文件
 		if(false === file_put_contents($cacheFile, $content)){
 			throw new Exception('cache write error:'.$cacheFile, 11602);
 		}
 	}
-	
+
 	/**
 	 * 读取编译编译
 	 *
@@ -51,16 +51,16 @@ class Compiler{
 	 */
 	public function read(string $cacheFile, array $vars = []):void{
 		$this->cacheFile = $cacheFile;
-		
+
 		if(!empty($vars) && is_array($vars)){
 			// 模板阵列变量分解成为独立变量
 			extract($vars, EXTR_OVERWRITE);
 		}
-		
+
 		//载入模版缓存文件
 		include $this->cacheFile;
 	}
-	
+
 	/**
 	 * 检查编译缓存是否有效
 	 *
@@ -74,12 +74,12 @@ class Compiler{
 		if(!file_exists($cacheFile)){
 			return false;
 		}
-		
+
 		if(0 != $cacheTime && time() > filemtime($cacheFile) + $cacheTime){
 			// 缓存是否在有效期
 			return false;
 		}
-		
+
 		return true;
 	}
 }

@@ -12,32 +12,32 @@ use Xin\Contracts\Auth\Guard as GuardContract;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 
 abstract class AbstractGuard implements GuardContract{
-	
+
 	/**
 	 * @var string
 	 */
 	protected $name;
-	
+
 	/**
 	 * @var mixed
 	 */
 	protected $user;
-	
+
 	/**
 	 * @var array
 	 */
 	protected $config;
-	
+
 	/**
 	 * @var UserProviderContract
 	 */
 	protected $provider;
-	
+
 	/**
 	 * @var \Closure
 	 */
 	protected $preCheckCallback;
-	
+
 	/**
 	 * AbstractGuard constructor.
 	 *
@@ -50,7 +50,7 @@ abstract class AbstractGuard implements GuardContract{
 		$this->config = $config;
 		$this->provider = $provider;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 * @throws \Xin\Auth\AuthenticationException
@@ -59,7 +59,7 @@ abstract class AbstractGuard implements GuardContract{
 		if(is_null($this->user)){
 			$this->user = $this->resolveUser();
 		}
-		
+
 		if($verifyType && is_null($this->user)){
 			throw new AuthenticationException(
 				$this->name,
@@ -67,14 +67,14 @@ abstract class AbstractGuard implements GuardContract{
 				$this->config
 			);
 		}
-		
+
 		if($verifyType){
 			$this->preCheck($this->user, $verifyType);
 		}
-		
+
 		return empty($field) ? $this->user : (isset($this->user[$field]) ? $this->user[$field] : $default);
 	}
-	
+
 	/**
 	 * 预检查数据
 	 *
@@ -85,10 +85,10 @@ abstract class AbstractGuard implements GuardContract{
 		if(!$this->preCheckCallback){
 			return;
 		}
-		
+
 		call_user_func($this->preCheckCallback, $user, $verifyType);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 * @throws \Xin\Auth\AuthenticationException
@@ -96,14 +96,14 @@ abstract class AbstractGuard implements GuardContract{
 	public function getUserId($verifyType = AuthVerifyType::BASE){
 		return $this->getUser('id', 0, $verifyType);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function temporaryUser($user){
 		$this->user = $user;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -114,26 +114,26 @@ abstract class AbstractGuard implements GuardContract{
 			return false;
 		}
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function guest(){
 		return !$this->check();
 	}
-	
+
 	/**
 	 * @return mixed
 	 */
 	abstract protected function resolveUser();
-	
+
 	/**
 	 * @return array
 	 */
 	public function getConfig(){
 		return $this->config;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -141,10 +141,10 @@ abstract class AbstractGuard implements GuardContract{
 		if(!is_callable($preCheckCallback)){
 			throw new \RuntimeException("setPreCheckCallback first parameter must callback.");
 		}
-		
+
 		$this->preCheckCallback = $preCheckCallback;
 	}
-	
+
 	/**
 	 * 获取用户提供者
 	 *

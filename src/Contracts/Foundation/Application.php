@@ -7,12 +7,12 @@
 namespace Xin\Contracts\Foundation;
 
 interface Application extends AppEnv{
-	
+
 	/**
 	 * @return string
 	 */
 	public function version();
-	
+
 	/**
 	 * 网站根目录
 	 *
@@ -20,7 +20,7 @@ interface Application extends AppEnv{
 	 * @return string
 	 */
 	public function rootPath($path = null);
-	
+
 	/**
 	 * Web根目录
 	 *
@@ -28,7 +28,7 @@ interface Application extends AppEnv{
 	 * @return string
 	 */
 	public function webRootPath($path = null);
-	
+
 	/**
 	 * 存储目录
 	 *
@@ -36,7 +36,7 @@ interface Application extends AppEnv{
 	 * @return string
 	 */
 	public function storagePath($path = null);
-	
+
 	/**
 	 * 插件目录
 	 *
@@ -44,13 +44,13 @@ interface Application extends AppEnv{
 	 * @return string
 	 */
 	public function pluginPath($path = null);
-	
+
 	/**
 	 * @param string $path
 	 * @return string
 	 */
 	public function runtimePath($path = null);
-	
+
 	/**
 	 * 第三方资源目录
 	 *
@@ -58,7 +58,7 @@ interface Application extends AppEnv{
 	 * @return mixed
 	 */
 	public function assetVendorPath($path = null);
-	
+
 	/**
 	 * 模块域目录
 	 *
@@ -66,7 +66,7 @@ interface Application extends AppEnv{
 	 * @return string
 	 */
 	public function assetScopePath($path = null);
-	
+
 	/**
 	 * 图片路径
 	 *
@@ -74,7 +74,7 @@ interface Application extends AppEnv{
 	 * @return string
 	 */
 	public function assetImagesPath($path = null);
-	
+
 	/**
 	 * 脚本路径
 	 *
@@ -82,7 +82,7 @@ interface Application extends AppEnv{
 	 * @return string
 	 */
 	public function assetScriptsPath($path = null);
-	
+
 	/**
 	 * 样式路径
 	 *
@@ -90,7 +90,7 @@ interface Application extends AppEnv{
 	 * @return string
 	 */
 	public function assetStylesPath($path = null);
-	
+
 	/**
 	 * 字体路径
 	 *
@@ -98,5 +98,5 @@ interface Application extends AppEnv{
 	 * @return string
 	 */
 	public function assetFontsPath($path = null);
-	
+
 }

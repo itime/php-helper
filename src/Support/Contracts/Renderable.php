@@ -8,7 +8,7 @@
 namespace Xin\Support\Contracts;
 
 interface Renderable{
-	
+
 	/**
 	 * Get the evaluated contents of the object.
 	 *

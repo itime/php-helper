@@ -10,7 +10,7 @@ namespace Xin\Contracts\Auth;
  * Interface Factory
  */
 interface Factory{
-	
+
 	/**
 	 * 尝试从本地缓存获取守卫者
 	 *
@@ -18,7 +18,7 @@ interface Factory{
 	 * @return \Xin\Contracts\Auth\Guard|\Xin\Contracts\Auth\StatefulGuard
 	 */
 	public function guard($name = null);
-	
+
 	/**
 	 * 选择一个默认的守卫者
 	 *

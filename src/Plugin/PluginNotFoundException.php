@@ -11,7 +11,7 @@ use Throwable;
 use Xin\Contracts\Plugin\PluginNotFoundException as PluginNotFoundExceptionContract;
 
 class PluginNotFoundException extends \Exception implements PluginNotFoundExceptionContract{
-	
+
 	/**
 	 * PluginNotFoundException constructor.
 	 *

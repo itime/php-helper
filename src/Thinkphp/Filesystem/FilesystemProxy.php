@@ -15,12 +15,12 @@ use think\File;
  * @mixin \Xin\Filesystem\Filesystem
  */
 class FilesystemProxy{
-	
+
 	/**
 	 * @var object
 	 */
 	protected $target;
-	
+
 	/**
 	 * FilesystemProxy constructor.
 	 *
@@ -29,7 +29,7 @@ class FilesystemProxy{
 	public function __construct($target){
 		$this->target = $target;
 	}
-	
+
 	/**
 	 * 保存文件
 	 *
@@ -42,7 +42,7 @@ class FilesystemProxy{
 	public function putFile(string $path, File $file, $rule = null, array $options = []){
 		return $this->putFileAs($path, $file, $file->hashName($rule), $options);
 	}
-	
+
 	/**
 	 * 指定文件名保存文件
 	 *
@@ -55,16 +55,16 @@ class FilesystemProxy{
 	public function putFileAs(string $path, File $file, string $name, array $options = []){
 		$stream = fopen($file->getRealPath(), 'r');
 		$path = trim($path.'/'.$name, '/');
-		
+
 		$result = $this->putStream($path, $stream, $options);
-		
+
 		if(is_resource($stream)){
 			fclose($stream);
 		}
-		
+
 		return $result ? $path : false;
 	}
-	
+
 	/**
 	 * @param $name
 	 * @param $arguments

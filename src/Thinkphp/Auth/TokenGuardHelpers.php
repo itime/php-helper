@@ -10,19 +10,19 @@ namespace Xin\Thinkphp\Auth;
 use think\Request;
 
 trait TokenGuardHelpers{
-	
+
 	/**
 	 * @var \Closure
 	 */
 	protected $authTokenResolver;
-	
+
 	/**
 	 * @return string
 	 */
 	public function getAuthToken(){
 		return call_user_func($this->authTokenResolver, $this->request, $this);
 	}
-	
+
 	/**
 	 * @return \Closure
 	 */

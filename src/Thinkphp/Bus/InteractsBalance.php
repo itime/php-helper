@@ -13,7 +13,7 @@ namespace Xin\Thinkphp\Bus;
  * @mixin \think\Model
  */
 trait InteractsBalance{
-	
+
 	/**
 	 * @return \Xin\Contracts\Bus\BalanceRepository
 	 */
@@ -27,7 +27,7 @@ trait InteractsBalance{
 			]
 		);
 	}
-	
+
 	/**
 	 * 充值
 	 *
@@ -42,7 +42,7 @@ trait InteractsBalance{
 			$amount, $remark, $attributes
 		);
 	}
-	
+
 	/**
 	 * 消费
 	 *
@@ -57,7 +57,7 @@ trait InteractsBalance{
 			$amount, $remark, $attributes
 		);
 	}
-	
+
 	/**
 	 * 获取当前用户余额
 	 *

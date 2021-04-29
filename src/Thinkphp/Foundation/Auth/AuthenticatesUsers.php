@@ -16,9 +16,9 @@ use Xin\Thinkphp\Facade\Auth;
 use Xin\Thinkphp\Facade\Hint;
 
 trait AuthenticatesUsers{
-	
+
 	use RedirectsUsers, AuthenticatesFields;
-	
+
 	/**
 	 * Handle a login request to the application.
 	 *
@@ -29,12 +29,12 @@ trait AuthenticatesUsers{
 		if($request->isGet()){
 			return $this->showLoginForm($request);
 		}
-		
+
 		$this->validateLogin($request);
-		
+
 		$notExistCallback = method_exists($this, 'notExistUser')
 			? \Closure::fromCallable([$this, 'notExistUser']) : null;
-		
+
 		try{
 			$user = $this->guard()->loginUsingCredential(
 				$this->credentials($request),
@@ -46,7 +46,7 @@ trait AuthenticatesUsers{
 			return $this->sendFailedLoginResponse($request, $e);
 		}
 	}
-	
+
 	//	/**
 	//	 * The user found does not exist.
 	//	 *
@@ -54,7 +54,7 @@ trait AuthenticatesUsers{
 	//	 */
 	//	protected function notExistUser($credentials){
 	//	}
-	
+
 	/**
 	 * Pre check before login.
 	 *
@@ -62,7 +62,7 @@ trait AuthenticatesUsers{
 	 */
 	protected function loginPreCheck($user){
 	}
-	
+
 	/**
 	 * Show the application's login form.
 	 *
@@ -72,7 +72,7 @@ trait AuthenticatesUsers{
 	protected function showLoginForm($request){
 		return view('auth/login');
 	}
-	
+
 	/**
 	 * Validate the user login request.
 	 *
@@ -82,7 +82,7 @@ trait AuthenticatesUsers{
 	protected function validateLogin(Request $request){
 		$validate = new Validate();
 		$validate->failException(true);
-		
+
 		$validate->rule([
 			$this->username() => 'require|alphaDash',
 			$this->password() => 'require|alphaDash',
@@ -90,10 +90,10 @@ trait AuthenticatesUsers{
 			$this->username() => '用户名',
 			$this->password() => '密码',
 		]);
-		
+
 		$validate->check($request->post());
 	}
-	
+
 	/**
 	 * Get the needed authorization credentials from the request.
 	 *
@@ -106,7 +106,7 @@ trait AuthenticatesUsers{
 			$this->password(),
 		]);
 	}
-	
+
 	/**
 	 * Send the response after the user was authenticated.
 	 *
@@ -116,16 +116,16 @@ trait AuthenticatesUsers{
 	 */
 	protected function sendLoginResponse(Request $request, $user){
 		Session::regenerate();
-		
+
 		if($result = $this->authenticated($request, $user)){
 			return $result;
 		}
-		
+
 		return $request->isJson() || $request->isAjax()
 			? Hint::success("登录成功！")
 			: redirect($this->redirectPath());
 	}
-	
+
 	/**
 	 * Get the failed login response instance.
 	 *
@@ -136,7 +136,7 @@ trait AuthenticatesUsers{
 	protected function sendFailedLoginResponse(Request $request, LoginException $e){
 		return Hint::error($e->getMessage());
 	}
-	
+
 	/**
 	 * The user has been authenticated.
 	 *
@@ -146,7 +146,7 @@ trait AuthenticatesUsers{
 	 */
 	protected function authenticated(Request $request, $user){
 	}
-	
+
 	/**
 	 * Log the user out of the application.
 	 *
@@ -157,19 +157,19 @@ trait AuthenticatesUsers{
 		if(!$request->isPost()){
 			throw new HttpException(500, ' not support '.$request->method());
 		}
-		
+
 		$this->guard()->logout();
 		Session::destroy();
-		
+
 		if($result = $this->loggedOut($request)){
 			return $result;
 		}
-		
+
 		return $request->isJson() || $request->isAjax()
 			? Hint::success("已退出登录！", (string)url("login/login"))
 			: redirect(url("login/login"));
 	}
-	
+
 	/**
 	 * The user has logged out of the application.
 	 *
@@ -178,7 +178,7 @@ trait AuthenticatesUsers{
 	 */
 	protected function loggedOut(Request $request){
 	}
-	
+
 	/**
 	 * 获取守卫者
 	 *

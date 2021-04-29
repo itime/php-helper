@@ -8,155 +8,155 @@
 namespace Xin\Thinkphp\Saas\Wechat;
 
 class AuthEnum{
-	
+
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	// + 公众号权限集														+
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	// 消息管理权限
 	const OFFICIAL_MESSAGE = 1;
-	
+
 	// 用户管理权限
 	const OFFICIAL_USER = 2;
-	
+
 	// 帐号服务权限
 	const OFFICIAL_ACCOUNT = 3;
-	
+
 	// 网页服务权限
 	const OFFICIAL_WEB = 4;
-	
+
 	// 微信小店权限
 	const OFFICIAL_MICRO_SHOP = 5;
-	
+
 	// 微信多客服权限
 	const OFFICIAL_CUSTOMER = 6;
-	
+
 	// 群发与通知权限
 	const OFFICIAL_TEMPLATE_MESSAGE = 7;
-	
+
 	// 微信卡券权限
 	const OFFICIAL_CARD = 8;
-	
+
 	// 微信扫一扫权限
 	const OFFICIAL_SCAN = 9;
-	
+
 	// 微信连WIFI权限
 	const OFFICIAL_WIFI = 10;
-	
+
 	// 素材管理权限
 	const OFFICIAL_MEDIA = 11;
-	
+
 	// 微信摇周边权限
 	const OFFICIAL_NEARBY = 12;
-	
+
 	// 微信门店权限
 	const OFFICIAL_STORE = 13;
-	
+
 	// 自定义菜单权限
 	const OFFICIAL_MENU = 15;
-	
+
 	// 城市服务接口权限
 	const OFFICIAL_CITY = 22;
-	
+
 	// 广告管理权限
 	const OFFICIAL_AD = 23;
-	
+
 	// 开放平台帐号管理权限
 	const OFFICIAL_OPEN_PLATFORM = 24;
-	
+
 	// 微信电子发票权限
 	const OFFICIAL_INVOICE = 26;
-	
+
 	// 快速注册小程序权限
 	const OFFICIAL_FAST_REGISTER_MINIPROGRAM = 27;
-	
+
 	// 小程序管理权限
 	const OFFICIAL_MINIPROGRAM = 33;
-	
+
 	// 微信商品库权限
 	const OFFICIAL_GOODS = 34;
-	
+
 	// 微信卡路里权限
 	const OFFICIAL_MOTION = 35;
-	
+
 	// 微信好物圈
 	const OFFICIAL_GOOD_GOODS = 44;
-	
+
 	// 微信一物一码权限
 	const OFFICIAL_UNIQUE_CODE = 46;
-	
+
 	// 微信财政电子票据权限
 	const OFFICIAL_FINANCE_INVOICE = 47;
-	
+
 	// 服务号对话权限
 	const OFFICIAL_GUIDE = 54;
-	
+
 	// 服务平台管理权限
 	const OFFICIAL_SERVICE_PLATFORM = 66;
-	
+
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	// + 小程序权限集														+
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	
+
 	// 用户管理权限
 	const MINIPROGRAM_USER = 17;
-	
+
 	// 开发管理与数据分析权限
 	const MINIPROGRAM_DEVELOP = 18;
-	
+
 	// 客服消息管理权限
 	const MINIPROGRAM_CUSTOMER = 19;
-	
+
 	// 开放平台帐号管理权限
 	const MINIPROGRAM_OPEN_PLATFORM = 25;
-	
+
 	// 开放平台帐号管理权限
 	const MINIPROGRAM_BASE_INFO = 30;
-	
+
 	// 小程序认证权限
 	const MINIPROGRAM_VERIFY = 31;
-	
+
 	// 微信卡路里权限
 	const MINIPROGRAM_MOTION = 36;
-	
+
 	// 附近地点权限
 	const MINIPROGRAM_NEARBY = 37;
-	
+
 	// 插件管理权限
 	const MINIPROGRAM_PLUGIN = 40;
-	
+
 	// 微信好物圈
 	const MINIPROGRAM_GOOD_GOODS = 41;
-	
+
 	// 快递配送权限
 	const MINIPROGRAM_EXPRESS = 45;
-	
+
 	// 微信财政电子票据权限
 	const MINIPROGRAM_FINANCE_INVOICE = 48;
-	
+
 	// 云开发管理权限
 	const MINIPROGRAM_CLOUD = 49;
-	
+
 	// 即时配送权限
 	const MINIPROGRAM_DELIVERY = 51;
-	
+
 	// 小程序直播权限
 	const MINIPROGRAM_LIVE_PLAY = 52;
-	
+
 	// 页面推送权限
 	const MINIPROGRAM_PAGE_PUSH = 57;
-	
+
 	// 广告管理权限
 	const MINIPROGRAM_AD = 65;
-	
+
 	// 服务平台管理权限
 	const MINIPROGRAM_SERVICE_PLATFORM = 67;
-	
+
 	// 商品管理权限
 	const MINIPROGRAM_MICRO_GOODS = 70;
-	
+
 	// 订单与物流管理权限
 	const MINIPROGRAM_MICRO_ORDER = 71;
-	
+
 	/**
 	 * @var \string[][]
 	 */
@@ -270,7 +270,7 @@ class AuthEnum{
 			'title' => '服务平台管理权限',
 			'desc'  => '帮助公众号管理服务平台上购买的资源',
 		],
-		
+
 		// 小程序权限集
 		17 => [
 			'title' => '帐号管理权限',
@@ -353,7 +353,7 @@ class AuthEnum{
 			'desc'  => '支持对小商店订单及物流信息进行管理',
 		],
 	];
-	
+
 	/**
 	 * 获取权限描述
 	 *
@@ -363,7 +363,7 @@ class AuthEnum{
 	public static function getDesc($type){
 		return isset(static::$DESC_LIST[$type]) ? static::$DESC_LIST[$type] : [];
 	}
-	
+
 	/**
 	 * 获取权限描述列表
 	 *

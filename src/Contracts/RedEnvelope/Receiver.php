@@ -8,7 +8,7 @@
 namespace Xin\Contracts\RedEnvelope;
 
 interface Receiver{
-	
+
 	/**
 	 * 领取红包
 	 *

@@ -8,7 +8,7 @@
 namespace Xin\Support;
 
 class XML{
-	
+
 	/**
 	 * 将XML转换成数组
 	 *
@@ -20,7 +20,7 @@ class XML{
 		libxml_disable_entity_loader(true);
 		return json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
 	}
-	
+
 	/**
 	 * 数组转XML(微信)
 	 *
@@ -31,7 +31,7 @@ class XML{
 	 */
 	public static function encode($param, $root = 'xml', $tag = ''){
 		if(!is_array($param) || count($param) <= 0) return '';
-		
+
 		$xml = '';
 		foreach($param as $key => $val){
 			$key = empty($tag) ? $key : $tag;

@@ -14,7 +14,7 @@ use Xin\Support\Str;
 use Xin\Thinkphp\Cache\RateLimiter;
 
 trait ThrottlesLogins{
-	
+
 	/**
 	 * Determine if the user has too many failed login attempts.
 	 *
@@ -26,7 +26,7 @@ trait ThrottlesLogins{
 			$this->throttleKey($request), $this->maxAttempts()
 		);
 	}
-	
+
 	/**
 	 * Increment the login attempts for the user.
 	 *
@@ -38,7 +38,7 @@ trait ThrottlesLogins{
 			$this->throttleKey($request), $this->decayMinutes() * 60
 		);
 	}
-	
+
 	/**
 	 * Redirect the user after determining they are locked out.
 	 *
@@ -49,12 +49,12 @@ trait ThrottlesLogins{
 		$seconds = $this->limiter()->availableIn(
 			$this->throttleKey($request)
 		);
-		
+
 		throw new ValidateException(
 			"登录尝试过多，请在 $seconds 秒后重试~"
 		);
 	}
-	
+
 	/**
 	 * Clear the login locks for the given user credentials.
 	 *
@@ -64,7 +64,7 @@ trait ThrottlesLogins{
 	protected function clearLoginAttempts(Request $request){
 		$this->limiter()->clear($this->throttleKey($request));
 	}
-	
+
 	/**
 	 * Fire an event when a lockout occurs.
 	 *
@@ -74,7 +74,7 @@ trait ThrottlesLogins{
 	protected function fireLockoutEvent(Request $request){
 		event(new Lockout($request));
 	}
-	
+
 	/**
 	 * Get the throttle key for the given request.
 	 *
@@ -84,7 +84,7 @@ trait ThrottlesLogins{
 	protected function throttleKey(Request $request){
 		return Str::lower($request->input($this->username())).'|'.$request->ip();
 	}
-	
+
 	/**
 	 * Get the rate limiter instance.
 	 *
@@ -93,7 +93,7 @@ trait ThrottlesLogins{
 	protected function limiter(){
 		return app(RateLimiter::class);
 	}
-	
+
 	/**
 	 * Get the maximum number of attempts to allow.
 	 *
@@ -102,7 +102,7 @@ trait ThrottlesLogins{
 	public function maxAttempts(){
 		return property_exists($this, 'maxAttempts') ? $this->maxAttempts : 5;
 	}
-	
+
 	/**
 	 * Get the number of minutes to throttle for.
 	 *

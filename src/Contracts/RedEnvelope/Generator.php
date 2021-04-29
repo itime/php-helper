@@ -8,12 +8,12 @@
 namespace Xin\Contracts\RedEnvelope;
 
 interface Generator{
-	
+
 	/**
 	 * 红包金额生成
 	 *
 	 * @return array|float
 	 */
 	public function generate();
-	
+
 }

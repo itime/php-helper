@@ -8,7 +8,7 @@
 namespace Xin\Support;
 
 class Collection extends Fluent implements \Countable, \IteratorAggregate{
-	
+
 	/**
 	 * (PHP 5 &gt;= 5.0.0)<br/>
 	 * Retrieve an external iterator.
@@ -20,7 +20,7 @@ class Collection extends Fluent implements \Countable, \IteratorAggregate{
 	public function getIterator(){
 		return new \ArrayIterator($this->items);
 	}
-	
+
 	/**
 	 * (PHP 5 &gt;= 5.1.0)<br/>
 	 * Count elements of an object.
@@ -34,7 +34,7 @@ class Collection extends Fluent implements \Countable, \IteratorAggregate{
 	public function count(){
 		return count($this->items);
 	}
-	
+
 	/**
 	 * var_export.
 	 *

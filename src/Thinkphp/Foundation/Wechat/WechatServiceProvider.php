@@ -12,7 +12,7 @@ use Xin\Foundation\Wechat\Wechat;
 use Xin\Thinkphp\Foundation\ServiceProvider;
 
 class WechatServiceProvider extends ServiceProvider{
-	
+
 	/**
 	 * 启动器
 	 */

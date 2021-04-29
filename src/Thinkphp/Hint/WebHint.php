@@ -14,19 +14,19 @@ use Xin\Contracts\Hint\Hint as HintContract;
 use Xin\Support\Reflect;
 
 class WebHint implements HintContract{
-	
+
 	use HintHelper;
-	
+
 	/**
 	 * @var \think\Request
 	 */
 	protected $request;
-	
+
 	/**
 	 * @var \think\Config
 	 */
 	protected $config;
-	
+
 	/**
 	 * ApiHint constructor.
 	 *
@@ -37,20 +37,20 @@ class WebHint implements HintContract{
 		$this->request = $request;
 		$this->config = $config;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function result($data = [], array $extend = []){
 		return $this->success('操作成功！', null, $data, $extend);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function success($msg = '', $url = null, $data = null, array $extend = []){
 		$url = $this->resolveSuccessUrl($url);
-		
+
 		$result = array_merge([
 			'code' => 1,
 			'msg'  => $msg,
@@ -58,16 +58,16 @@ class WebHint implements HintContract{
 			'url'  => $url,
 			'wait' => 1,
 		], $extend);
-		
+
 		return $this->resolve(true, $result);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function error($msg, $code = 0, $url = null, array $extend = []){
 		$url = $this->resolveErrorUrl($url);
-		
+
 		$result = array_merge([
 			'code' => 0,
 			'msg'  => $msg,
@@ -75,10 +75,10 @@ class WebHint implements HintContract{
 			'url'  => $url,
 			'wait' => 3,
 		], $extend);
-		
+
 		return $this->resolve(false, $result);
 	}
-	
+
 	/**
 	 * make Response
 	 *
@@ -89,18 +89,18 @@ class WebHint implements HintContract{
 	protected function resolve($isSuccess, array $result){
 		$configPrefix = Reflect::methodVisible($this->config, 'pull') == Reflect::VISIBLE_PUBLIC
 			? 'app' : 'hint.web';
-		
+
 		if($isSuccess){
 			$data = $this->config->get($configPrefix.'.dispatch_success_tmpl');
 		}else{
 			$data = $this->config->get($configPrefix.'.dispatch_error_tmpl');
 		}
-		
+
 		/** @var \think\response\View $response */
 		$response = Response::create($data ?: '', 'view');
 		$response->assign($result);
-		
+
 		return $response;
 	}
-	
+
 }

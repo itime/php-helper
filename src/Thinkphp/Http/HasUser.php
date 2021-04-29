@@ -10,12 +10,12 @@ namespace Xin\Thinkphp\Http;
 use Xin\Thinkphp\Facade\Auth;
 
 trait HasUser{
-	
+
 	/**
 	 * @var \Closure
 	 */
 	protected $userResolverCallback;
-	
+
 	/**
 	 * 设置用户完成器
 	 *
@@ -24,7 +24,7 @@ trait HasUser{
 	public function setUserResolver(\Closure $resolverCallback){
 		$this->userResolverCallback = $resolverCallback;
 	}
-	
+
 	/**
 	 * 获取用户信息
 	 *
@@ -39,10 +39,10 @@ trait HasUser{
 				return Auth::getUser($field, $default, $verifyType);
 			};
 		}
-		
+
 		return call_user_func($this->userResolverCallback, $field, $default, $verifyType);
 	}
-	
+
 	/**
 	 * 获取当前用户ID
 	 *

@@ -19,7 +19,7 @@ use Xin\Foundation\Wechat\WechatException;
 use Xin\Thinkphp\Facade\Hint;
 
 class ExceptionHandle extends Handle{
-	
+
 	/**
 	 * 不需要记录信息（日志）的异常类列表
 	 *
@@ -33,7 +33,7 @@ class ExceptionHandle extends Handle{
 		ValidateException::class,
 		AuthenticationException::class,
 	];
-	
+
 	/**
 	 * 记录异常信息（包括日志或者其它方式记录）
 	 *
@@ -45,7 +45,7 @@ class ExceptionHandle extends Handle{
 		if($this->isIgnoreReport($exception)){
 			return;
 		}
-		
+
 		// 收集异常数据
 		$data = [
 			'file'    => $exception->getFile(),
@@ -53,23 +53,23 @@ class ExceptionHandle extends Handle{
 			'message' => $this->getMessage($exception),
 			'code'    => $this->getCode($exception),
 		];
-		
+
 		$traceString = $exception->getTraceAsString();
 		if($find = strpos($traceString, "\n#11 ")){
 			$traceString = substr($traceString, 0, $find);
 		}
 		$log = "[{$data['code']}]{$data['message']}[{$data['file']}:{$data['line']}]\n{$traceString}";
-		
+
 		if($this->app->config->get('log.record_trace')){
 			$log .= PHP_EOL.$exception->getTraceAsString();
 		}
-		
+
 		try{
 			$this->app->log->record($log, 'error');
 		}catch(\Exception $e){
 		}
 	}
-	
+
 	/**
 	 * Render an exception into an HTTP response.
 	 *
@@ -92,11 +92,11 @@ class ExceptionHandle extends Handle{
 		}elseif($e instanceof WechatException){
 			return Hint::error($e->getMessage(), $e->getCode());
 		}
-		
+
 		// 其他错误交给系统处理
 		return parent::render($request, $e);
 	}
-	
+
 	/**
 	 * 未授权处理
 	 *
@@ -110,7 +110,7 @@ class ExceptionHandle extends Handle{
 			return redirect($e->redirectTo());
 		}
 	}
-	
+
 	/**
 	 * @access protected
 	 * @param HttpException $e
@@ -118,19 +118,19 @@ class ExceptionHandle extends Handle{
 	 */
 	protected function renderHttpException(HttpException $e):Response{
 		$statusCode = $e->getStatusCode();
-		
+
 		if($this->isJson() && in_array($statusCode, [403, 404])){
 			$msg = $e->getMessage();
 			if(empty($msg)){
 				$msg = strval($statusCode);
 			}
-			
+
 			return Hint::error($msg, $statusCode);
 		}
-		
+
 		return parent::renderHttpException($e);
 	}
-	
+
 	/**
 	 * @access protected
 	 * @param \Throwable $exception
@@ -140,17 +140,17 @@ class ExceptionHandle extends Handle{
 		if(!$this->isJson()){
 			return parent::convertExceptionToResponse($exception);
 		}
-		
+
 		// 收集异常数据
 		$code = $this->getCode($exception);
 		$msg = $this->getMessage($exception);
-		
+
 		// 不显示详细错误信息
 		if(!$this->app->isDebug() && !$this->app->config->get('app.show_error_msg')
 			&& !$exception instanceof \LogicException){
 			$msg = $this->app->config->get('app.error_message');
 		}
-		
+
 		// 调试模式，获取详细的错误信息
 		$extend = $this->app->isDebug() ? [
 			'name'   => get_class($exception),
@@ -169,10 +169,10 @@ class ExceptionHandle extends Handle{
 				'Environment Variables' => $_ENV,
 			],
 		] : [];
-		
+
 		return Hint::error($msg, $code, null, $extend);
 	}
-	
+
 	/**
 	 * 是否Ajax请求
 	 *
@@ -183,5 +183,5 @@ class ExceptionHandle extends Handle{
 			|| $this->app->request->isAjax()
 			|| $this->app->request->isJson();
 	}
-	
+
 }

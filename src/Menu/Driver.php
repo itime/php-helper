@@ -11,12 +11,12 @@ use Xin\Contracts\Menu\Repository;
 use Xin\Support\Arr;
 
 abstract class Driver implements Repository{
-	
+
 	/**
 	 * @var $config
 	 */
 	protected $config;
-	
+
 	/**
 	 * Driver constructor.
 	 *
@@ -25,7 +25,7 @@ abstract class Driver implements Repository{
 	public function __construct($config){
 		$this->config = $config;
 	}
-	
+
 	/**
 	 * 获取配置
 	 *
@@ -37,10 +37,10 @@ abstract class Driver implements Repository{
 		if(empty($key)){
 			return $this->config;
 		}
-		
+
 		return Arr::get($this->config, $key, $default);
 	}
-	
+
 	/**
 	 * 遍历树形数据
 	 *

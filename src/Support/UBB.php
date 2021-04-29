@@ -8,7 +8,7 @@
 namespace Xin\Support;
 
 class UBB{
-	
+
 	/**
 	 * 解析UBB语法
 	 *

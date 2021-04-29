@@ -8,12 +8,12 @@
 namespace Xin\Contracts\Auth;
 
 interface AuthVerifyType{
-	
+
 	/**
 	 * 不验证
 	 */
 	const NOT = 0;
-	
+
 	/**
 	 * 验证基础信息
 	 */

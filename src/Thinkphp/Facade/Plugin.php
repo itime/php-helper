@@ -22,7 +22,7 @@ use Xin\Thinkphp\Plugin\PluginDispatch;
  * @method string path($path = '') static
  */
 class Plugin extends Facade{
-	
+
 	/**
 	 * 获取当前Facade对应类名（或者已经绑定的容器对象标识）
 	 *
@@ -32,7 +32,7 @@ class Plugin extends Facade{
 	protected static function getFacadeClass(){
 		return 'PluginManager';
 	}
-	
+
 	/**
 	 * 路由到自定义调度对象
 	 *
@@ -42,5 +42,5 @@ class Plugin extends Facade{
 		Route::any('plugin/:plugin/:controller/[:action]', PluginDispatch::class);
 		PluginDispatch::$pluginBootCallback = $pluginBootCallback;
 	}
-	
+
 }

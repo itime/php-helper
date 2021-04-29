@@ -8,7 +8,7 @@
 namespace Xin\Contracts\Foundation;
 
 interface Repository{
-	
+
 	/**
 	 * 根据唯一标识符获取数据
 	 *
@@ -16,7 +16,7 @@ interface Repository{
 	 * @return mixed
 	 */
 	public function retrieveById($identifier);
-	
+
 	/**
 	 * 根据凭证获取数据
 	 *

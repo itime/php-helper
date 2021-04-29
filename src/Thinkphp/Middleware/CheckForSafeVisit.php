@@ -11,24 +11,24 @@ use think\exception\HttpException;
 use think\Request;
 
 class CheckForSafeVisit{
-	
+
 	use InteractsExcept;
-	
+
 	/**
 	 * @var \think\App
 	 */
 	protected $app;
-	
+
 	/**
 	 * @var \think\Config
 	 */
 	protected $config;
-	
+
 	/**
 	 * @var array
 	 */
 	protected $except = [];
-	
+
 	/**
 	 * CheckForSafeVisit constructor.
 	 *
@@ -38,7 +38,7 @@ class CheckForSafeVisit{
 		$this->app = $app;
 		$this->config = $app['config'];
 	}
-	
+
 	/**
 	 * 检查站点是否允许访问
 	 *
@@ -49,19 +49,19 @@ class CheckForSafeVisit{
 	 */
 	public function handle(Request $request, \Closure $next){
 		$safeKey = $this->localSafeKey($request);
-		
+
 		if($safeKey != $this->resolveSafeKey($request)){
 			// 要排除的URL
 			if($this->isExcept($request)){
 				return $next($request);
 			}
-			
+
 			throw new HttpException(404, '页面不存在！');
 		}
-		
+
 		return $next($request);
 	}
-	
+
 	/**
 	 * 获取本地的[safe_key]
 	 *
@@ -71,7 +71,7 @@ class CheckForSafeVisit{
 	protected function localSafeKey(Request $request){
 		return $this->config->get('app.safe_key');
 	}
-	
+
 	/**
 	 * 获取当前请求的[safe_key]
 	 *
@@ -80,18 +80,18 @@ class CheckForSafeVisit{
 	 */
 	protected function resolveSafeKey(Request $request){
 		$safeKey = $request->cookie($this->cookieSafeKeyName());
-		
+
 		if(empty($safeKey)){
 			$safeKey = $request->param($this->requestSafeKeyName(), '', 'trim');
-			
+
 			if($safeKey){
 				$this->app->cookie->set($this->cookieSafeKeyName(), $safeKey);
 			}
 		}
-		
+
 		return $safeKey;
 	}
-	
+
 	/**
 	 * 获取 cookie 存储的[safe_key]名称
 	 *
@@ -100,7 +100,7 @@ class CheckForSafeVisit{
 	protected function cookieSafeKeyName(){
 		return '__safe_key__';
 	}
-	
+
 	/**
 	 * 获取 当前请求的存储的[safe_key]参数名称
 	 *
@@ -109,5 +109,5 @@ class CheckForSafeVisit{
 	protected function requestSafeKeyName(){
 		return '_safe_key';
 	}
-	
+
 }

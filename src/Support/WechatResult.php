@@ -10,32 +10,32 @@ use EasyWeChat\Kernel\Exceptions\HttpException;
 use EasyWeChat\Kernel\Http\StreamResponse;
 
 class WechatResult implements \ArrayAccess{
-	
+
 	/**
 	 * @var mixed
 	 */
 	protected $result;
-	
+
 	/**
 	 * @var bool
 	 */
 	protected $isStream;
-	
+
 	/**
 	 * @var \Throwable
 	 */
 	protected $throw = null;
-	
+
 	/**
 	 * @var array
 	 */
 	protected $errorListeners = [];
-	
+
 	/**
 	 * @var \Throwable
 	 */
 	protected $exception = null;
-	
+
 	/**
 	 * WechatResult constructor.
 	 *
@@ -61,11 +61,11 @@ class WechatResult implements \ArrayAccess{
 				$result = null;
 			}
 		}
-		
+
 		$this->result = $result;
 		$this->isStream = $result instanceof StreamResponse;
 	}
-	
+
 	/**
 	 * 验证数据是否有效
 	 *
@@ -75,14 +75,14 @@ class WechatResult implements \ArrayAccess{
 		if(!$this->result){
 			return false;
 		}
-		
+
 		if($this->isStream || !isset($this->result['errcode'])){
 			return true;
 		}
-		
+
 		return $this->result['errcode'] == 0;
 	}
-	
+
 	/**
 	 * 是否是流数据
 	 *
@@ -91,7 +91,7 @@ class WechatResult implements \ArrayAccess{
 	public function isStream(){
 		return $this->isStream;
 	}
-	
+
 	/**
 	 * 获取错误码
 	 *
@@ -101,10 +101,10 @@ class WechatResult implements \ArrayAccess{
 		if(!$this->result){
 			return -10000;
 		}
-		
+
 		return $this->isStream ? 0 : $this->result['errcode'];
 	}
-	
+
 	/**
 	 * 获取错误消息
 	 *
@@ -114,10 +114,10 @@ class WechatResult implements \ArrayAccess{
 		if(!$this->result){
 			return '';
 		}
-		
+
 		return $this->isStream ? '' : $this->result['errmsg'];
 	}
-	
+
 	/**
 	 * 是否异常
 	 *
@@ -126,7 +126,7 @@ class WechatResult implements \ArrayAccess{
 	public function isException(){
 		return $this->exception != null;
 	}
-	
+
 	/**
 	 * 获取异常类
 	 *
@@ -135,7 +135,7 @@ class WechatResult implements \ArrayAccess{
 	public function getException(){
 		return $this->exception;
 	}
-	
+
 	/**
 	 * 抛出捕获的异常
 	 *
@@ -151,10 +151,10 @@ class WechatResult implements \ArrayAccess{
 				throw $this->exception;
 			}
 		}
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * 验证数据是否有效，无效则抛出异常
 	 *
@@ -169,7 +169,7 @@ class WechatResult implements \ArrayAccess{
 		}
 		return $this;
 	}
-	
+
 	/**
 	 * 监听业务错误事件
 	 *
@@ -182,10 +182,10 @@ class WechatResult implements \ArrayAccess{
 		foreach($errCode as $code){
 			$this->errorListeners[$code] = $callback;
 		}
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * 监听是否AppId或者AppSecret是否无效错误
 	 *
@@ -195,7 +195,7 @@ class WechatResult implements \ArrayAccess{
 	public function onAppIdOrAppSecretInvalid(callable $callback){
 		return $this->onError([40125, 40013], $callback);
 	}
-	
+
 	/**
 	 * 验证数据有效性
 	 *
@@ -213,10 +213,10 @@ class WechatResult implements \ArrayAccess{
 				return call_user_func_array($reject, [$this->result]);
 			}
 		}
-		
+
 		return $this->result;
 	}
-	
+
 	/**
 	 * 如果数据合法则返回指定的字段
 	 *
@@ -229,22 +229,22 @@ class WechatResult implements \ArrayAccess{
 			if($this->isStream){
 				return $this->result;
 			}
-			
+
 			if($fields === null){
 				$result = $this->result;
-				
+
 				unset($result['errcode'], $result['errmsg']);
-				
+
 				return $result;
 			}elseif(is_array($fields)){
 				$result = [];
-				
+
 				foreach($fields as $field){
 					if(isset($this->result[$field])){
 						$result[$field] = $this->result[$field];
 					}
 				}
-				
+
 				return $result;
 			}else{
 				return isset($this->result[$fields]) ? $this->result[$fields] : null;
@@ -259,11 +259,11 @@ class WechatResult implements \ArrayAccess{
 				$errMsg = $this->getErrMsg();
 				throw new $exception($errMsg ? $errMsg : '数据错误！');
 			}
-			
+
 			return $default;
 		});
 	}
-	
+
 	/**
 	 * @param string $name
 	 * @return bool
@@ -271,7 +271,7 @@ class WechatResult implements \ArrayAccess{
 	public function __isset($name){
 		return isset($this->result[$name]);
 	}
-	
+
 	/**
 	 * @param string $name
 	 * @return mixed
@@ -279,7 +279,7 @@ class WechatResult implements \ArrayAccess{
 	public function __get($name){
 		return $this->result[$name];
 	}
-	
+
 	/**
 	 * 实例化
 	 *
@@ -289,7 +289,7 @@ class WechatResult implements \ArrayAccess{
 	public static function make($result){
 		return new static($result);
 	}
-	
+
 	/**
 	 * 验证数据是否有效
 	 *
@@ -299,7 +299,7 @@ class WechatResult implements \ArrayAccess{
 	public static function valid($result){
 		return self::make($result)->isValid();
 	}
-	
+
 	/**
 	 * 实例化并包含抛出异常行为
 	 *
@@ -310,7 +310,7 @@ class WechatResult implements \ArrayAccess{
 	public static function toThrow($result, $exception = true){
 		return static::make($result)->throw($exception);
 	}
-	
+
 	/**
 	 * 实例化并包含返回结果行为
 	 *
@@ -322,7 +322,7 @@ class WechatResult implements \ArrayAccess{
 	public static function toResult($result, $fields = null, $default = null){
 		return self::make($result)->result($fields, $default);
 	}
-	
+
 	/**
 	 * 实例化并包含抛出异常和返回结果行为
 	 *
@@ -334,28 +334,28 @@ class WechatResult implements \ArrayAccess{
 	public static function toThrowsResult($result, $fields = null, $exception = true){
 		return self::make($result)->throw($exception)->result($fields);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function offsetExists($offset){
 		return isset($this->result[$offset]);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function offsetGet($offset){
 		return $this->result[$offset];
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function offsetSet($offset, $value){
 		$this->result[$offset] = $value;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */

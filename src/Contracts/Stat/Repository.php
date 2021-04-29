@@ -8,7 +8,7 @@
 namespace Xin\Contracts\Stat;
 
 interface Repository{
-	
+
 	/**
 	 * 自定义统计
 	 *
@@ -17,14 +17,14 @@ interface Repository{
 	 * @param array  $options
 	 */
 	public function tally($name, $step = 1, array $options = []);
-	
+
 	/**
 	 * 统计IP
 	 *
 	 * @param array $options
 	 */
 	public function tallyIP(array $options = []);
-	
+
 	/**
 	 * 获取统计的值
 	 *
@@ -34,7 +34,7 @@ interface Repository{
 	 * @return int
 	 */
 	public function value($name, $time = null, array $options = []);
-	
+
 	/**
 	 * 获取统计总值
 	 *
