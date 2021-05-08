@@ -5,9 +5,10 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Foundation;
+namespace Xin\Thinkphp\Foundation\Validate;
 
 use think\Validate;
+use Xin\Thinkphp\Foundation\ServiceProvider;
 
 class ValidateServiceProvider extends ServiceProvider{
 

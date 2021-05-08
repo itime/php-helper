@@ -10,7 +10,7 @@ namespace Xin\Thinkphp\Foundation\Setting\Command;
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
-use Xin\Thinkphp\Setting\DatabaseSetting;
+use Xin\Thinkphp\Foundation\Setting\DatabaseSetting;
 
 class Update extends Command{
 

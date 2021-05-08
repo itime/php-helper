@@ -11,7 +11,7 @@ use think\console\Command;
 use think\console\Input;
 use think\console\Output;
 use think\facade\Cache;
-use Xin\Thinkphp\Setting\DatabaseSetting;
+use Xin\Thinkphp\Foundation\Setting\DatabaseSetting;
 
 class Clear extends Command{
 

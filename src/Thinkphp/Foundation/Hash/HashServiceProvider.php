@@ -5,9 +5,10 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Foundation;
+namespace Xin\Thinkphp\Foundation\Hash;
 
 use Xin\Support\Hasher;
+use Xin\Thinkphp\Foundation\ServiceProvider;
 
 /**
  * Class HintServiceProvider

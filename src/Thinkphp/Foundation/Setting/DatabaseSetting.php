@@ -252,4 +252,62 @@ class DatabaseSetting extends Model{
 
 		return $settings;
 	}
+
+	/**
+	 * 安装配置
+	 *
+	 * @param array $settings
+	 */
+	public static function setup($settings){
+		$keys = array_keys($settings);
+		$existKeys = static::where('name', 'in', $keys)->column('name');
+		$attachKeys = array_diff($keys, $existKeys);
+		$detachKeys = array_diff($existKeys, $keys);
+		$updateKeys = array_diff($existKeys, $detachKeys);
+
+		if(!empty($attachKeys)){
+			foreach($attachKeys as $attachKey){
+				$setting = $settings[$attachKey];
+				static::create([
+					'title'   => $setting['title'],
+					'name'    => $attachKey,
+					'value'   => isset($setting['value']) ? $setting['value'] : '',
+					'type'    => isset($setting['type']) ? $setting['type'] : 'string',
+					'extra'   => isset($setting['extra']) ? $setting['type'] : '',
+					'group'   => isset($setting['group']) ? $setting['group'] : '',
+					'sort'    => isset($setting['sort']) ? $setting['sort'] : 0,
+					'system'  => 0,
+					'display' => isset($setting['display']) ? $setting['display'] : 1,
+
+				]);
+			}
+		}
+
+		if(!empty($updateKeys)){
+			foreach($updateKeys as $updateKey){
+				static::update([
+					'type'    => isset($setting['type']) ? $setting['type'] : 'string',
+					'extra'   => isset($setting['extra']) ? $setting['type'] : '',
+					'group'   => isset($setting['group']) ? $setting['group'] : '',
+					'display' => isset($setting['display']) ? $setting['display'] : 1,
+				], [
+					'name' => $updateKey,
+				]);
+			}
+		}
+
+		if(!empty($detachKeys)){
+			static::unsetup($detachKeys);
+		}
+	}
+
+	/**
+	 * 取消安装配置
+	 *
+	 * @param array $keys
+	 * @return bool
+	 */
+	public static function unsetup($keys){
+		return static::where('name', 'in', $keys)->delete();
+	}
 }
