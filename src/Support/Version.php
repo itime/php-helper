@@ -38,10 +38,13 @@ final class Version{
 	 * @return int
 	 */
 	public static function check($current, $new){
-		if($current == $new) return 0;
+		if($current == $new){
+			return 0;
+		}
 
 		$current = explode(".", $current);
 		$new = explode(".", $new);
+
 		foreach($current as $k => $cur){
 			if(isset($new[$k])){
 				if($cur < $new[$k]){
@@ -53,6 +56,7 @@ final class Version{
 				return 1;
 			}
 		}
+
 		return count($new) > count($current) ? -1 : 0;
 	}
 

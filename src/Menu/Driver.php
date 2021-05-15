@@ -44,9 +44,9 @@ abstract class Driver implements Repository{
 	/**
 	 * 遍历树形数据
 	 *
-	 * @param string $callback
-	 * @param array  $menus
-	 * @param mixed  $parent
+	 * @param callable $callback
+	 * @param array    $menus
+	 * @param mixed    $parent
 	 */
 	protected static function eachTree($callback, &$menus, &$parent = null){
 		foreach($menus as $key => &$menu){

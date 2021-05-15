@@ -16,11 +16,26 @@ interface PluginInfo{
 	public function getName();
 
 	/**
+	 * 获取插件版本
+	 *
+	 * @return string
+	 */
+	public function getVersion();
+
+	/**
+	 * 检查插件版本
+	 *
+	 * @param string $newVersion
+	 * @return int
+	 */
+	public function checkVersion($newVersion);
+
+	/**
 	 * 获取插件信息
 	 *
 	 * @return array
 	 */
-	public function getInfo();
+	public function getInfo($name = null);
 
 	/**
 	 * 获取配置模板

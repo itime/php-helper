@@ -7,28 +7,28 @@
 
 namespace Xin\Menu;
 
+use Xin\Contracts\Menu\Factory;
 use Xin\Support\Arr;
 use Xin\Support\Manager;
 
 /**
  * Class MenuManager
- * @method \Xin\Contracts\Menu\Writer driver($driver = null)
+ * @method \Xin\Contracts\Menu\Repository driver($driver = null)
  * @method array|\iterable get($menu)
- * @method bool put($menu)
  * @method bool puts($menus)
  * @method bool forget($name)
  */
-class MenuManager extends Manager{
-
-	/**
-	 * @var array
-	 */
-	protected $customGenerator = [];
+class MenuManager extends Manager implements Factory{
 
 	/**
 	 * @var array
 	 */
 	protected $config = [];
+
+	/**
+	 * @var array
+	 */
+	protected $customGenerator = [];
 
 	/**
 	 * MenuManager constructor.
@@ -38,12 +38,17 @@ class MenuManager extends Manager{
 	 */
 	public function __construct($app, array $config){
 		parent::__construct($app);
+
 		$this->config = $config;
+
+		$this->generator('default', Generator::class);
 	}
 
 	/**
+	 * 获取菜单器实例
+	 *
 	 * @param string $name
-	 * @return \Xin\Contracts\Menu\Writer
+	 * @return \Xin\Contracts\Menu\Repository
 	 */
 	public function menu($name = null){
 		return $this->driver($name);
@@ -94,7 +99,7 @@ class MenuManager extends Manager{
 	 * @param string $menu
 	 * @param null   $name
 	 * @param null   $default
-	 * @return array
+	 * @return mixed
 	 */
 	public function getMenuConfig($menu, $name = null, $default = null){
 		if($config = $this->getConfig("menus.{$menu}")){
@@ -141,13 +146,17 @@ class MenuManager extends Manager{
 	}
 
 	/**
+	 * 生成菜单
+	 *
 	 * @param mixed $user
 	 * @param array $options
 	 * @return array
 	 */
 	public function generate($user, array $options = []){
+		$generator = $this->resolveGenerator();
+
 		$menus = $this->driver()->get($user);
-		$generator = new Generator();
+
 		return $generator->generate($menus, $options);
 	}
 
@@ -165,14 +174,28 @@ class MenuManager extends Manager{
 	 * 调用生成器
 	 *
 	 * @param string $name
-	 * @param array  $params
-	 * @return false|mixed
+	 * @return \Xin\Contracts\Menu\Generator
 	 */
-	protected function callCustomGenerator($name, $params = []){
-		return call_user_func_array(
-			$this->customCreators[$name],
-			$params
-		);
+	protected function resolveGenerator($name = null){
+		$name = $name ?: $this->getDefaultDriver();
+		$generatorType = $this->getMenuConfig($name, 'generator', 'default');
+
+		if(!isset($this->customGenerator[$generatorType])){
+			throw new \RuntimeException("Menu Generator[{$generatorType}] not defined.");
+		}
+
+		$generator = $this->customGenerator[$generatorType];
+
+		if(!is_object($generator)){
+			//if(is_callable($generator)){
+			//	$this->customGenerator[$generator] = $generator();
+			//}else{
+			//	$this->customGenerator[$generator] = new $generator();
+			//}
+			$this->customGenerator[$generatorType] = $generator = new $generator();
+		}
+
+		return $generator;
 	}
 
 }

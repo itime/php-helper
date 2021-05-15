@@ -9,6 +9,7 @@ namespace Xin\Plugin;
 
 use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Contracts\Plugin\PluginInfo as PluginInfoContract;
+use Xin\Support\Version;
 
 class PluginInfo implements PluginInfoContract{
 
@@ -46,13 +47,13 @@ class PluginInfo implements PluginInfoContract{
 	/**
 	 * @return array
 	 */
-	public function getInfo(){
+	public function getInfo($name = null){
 		if(is_null($this->info)){
 			$path = $this->path().'manifest.php';
 			$this->info = require_once $path;
 		}
 
-		return $this->info;
+		return $name ? $this->info : $this->info[$name];
 	}
 
 	/**
@@ -60,6 +61,20 @@ class PluginInfo implements PluginInfoContract{
 	 */
 	public function getName(){
 		return $this->name;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getVersion(){
+		return $this->getInfo('version');
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function checkVersion($newVersion){
+		return Version::check($this->getVersion(), $newVersion);
 	}
 
 	/**
@@ -155,4 +170,5 @@ class PluginInfo implements PluginInfoContract{
 	public function plugin(){
 		return $this->factory->plugin($this->getName());
 	}
+
 }

@@ -118,23 +118,6 @@ class PhpFile extends Driver{
 	}
 
 	/**
-	 * 遍历删除菜单
-	 *
-	 * @param callable $callback
-	 * @param array    $menus
-	 */
-	public static function eachDelete($callback, &$menus){
-		foreach($menus as $key => &$menu){
-			if(call_user_func_array($callback, [$menu]) === true){
-				unset($menus[$key]);
-			}elseif(isset($menu['child'])){
-				self::eachDelete($callback, $menu['child']);
-			}
-		}
-		unset($menu);
-	}
-
-	/**
 	 * 写入数据
 	 *
 	 * @param bool $ignoreError
@@ -173,6 +156,23 @@ class PhpFile extends Driver{
 
 			return $sort1 == $sort2 ? 0 : ($sort1 > $sort2 ? 1 : -1);
 		});
+	}
+
+	/**
+	 * 遍历删除菜单
+	 *
+	 * @param callable $callback
+	 * @param array    $menus
+	 */
+	public static function eachDelete($callback, &$menus){
+		foreach($menus as $key => &$menu){
+			if(call_user_func_array($callback, [$menu]) === true){
+				unset($menus[$key]);
+			}elseif(isset($menu['child'])){
+				self::eachDelete($callback, $menu['child']);
+			}
+		}
+		unset($menu);
 	}
 
 }

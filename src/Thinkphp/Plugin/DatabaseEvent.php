@@ -108,26 +108,6 @@ class DatabaseEvent extends Model{
 	}
 
 	/**
-	 * 获取事件列表
-	 *
-	 * @param array|null $names
-	 * @return \think\Collection
-	 * @throws \think\db\exception\DataNotFoundException
-	 * @throws \think\db\exception\DbException
-	 * @throws \think\db\exception\ModelNotFoundException
-	 */
-	protected static function resolveList($names){
-		if($names === null){
-			$eventCollection = static::select();
-		}else{
-			$names = is_array($names) ? $names : [$names];
-			$eventCollection = static::where('name', 'in', $names)->select();
-		}
-
-		return $eventCollection;
-	}
-
-	/**
 	 * 挂载插件
 	 *
 	 * @param string     $addon
@@ -137,7 +117,8 @@ class DatabaseEvent extends Model{
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	public static function mountAddon($addon, $names){
-		$eventCollection = static::resolveList($names);
+		$names = is_array($names) ? $names : [$names];
+		$eventCollection = static::where('name', 'in', $names)->select();
 
 		/** @var static $event */
 		foreach($eventCollection as $event){
@@ -161,7 +142,7 @@ class DatabaseEvent extends Model{
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	public static function unmountAddon($addon, $names = null){
-		$eventCollection = static::resolveList($names);
+		$eventCollection = static::whereFindInSet('addons', $addon)->select();
 
 		/** @var static $event */
 		foreach($eventCollection as $event){
