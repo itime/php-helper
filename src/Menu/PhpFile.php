@@ -26,7 +26,11 @@ class PhpFile extends Driver{
 
 		$targetPath = $this->config('target_path');
 		if(empty($targetPath) || !file_exists($targetPath)){
-			$this->data = require_once $this->config('base_path');
+			$basePath = $this->config('base_path');
+			if(!file_exists($basePath)){
+				throw new \RuntimeException("菜单初始文件不存在[{$basePath}]");
+			}
+			$this->data = require_once $basePath;
 		}else{
 			$this->data = require_once $targetPath;
 		}
@@ -57,8 +61,7 @@ class PhpFile extends Driver{
 		$this->load();
 
 		foreach($menus as $menu){
-			$menu['plugin'] = $plugin;
-			$this->insert($menu, $append);
+			$this->insert($menu, $plugin, $append);
 		}
 
 		$this->write();
@@ -70,19 +73,21 @@ class PhpFile extends Driver{
 	 * @param array $menu
 	 * @param array $append
 	 */
-	protected function insert($menu, $append = []){
+	protected function insert($menu, $plugin, $append = []){
 		$menu = array_merge($menu, $append);
+		$menu['plugin'] = $plugin;
 
 		if(isset($menu['child'])){
-			self::eachTree(function(&$item) use ($append){
+			self::eachTree(function(&$item) use ($plugin, $append){
 				$item = array_merge($item, $append);
+				$item['plugin'] = $plugin;
 			}, $menu['child']);
 		}
 
 		if(isset($menu['parent'])){
 			foreach($this->data as &$item){
 				if($item['name'] == $menu['parent']){
-					if(isset($item['child'])){
+					if(!isset($item['child'])){
 						$item['child'] = [];
 					}
 
@@ -170,6 +175,10 @@ class PhpFile extends Driver{
 	public function refresh($plugin = null){
 		if(empty($plugin)){
 			$this->data = null;
+			$targetPath = $this->config('target_path');
+			if(file_exists($targetPath)){
+				unlink($targetPath);
+			}
 		}else{
 			$this->forget(function($item) use ($plugin){
 				return isset($item['plugin']) && $item['plugin'] == $plugin;
