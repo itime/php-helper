@@ -27,11 +27,12 @@ interface Repository{
 	/**
 	 * 写入一组菜单
 	 *
-	 * @param array $menus
-	 * @param array $append
+	 * @param array  $menus
+	 * @param string $plugin
+	 * @param array  $append
 	 * @return bool
 	 */
-	public function puts($menus, $append = []);
+	public function puts($menus, $plugin = null, $append = []);
 
 	/**
 	 * 移除菜单
@@ -39,5 +40,13 @@ interface Repository{
 	 * @param mixed $condition
 	 */
 	public function forget($condition);
+
+	/**
+	 * 刷新菜单
+	 *
+	 * @param string $plugin
+	 * @return bool
+	 */
+	public function refresh($plugin = null);
 
 }

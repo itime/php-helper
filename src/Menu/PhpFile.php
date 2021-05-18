@@ -51,10 +51,13 @@ class PhpFile extends Driver{
 	/**
 	 * @inheritDoc
 	 */
-	public function puts($menus, $append = []){
+	public function puts($menus, $plugin = null, $append = []){
+		$plugin = empty($plugin) ? '' : $plugin;
+
 		$this->load();
 
 		foreach($menus as $menu){
+			$menu['plugin'] = $plugin;
 			$this->insert($menu, $append);
 		}
 
@@ -102,13 +105,13 @@ class PhpFile extends Driver{
 		if(is_numeric($condition)){
 			unset($this->data[$condition]);
 		}elseif(is_callable($condition)){
-			$this->eachDelete($condition, $this->data);
+			static::eachTreeFilter($condition, $this->data);
 		}elseif(is_string($condition)){
-			$this->eachDelete(function($item) use ($condition){
+			static::eachTreeFilter(function($item) use ($condition){
 				return $condition == $item['name'];
 			}, $this->data);
 		}else{
-			$this->eachDelete(function($item) use ($condition){
+			static::eachTreeFilter(function($item) use ($condition){
 				return Arr::where($item, $condition);
 				// return empty(array_diff_assoc($item, $condition));
 			}, $this->data);
@@ -159,20 +162,19 @@ class PhpFile extends Driver{
 	}
 
 	/**
-	 * 遍历删除菜单
+	 * 刷新菜单
 	 *
-	 * @param callable $callback
-	 * @param array    $menus
+	 * @param string $plugin
+	 * @return bool
 	 */
-	public static function eachDelete($callback, &$menus){
-		foreach($menus as $key => &$menu){
-			if(call_user_func_array($callback, [$menu]) === true){
-				unset($menus[$key]);
-			}elseif(isset($menu['child'])){
-				self::eachDelete($callback, $menu['child']);
-			}
+	public function refresh($plugin = null){
+		if(empty($plugin)){
+			$this->data = null;
+		}else{
+			$this->forget(function($item) use ($plugin){
+				return isset($item['plugin']) && $item['plugin'] == $plugin;
+			});
 		}
-		unset($menu);
+		return true;
 	}
-
 }

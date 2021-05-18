@@ -53,7 +53,7 @@ class PluginInfo implements PluginInfoContract{
 			$this->info = require_once $path;
 		}
 
-		return $name ? $this->info : $this->info[$name];
+		return $name ? $this->info[$name] : $this->info;
 	}
 
 	/**
@@ -75,6 +75,21 @@ class PluginInfo implements PluginInfoContract{
 	 */
 	public function checkVersion($newVersion){
 		return Version::check($this->getVersion(), $newVersion);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function path($path = ''){
+		$rootPath = $this->factory->pluginPath($this->getName());
+		return $rootPath.($path ? $path.DIRECTORY_SEPARATOR : $path);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function plugin(){
+		return $this->factory->plugin($this->getName());
 	}
 
 	/**
@@ -154,21 +169,6 @@ class PluginInfo implements PluginInfoContract{
 		}
 
 		return $this->configTemplate;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function path($path = ''){
-		$rootPath = $this->factory->pluginPath($this->getName());
-		return $rootPath.($path ? $path.DIRECTORY_SEPARATOR : $path);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function plugin(){
-		return $this->factory->plugin($this->getName());
 	}
 
 }

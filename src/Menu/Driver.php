@@ -49,10 +49,27 @@ abstract class Driver implements Repository{
 	 * @param mixed    $parent
 	 */
 	protected static function eachTree($callback, &$menus, &$parent = null){
-		foreach($menus as $key => &$menu){
+		foreach($menus as &$menu){
 			call_user_func_array($callback, [&$menu, &$parent]);
 			if(isset($menu['child'])){
 				self::eachTree($callback, $menu['child'], $menu);
+			}
+		}
+		unset($menu);
+	}
+
+	/**
+	 * 遍历删除菜单
+	 *
+	 * @param callable $callback
+	 * @param array    $menus
+	 */
+	public static function eachTreeFilter($callback, &$menus){
+		foreach($menus as $key => &$menu){
+			if(call_user_func_array($callback, [$menu]) === true){
+				unset($menus[$key]);
+			}elseif(isset($menu['child'])){
+				self::eachTreeFilter($callback, $menu['child']);
 			}
 		}
 		unset($menu);
