@@ -9,12 +9,8 @@ namespace Xin\Http;
 
 /**
  * Class Response
- * @method int getStatusCode()
- * @method string[] getHeader(string $name)
- * @method string[][] getHeaders()
- * @method bool hasHeader(string $name)
- * @method bool getHeaderLine(string $name)
- * @method \Psr\Http\Message\StreamInterface getBody(string $name)
+ *
+ * @mixin \GuzzleHttp\Psr7\Response
  */
 class Response{
 
@@ -24,12 +20,18 @@ class Response{
 	protected $response;
 
 	/**
+	 * @var \GuzzleHttp\Exception\BadResponseException
+	 */
+	protected $e;
+
+	/**
 	 * Response constructor.
 	 *
 	 * @param \Psr\Http\Message\ResponseInterface $response
 	 */
-	public function __construct($response){
+	public function __construct($response, $e = null){
 		$this->response = $response;
+		$this->e = $e;
 	}
 
 	/**
@@ -127,8 +129,31 @@ class Response{
 	 *
 	 * @return \Psr\Http\Message\ResponseInterface
 	 */
-	public function getResponse(){
+	public function getRaw(){
 		return $this->response;
+	}
+
+	/**
+	 * 如果有异常则抛出
+	 *
+	 * @return $this
+	 * @throws \GuzzleHttp\Exception\BadResponseException
+	 */
+	public function throwException(){
+		if($this->e){
+			throw $this->e;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * 当前响应是否异常
+	 *
+	 * @return bool
+	 */
+	public function isException(){
+		return $this->e != null;
 	}
 
 	/**

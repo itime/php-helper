@@ -95,7 +95,7 @@ class Payment extends BasePayment implements PaymentRepository{
 	 *
 	 * @param mixed  $query
 	 * @param string $type
-	 * @return array|\think\Model
+	 * @return array
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
@@ -106,6 +106,8 @@ class Payment extends BasePayment implements PaymentRepository{
 			throw new PaymentNotConfigureException("未配置支付信息！");
 		}
 
-		return $payment;
+		$config = $type === 'wechat' ? $this->initWechatConfig($payment->toArray()) : $payment->toArray();
+
+		return $config;
 	}
 }

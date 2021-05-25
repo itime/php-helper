@@ -34,7 +34,7 @@ class Payment implements PaymentContract{
 			throw new PaymentNotConfigureException("payment config 'wechat' not defined.");
 		}
 
-		$config = $this->config['alipay'];
+		$config = $this->initWechatConfig($this->config['wechat']);
 
 		return $this->initApplication(
 			Pay::wechat($config),
@@ -67,5 +67,27 @@ class Payment implements PaymentContract{
 	 */
 	protected function initApplication($driver, array $options = []){
 		return $driver;
+	}
+
+	/**
+	 * 初始化微信配置信息
+	 *
+	 * @param array $config
+	 * @return array
+	 */
+	protected function initWechatConfig($config){
+		if(isset($config['appid'])){
+			// fix official
+			if(!isset($config['app_id'])){
+				$config['app_id'] = $config['appid'];
+			}
+
+			// fix miniapp
+			if(!isset($config['miniapp_id'])){
+				$config['miniapp_id'] = $config['appid'];
+			}
+		}
+
+		return $config;
 	}
 }

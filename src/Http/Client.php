@@ -6,10 +6,13 @@
  */
 namespace Xin\Http;
 
+use GuzzleHttp\Exception\BadResponseException;
+
 /**
  * Class Client
  * @method Response get($url, $data = null, $options = [])
  * @method Response post($url, $data = null, $options = [])
+ * @method Response postJSON($url, $data = null, $options = [])
  * @method Response put($url, $data = null, $options = [])
  * @method Response delete($url, $data = null, $options = [])
  * @method Response upload($url, $data = null, $options = [])
@@ -57,6 +60,17 @@ class Client{
 		if($data){
 			if('POST' == $method){
 				$options['form_params'] = $data;
+			}elseif('POSTJSON' == $method){
+				$method = 'POST';
+
+				if(!isset($options['headers'])){
+					$options['headers'] = [];
+				}
+
+				$options['headers']['Content-Type'] = 'application/json';
+				$options['body'] = json_encode($data);
+
+				$data = null;
 			}elseif('PUT' == $method){
 				$options['form_params'] = $data;
 			}elseif('UPLOAD' == $method){
@@ -68,7 +82,11 @@ class Client{
 			}
 		}
 
-		$response = $this->client->request($method, $url, $options);
+		try{
+			$response = $this->client->request($method, $url, $options);
+		}catch(BadResponseException $e){
+			return new Response($e->getResponse(), $e);
+		}
 
 		return new Response($response);
 	}
