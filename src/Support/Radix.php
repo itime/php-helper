@@ -8,9 +8,9 @@
 namespace Xin\Support;
 
 /**
- * ID 生成器
+ * 进制转化器
  */
-class IDGenerator{
+class Radix{
 
 	/**
 	 * @var array
@@ -26,6 +26,11 @@ class IDGenerator{
 	 * @var int
 	 */
 	protected $radix = 0;
+
+	/**
+	 * @var static
+	 */
+	protected static $instance62 = null;
 
 	/**
 	 * IDGenerator constructor.
@@ -89,5 +94,20 @@ class IDGenerator{
 		}while(--$strLastIndex >= 0);
 
 		return $result;
+	}
+
+	/**
+	 * 使用 62 进制转化器
+	 *
+	 * @return $this|null
+	 */
+	public function gain62(){
+		if(static::$instance62 === null){
+			static::$instance62 = new static(
+				'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+			);
+		}
+
+		return static::$instance62;
 	}
 }

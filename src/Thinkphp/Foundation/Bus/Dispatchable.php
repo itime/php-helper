@@ -21,12 +21,12 @@ trait Dispatchable{
 	/**
 	 * Dispatch the job with the given arguments.
 	 *
-	 * @param int    $delay
 	 * @param mixed  $data
+	 * @param int    $delay
 	 * @param string $queue
 	 * @return mixed
 	 */
-	public static function dispatch($delay, $data = null, $queue = ''){
+	public static function dispatch($data = null, $delay = 0, $queue = ''){
 		$queue = static::resolveQueue($queue);
 		return Queue::later($delay, static::class, $data, $queue);
 	}

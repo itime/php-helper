@@ -120,4 +120,34 @@ final class File{
 			}
 		}
 	}
+
+	/**
+	 * 建立一个具有唯一文件名的文件
+	 *
+	 * @param string $prefix
+	 * @return false|string
+	 */
+	public static function tempFilePath($prefix = ''){
+		return tempnam(sys_get_temp_dir(), empty($prefix) ? uniqid() : $prefix);
+	}
+
+	/**
+	 * 写入数据到临时文件中
+	 *
+	 * @param mixed  $data
+	 * @param string $prefix
+	 * @return false|string
+	 */
+	public static function putTempFile($data, $prefix = ''){
+		$filePath = static::tempFilePath($prefix);
+		if($filePath === false){
+			return false;
+		}
+
+		if(file_put_contents($filePath, $data) === false){
+			return false;
+		}
+
+		return $filePath;
+	}
 }

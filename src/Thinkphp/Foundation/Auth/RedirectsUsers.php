@@ -19,6 +19,6 @@ trait RedirectsUsers{
 			return $this->redirectTo();
 		}
 
-		return property_exists($this, 'redirectTo') ? $this->redirectTo : (string)url('index/index');
+		return property_exists($this, 'redirectTo') && $this->redirectTo ? $this->redirectTo : (string)url('index/index');
 	}
 }

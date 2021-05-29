@@ -45,7 +45,7 @@ class Url extends UrlBuild{
 		}elseif('' === $url){
 			$url = $this->getAppName().'/'
 				.($plugin ? "plugin/".$plugin."/" : "")
-				.Str::snake($request->controller()).'/'
+				.$this->parseController($request->controller()).'/'
 				.$request->action();
 		}else{
 			// 解析到 应用/控制器/操作
@@ -69,5 +69,21 @@ class Url extends UrlBuild{
 		}
 
 		return $url;
+	}
+
+	/**
+	 * 解析控制器
+	 *
+	 * @param string $controller
+	 * @return string
+	 */
+	protected function parseController($controller){
+		if($pos = strrpos($controller, '.')){
+			$controller = substr($controller, 0, $pos).'.'.Str::snake(substr($controller, $pos + 1));
+		}else{
+			$controller = Str::snake($controller);
+		}
+
+		return $controller;
 	}
 }

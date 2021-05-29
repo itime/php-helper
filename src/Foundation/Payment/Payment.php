@@ -8,6 +8,7 @@
 namespace Xin\Foundation\Payment;
 
 use Xin\Contracts\Foundation\Payment as PaymentContract;
+use Xin\Support\File;
 use Yansongda\Pay\Pay;
 
 class Payment implements PaymentContract{
@@ -34,7 +35,7 @@ class Payment implements PaymentContract{
 			throw new PaymentNotConfigureException("payment config 'wechat' not defined.");
 		}
 
-		$config = $this->initWechatConfig($this->config['wechat']);
+		$config = $this->initWechatConfig($this->config['wechat'], $options);
 
 		return $this->initApplication(
 			Pay::wechat($config),
@@ -75,7 +76,7 @@ class Payment implements PaymentContract{
 	 * @param array $config
 	 * @return array
 	 */
-	protected function initWechatConfig($config){
+	protected function initWechatConfig($config, $options){
 		if(isset($config['appid'])){
 			// fix official
 			if(!isset($config['app_id'])){
@@ -85,6 +86,17 @@ class Payment implements PaymentContract{
 			// fix miniapp
 			if(!isset($config['miniapp_id'])){
 				$config['miniapp_id'] = $config['appid'];
+			}
+		}
+
+		// cert support
+		if(isset($options['cert'])){
+			if(isset($config['cert_client_content'])){
+				$config['cert_client'] = File::putTempFile($config['cert_client_content']);
+			}
+
+			if(isset($config['cert_key_content'])){
+				$config['cert_key'] = File::putTempFile($config['cert_key_content']);
 			}
 		}
 

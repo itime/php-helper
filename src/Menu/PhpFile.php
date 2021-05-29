@@ -86,7 +86,7 @@ class PhpFile extends Driver{
 
 		if(isset($menu['parent'])){
 			foreach($this->data as &$item){
-				if($item['name'] == $menu['parent']){
+				if($item['url'] == $menu['parent']){
 					if(!isset($item['child'])){
 						$item['child'] = [];
 					}
@@ -113,7 +113,7 @@ class PhpFile extends Driver{
 			static::eachTreeFilter($condition, $this->data);
 		}elseif(is_string($condition)){
 			static::eachTreeFilter(function($item) use ($condition){
-				return $condition == $item['name'];
+				return $condition == $item['url'];
 			}, $this->data);
 		}else{
 			static::eachTreeFilter(function($item) use ($condition){
