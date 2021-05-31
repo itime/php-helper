@@ -16,12 +16,13 @@ class SetDefaultApp{
 	 *
 	 * @param \Xin\Thinkphp\Http\HasApp $request
 	 * @param \Closure                  $next
+	 * @param int                       $appId
 	 * @return mixed
 	 */
-	public function handle($request, \Closure $next){
-		$request->setAppResolver(function(){
+	public function handle($request, \Closure $next, $appId = 0){
+		$request->setAppResolver(function() use ($appId){
 			return new Fluent([
-				'id'    => 1,
+				'id'    => intval($appId),
 				'title' => '默认应用',
 			]);
 		});
