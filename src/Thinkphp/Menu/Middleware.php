@@ -107,10 +107,10 @@ class Middleware{
 	protected function getPathRule($request){
 		$path = $request->path();
 
-		if(strpos($path, "plugin") === 0){
-			$pulgin = substr($path, 7, strpos($path, '/', 7) - 7);
+		if(method_exists($request, 'plugin') && $plugin = $request->plugin()){
+			// $pulgin = substr($path, 7, strpos($path, '/', 7) - 7);
 			$path = substr($path, strpos($path, '/', 7) + 1);
-			$path = $pulgin.">".$path;
+			$path = $plugin.">".$path;
 		}
 
 		return $path;

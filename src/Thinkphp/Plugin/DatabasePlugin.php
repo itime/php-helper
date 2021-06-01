@@ -49,12 +49,11 @@ class DatabasePlugin extends Model{
 	public static function onAfterWrite(self $model):void{
 		// 检查改变后的数据是否存在config字段，如果存在则更新缓存
 		$changeData = $model->getChangedData();
-		if(isset($changeData['config'])){
-			// 安全更新
-			try{
-				static::setPluginConfigCache($model->name, $model->config);
-			}catch(\Throwable $e){
-			}
+
+		// 安全更新
+		try{
+			static::setPluginConfigCache($model->getOrigin('name'), $model->getAttr('config'));
+		}catch(\Throwable $e){
 		}
 	}
 
