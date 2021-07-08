@@ -20,7 +20,7 @@ use Think\Model;
 class DatabasePlugin extends Model{
 
 	// 缓存前缀
-	const CACHE_PREFIX = 'plugin_';
+	const CACHE_PREFIX = 'plugin:';
 
 	/**
 	 * 插件配置缓存列表

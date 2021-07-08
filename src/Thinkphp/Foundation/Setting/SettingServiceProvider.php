@@ -8,6 +8,7 @@
 namespace Xin\Thinkphp\Foundation\Setting;
 
 use think\Console;
+use Xin\Support\Arr;
 use Xin\Thinkphp\Foundation\ServiceProvider;
 use Xin\Thinkphp\Foundation\Setting\Command\Clear;
 use Xin\Thinkphp\Foundation\Setting\Command\Show;
@@ -33,10 +34,17 @@ class SettingServiceProvider extends ServiceProvider{
 	 */
 	public function boot(){
 		$this->app->event->listen('HttpRun', function(){
+			$configRef = new \ReflectionProperty($this->app->config, 'config');
+			$configRef->setAccessible(true);
+			$globalConfig = $configRef->getValue($this->app->config);
+
 			$config = DatabaseSetting::load();
 			foreach($config as $key => $value){
-				$this->app->config->set($value, $key);
+				Arr::set($globalConfig, $key, $value);
+				// $this->app->config->set($value, $key);
 			}
+
+			$configRef->setValue($this->app->config, $globalConfig);
 		});
 	}
 

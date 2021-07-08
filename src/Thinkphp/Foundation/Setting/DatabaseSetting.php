@@ -28,7 +28,7 @@ class DatabaseSetting extends Model{
 	/**
 	 * 缓存数据的key
 	 */
-	const CACHE_KEY = 'sys_setting';
+	const CACHE_KEY = 'setting';
 
 	/**
 	 * @var string
@@ -236,15 +236,23 @@ class DatabaseSetting extends Model{
 
 		$settings = [];
 		foreach($data as $key => $item){
-			$name = explode('.', $item['name'], 2);
-			$rootName = isset($name[1]) ? $name[0] : 'web';
-			$name = isset($name[1]) ? $name[1] : $name[0];
+			// $name = explode('.', $item['name'], 2);
+			// $rootName = isset($name[1]) ? $name[0] : 'web';
+			// $name = isset($name[1]) ? $name[1] : $name[0];
 
-			if(!isset($settings[$rootName])){
-				$settings[$rootName] = [];
+			// if(!isset($settings[$rootName])){
+			// 	$settings[$rootName] = [];
+			// }
+			//
+			// $settings[$rootName][$name] = $item->value;
+
+			$name = $item['name'];
+			if(!strpos($name, '.')){
+				$name = 'web.'.$name;
 			}
 
-			$settings[$rootName][$name] = $item->value;
+			$settings[$name] = $item->value;
+
 			unset($data[$key]);
 		}
 
