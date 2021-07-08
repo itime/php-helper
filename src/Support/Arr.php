@@ -161,7 +161,12 @@ final class Arr{
 			$array = &$array[$key];
 		}
 
-		$array[array_shift($keys)] = $value;
+		$key = array_shift($keys);
+		if(isset($array[$key]) && is_array($array[$key]) && is_array($value)){
+			$array[$key] = array_merge($array[$key], $value);
+		}else{
+			$array[$key] = $value;
+		}
 
 		return $array;
 	}
