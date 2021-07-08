@@ -155,6 +155,10 @@ class FilesystemManager extends Manager{
 	 * @throws \Xin\Filesystem\FilesystemException
 	 */
 	protected function createQiniuDriver(array $config){
+		if(!class_exists('Qiniu\Auth')){
+			throw new \LogicException("请先安装七牛云驱动！");
+		}
+
 		return new FilesystemProxy(
 			new Filesystem(new Qiniu($config))
 		);
@@ -168,6 +172,10 @@ class FilesystemManager extends Manager{
 	 * @throws \Xin\Filesystem\FilesystemException
 	 */
 	protected function createAliyunDriver(array $config){
+		if(!class_exists('OSS\OssClient')){
+			throw new \LogicException("请先安装阿里云OSS驱动！");
+		}
+
 		return new FilesystemProxy(
 			new Filesystem(new Aliyun($config))
 		);
@@ -181,6 +189,10 @@ class FilesystemManager extends Manager{
 	 * @throws \Xin\Filesystem\FilesystemException
 	 */
 	protected function createQCloudDriver(array $config){
+		if(!class_exists('Qcloud\Cos\Client')){
+			throw new \LogicException("请先安装腾讯云COS驱动！");
+		}
+
 		return new FilesystemProxy(
 			new Filesystem(new QCloud($config))
 		);
