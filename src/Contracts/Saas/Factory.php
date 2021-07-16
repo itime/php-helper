@@ -36,7 +36,7 @@ interface Factory{
 	/**
 	 * 获取config实例
 	 *
-	 * @return \Xin\Contracts\Foundation\ConfigRepository
+	 * @return \Xin\Contracts\Config\Repository
 	 */
 	public function getConfig();
 }

@@ -9,7 +9,7 @@ namespace Xin\Contracts\Hint;
 interface Factory{
 
 	/**
-	 * 使用 Ajax 提示器
+	 * 使用 Api 提示器
 	 *
 	 * @return static
 	 */
@@ -21,6 +21,14 @@ interface Factory{
 	 * @return static
 	 */
 	public function shouldUseWeb();
+
+	/**
+	 * 使用指定的提示器
+	 *
+	 * @param string $name
+	 * @return static
+	 */
+	public function shouldUse($name);
 
 	/**
 	 * 获取提示器

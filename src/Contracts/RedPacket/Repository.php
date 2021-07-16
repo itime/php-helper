@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Shipping;
+namespace Xin\Contracts\RedPacket;
 
 use Xin\Contracts\Foundation\Repository as BaseRepository;
 

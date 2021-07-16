@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Stat;
 
-interface StatProvider{
+interface Provider{
 
 	/**
 	 * 获取缓存 key

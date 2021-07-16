@@ -5,9 +5,9 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Mall;
+namespace Xin\Contracts\Order;
 
-interface Order{
+interface Orderable{
 
 	/**
 	 * 订单是否已取消

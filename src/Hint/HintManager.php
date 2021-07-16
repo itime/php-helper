@@ -58,8 +58,7 @@ class HintManager implements HintFactory{
 	 * @return $this|\Xin\Hint\HintManager
 	 */
 	public function shouldUseApi(){
-		$this->setDefaultDriver('api');
-		return $this;
+		return $this->shouldUse('api');
 	}
 
 	/**
@@ -68,7 +67,16 @@ class HintManager implements HintFactory{
 	 * @return $this|\Xin\Hint\HintManager
 	 */
 	public function shouldUseWeb(){
-		$this->setDefaultDriver('web');
+		return $this->shouldUse('web');
+	}
+
+	/**
+	 * 使用指定的提示器
+	 *
+	 * @return $this|\Xin\Hint\HintManager
+	 */
+	public function shouldUse($name){
+		$this->setDefaultDriver($name);
 		return $this;
 	}
 

@@ -5,9 +5,9 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Foundation;
+namespace Xin\Contracts\Config;
 
-interface ConfigRepository extends \ArrayAccess{
+interface Repository extends \ArrayAccess{
 
 	/**
 	 * 检测指定的 key 是否存在

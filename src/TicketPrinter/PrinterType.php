@@ -1,5 +1,5 @@
 <?php
-namespace Xin\Printer;
+namespace Xin\TicketPrinter;
 
 /**
  * 小票打印机类型 枚举类

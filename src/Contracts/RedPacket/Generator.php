@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\RedEnvelope;
+namespace Xin\Contracts\RedPacket;
 
 interface Generator{
 

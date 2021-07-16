@@ -9,10 +9,10 @@ namespace Xin\Thinkphp\Stat;
 
 use think\App;
 use Xin\Contracts\Stat\Repository as StatRepository;
-use Xin\Contracts\Stat\StatProvider as StatProviderContract;
+use Xin\Contracts\Stat\Provider as StatProviderContract;
 use Xin\Support\Time;
 
-class StatProvider implements StatProviderContract{
+class DatabaseProvider implements StatProviderContract{
 
 	/**
 	 * @var \think\Db
