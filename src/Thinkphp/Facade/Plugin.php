@@ -9,6 +9,7 @@ namespace Xin\Thinkphp\Facade;
 use think\Facade;
 use think\facade\Route;
 use Xin\Thinkphp\Plugin\PluginDispatch;
+use Xin\Thinkphp\Plugin\Url;
 
 /**
  * @method bool has($plugin) static
@@ -38,9 +39,19 @@ class Plugin extends Facade{
 	 *
 	 * @param callable $pluginBootCallback
 	 */
-	public static function routes($pluginBootCallback = null){
-		Route::any('plugin/:plugin/:controller/[:action]', PluginDispatch::class);
+	public static function routes($prefix = 'app', $pluginBootCallback = null){
+		Route::any($prefix.'/:plugin/:controller/[:action]', PluginDispatch::class);
+		Url::$pluginPrefix = $prefix;
 		PluginDispatch::$pluginBootCallback = $pluginBootCallback;
+	}
+
+	/**
+	 * 获取路由前缀
+	 *
+	 * @return string
+	 */
+	public static function getPrefix(){
+		return Url::$pluginPrefix;
 	}
 
 }

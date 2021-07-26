@@ -17,6 +17,11 @@ class PhpFile extends Driver{
 	protected $data;
 
 	/**
+	 * @var callable
+	 */
+	protected $loadCallback;
+
+	/**
 	 * 初始化加载文件
 	 */
 	protected function load(){
@@ -25,6 +30,10 @@ class PhpFile extends Driver{
 		}
 
 		$targetPath = $this->config('target_path');
+		if(!file_exists($targetPath) && $this->loadCallback){
+			call_user_func($this->loadCallback);
+		}
+
 		if(empty($targetPath) || !file_exists($targetPath)){
 			$basePath = $this->config('base_path');
 			if(!file_exists($basePath)){
@@ -186,4 +195,12 @@ class PhpFile extends Driver{
 		}
 		return true;
 	}
+
+	/**
+	 * @param callable $loadCallback
+	 */
+	public function setLoadCallback(callable $loadCallback):void{
+		$this->loadCallback = $loadCallback;
+	}
+
 }

@@ -101,7 +101,7 @@ class Radix{
 	 *
 	 * @return $this|null
 	 */
-	public function gain62(){
+	public static function gain62(){
 		if(static::$instance62 === null){
 			static::$instance62 = new static(
 				'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'

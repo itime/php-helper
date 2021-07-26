@@ -10,6 +10,7 @@ namespace Xin\Thinkphp\Menu;
 use think\App;
 use Xin\Menu\MenuManager;
 use Xin\Thinkphp\Facade\Auth;
+use Xin\Thinkphp\Facade\Plugin;
 
 class Middleware{
 
@@ -107,7 +108,7 @@ class Middleware{
 	protected function getPathRule($request){
 		$path = $request->path();
 
-		if(method_exists($request, 'plugin') && $plugin = $request->plugin()){
+		if(method_exists($request, Plugin::getPrefix()) && $plugin = $request->plugin()){
 			// $pulgin = substr($path, 7, strpos($path, '/', 7) - 7);
 			$path = substr($path, strpos($path, '/', 7) + 1);
 			$path = $plugin.">".$path;

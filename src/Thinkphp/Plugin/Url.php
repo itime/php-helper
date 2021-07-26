@@ -15,6 +15,11 @@ use Xin\Support\Str;
 class Url extends UrlBuild{
 
 	/**
+	 * @var string
+	 */
+	public static $pluginPrefix = 'app';
+
+	/**
 	 * 直接解析URL地址
 	 *
 	 * @access protected
@@ -44,7 +49,7 @@ class Url extends UrlBuild{
 			$url = substr($url, 1);
 		}elseif('' === $url){
 			$url = $this->getAppName().'/'
-				.($plugin ? "plugin/".$plugin."/" : "")
+				.($plugin ? self::$pluginPrefix."/".$plugin."/" : "")
 				.$this->parseController($request->controller()).'/'
 				.$request->action();
 		}else{
@@ -64,7 +69,7 @@ class Url extends UrlBuild{
 
 				$domain = is_bool($domain) ? $key : $domain;
 			}else{
-				$url = $app.'/'.($plugin ? "plugin/".$plugin."/" : "").$controller.'/'.$action;
+				$url = $app.'/'.($plugin ? self::$pluginPrefix."/".$plugin."/" : "").$controller.'/'.$action;
 			}
 		}
 

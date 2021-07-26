@@ -8,6 +8,8 @@
 
 namespace Xin\Support;
 
+use Ramsey\Uuid\Uuid;
+
 /**
  * 字符串工具类
  */
@@ -338,6 +340,15 @@ final class Str{
 	 */
 	public static function substr($string, $start, $length = null){
 		return mb_substr($string, $start, $length, 'UTF-8');
+	}
+
+	/**
+	 * 生成一个 UUID (version 4).
+	 *
+	 * @return \Ramsey\Uuid\UuidInterface
+	 */
+	public static function uuid(){
+		return Uuid::uuid4();
 	}
 
 	/**

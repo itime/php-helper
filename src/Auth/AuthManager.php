@@ -280,6 +280,11 @@ class AuthManager implements FactoryContract{
 		$config = $this->getGuardConfig(
 			$this->getDefaultDriver()
 		);
+
+		if(!isset($config['administrator_id'])){
+			return false;
+		}
+
 		return $this->id() === $config['administrator_id'];
 	}
 

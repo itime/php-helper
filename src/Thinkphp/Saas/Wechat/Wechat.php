@@ -72,7 +72,7 @@ class Wechat extends WechatBase implements WechatRepository{
 			return $this->official($options);
 		}
 
-		$weapp = DatabaseWeapp::where('id', $id)->find();
+		$weapp = DatabaseAccount::where('id', $id)->find();
 		if(empty($weapp)){
 			throw new WechatNotConfigureException("未配置或授权公众号！");
 		}
@@ -91,7 +91,7 @@ class Wechat extends WechatBase implements WechatRepository{
 			return $this->official($options);
 		}
 
-		$weapp = DatabaseWeapp::where([
+		$weapp = DatabaseAccount::where([
 			'app_id'   => $appId,
 			'app_type' => 1,
 		])->find();
@@ -105,11 +105,11 @@ class Wechat extends WechatBase implements WechatRepository{
 	/**
 	 * 解析公众号实例
 	 *
-	 * @param \Xin\Thinkphp\Saas\Wechat\DatabaseWeapp $weapp
-	 * @param array                                   $options
+	 * @param \Xin\Thinkphp\Saas\Wechat\DatabaseAccount $weapp
+	 * @param array                                     $options
 	 * @return \EasyWeChat\MiniProgram\Application|\EasyWeChat\OpenPlatform\Authorizer\MiniProgram\Application
 	 */
-	protected function newOfficialInstance(DatabaseWeapp $weapp, array $options){
+	protected function newOfficialInstance(DatabaseAccount $weapp, array $options){
 		$config = $this->resolveWeappConfig($weapp);
 
 		if($config['mode'] === 1){
@@ -133,7 +133,7 @@ class Wechat extends WechatBase implements WechatRepository{
 			return $this->miniProgram($options);
 		}
 
-		$weapp = DatabaseWeapp::where('id', $id)->find();
+		$weapp = DatabaseAccount::where('id', $id)->find();
 		if(empty($weapp)){
 			throw new WechatNotConfigureException("未配置或授权小程序！");
 		}
@@ -152,7 +152,7 @@ class Wechat extends WechatBase implements WechatRepository{
 			return $this->miniProgram($options);
 		}
 
-		$weapp = DatabaseWeapp::where([
+		$weapp = DatabaseAccount::where([
 			'app_id'   => $appId,
 			'app_type' => 0,
 		])->find();
@@ -166,11 +166,11 @@ class Wechat extends WechatBase implements WechatRepository{
 	/**
 	 * 解析小程序实例
 	 *
-	 * @param \Xin\Thinkphp\Saas\Wechat\DatabaseWeapp $weapp
-	 * @param array                                   $options
+	 * @param \Xin\Thinkphp\Saas\Wechat\DatabaseAccount $weapp
+	 * @param array                                     $options
 	 * @return \EasyWeChat\MiniProgram\Application|\EasyWeChat\OpenPlatform\Authorizer\MiniProgram\Application
 	 */
-	protected function newMiniProgramInstance(DatabaseWeapp $weapp, array $options){
+	protected function newMiniProgramInstance(DatabaseAccount $weapp, array $options){
 		$config = $this->resolveWeappConfig($weapp);
 
 		if($config['mode'] === 1){
@@ -186,10 +186,10 @@ class Wechat extends WechatBase implements WechatRepository{
 	/**
 	 * 解析应用配置信息
 	 *
-	 * @param \Xin\Thinkphp\Saas\Wechat\DatabaseWeapp $weapp
+	 * @param \Xin\Thinkphp\Saas\Wechat\DatabaseAccount $weapp
 	 * @return array
 	 */
-	protected function resolveWeappConfig(DatabaseWeapp $weapp){
+	protected function resolveWeappConfig(DatabaseAccount $weapp){
 		return $this->checkConfig([
 			'mode'                     => $weapp['mode'],
 			'app_id'                   => $weapp['appid'],
