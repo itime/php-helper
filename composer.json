@@ -15,7 +15,7 @@
 		"nesbot/carbon":"^1.26.3 || ^2.0",
 		"swiftmailer/swiftmailer":"^6.2",
 		"doctrine/inflector":"^2.0",
-		"ramsey/uuid":"^4.1",
+		"ramsey/uuid":"^3.5",
 		"ext-json":"*",
 		"ext-openssl":"*",
 		"ext-mbstring":"*",
@@ -39,13 +39,10 @@
 			"Xin\\":"src/"
 		}
 	},
-	"conflict":{
-		"ramsey/uuid":"<=4.1"
-	},
 	"suggest":{
 		"yansongda/pay":"支付宝与微信支付的轮子",
 		"overtrue/wechat":"微信开发必备SDK包"
 	},
-	"minimum-stability":"dev",
+	"minimum-stability":"stable",
 	"prefer-stable":true
 }
