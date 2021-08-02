@@ -31,6 +31,11 @@ class DatabaseSetting extends Model{
 	const CACHE_KEY = 'setting';
 
 	/**
+	 * 缓存开放数据的key
+	 */
+	const CACHE_PUBLIC_KEY = 'setting:public';
+
+	/**
 	 * @var string
 	 */
 	protected $name = 'setting';
@@ -63,6 +68,9 @@ class DatabaseSetting extends Model{
 	 *
 	 * @param array|null $settings
 	 * @return array
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	public static function load(array $settings = null){
 		// 批量保存配置
@@ -84,10 +92,117 @@ class DatabaseSetting extends Model{
 
 		$config = Cache::get(static::CACHE_KEY);
 		if(empty($config)){
-			$config = static::updateCache();
+			$config = static::resolveCache(static::CACHE_KEY);
 		}
 
 		return $config;
+	}
+
+	/**
+	 * 加载数据库设置信息（公开的数据）
+	 *
+	 * @return array
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
+	 */
+	public static function loadPublic(){
+		$config = Cache::get(static::CACHE_PUBLIC_KEY);
+		if(empty($config)){
+			$config = static::resolveCache(static::CACHE_PUBLIC_KEY, [
+				'public' => 1,
+			]);;
+		}
+
+		return $config;
+	}
+
+	/**
+	 * 获取配置
+	 *
+	 * @return array
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
+	 */
+	public static function getSettings(){
+		$data = static::loadData();
+
+		$settings = [];
+		foreach($data as $key => $item){
+			$name = explode('.', $item['name'], 2);
+			$rootName = isset($name[1]) ? $name[0] : 'web';
+			$name = isset($name[1]) ? $name[1] : $name[0];
+
+			if(!isset($settings[$rootName])){
+				$settings[$rootName] = [];
+			}
+
+			$settings[$rootName][$name] = $item->value;
+			unset($data[$key]);
+		}
+		return $settings;
+	}
+
+	/**
+	 * 更新缓存
+	 *
+	 * @return array
+	 * @noinspection PhpUnhandledExceptionInspection
+	 * @noinspection PhpDocMissingThrowsInspection
+	 */
+	public static function updateCache(){
+		static::resolveCache(static::CACHE_KEY);
+
+		static::resolveCache(static::CACHE_PUBLIC_KEY, [
+			'public' => 1,
+		]);
+	}
+
+	/**
+	 * 解析缓存
+	 *
+	 * @param string $cacheKey
+	 * @param array  $where
+	 * @return array
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
+	 */
+	protected static function resolveCache($cacheKey, $where = []){
+		$data = self::loadData($where);
+
+		$settings = [];
+		foreach($data as $key => $item){
+			$name = $item['name'];
+			if(!strpos($name, '.')){
+				$name = 'web.'.$name;
+			}
+
+			$settings[$name] = $item->value;
+
+			unset($data[$key]);
+		}
+
+		Cache::set($cacheKey, $settings);
+
+		return $settings;
+	}
+
+	/**
+	 * 加载数据
+	 *
+	 * @param array $where
+	 * @return array|\think\Collection|\Xin\Thinkphp\Foundation\Setting\DatabaseSetting[]
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
+	 */
+	protected static function loadData($where = []){
+		return static::field('type,name,value')
+			->where('status', 1)
+			->where($where)
+			->select();
 	}
 
 	/**
@@ -223,45 +338,6 @@ class DatabaseSetting extends Model{
 	}
 
 	/**
-	 * 更新缓存
-	 *
-	 * @return array
-	 * @noinspection PhpUnhandledExceptionInspection
-	 * @noinspection PhpDocMissingThrowsInspection
-	 */
-	public static function updateCache(){
-		$data = static::field('type,name,value')
-			->where('status', 1)
-			->select();
-
-		$settings = [];
-		foreach($data as $key => $item){
-			// $name = explode('.', $item['name'], 2);
-			// $rootName = isset($name[1]) ? $name[0] : 'web';
-			// $name = isset($name[1]) ? $name[1] : $name[0];
-
-			// if(!isset($settings[$rootName])){
-			// 	$settings[$rootName] = [];
-			// }
-			//
-			// $settings[$rootName][$name] = $item->value;
-
-			$name = $item['name'];
-			if(!strpos($name, '.')){
-				$name = 'web.'.$name;
-			}
-
-			$settings[$name] = $item->value;
-
-			unset($data[$key]);
-		}
-
-		Cache::set(static::CACHE_KEY, $settings);
-
-		return $settings;
-	}
-
-	/**
 	 * 安装配置
 	 *
 	 * @param array $settings
@@ -286,7 +362,6 @@ class DatabaseSetting extends Model{
 					'sort'    => isset($setting['sort']) ? $setting['sort'] : 0,
 					'system'  => 0,
 					'display' => isset($setting['display']) ? $setting['display'] : 1,
-
 				]);
 			}
 		}

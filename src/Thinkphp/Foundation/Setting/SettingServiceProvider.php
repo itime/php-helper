@@ -33,19 +33,35 @@ class SettingServiceProvider extends ServiceProvider{
 	 * @inheritDoc
 	 */
 	public function boot(){
-		$this->app->event->listen('HttpRun', function(){
-			$configRef = new \ReflectionProperty($this->app->config, 'config');
-			$configRef->setAccessible(true);
-			$globalConfig = $configRef->getValue($this->app->config);
+		if($this->app->runningInConsole()){
+			$this->load();
+		}else{
+			$this->app->event->listen('HttpRun', function(){
+				$this->load();
+			});
+		}
+	}
 
-			$config = DatabaseSetting::load();
-			foreach($config as $key => $value){
-				Arr::set($globalConfig, $key, $value);
-				// $this->app->config->set($value, $key);
-			}
+	/**
+	 * 加载配置信息
+	 *
+	 * @throws \ReflectionException
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
+	 */
+	protected function load(){
+		$configRef = new \ReflectionProperty($this->app->config, 'config');
+		$configRef->setAccessible(true);
+		$globalConfig = $configRef->getValue($this->app->config);
 
-			$configRef->setValue($this->app->config, $globalConfig);
-		});
+		$config = DatabaseSetting::load();
+		foreach($config as $key => $value){
+			Arr::set($globalConfig, $key, $value);
+			// $this->app->config->set($value, $key);
+		}
+
+		$configRef->setValue($this->app->config, $globalConfig);
 	}
 
 }

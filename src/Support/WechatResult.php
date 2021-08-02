@@ -11,6 +11,9 @@ use EasyWeChat\Kernel\Http\StreamResponse;
 
 class WechatResult implements \ArrayAccess{
 
+	// 全部错误类型
+	const ERROR_ALL = '*';
+
 	/**
 	 * @var mixed
 	 */
@@ -251,6 +254,11 @@ class WechatResult implements \ArrayAccess{
 			}
 		}, function() use ($default){
 			$errCode = $this->getErrCode();
+			if(isset($this->errorListeners[static::ERROR_ALL])){
+				$callback = $this->errorListeners[static::ERROR_ALL];
+				$callback($this->result);
+			}
+
 			if(isset($this->errorListeners[$errCode])){
 				$callback = $this->errorListeners[$errCode];
 				$callback($this->result);

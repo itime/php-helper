@@ -278,7 +278,7 @@ trait InteractsCURD{
 	 * @param mixed  $value
 	 * @return mixed
 	 */
-	protected function beforeSetField(&$ids, $field, $value){
+	protected function beforeSetField(&$ids, &$field, &$value){
 		return $value;
 	}
 
@@ -307,14 +307,12 @@ trait InteractsCURD{
 		$ids = $this->request->idsWithValid();
 		$value = $this->request->param("{$field}");
 
-		$data = [
-			$field => $value,
-		];
-
 		// 验证规则
 		$allowFields = $this->allowFields();
 		if(isset($allowFields[$field]) && ($validateRule = $allowFields[$field])){
-			$flag = Validate::check($data, [
+			$flag = Validate::check([
+				$field => $value,
+			], [
 				$field => $validateRule,
 			]);
 
@@ -325,16 +323,24 @@ trait InteractsCURD{
 
 		$this->beforeSetField($ids, $field, $value);
 
+		$obj = new \stdClass();
+		$obj->ids = $ids;
+		$obj->field = $field;
+		$obj->value = $value;
+
 		$fieldStudly = Str::studly($field);
-		$this->invokeMethod("beforeSet{$fieldStudly}", [&$ids, $field, $value]);
-		if($this->model()->update($data, [
-				['id', 'IN', $ids],
+		$this->invokeMethod("beforeSet{$fieldStudly}", [$obj]);
+
+		if($this->model()->update([
+				$obj->field => $obj->value,
+			], [
+				['id', 'IN', $obj->ids],
 			]) === false){
 			return Hint::error("更新失败！");
 		}
 
 		$this->afterSetField($ids, $field, $value);
-		$this->invokeMethod("afterSet{$fieldStudly}", [$ids, $field, $value]);
+		$this->invokeMethod("afterSet{$fieldStudly}", [$obj]);
 
 		return Hint::success("更新成功！");
 	}
