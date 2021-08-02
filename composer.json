@@ -46,5 +46,5 @@
 	"suggest":{
 		"yansongda/pay":"支付宝与微信支付的轮子",
 		"overtrue/wechat":"微信开发必备SDK包"
-	},
+	}
 }
