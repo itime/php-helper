@@ -10,7 +10,6 @@
 		}
 	],
 	"license":"Apache-2.0",
-	"minimum-stability":"stable",
 	"require":{
 		"php":">=7.1.9",
 		"nesbot/carbon":"^1.26.3 || ^2.0",
@@ -40,11 +39,13 @@
 			"Xin\\":"src/"
 		}
 	},
-	"conflict": {
-		"ramsey/uuid":"<=3.5"
+	"conflict":{
+		"ramsey/uuid":"<=4.1"
 	},
 	"suggest":{
 		"yansongda/pay":"支付宝与微信支付的轮子",
 		"overtrue/wechat":"微信开发必备SDK包"
-	}
+	},
+	"minimum-stability":"dev",
+	"prefer-stable":true
 }
