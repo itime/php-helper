@@ -8,8 +8,8 @@
 namespace Xin\Thinkphp\Stat;
 
 use think\App;
-use Xin\Contracts\Stat\Repository as StatRepository;
 use Xin\Contracts\Stat\Provider as StatProviderContract;
+use Xin\Contracts\Stat\Repository as StatRepository;
 use Xin\Support\Time;
 
 class Stat implements StatRepository{
@@ -42,9 +42,9 @@ class Stat implements StatRepository{
 	/**
 	 * Stat constructor.
 	 *
-	 * @param \think\App           $app
-	 * @param array                $config
-	 * @param StatProviderContract $provider
+	 * @param \think\App                        $app
+	 * @param array                             $config
+	 * @param \Xin\Contracts\Stat\Provider|null $provider
 	 */
 	public function __construct(App $app, array $config = [], StatProviderContract $provider = null){
 		$this->app = $app;
@@ -55,9 +55,7 @@ class Stat implements StatRepository{
 
 		$this->provider = $provider
 			? $provider
-			: new StatProvider(
-				$app, $this, $config
-			);
+			: new DatabaseProvider($app, $this, $config);
 	}
 
 	/**

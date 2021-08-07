@@ -12,6 +12,27 @@ use think\paginator\driver\Bootstrap;
 class Bootstrap4 extends Bootstrap{
 
 	/**
+	 * @var int
+	 */
+	protected $originalCurrentPage;
+
+	/**
+	 * Bootstrap4 constructor.
+	 *
+	 * @param mixed    $items
+	 * @param int      $listRows
+	 * @param int      $currentPage
+	 * @param int|null $total
+	 * @param bool     $simple
+	 * @param array    $options
+	 */
+	public function __construct($items, int $listRows, int $currentPage = 1, int $total = null, bool $simple = false, array $options = []){
+		parent::__construct($items, $listRows, $currentPage, $total, $simple, $options);
+		$this->currentPage = $currentPage;
+		$this->originalCurrentPage = $currentPage;
+	}
+
+	/**
 	 * 上一页按钮
 	 *
 	 * @param string $text
