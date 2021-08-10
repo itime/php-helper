@@ -76,7 +76,7 @@ class PluginDispatch extends Controller{
 	 */
 	public function exec(){
 		if(!$this->pluginManager->has($this->plugin)){
-			throw new HttpException(404, "plugin {$this->plugin} not exist.");
+			throw new PluginNotFoundHttpException($this->plugin);
 		}
 
 		// 启动插件事件
@@ -88,7 +88,7 @@ class PluginDispatch extends Controller{
 			// 实例化控制器
 			$instance = $this->controller($this->controller);
 		}catch(ClassNotFoundException $e){
-			throw new HttpException(404, 'controller not exists:'.$e->getClass());
+			throw new PluginControllerNotFoundHttpException($this->plugin, $e->getClass());
 		}
 
 		// 初始化视图

@@ -33,7 +33,8 @@ class StoreUrl{
 	public function handle(Request $request, \Closure $next){
 		if($request->method() === 'GET' &&
 			!$request->isAjax() &&
-			!$request->prefetch()){
+			!$request->prefetch() &&
+			!$request->has('choice')){
 			$this->storeUrl($request);
 		}
 
