@@ -7,50 +7,57 @@
 
 namespace Xin\Thinkphp\Hint;
 
+use think\Service;
 use Xin\Contracts\Hint\Factory as HintFactory;
 use Xin\Hint\HintManager;
-use Xin\Support\Reflect;
-use Xin\Thinkphp\Foundation\ServiceProvider;
 
 /**
  * Class HintServiceProvider
  */
-class HintServiceProvider extends ServiceProvider{
+class HintServiceProvider extends Service{
 
 	/**
 	 * 启动器
 	 */
 	public function register(){
-		$hint = new HintManager;
+		$this->app->bind([
+			'hint'             => HintFactory::class,
+			HintFactory::class => function(){
+				$hint = new HintManager;
 
+				$this->registerHintScenes($hint);
+
+				return $hint;
+			},
+		]);
+	}
+
+	/**
+	 * 注册提示器场景
+	 *
+	 * @param \Xin\Hint\HintManager $manager
+	 */
+	protected function registerHintScenes(HintManager $manager){
 		// extend api hint
-		$hint->extend('api', function(){
+		$manager->extend('api', function(){
 			return $this->app->make(ApiHint::class);
 		});
 
 		// extend web hint
-		$hint->extend('web', function(){
+		$manager->extend('web', function(){
 			return $this->app->make(WebHint::class);
 		});
 
 		// set auto bind hint
-		$hint->setAutoResolver(function(){
-			return $this->autoHint();
+		$manager->setAutoResolver(function(){
+			return $this->getScene();
 		});
-
-		if(Reflect::VISIBLE_PUBLIC === Reflect::methodVisible($this->app, 'bindTo')){
-			$this->app->bindTo(HintFactory::class, 'hint');
-			$this->app->bindTo('hint', $hint);
-		}else{
-			$this->app->bind(HintFactory::class, 'hint');
-			$this->app->bind('hint', $hint);
-		}
 	}
 
 	/**
 	 * @return string
 	 */
-	protected function autoHint(){
+	protected function getScene(){
 		return $this->isApiRequest() ? "api" : "web";
 	}
 
@@ -58,7 +65,9 @@ class HintServiceProvider extends ServiceProvider{
 	 * @return bool
 	 */
 	protected function isApiRequest(){
-		return $this->request->isAjax() || $this->request->isJson();
+		return $this->app->request->isAjax() ||
+			$this->app->request->isJson() ||
+			$this->app->http->getName() === 'api';
 	}
 
 }

@@ -8,8 +8,8 @@
 namespace Xin\Thinkphp\Stat;
 
 use think\App;
-use Xin\Contracts\Stat\Repository as StatRepository;
 use Xin\Contracts\Stat\Provider as StatProviderContract;
+use Xin\Contracts\Stat\Repository as StatRepository;
 use Xin\Support\Time;
 
 class DatabaseProvider implements StatProviderContract{

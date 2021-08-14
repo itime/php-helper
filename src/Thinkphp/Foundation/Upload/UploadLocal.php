@@ -13,6 +13,9 @@ use think\file\UploadedFile;
 use think\Request;
 use Xin\Thinkphp\Facade\Hint;
 
+/**
+ * @method array buildSaveData(array $data, UploadedFile $file)
+ */
 trait UploadLocal{
 
 	/**
@@ -59,13 +62,19 @@ trait UploadLocal{
 
 		$publicPath = config('filesystem.disks.'.$this->disk().'.url').'/'.str_replace("\\", "/", $savePath);
 
-		return $this->saveDb($type, [
+		$saveData = [
 			'path' => $publicPath,
 			'md5'  => $file->md5(),
 			'sha1' => $file->sha1(),
 			'size' => $file->getSize(),
 			'type' => $file->getMime(),
-		]);
+		];
+
+		if(method_exists($this, 'buildSaveData')){
+			$saveData = $this->buildSaveData($saveData, $file);
+		}
+
+		return $this->saveDb($type, $saveData);
 	}
 
 	/**

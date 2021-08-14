@@ -14,13 +14,13 @@ use Xin\Bus\Balance\SceneEnum;
  */
 trait HasDatabaseBalance{
 
-    /**
-     * 余额消费场景
-     *
-     * @return string
-     */
-    protected function getSceneTextAttr(){
-        $val = $this->getOrigin('scene');
-        return SceneEnum::data()[$val]['title'];
-    }
+	/**
+	 * 余额消费场景
+	 *
+	 * @return string
+	 */
+	protected function getSceneTextAttr(){
+		$val = $this->getOrigin('scene');
+		return SceneEnum::data()[$val]['title'];
+	}
 }

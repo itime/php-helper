@@ -5,13 +5,13 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Foundation\Payment;
+namespace Xin\Thinkphp\Foundation;
 
+use think\Service;
 use Xin\Contracts\Foundation\Payment as PaymentContract;
 use Xin\Foundation\Payment\Payment;
-use Xin\Thinkphp\Foundation\ServiceProvider;
 
-class PaymentServiceProvider extends ServiceProvider{
+class PaymentServiceProvider extends Service{
 
 	/**
 	 * 启动器

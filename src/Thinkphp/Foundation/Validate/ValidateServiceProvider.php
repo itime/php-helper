@@ -7,10 +7,10 @@
 
 namespace Xin\Thinkphp\Foundation\Validate;
 
+use think\Service;
 use think\Validate;
-use Xin\Thinkphp\Foundation\ServiceProvider;
 
-class ValidateServiceProvider extends ServiceProvider{
+class ValidateServiceProvider extends Service{
 
 	/**
 	 * @inheritDoc

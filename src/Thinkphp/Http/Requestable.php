@@ -205,41 +205,27 @@ trait Requestable{
 	 * It builds a normalized query string, where keys/value pairs are alphabetized
 	 * and have consistent escaping.
 	 *
-	 * @return string|null A normalized query string for the Request
+	 * @return string A normalized query string for the Request
 	 */
 	public function getQueryString(){
-		$qs = static::normalizeQueryString($this->query());
-
-		return '' === $qs ? null : $qs;
-	}
-
-	/**
-	 * 获取当前请求的全路径地址
-	 *
-	 * @return string
-	 */
-	public function fullUrl(){
-		$query = $this->getQueryString();
-
-		// $question = $this->baseUrl().$this->pathinfo() === '/' ? '/?' : '?';
-		$question = '?';
-
-		return $query ? $this->url(true).$question.$query : $this->url(true);
+		return static::normalizeQueryString($this->query());
 	}
 
 	/**
 	 * 包含自定义参数的全路径地址
 	 *
 	 * @param array $query
+	 * @param bool  $complete
 	 * @return string
 	 */
-	public function fullUrlWithQuery(array $query){
-		$question = '?';
-		// $question = $this->getBaseUrl().$this->getPathInfo() === '/' ? '/?' : '?';
+	public function urlWithQuery(array $query, $complete = false){
+		$queryString = $this->query();
+		parse_str($queryString, $queryString);
+		$query = array_merge($queryString, $query);
 
-		return count($this->get()) > 0
-			? $this->url().$question.http_build_query(array_merge($this->get(), $query), null, '&', PHP_QUERY_RFC3986)
-			: $this->fullUrl().$question.http_build_query($query, null, '&', PHP_QUERY_RFC3986);
+		return count($query) > 0
+			? $this->baseUrl($complete)."?".static::normalizeQueryString($query)
+			: $this->baseUrl($complete);
 	}
 
 	/**
@@ -319,7 +305,7 @@ trait Requestable{
 	 * @return string A normalized query string for the Request
 	 */
 	public static function normalizeQueryString($qs){
-		if('' === ($qs ?? '')){
+		if(empty($qs)){
 			return '';
 		}
 

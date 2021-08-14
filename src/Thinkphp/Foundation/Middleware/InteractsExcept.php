@@ -4,8 +4,7 @@
  *
  * @author: 晋<657306123@qq.com>
  */
-
-namespace Xin\Thinkphp\Middleware;
+namespace Xin\Thinkphp\Foundation\Middleware;
 
 use think\Request;
 

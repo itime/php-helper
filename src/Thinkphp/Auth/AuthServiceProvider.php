@@ -8,15 +8,14 @@
 namespace Xin\Thinkphp\Auth;
 
 use think\App;
+use think\Service;
 use Xin\Auth\Access\Gate;
 use Xin\Auth\AuthManager;
 use Xin\Contracts\Auth\Access\Gate as GateContract;
 use Xin\Contracts\Auth\Factory as AuthFactory;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
-use Xin\Support\Reflect;
-use Xin\Thinkphp\Foundation\ServiceProvider;
 
-class AuthServiceProvider extends ServiceProvider{
+class AuthServiceProvider extends Service{
 
 	/**
 	 * @var callable
@@ -44,22 +43,14 @@ class AuthServiceProvider extends ServiceProvider{
 	 * @return void
 	 */
 	protected function registerAuthManager(){
-		$method = Reflect::methodVisible($this->config, 'pull') === Reflect::VISIBLE_PUBLIC ?
-			'pull' : 'get';
-
-		$auth = new AuthManager(
-			$this->config->$method('auth')
-		);
-
-		if(Reflect::methodVisible($this->app, 'bindTo') === Reflect::VISIBLE_PUBLIC){
-			$this->app->bindTo('auth', $auth);
-			$this->app->bindTo(AuthFactory::class, $auth);
-		}else{
-			$this->app->bind([
-				'auth'             => $auth,
-				AuthFactory::class => $auth,
-			]);
-		}
+		$this->app->bind([
+			'auth'             => AuthFactory::class,
+			AuthFactory::class => function(){
+				return new AuthManager(
+					$this->app->config->get('auth')
+				);
+			},
+		]);
 	}
 
 	/**

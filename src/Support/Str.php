@@ -61,10 +61,28 @@ final class Str{
 	 */
 	public static function endsWith($haystack, $needles){
 		foreach((array)$needles as $needle){
-			if((string)$needle === static::subString($haystack, -mb_strlen($needle))){
+			if((string)$needle === static::substr($haystack, -static::length($needle))){
 				return true;
 			}
 		}
+
+		return false;
+	}
+
+	/**
+	 * 检查字符串是否以某些字符串开头
+	 *
+	 * @param string       $haystack
+	 * @param string|array $needles
+	 * @return bool
+	 */
+	public static function startsWith($haystack, $needles){
+		foreach((array)$needles as $needle){
+			if('' != $needle && mb_strpos($haystack, $needle) === 0){
+				return true;
+			}
+		}
+
 		return false;
 	}
 
@@ -76,13 +94,14 @@ final class Str{
 	 * @param int    $length 截取长度
 	 * @param string $charset 字符编码
 	 * @return string
+	 * @deprecated
 	 */
 	public static function subString($value, $start = 0, $length = null, $charset = null){
-		if(function_exists("mb_substr"))
+		if(function_exists("mb_substr")){
 			$slice = mb_substr($value, $start, $length, $charset);
-		elseif(function_exists('iconv_substr')){
-			$length = is_null($length) ? $length = 'iconv_strlen($str, $charset)' : $length;
-			$charset = is_null($charset) ? $charset = 'ini_get("iconv.internal_encoding")' : $charset;
+		}elseif(function_exists('iconv_substr')){
+			$length = is_null($length) ? iconv_strlen($value, $charset) : $length;
+			$charset = is_null($charset) ? ini_get("iconv.internal_encoding") : $charset;
 			$slice = iconv_substr($value, $start, $length, $charset);
 			if(false === $slice){
 				$slice = '';
@@ -96,22 +115,6 @@ final class Str{
 			$slice = join("", array_slice($match [0], $start, $length));
 		}
 		return $slice;
-	}
-
-	/**
-	 * 检查字符串是否以某些字符串开头
-	 *
-	 * @param string       $haystack
-	 * @param string|array $needles
-	 * @return bool
-	 */
-	public static function startsWith($haystack, $needles){
-		foreach((array)$needles as $needle){
-			if($needle != '' && mb_strpos($haystack, $needle) === 0){
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**
@@ -346,6 +349,7 @@ final class Str{
 	 * 生成一个 UUID (version 4).
 	 *
 	 * @return \Ramsey\Uuid\UuidInterface
+	 * @noinspection PhpDocMissingThrowsInspection
 	 */
 	public static function uuid(){
 		return Uuid::uuid4();
@@ -539,5 +543,69 @@ final class Str{
 		}
 
 		return false;
+	}
+
+	/**
+	 * 返回给定值首次出现后字符串的剩余部分
+	 *
+	 * @param string $subject
+	 * @param string $search
+	 * @return string
+	 */
+	public static function after($subject, $search){
+		return $search === '' ? $subject : array_reverse(explode($search, $subject, 2))[0];
+	}
+
+	/**
+	 * 返回给定值最后一次出现后字符串的剩余部分
+	 *
+	 * @param string $subject
+	 * @param string $search
+	 * @return string
+	 */
+	public static function afterLast($subject, $search){
+		if($search === ''){
+			return $subject;
+		}
+
+		$position = mb_strrpos($subject, (string)$search);
+
+		if($position === false){
+			return $subject;
+		}
+
+		return static::substr($subject, $position + mb_strlen($search));
+	}
+
+	/**
+	 * 获取给定值第一次出现之前的字符串部分
+	 *
+	 * @param string $subject
+	 * @param string $search
+	 * @return string
+	 */
+	public static function before($subject, $search){
+		return $search === '' ? $subject : explode($search, $subject)[0];
+	}
+
+	/**
+	 * 获取给定值最后一次出现之前的字符串部分。
+	 *
+	 * @param string $subject
+	 * @param string $search
+	 * @return string
+	 */
+	public static function beforeLast($subject, $search){
+		if($search === ''){
+			return $subject;
+		}
+
+		$pos = mb_strrpos($subject, $search);
+
+		if($pos === false){
+			return $subject;
+		}
+
+		return static::substr($subject, 0, $pos);
 	}
 }

@@ -197,3 +197,15 @@ if(!function_exists('const_exist')){
 		return false;
 	}
 }
+
+if(!function_exists('now')){
+	/**
+	 * 获取当前时间实例
+	 *
+	 * @param DateTimeZone|string|null $tz $tz
+	 * @return \Carbon\Carbon
+	 */
+	function now($tz = null){
+		return \Carbon\Carbon::now($tz);
+	}
+}

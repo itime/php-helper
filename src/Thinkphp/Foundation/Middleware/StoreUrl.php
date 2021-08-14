@@ -4,7 +4,7 @@
  *
  * @author: 晋<657306123@qq.com>
  */
-namespace Xin\Thinkphp\Middleware;
+namespace Xin\Thinkphp\Foundation\Middleware;
 
 use think\Cookie;
 use think\Request;
@@ -31,14 +31,18 @@ class StoreUrl{
 	 * @return mixed
 	 */
 	public function handle(Request $request, \Closure $next){
+		/** @var \think\Response $response */
+		$response = $next($request);
+
 		if($request->method() === 'GET' &&
 			!$request->isAjax() &&
 			!$request->prefetch() &&
-			!$request->has('choice')){
+			!$request->has('choice') &&
+			strpos($response->getHeader('Content-Type'), 'text/html') !== false){
 			$this->storeUrl($request);
 		}
 
-		return $next($request);
+		return $response;
 	}
 
 	/**
@@ -48,7 +52,7 @@ class StoreUrl{
 		$previousUrl = $this->cookie->get('_previous_url');
 		$currentUrl = $this->cookie->get('_current_url');
 
-		$requestUrl = $request->fullUrl();
+		$requestUrl = $request->url(true);
 
 		if(empty($currentUrl)){
 			$currentUrl = $requestUrl;
@@ -58,6 +62,6 @@ class StoreUrl{
 			$this->cookie->set('_previous_url', $currentUrl);
 		}
 
-		$this->cookie->set('_current_url', $request->fullUrl());
+		$this->cookie->set('_current_url', $requestUrl);
 	}
 }

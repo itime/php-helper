@@ -32,8 +32,7 @@ class AppContext{
 	/**
 	 * MultiAppContext constructor.
 	 */
-	protected function __construct(){
-	}
+	protected function __construct(){ }
 
 	/**
 	 * @return int

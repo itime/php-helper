@@ -7,33 +7,24 @@
 
 namespace Xin\Thinkphp\Foundation\Setting;
 
-use think\Console;
+use think\Service;
 use Xin\Support\Arr;
-use Xin\Thinkphp\Foundation\ServiceProvider;
 use Xin\Thinkphp\Foundation\Setting\Command\Clear;
 use Xin\Thinkphp\Foundation\Setting\Command\Show;
 use Xin\Thinkphp\Foundation\Setting\Command\Update;
 
-class SettingServiceProvider extends ServiceProvider{
-
-	/**
-	 * @inheritDoc
-	 */
-	public function register(){
-		Console::starting(function(Console $console){
-			$console->addCommands([
-				Show::class,
-				Clear::class,
-				Update::class,
-			]);
-		});
-	}
+class SettingServiceProvider extends Service{
 
 	/**
 	 * @inheritDoc
 	 */
 	public function boot(){
 		if($this->app->runningInConsole()){
+			$this->commands([
+				Show::class,
+				Clear::class,
+				Update::class,
+			]);
 			$this->load();
 		}else{
 			$this->app->event->listen('HttpRun', function(){

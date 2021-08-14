@@ -159,7 +159,7 @@ trait AuthenticatesUsers{
 		}
 
 		$this->guard()->logout();
-		Session::clear();
+		Session::destroy();
 
 		if($result = $this->loggedOut($request)){
 			return $result;

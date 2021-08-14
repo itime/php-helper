@@ -7,11 +7,11 @@
 
 namespace Xin\Thinkphp\Plugin;
 
+use think\Service;
 use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Plugin\PluginManager;
-use Xin\Thinkphp\Foundation\ServiceProvider;
 
-class PluginServiceProvider extends ServiceProvider{
+class PluginServiceProvider extends Service{
 
 	/**
 	 * 注册插件管理器

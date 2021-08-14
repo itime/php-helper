@@ -7,78 +7,6 @@
 
 use Xin\Support\Str;
 
-if(!function_exists('thinkphp_version')){
-	/**
-	 * ThinkPHP 版本
-	 *
-	 * @return string
-	 */
-	function thinkphp_version(){
-		static $version = null;
-
-		if(empty($version)){
-			if(const_exist('\think\App', 'VERSION')){
-				$version = "5.1";
-			}
-
-			$version = "6.0";
-		}
-
-		return $version;
-	}
-}
-
-if(!function_exists('thinkphp_is')){
-	/**
-	 * ThinkPHP版本号是否是指定版本
-	 *
-	 * @param string $version
-	 * @return bool
-	 */
-	function thinkphp_is($version){
-		$tVersion = thinkphp_version();
-		return $version == $tVersion;
-	}
-}
-
-if(!function_exists('thinkphp51_if')){
-	/**
-	 * 如果ThinkPHP版本是5.1执行第一个回调，如果不是执行第二个回调
-	 *
-	 * @param callable      $resolve
-	 * @param callable|null $reject
-	 * @return mixed
-	 */
-	function thinkphp51_if($resolve, $reject = null){
-		if(thinkphp_is("5.1")){
-			return call_user_func($resolve);
-		}elseif($reject){
-			return call_user_func($reject);
-		}
-
-		return null;
-	}
-}
-
-if(!function_exists('thinkphp60_if')){
-	/**
-	 * 如果ThinkPHP版本是6.0执行第一个回调，如果不是执行第二个回调
-	 *
-	 * @param callable      $resolve
-	 * @param callable|null $reject
-	 * @return mixed|null
-	 */
-	function thinkphp60_if($resolve, $reject = null){
-		if(thinkphp_is("6.0")){
-			return call_user_func($resolve);
-		}elseif($reject){
-			return call_user_func($reject);
-		}
-
-		return null;
-	}
-}
-
 if(!function_exists('listen')){
 	/**
 	 * 监听行为
@@ -200,7 +128,19 @@ if(!function_exists('logic_action')){
 	}
 }
 
-if(!function_exists('table_rows')){
+if(!function_exists('db')){
+	/**
+	 * 获取 db 实例
+	 *
+	 * @param string $name
+	 * @return \think\db\Query
+	 */
+	function db($name){
+		return app('db')->name($name);
+	}
+}
+
+if(!function_exists('db_rows')){
 	/**
 	 * 获取数据库数据
 	 *
@@ -209,21 +149,17 @@ if(!function_exists('table_rows')){
 	 * @param string $field
 	 * @param string $order
 	 * @param string $page
-	 * @return array|string|\think\Collection
+	 * @return array|\think\Collection
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	function table_rows($table, $where = [], $field = '*', $order = '', $page = ''){
-		return thinkphp60_if(function() use ($table, $where, $field, $order, $page){
-			return \think\facade\Db::name($table)->field($field)->where($where)->order($order)->page(intval($page))->select();
-		}, function() use ($table, $where, $field, $order, $page){
-			return \think\Db::name($table)->field($field)->where($where)->order($order)->page($page)->select();
-		});
+	function db_rows($table, $where = [], $field = '*', $order = '', $page = ''){
+		return db($table)->field($field)->where($where)->order($order)->page(intval($page))->select();
 	}
 }
 
-if(!function_exists('table_column')){
+if(!function_exists('db_columns')){
 	/**
 	 * 获取数据库数据
 	 *
@@ -235,16 +171,12 @@ if(!function_exists('table_column')){
 	 * @param string $page
 	 * @return array
 	 */
-	function table_column($table, $field, $where = [], $key = '', $order = '', $page = ''){
-		return thinkphp60_if(function() use ($table, $field, $where, $key, $order, $page){
-			return \think\facade\Db::name($table)->where($where)->order($order)->page(intval($page))->column($field, $key);
-		}, function() use ($table, $field, $where, $key, $order, $page){
-			return \think\Db::name($table)->where($where)->order($order)->page($page)->column($field, $key);
-		});
+	function db_columns($table, $field, $where = [], $key = '', $order = '', $page = ''){
+		return db($table)->where($where)->order($order)->page(intval($page))->column($field, $key);
 	}
 }
 
-if(!function_exists('table_value')){
+if(!function_exists('db_value')){
 	/**
 	 * 获取数据库值
 	 *
@@ -254,12 +186,8 @@ if(!function_exists('table_value')){
 	 * @param mixed        $default 默认值
 	 * @return mixed
 	 */
-	function table_value($table, $field, $where, $default = null){
-		return thinkphp60_if(function() use ($table, $field, $where, $default){
-			return \think\facade\Db::name($table)->where($where)->value($field, $default);
-		}, function() use ($table, $field, $where, $default){
-			return \think\Db::name($table)->where($where)->value($field, $default);
-		});
+	function db_value($table, $field, $where, $default = null){
+		return db($table)->where($where)->value($field, $default);
 	}
 }
 
@@ -273,6 +201,31 @@ if(!function_exists('bcrypt')){
 	 */
 	function bcrypt($value, $options = []){
 		return app('hash')->make($value, $options);
+	}
+}
+if(!function_exists('decrypt')){
+	/**
+	 * Decrypt the given value.
+	 *
+	 * @param string $value
+	 * @param bool   $unserialize
+	 * @return mixed
+	 */
+	function decrypt($value, $unserialize = true){
+		return app('encrypter')->decrypt($value, $unserialize);
+	}
+}
+
+if(!function_exists('encrypt')){
+	/**
+	 * Encrypt the given value.
+	 *
+	 * @param mixed $value
+	 * @param bool  $serialize
+	 * @return string
+	 */
+	function encrypt($value, $serialize = true){
+		return app('encrypter')->encrypt($value, $serialize);
 	}
 }
 
