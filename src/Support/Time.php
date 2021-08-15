@@ -239,4 +239,20 @@ class Time{
 
 		return $rangeDatetime;
 	}
+
+	/**
+	 * 时间排序
+	 *
+	 * @param array $times
+	 * @return array
+	 */
+	public static function sort($times){
+		usort($times, function($com1, $com2){
+			$com1 = strtotime($com1);
+			$com2 = strtotime($com2);
+			return $com1 < $com2 ? -1 : 1;
+		});
+
+		return $times;
+	}
 }

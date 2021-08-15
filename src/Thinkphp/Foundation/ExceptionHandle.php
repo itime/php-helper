@@ -18,6 +18,10 @@ use Xin\Auth\AuthenticationException;
 use Xin\Foundation\Wechat\WechatException;
 use Xin\Thinkphp\Facade\Hint;
 
+/**
+ * Class ExceptionHandle
+ * @method void reportTo(\Throwable $e, string $log)
+ */
 class ExceptionHandle extends Handle{
 
 	/**
@@ -58,7 +62,7 @@ class ExceptionHandle extends Handle{
 		if($find = strpos($traceString, "\n#11 ")){
 			$traceString = substr($traceString, 0, $find);
 		}
-		$log = "[{$data['code']}]{$data['message']}[{$data['file']}:{$data['line']}]\n{$traceString}";
+		$log = "[{$data['message']}]: code({$data['code']}): {$data['file']}({$data['line']})\n{$traceString}";
 
 		if($this->app->config->get('log.record_trace')){
 			$log .= PHP_EOL.$exception->getTraceAsString();
@@ -66,7 +70,14 @@ class ExceptionHandle extends Handle{
 
 		try{
 			$this->app->log->record($log, 'error');
-		}catch(\Exception $e){
+		}catch(\Throwable $e){
+		}
+
+		if(method_exists($this, 'reportTo')){
+			try{
+				$this->reportTo($exception, $log);
+			}catch(\Throwable $e){
+			}
 		}
 	}
 
