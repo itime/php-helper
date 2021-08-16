@@ -425,24 +425,30 @@ final class Str{
 	/**
 	 * 把数组所有元素按照“参数=参数值”的模式用“&”字符拼接成字符串
 	 *
-	 * @param array  $params 关联数组
-	 * @param string $handleFunc 值处理函数
+	 * @param array    $params 关联数组
+	 * @param callable $valueHandler 值处理函数
 	 * @return string
 	 */
-	public static function buildUrlQuery($params, $handleFunc = null){
-		if(!is_callable($handleFunc)) $handleFunc = function($key, $val){
-			$type = gettype($val);
-			if($type == 'object' || $type == 'array') return '';
+	public static function buildUrlQuery($params, $valueHandler = null){
+		if(!is_callable($valueHandler)){
+			$valueHandler = function($key, $val){
+				$type = gettype($val);
+				if($type == 'object' || $type == 'array'){
+					return '';
+				}
 
-			$val = urlencode($val);
-			return $key.'='.$val;
-		};
+				$val = urlencode($val);
+				return $key.'='.$val;
+			};
+		}
 
 		$result = '';
 		$i = 0;
 		foreach($params as $key => $val){
-			$str = $handleFunc($key, $val);
-			if($str === '') continue;
+			$str = $valueHandler($key, $val);
+			if($str === ''){
+				continue;
+			}
 			$result .= ($i === 0 ? '' : '&').$str;
 			$i++;
 		}
