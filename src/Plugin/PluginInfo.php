@@ -7,11 +7,17 @@
 
 namespace Xin\Plugin;
 
+use think\Container;
 use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Contracts\Plugin\PluginInfo as PluginInfoContract;
 use Xin\Support\Version;
 
 class PluginInfo implements PluginInfoContract{
+
+	/**
+	 * @var \think\App
+	 */
+	protected $app;
 
 	/**
 	 * @var PluginFactory
@@ -24,6 +30,11 @@ class PluginInfo implements PluginInfoContract{
 	protected $name;
 
 	/**
+	 * @var string
+	 */
+	protected $pluginClass;
+
+	/**
 	 * @var array
 	 */
 	protected $info = null;
@@ -34,14 +45,17 @@ class PluginInfo implements PluginInfoContract{
 	protected $configTemplate = null;
 
 	/**
-	 * AbstractPlugin constructor.
+	 * PluginInfo constructor.
 	 *
-	 * @param                               $name
+	 * @param string                        $name
+	 * @param string                        $pluginClass
 	 * @param \Xin\Contracts\Plugin\Factory $factory
 	 */
-	public function __construct($name, PluginFactory $factory){
+	public function __construct($name, $pluginClass, PluginFactory $factory){
 		$this->name = $name;
+		$this->pluginClass = $pluginClass;
 		$this->factory = $factory;
+		$this->app = Container::getInstance()->get('app');
 	}
 
 	/**
@@ -89,7 +103,10 @@ class PluginInfo implements PluginInfoContract{
 	 * @inheritDoc
 	 */
 	public function plugin(){
-		return $this->factory->plugin($this->getName());
+		if(!is_object($this->pluginClass)){
+			$this->pluginClass = $this->app->invokeClass($this->pluginClass);
+		}
+		return $this->pluginClass;
 	}
 
 	/**

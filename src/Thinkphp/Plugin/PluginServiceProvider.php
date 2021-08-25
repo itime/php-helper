@@ -37,7 +37,7 @@ class PluginServiceProvider extends Service{
 	 * 注册插件管理器
 	 */
 	protected function registerPluginManager(){
-		$this->app->bind("PluginManager", PluginFactory::class);
+		$this->app->bind("pluginManager", PluginFactory::class);
 		$this->app->bind(PluginFactory::class, function(){
 			return new PluginManager(array_merge([
 				'default' => [
@@ -57,7 +57,7 @@ class PluginServiceProvider extends Service{
 		$this->app->event->listen('HttpRun', function(){
 			$this->app->middleware->add(function($request, \Closure $next){
 				/** @var PluginFactory $pm */
-				$pm = $this->app['PluginManager'];
+				$pm = $this->app['pluginManager'];
 				$pm->pluginBoot();
 
 				return $next($request);

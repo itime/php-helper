@@ -10,6 +10,7 @@ namespace Xin\Plugin;
 use think\helper\Str;
 use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Support\Arr;
+use Xin\Support\Collection;
 
 class PluginManager implements PluginFactory{
 
@@ -19,14 +20,14 @@ class PluginManager implements PluginFactory{
 	protected $config;
 
 	/**
-	 * @var array
+	 * @var Collection
 	 */
-	protected $pluginInfos = [];
+	protected $plugins;
 
 	/**
 	 * @var array
 	 */
-	protected $pluginBoots = [];
+	protected $isPluginBoot = false;
 
 	/**
 	 * AbstractPluginManager constructor.
@@ -35,6 +36,8 @@ class PluginManager implements PluginFactory{
 	 */
 	public function __construct(array $config){
 		$this->config = $config;
+
+		$this->plugins();
 	}
 
 	/**
@@ -42,13 +45,6 @@ class PluginManager implements PluginFactory{
 	 */
 	public function rootPath($path = ''){
 		return $this->config['path'].($path ? $path.DIRECTORY_SEPARATOR : $path);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function lists(){
-		return new PlugLazyCollection($this);
 	}
 
 	/**
@@ -62,7 +58,8 @@ class PluginManager implements PluginFactory{
 	 * @inheritDoc
 	 */
 	public function installPlugin($plugin){
-		$pluginInfo = $this->pluginInfo($plugin);
+		$pluginInfo = $this->plugin($plugin);
+
 		$this->plugin($plugin)->install($pluginInfo, $this);
 
 		return $pluginInfo;
@@ -72,7 +69,8 @@ class PluginManager implements PluginFactory{
 	 * @inheritDoc
 	 */
 	public function uninstallPlugin($plugin){
-		$pluginInfo = $this->pluginInfo($plugin);
+		$pluginInfo = $this->plugin($plugin);
+
 		$this->plugin($plugin)->uninstall($pluginInfo, $this);
 
 		return $pluginInfo;
@@ -80,26 +78,10 @@ class PluginManager implements PluginFactory{
 
 	/**
 	 * @inheritDoc
-	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
-	 */
-	public function pluginBoot(array $plugins = []){
-		foreach($plugins as $plugin){
-			if(isset($this->pluginBoots[$plugin])){
-				continue;
-			}
-
-			$this->pluginBoots[$plugin] = true;
-			$pluginInfo = $this->pluginInfo($plugin);
-			$this->plugin($plugin)->boot($pluginInfo, $this);
-		}
-	}
-
-	/**
-	 * @inheritDoc
 	 */
 	public function plugin($plugin){
-		if(isset($this->pluginBoots[$plugin])){
-			return $this->pluginBoots[$plugin];
+		if($this->plugins->has($plugin)){
+			return $this->plugins->get($plugin);
 		}
 
 		$class = $this->pluginClass($plugin, "Plugin");
@@ -107,18 +89,55 @@ class PluginManager implements PluginFactory{
 			throw new PluginNotFoundException($plugin);
 		}
 
-		return $this->pluginBoots[$plugin] = new $class();
+		$pluginInfo = new PluginInfo($plugin, $class, $this);
+		$this->plugins->set($plugin, $pluginInfo);
+
+		return $pluginInfo;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function pluginInfo($plugin){
-		if(isset($this->pluginInfos[$plugin])){
-			return $this->pluginInfos[$plugin];
+	public function plugins(){
+		if($this->plugins){
+			return $this->plugins;
 		}
 
-		return $this->pluginInfos[$plugin] = new PluginInfo($plugin, $this);
+		$plugins = [];
+		$fileIterator = new \FilesystemIterator($this->rootPath());
+		foreach($fileIterator as $file){
+			if(!$file->isDir()){
+				continue;
+			}
+
+			$name = $file->getFilename();
+			$class = $this->pluginClass($name, "Plugin");
+			if(!class_exists($class)){
+				continue;
+			}
+
+			$plugins[$name] = new PluginInfo($name, $class, $this);
+		}
+
+		$this->plugins = new Collection($plugins);
+
+		return $this->plugins;
+	}
+
+	/**
+	 * @inheritDoc
+	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
+	 */
+	public function pluginBoot(array $plugins = []){
+		if($this->isPluginBoot){
+			return;
+		}
+
+		$this->isPluginBoot = true;
+
+		foreach($this->plugins as $plugin => $pluginInfo){
+			$this->plugin($plugin)->plugin()->boot($pluginInfo, $this);
+		}
 	}
 
 	/**

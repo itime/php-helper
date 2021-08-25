@@ -20,9 +20,9 @@ interface Factory{
 	/**
 	 * 插件列表
 	 *
-	 * @return \Xin\Contracts\Plugin\PlugLazyCollection
+	 * @return \Xin\Contracts\Plugin\PluginCollection
 	 */
-	public function lists();
+	public function plugins();
 
 	/**
 	 * 获取插件目录
@@ -50,15 +50,6 @@ interface Factory{
 	public function plugin($plugin);
 
 	/**
-	 * 获取插件信息
-	 *
-	 * @param string $plugin
-	 * @return \Xin\Contracts\Plugin\PluginInfo
-	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
-	 */
-	public function pluginInfo($plugin);
-
-	/**
 	 * 安装插件
 	 *
 	 * @param string $plugin
@@ -78,10 +69,8 @@ interface Factory{
 
 	/**
 	 * 启动相关插件
-	 *
-	 * @param array $plugins
 	 */
-	public function pluginBoot(array $plugins = []);
+	public function pluginBoot();
 
 	/**
 	 * 获取插件下的类路径
