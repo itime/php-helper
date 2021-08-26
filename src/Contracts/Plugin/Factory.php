@@ -44,7 +44,7 @@ interface Factory{
 	 * 获取插件
 	 *
 	 * @param string $plugin
-	 * @return \Xin\Contracts\Plugin\Plugin
+	 * @return \Xin\Contracts\Plugin\PluginInfo
 	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
 	public function plugin($plugin);
