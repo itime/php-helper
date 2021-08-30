@@ -43,7 +43,7 @@ interface PluginInfo{
 	 * @param array $config
 	 * @return array
 	 */
-	public function getConfigTemplate($config = []);
+	public function getConfigTemplate($config = [], $layer = null);
 
 	/**
 	 * 获取配置字段类型

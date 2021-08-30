@@ -106,6 +106,7 @@ class Middleware{
 	 * @return string
 	 */
 	protected function getPathRule($request){
+		plugin_url();
 		$path = $request->path();
 
 		if(method_exists($request, Plugin::getPrefix()) && $plugin = $request->plugin()){

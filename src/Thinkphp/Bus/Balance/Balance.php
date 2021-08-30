@@ -61,7 +61,7 @@ class Balance implements BalanceRepository{
 	 * @inheritDoc
 	 */
 	public function consume($userId, $amount, $remark = '', $attributes = []){
-		$value = $this->newQuery()->value($userId);
+		$value = $this->newQuery()->where('id', $userId)->value($this->field());
 		if($value < $amount){
 			throw new ValidateException("余额不足！");
 		}

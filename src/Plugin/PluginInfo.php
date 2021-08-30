@@ -112,8 +112,8 @@ class PluginInfo implements PluginInfoContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function getConfigTemplate($config = []){
-		$template = $this->loadConfigTemplate();
+	public function getConfigTemplate($config = [], $layer = null){
+		$template = $this->loadConfigTemplate($layer);
 
 		foreach($template as &$item){
 			foreach($item['config'] as &$value){
@@ -173,15 +173,22 @@ class PluginInfo implements PluginInfoContract{
 	 * 加载配置信息模板
 	 *
 	 * @return array
-	 * @noinspection PhpIncludeInspection
 	 */
-	protected function loadConfigTemplate(){
+	protected function loadConfigTemplate($layer = null){
 		if(is_null($this->configTemplate)){
 			$configTemplatePath = $this->path()."config.php";
 			if(file_exists($configTemplatePath)){
 				$this->configTemplate = require_once $configTemplatePath;
 			}else{
 				$this->configTemplate = [];
+			}
+		}
+
+		if($layer){
+			$configTemplatePath = $this->path($layer)."config.php";
+			if(file_exists($configTemplatePath)){
+				$layerConfigTemplate = require_once $configTemplatePath;
+				return array_merge_recursive($this->configTemplate, $layerConfigTemplate);
 			}
 		}
 

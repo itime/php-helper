@@ -51,7 +51,7 @@ class Url extends UrlBuild{
 			$url = $this->getAppName().'/'
 				.($plugin ? self::$pluginPrefix."/".$plugin."/" : "")
 				.$this->parseController($request->controller()).'/'
-				.$request->action();
+				.$request->action(true);
 		}else{
 			// 解析到 应用/控制器/操作
 			$app = $this->getAppName();

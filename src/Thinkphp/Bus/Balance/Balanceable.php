@@ -59,7 +59,7 @@ trait Balanceable{
 	 * @return mixed
 	 */
 	public function recharge($amount, $remark = '', $attributes = [], $bag = 'default'){
-		return $this->balance($bag)->recharge($amount, $remark, $attributes);
+		return $this->balance($bag)->recharge($this->getOrigin('id'), $amount, $remark, $attributes);
 	}
 
 	/**
@@ -71,7 +71,7 @@ trait Balanceable{
 	 * @return mixed
 	 */
 	public function consume($amount, $remark = '', $attributes = [], $bag = 'default'){
-		return $this->balance($bag)->consume($amount, $remark, $attributes);
+		return $this->balance($bag)->consume($this->getOrigin('id'), $amount, $remark, $attributes);
 	}
 
 	/**
