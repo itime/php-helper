@@ -149,7 +149,7 @@ class PluginDispatch extends Controller{
 		$pluginControllerLayer = "{$appName}\\{$controllerLayer}";
 		$class = $this->pluginManager->controllerClass(
 			$this->plugin,
-			$name = str_replace(['/', '.'], '\\', $name),
+			str_replace(['/', '.'], '\\', $name),
 			$pluginControllerLayer
 		);
 

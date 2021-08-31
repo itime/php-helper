@@ -151,7 +151,6 @@ class PluginManager implements PluginFactory{
 	 * @inheritDoc
 	 */
 	public function controllerClass($plugin, $controller, $layer = 'controller'){
-		$controller = Str::studly($controller);
 		return $this->pluginClass($plugin, "{$layer}\\{$controller}Controller");
 	}
 
