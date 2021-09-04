@@ -9,12 +9,17 @@ namespace Xin\Thinkphp\Plugin;
 
 use think\facade\Cache;
 use Think\Model;
+use Xin\Contracts\Plugin\Factory as PluginFactory;
+use Xin\Plugin\PluginNotFoundException;
+use Xin\Support\Version;
 
 /**
  * Class DatabasePlugin
  *
  * @property-read string name
  * @property-read int    install
+ * @property-read bool   is_new_version
+ * @property-read string local_version
  * @property array       config
  */
 class DatabasePlugin extends Model{
@@ -128,6 +133,64 @@ class DatabasePlugin extends Model{
 	 */
 	public static function resolvePluginConfigKey($plugin){
 		return static::CACHE_PREFIX.$plugin;
+	}
+
+	/**
+	 * 获取本地插件信息
+	 *
+	 * @param string $attr
+	 * @return \Xin\Contracts\Plugin\PluginInfo|null
+	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
+	 */
+	public function getLocalInfo($attr = null){
+		/** @var PluginFactory $pluginFactory */
+		$pluginFactory = app(PluginFactory::class);
+		try{
+			/** @var \Xin\Plugin\PluginInfo $info */
+			$info = $pluginFactory->plugin($this->getOrigin('name'));
+
+			if($attr){
+				return $info->getInfo($attr);
+			}
+
+			return $info;
+		}catch(PluginNotFoundException $e){
+		}
+		return null;
+	}
+
+	/**
+	 * 获取本地信息
+	 *
+	 * @return \Xin\Contracts\Plugin\PluginInfo|null
+	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
+	 */
+	protected function getLocalInfoAttr(){
+		return $this->getLocalInfo();
+	}
+
+	/**
+	 * 获取本地版本号
+	 *
+	 * @return \Xin\Contracts\Plugin\PluginInfo|null
+	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
+	 */
+	protected function getLocalVersionAttr(){
+		return $this->getLocalInfo('version');
+	}
+
+	/**
+	 * 是否有新版本
+	 *
+	 * @return bool
+	 */
+	protected function getIsNewVersionAttr(){
+		$localVersion = $this->getAttr('local_version');
+		if(!$localVersion){
+			return false;
+		}
+
+		return Version::lt($this->getOrigin('version'), $localVersion);
 	}
 
 }

@@ -94,9 +94,10 @@ trait FindTemplate{
 	 * 自动定位模板文件
 	 *
 	 * @param string $template
+	 * @param bool   $failException
 	 * @return string
 	 */
-	protected function parseTemplate(string $template):string{
+	protected function parseTemplate(string $template, $failException = true):string{
 		// 分析模板文件规则
 		$request = $this->app['request'];
 
@@ -154,7 +155,16 @@ trait FindTemplate{
 			$template = str_replace(['/', ':'], $depr, substr($template, 1));
 		}
 
-		return $path.ltrim($template, '/').'.'.ltrim($this->config['view_suffix'], '.');
+		$templateFile = $path.ltrim($template, '/').'.'.ltrim($this->config['view_suffix'], '.');
+
+		if(is_file($templateFile)){
+			// 记录模板文件的更新时间
+			$this->includeFile[$templateFile] = filemtime($templateFile);
+		}elseif($failException){
+			throw new TemplateNotFoundException('template not exists:'.$template);
+		}
+
+		return $templateFile;
 	}
 
 	/**
@@ -236,7 +246,7 @@ trait FindTemplate{
 	public function exists(string $template):bool{
 		if('' == pathinfo($template, PATHINFO_EXTENSION)){
 			// 获取模板文件名
-			$template = $this->parseTemplate($template);
+			$template = $this->parseTemplate($template, false);
 		}
 
 		return is_file($template);

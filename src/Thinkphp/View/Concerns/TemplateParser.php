@@ -837,7 +837,7 @@ trait TemplateParser{
 			}
 		}elseif('@' == $tagName){
 			$regex = '\@([a-wA-w_]*)\(([\$a-wA-w_]*)\)';
-			// $regex = '\@([a-wA-w_]*\([\$a-wA-w_]*\))';
+			$regex = '\@(\w+(?:::\w+)?)\`([\w\W]+?)\`';
 		}else{
 			$begin = $this->config['taglib_begin'];
 			$end = $this->config['taglib_end'];
