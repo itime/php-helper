@@ -9,7 +9,7 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
-namespace Xin\Thinkphp\View;
+namespace Xin\Thinkphp\View\Exceptions;
 
 class TemplateNotFoundException extends \RuntimeException{
 

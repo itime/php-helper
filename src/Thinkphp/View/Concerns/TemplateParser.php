@@ -5,7 +5,9 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\View;
+namespace Xin\Thinkphp\View\Concerns;
+
+use Exception;
 
 /**
  * Trait Parser
@@ -89,6 +91,9 @@ trait TemplateParser{
 		// 解析普通模板标签 {$tagName}
 		$this->parseTag($content);
 
+		// 解析指令标签
+		$this->parseDirective($content);
+
 		// 还原被替换的Literal标签
 		$this->parseLiteral($content, true);
 	}
@@ -107,7 +112,7 @@ trait TemplateParser{
 
 		// PHP语法检查
 		if($this->config['tpl_deny_php'] && false !== strpos($content, '<?php')){
-			throw new \Exception('not allow php tag');
+			throw new Exception('not allow php tag');
 		}
 	}
 
@@ -128,7 +133,7 @@ trait TemplateParser{
 
 			if(!$this->config['layout_on'] || $this->config['layout_name'] != $array['name']){
 				// 读取布局模板
-				$layoutFile = $this->findView($array['name']);
+				$layoutFile = $this->parseTemplateFile($array['name']);
 
 				if($layoutFile){
 					$replace = isset($array['replace']) ? $array['replace'] : $this->config['layout_item'];
@@ -401,8 +406,8 @@ trait TemplateParser{
 	 * 分析标签属性
 	 *
 	 * @access public
-	 * @param string $str 属性字符串
-	 * @param string $name 不为空时返回指定的属性名
+	 * @param string      $str 属性字符串
+	 * @param string|null $name 不为空时返回指定的属性名
 	 * @return array
 	 */
 	public function parseAttr(string $str, string $name = null):array{
@@ -433,6 +438,7 @@ trait TemplateParser{
 	 */
 	protected function parseTag(string &$content):void{
 		$regex = $this->getRegex('tag');
+
 		if(preg_match_all($regex, $content, $matches, PREG_SET_ORDER)){
 			foreach($matches as $match){
 				$str = stripslashes($match[1]);
@@ -556,23 +562,32 @@ trait TemplateParser{
 
 			unset($matches);
 		}
+	}
 
-		$sRegex = $this->getRegex('@');
-		if(preg_match_all($sRegex, $content, $matches, PREG_SET_ORDER)){
-			foreach($matches as $match){
-				$directive = stripslashes($match[1]);
-
-				// 指令
-				if(isset($this->directive[$directive])){
-					$callback = $this->directive[$directive];
-					$parseStr = $callback($match[2]);
-
-					$content = str_replace($match[0], $parseStr, $content);
-				}
-			}
-
-			unset($matches);
+	/**
+	 * 解析指令
+	 *
+	 * @param string $content
+	 */
+	protected function parseDirective(string &$content):void{
+		$regex = $this->getRegex('@');
+		if(!preg_match_all($regex, $content, $matches, PREG_SET_ORDER)){
+			return;
 		}
+
+		foreach($matches as $match){
+			$directive = stripslashes($match[1]);
+
+			// 指令
+			if(isset($this->directive[$directive])){
+				$callback = $this->directive[$directive];
+				$parseStr = $callback($match[2]);
+
+				$content = str_replace($match[0], $parseStr, $content);
+			}
+		}
+
+		unset($matches);
 	}
 
 	/**
@@ -826,7 +841,7 @@ trait TemplateParser{
 		}else{
 			$begin = $this->config['taglib_begin'];
 			$end = $this->config['taglib_end'];
-			$single = strlen(ltrim($begin, '\\')) == 1 && strlen(ltrim($end, '\\')) == 1;
+			$single = strlen(ltrim($begin, '\\')) == 1 && strlen(ltrim($end, '\\')) == 1 ? true : false;
 
 			switch($tagName){
 				case 'block':
@@ -868,37 +883,5 @@ trait TemplateParser{
 		}
 
 		return '/'.$regex.'/is';
-	}
-
-	/**
-	 * 分析加载的模板文件并读取内容 支持多个模板文件读取
-	 *
-	 * @param string $templateName 模板文件名
-	 * @return string
-	 * @throws \Exception
-	 */
-	protected function parseTemplateName(string $templateName):string{
-		$array = explode(',', $templateName);
-		$parseStr = '';
-
-		foreach($array as $templateName){
-			if(empty($templateName)){
-				continue;
-			}
-
-			if(0 === strpos($templateName, '$')){
-				//支持加载变量文件名
-				$templateName = $this->get(substr($templateName, 1));
-			}
-
-			$template = $this->findView($templateName);
-
-			if($template){
-				// 获取模板文件内容
-				$parseStr .= file_get_contents($template);
-			}
-		}
-
-		return $parseStr;
 	}
 }

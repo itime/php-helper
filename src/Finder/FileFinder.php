@@ -41,8 +41,8 @@ class FileFinder implements FinderContract{
 	/**
 	 * Create a new file loader instance.
 	 *
-	 * @param array $paths
-	 * @param array $extensions
+	 * @param array      $paths
+	 * @param array|null $extensions
 	 */
 	public function __construct(array $paths, array $extensions = null){
 		$this->paths = array_map([$this, 'resolvePath'], $paths);

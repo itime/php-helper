@@ -14,16 +14,12 @@ namespace Xin\Thinkphp\View;
 
 use Psr\SimpleCache\CacheInterface;
 use think\App;
-use Xin\Support\Str;
 
-/**
- * ThinkPHP分离出来的模板引擎
- * 支持XML标签和普通标签的模板解析
- * 编译型模板引擎 支持动态缓存
- */
 class Template{
 
-	use TemplateFinder, TemplateParser;
+	use Concerns\ExtendThink,
+		Concerns\FindTemplate,
+		Concerns\TemplateParser;
 
 	/**
 	 * @var \think\App
@@ -36,6 +32,11 @@ class Template{
 	 * @var array
 	 */
 	protected $data = [];
+
+	/**
+	 * @var array
+	 */
+	protected static $stacks = [];
 
 	/**
 	 * 模板配置参数
@@ -133,136 +134,21 @@ class Template{
 		$this->config['tpl_begin'] = preg_quote($this->config['tpl_begin'], '/');
 		$this->config['tpl_end'] = preg_quote($this->config['tpl_end'], '/');
 
-		$this->cache = $app->cache;
-
 		// 初始化模板编译存储器
-		$type = $this->config['compile_type'] ? $this->config['compile_type'] : 'Compiler';
-		$class = false !== strpos($type, '\\') ? $type : Compiler::class;
+		$type = $this->config['compile_type'] ?: 'File';
+		$class = false !== strpos($type, '\\') ? $type : '\\Xin\\Thinkphp\\View\\Storage\\'.ucwords($type);
 		$this->storage = new $class();
 
+		$this->cache = $app->cache;
+
 		// 初始化扩展变量
-		$this->extend('$Think', function(array $vars){
-			$type = strtoupper(trim(array_shift($vars)));
-			$param = implode('.', $vars);
-
-			switch($type){
-				case 'CONST':
-					$parseStr = strtoupper($param);
-					break;
-				case 'CONFIG':
-					$parseStr = 'config(\''.$param.'\')';
-					break;
-				case 'LANG':
-					$parseStr = 'lang(\''.$param.'\')';
-					break;
-				case 'NOW':
-					$parseStr = "date('Y-m-d g:i a',time())";
-					break;
-				case 'LDELIM':
-					$parseStr = '\''.ltrim($this->getConfig('tpl_begin'), '\\').'\'';
-					break;
-				case 'RDELIM':
-					$parseStr = '\''.ltrim($this->getConfig('tpl_end'), '\\').'\'';
-					break;
-				default:
-					$parseStr = defined($type) ? $type : '\'\'';
-			}
-
-			return $parseStr;
-		});
-
-		$this->extend('$Request', function(array $vars){
-			// 获取Request请求对象参数
-			$method = array_shift($vars);
-			if(!empty($vars)){
-				$params = implode('.', $vars);
-				if('true' != $params){
-					$params = '\''.$params.'\'';
-				}
-			}else{
-				$params = '';
-			}
-
-			return 'app(\'request\')->'.$method.'('.$params.')';
-		});
+		$this->extendThink();
+		$this->extendRequest();
 
 		// 扩展常用指令
 		$this->directive('json', function($vars){
 			return '<?php echo json_encode('.$vars.')?>';
 		});
-	}
-
-	/**
-	 * 自动定位模板文件
-	 *
-	 * @param string $template
-	 * @return string
-	 */
-	protected function parseTemplate(string $template):string{
-		if('' != pathinfo($template, PATHINFO_EXTENSION)
-			|| strpos($template, '@')){
-			return $template;
-		}
-
-		$depr = $this->config['view_depr'];
-
-		if(0 === strpos($template, '/')){
-			return str_replace(['/', ':'], $depr, substr($template, 1));
-		}
-
-		$request = $this->app['request'];
-
-		$template = str_replace(['/', ':'], $depr, $template);
-		$controller = $request->controller();
-
-		if(strpos($controller, '.')){
-			$pos = strrpos($controller, '.');
-			$controller = substr($controller, 0, $pos).'.'.Str::snake(substr($controller, $pos + 1));
-		}else{
-			$controller = Str::snake($controller);
-		}
-
-		if($controller){
-			if('' == $template){
-				// 如果模板文件名为空 按照默认模板渲染规则定位
-				if(2 == $this->config['auto_rule']){
-					$template = $request->action(true);
-				}elseif(3 == $this->config['auto_rule']){
-					$template = $request->action();
-				}else{
-					$template = Str::snake($request->action());
-				}
-
-				$template = str_replace('.', DIRECTORY_SEPARATOR, $controller).$depr.$template;
-			}elseif(false === strpos($template, $depr)){
-				$template = str_replace('.', DIRECTORY_SEPARATOR, $controller).$depr.$template;
-			}
-		}
-
-		return $template;
-	}
-
-	/**
-	 * 检测是否存在模板文件
-	 *
-	 * @access public
-	 * @param string $template 模板文件或者模板规则
-	 * @return bool
-	 */
-	public function exists(string $template):bool{
-		// 获取模板文件名
-		if('' == pathinfo($template, PATHINFO_EXTENSION)){
-			try{
-				$this->findView($this->parseTemplate($template));
-				return true;
-			}catch(TemplateNotFoundException $e){
-			}catch(\InvalidArgumentException $e){
-			}
-
-			return false;
-		}
-
-		return is_file($template);
 	}
 
 	/**
@@ -275,6 +161,19 @@ class Template{
 	 * @throws \Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function fetch(string $template, array $vars = []):void{
+		if(empty($this->config['view_path'])){
+			$view = $this->config['view_dir_name'];
+
+			if(is_dir($this->app->getAppPath().$view)){
+				$path = $this->app->getAppPath().$view.DIRECTORY_SEPARATOR;
+			}else{
+				$appName = $this->app->http->getName();
+				$path = $this->app->getRootPath().$view.DIRECTORY_SEPARATOR.($appName ? $appName.DIRECTORY_SEPARATOR : '');
+			}
+
+			$this->config['view_path'] = $path;
+		}
+
 		if($vars){
 			$this->data = array_merge($this->data, $vars);
 		}
@@ -287,16 +186,11 @@ class Template{
 			}
 		}
 
-		$template = $this->findView(
-			$this->parseTemplate($template)
-		);
+		$template = $this->parseTemplate($template);
 
 		$cacheFile = $this->config['cache_path'].$this->config['cache_prefix'].md5($this->config['layout_on'].$this->config['layout_name'].$template).'.'.ltrim($this->config['cache_suffix'], '.');
 
 		if(!$this->checkCache($cacheFile)){
-			// 记录模板文件的更新时间
-			$this->includeFile[$template] = filemtime($template);
-
 			// 缓存无效 重新模板编译
 			$content = file_get_contents($template);
 			$this->compiler($content, $cacheFile);
@@ -304,7 +198,11 @@ class Template{
 
 		// 页面缓存
 		ob_start();
-		ob_implicit_flush(0);
+		if(PHP_VERSION > 8.0){
+			ob_implicit_flush(false);
+		}else{
+			ob_implicit_flush(0);
+		}
 
 		// 读取编译存储
 		$this->storage->read($cacheFile, $this->data);
@@ -326,6 +224,7 @@ class Template{
 	 * @access public
 	 * @param string $content 模板内容
 	 * @param array  $vars 模板变量
+	 * @noinspection PhpDocMissingThrowsInspection
 	 */
 	public function display(string $content, array $vars = []):void{
 		if($vars){
@@ -350,6 +249,7 @@ class Template{
 	 * @param string $content 模板内容
 	 * @param string $cacheFile 缓存文件名
 	 * @return void
+	 * @throws \Exception
 	 */
 	protected function compiler(string &$content, string $cacheFile):void{
 		// 判断是否启用布局
@@ -359,7 +259,7 @@ class Template{
 				$content = str_replace('{__NOLAYOUT__}', '', $content);
 			}else{
 				// 读取布局模板
-				$layoutFile = $this->findView($this->config['layout_name']);
+				$layoutFile = $this->parseTemplateFile($this->config['layout_name']);
 
 				if($layoutFile){
 					// 替换布局的主体内容
@@ -573,6 +473,30 @@ class Template{
 		}
 
 		return $data;
+	}
+
+	/**
+	 * 获取堆内容
+	 *
+	 * @param string $name
+	 * @return string
+	 */
+	public static function getStack($name){
+		return isset(self::$stacks[$name]) ? self::$stacks[$name] : '';
+	}
+
+	/**
+	 * 添加一块堆内容，后续使用
+	 *
+	 * @param string $name
+	 * @param string $content
+	 */
+	public static function pushStack($name, $content){
+		if(!isset(self::$stacks[$name])){
+			self::$stacks[$name] = '';
+		}
+
+		self::$stacks[$name] .= "\n".$content;
 	}
 
 	/**

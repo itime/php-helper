@@ -1,19 +1,15 @@
 <?php
-// +----------------------------------------------------------------------
-// | ThinkPHP [ WE CAN DO IT JUST THINK ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2006~2019 http://thinkphp.cn All rights reserved.
-// +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
-// | Author: liu21st <liu21st@gmail.com>
-// +----------------------------------------------------------------------
+/**
+ * Talents come from diligence, and knowledge is gained by accumulation.
+ *
+ * @author: 晋<657306123@qq.com>
+ */
 
-namespace Xin\Thinkphp\View;
+namespace Xin\Thinkphp\View\Storage;
 
 use Exception;
 
-class Compiler{
+class File{
 
 	protected $cacheFile;
 
@@ -24,7 +20,7 @@ class Compiler{
 	 * @param string $cacheFile 缓存的文件名
 	 * @param string $content 缓存的内容
 	 * @return void
-	 * @throws \Exception
+	 * @noinspection PhpDocMissingThrowsInspection
 	 */
 	public function write(string $cacheFile, string $content):void{
 		// 检测模板目录
@@ -47,7 +43,6 @@ class Compiler{
 	 * @param string $cacheFile 缓存的文件名
 	 * @param array  $vars 变量数组
 	 * @return void
-	 * @noinspection PhpIncludeInspection
 	 */
 	public function read(string $cacheFile, array $vars = []):void{
 		$this->cacheFile = $cacheFile;

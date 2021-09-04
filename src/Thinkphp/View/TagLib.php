@@ -82,9 +82,9 @@ class TagLib{
 	 * 架构函数
 	 *
 	 * @access public
-	 * @param \Xin\Thinkphp\View\Template $template 模板引擎对象
+	 * @param Template $template 模板引擎对象
 	 */
-	public function __construct($template){
+	public function __construct(Template $template){
 		$this->tpl = $template;
 	}
 
@@ -115,31 +115,8 @@ class TagLib{
 
 		// 闭合标签
 		if(!empty($tags[1])){
-			$nodes = [];
 			$regex = $this->getRegex(array_keys($tags[1]), 1);
-			if(preg_match_all($regex, $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)){
-				$right = [];
-				foreach($matches as $match){
-					if('' == $match[1][0]){
-						$name = strtolower($match[2][0]);
-						// 如果有没闭合的标签头则取出最后一个
-						if(!empty($right[$name])){
-							// $match[0][1]为标签结束符在模板中的位置
-							$nodes[$match[0][1]] = [
-								'name'  => $name,
-								'begin' => array_pop($right[$name]), // 标签开始符
-								'end'   => $match[0], // 标签结束符
-							];
-						}
-					}else{
-						// 标签头压入栈
-						$right[strtolower($match[1][0])][] = $match[0];
-					}
-				}
-				unset($right, $matches);
-				// 按标签在模板中的位置从后向前排序
-				krsort($nodes);
-			}
+			$nodes = $this->parseNodes($regex, $content);
 
 			$break = '<!--###break###--!>';
 			if($nodes){
@@ -178,7 +155,6 @@ class TagLib{
 						];
 					}
 				}
-
 				while($beginArray){
 					$begin = array_pop($beginArray);
 					// 替换标签头部
@@ -199,6 +175,51 @@ class TagLib{
 				return $this->$method($attrs, '');
 			}, $content);
 		}
+
+		// 标签解析结束
+		$this->parseTagComplete($content);
+	}
+
+	/**
+	 * 标签解析结束
+	 *
+	 * @param string $content
+	 */
+	protected function parseTagComplete(&$content){
+	}
+
+	/**
+	 * @param string $regex
+	 * @param string $content
+	 * @return array
+	 */
+	protected function parseNodes($regex, &$content){
+		$nodes = [];
+		if(preg_match_all($regex, $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)){
+			$right = [];
+			foreach($matches as $match){
+				if('' == $match[1][0]){
+					$name = strtolower($match[2][0]);
+					// 如果有没闭合的标签头则取出最后一个
+					if(!empty($right[$name])){
+						// $match[0][1]为标签结束符在模板中的位置
+						$nodes[$match[0][1]] = [
+							'name'  => $name,
+							'begin' => array_pop($right[$name]), // 标签开始符
+							'end'   => $match[0], // 标签结束符
+						];
+					}
+				}else{
+					// 标签头压入栈
+					$right[strtolower($match[1][0])][] = $match[0];
+				}
+			}
+			unset($right, $matches);
+			// 按标签在模板中的位置从后向前排序
+			krsort($nodes);
+		}
+
+		return $nodes;
 	}
 
 	/**
@@ -212,7 +233,7 @@ class TagLib{
 	public function getRegex($tags, bool $close):string{
 		$begin = $this->tpl->getConfig('taglib_begin');
 		$end = $this->tpl->getConfig('taglib_end');
-		$single = strlen(ltrim($begin, '\\')) == 1 && strlen(ltrim($end, '\\')) == 1;
+		$single = strlen(ltrim($begin, '\\')) == 1 && strlen(ltrim($end, '\\')) == 1 ? true : false;
 		$tagName = is_array($tags) ? implode('|', $tags) : $tags;
 
 		if($single){

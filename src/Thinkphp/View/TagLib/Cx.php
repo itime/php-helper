@@ -14,7 +14,12 @@ namespace Xin\Thinkphp\View\TagLib;
 use Xin\Thinkphp\View\TagLib;
 
 /**
- * CX标签库解析类（扩展ThinkTemplate）
+ * CX标签库解析类
+ *
+ * @category   Think
+ * @package  Think
+ * @subpackage  Driver.Taglib
+ * @author    liu21st <liu21st@gmail.com>
  */
 class Cx extends Taglib{
 
@@ -46,6 +51,8 @@ class Cx extends Taglib{
 		'for'        => ['attr' => 'start,end,name,comparison,step'],
 		'url'        => ['attr' => 'link,vars,suffix,domain', 'close' => 0, 'expression' => true],
 		'function'   => ['attr' => 'name,vars,use,call'],
+		'push'       => ['attr' => 'name',],
+		'stack'      => ['attr' => 'name', 'close' => 0],
 	];
 
 	/**
@@ -709,4 +716,58 @@ class Cx extends Taglib{
 
 		return $parseStr;
 	}
+
+	/**
+	 * 解析Stack标签
+	 *
+	 * @param array  $tag
+	 * @param string $content
+	 * @return string
+	 */
+	protected function tagStack(array $tag, string $content){
+		$name = $tag['name'];
+		return '<?php echo \Xin\Thinkphp\View\Template::getStack("'.$name.'");?>';
+	}
+
+	/**
+	 * 解析Stack标签
+	 *
+	 * @param array  $tag
+	 * @param string $content
+	 * @return string
+	 */
+	protected function tagPush(array $tag, string $content){
+		$name = $tag['name'];
+		$parseStr = '<?php {ob_start();if(PHP_VERSION > 8.0){ob_implicit_flush(false);}else{ob_implicit_flush(0);}?>';
+		$parseStr .= $content;
+		$parseStr .= '<?php \Xin\Thinkphp\View\Template::pushStack("'.$name.'",ob_get_clean());}?>';
+		return $parseStr;
+	}
+
+	/**
+	 * 解析PushTag
+	 *
+	 * @param string $content
+	 * @throws \Exception
+	 */
+	// protected function parsePushTag(&$content){
+	// 	$regex = $this->getRegex(['push'], 1);
+	// 	$nodes = $this->parseNodes($regex, $content);
+	// 	if(empty($nodes)){
+	// 		return;
+	// 	}
+	//
+	// 	foreach($nodes as $node){
+	// 		$attrs = $this->parseAttr($node['begin'][0], 'push');
+	// 		$name = $attrs['name'];
+	//
+	// 		$startPos = $node['begin'][1] + strlen($node['begin'][0]);
+	// 		$endPos = $node['end'][1] + strlen($node['end'][0]);
+	//
+	// 		$saveContent = substr($content, $startPos, $node['end'][1] - $startPos);
+	// 		$content = substr_replace($content, '', $node['begin'][1], $endPos - $node['begin'][1]);
+	//
+	// 		$this->tpl->pushStock($name, $saveContent);
+	// 	}
+	// }
 }
