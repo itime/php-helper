@@ -19,7 +19,8 @@ class WechatServiceProvider extends Service{
 	public function register(){
 		$this->app->bind([
 			'wechat'              => WechatContract::class,
-			WechatContract::class => function(){
+			WechatContract::class => Wechat::class,
+			Wechat::class         => function(){
 				return new Wechat(
 					$this->app->config->get('wechat')
 				);
