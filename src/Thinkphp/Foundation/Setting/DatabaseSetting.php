@@ -9,6 +9,7 @@
 
 namespace Xin\Thinkphp\Foundation\Setting;
 
+use think\facade\App;
 use think\facade\Cache;
 use think\facade\Config;
 use think\Model;
@@ -147,9 +148,7 @@ class DatabaseSetting extends Model{
 	/**
 	 * 更新缓存
 	 *
-	 * @return array
 	 * @noinspection PhpUnhandledExceptionInspection
-	 * @noinspection PhpDocMissingThrowsInspection
 	 */
 	public static function updateCache(){
 		static::resolveCache(static::CACHE_KEY);
@@ -203,6 +202,30 @@ class DatabaseSetting extends Model{
 			->where('status', 1)
 			->where($where)
 			->select();
+	}
+
+	/**
+	 * 刷新配置到 think\Config 实例中
+	 *
+	 * @throws \ReflectionException
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
+	 */
+	public static function refreshThinkConfig(){
+		/** @var \think\Config $config */
+		$thinkConfig = App::get('config');
+
+		$configRef = new \ReflectionProperty($thinkConfig, 'config');
+		$configRef->setAccessible(true);
+		$globalConfig = $configRef->getValue($thinkConfig);
+
+		$config = DatabaseSetting::load();
+		foreach($config as $key => $value){
+			Arr::set($globalConfig, $key, $value);
+		}
+
+		$configRef->setValue($thinkConfig, $globalConfig);
 	}
 
 	/**
