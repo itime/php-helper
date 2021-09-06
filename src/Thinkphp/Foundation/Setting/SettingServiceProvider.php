@@ -18,6 +18,21 @@ class SettingServiceProvider extends Service{
 	/**
 	 * @inheritDoc
 	 */
+	public function register(){
+		if($this->app->runningInConsole()){
+			$this->app->event->listen('AppInit', function(){
+				$initializersRef = new \ReflectionProperty($this->app, 'initializers');
+				$initializersRef->setAccessible(true);
+				$initializers = $initializersRef->getValue($this->app);
+				$initializers[] = SettingServiceProvider::class;
+				$initializersRef->setValue($this->app, $initializers);
+			});
+		}
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function boot(){
 		if($this->app->runningInConsole()){
 			$this->commands([
@@ -25,12 +40,21 @@ class SettingServiceProvider extends Service{
 				Clear::class,
 				Update::class,
 			]);
-			$this->load();
 		}else{
 			$this->app->event->listen('HttpRun', function(){
 				$this->load();
 			});
 		}
+	}
+
+	/**
+	 * @throws \ReflectionException
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
+	 */
+	public function init(){
+		$this->load();
 	}
 
 	/**
