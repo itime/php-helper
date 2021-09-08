@@ -53,6 +53,7 @@ class Bot implements LogHandlerInterface{
 
 		$log = substr($log['error'][0], 0, 512);
 		$ip = $this->app->request->server('SERVER_ADDR');
+		$clientId = $this->app->request->ip();
 		if($this->app->runningInConsole()){
 			$input = new Input();
 			$arguments = array_map(function(Argument $argument){
@@ -72,7 +73,7 @@ class Bot implements LogHandlerInterface{
 		}
 
 		$contents = <<<MARKDOWN
-<font color="warning">**ERROR ({$env}:{$ip}:10 min:{$errCount})**</font>
+<font color="warning">**ERROR ({$env}:[{$clientId}->{$ip}]:10 min:{$errCount})**</font>
 <font color="info">{$info}</font>
 <font color="comment">{$log}</font>
 MARKDOWN;
