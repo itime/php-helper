@@ -35,9 +35,9 @@ trait FindTemplate{
 				? $this->config['view_suffix']
 				: explode(',', $this->config['view_suffix']);
 
-			$this->finder = new FileFinder([
+			$this->finder = new FileFinder(array_merge([
 				$this->config['view_path'],
-			], $extensions);
+			], $this->config['locations']), $extensions);
 		}
 
 		return $this->finder;
@@ -101,31 +101,16 @@ trait FindTemplate{
 		// 分析模板文件规则
 		$request = $this->app['request'];
 
+		$depr = $this->config['view_depr'];
+
+		$template = str_replace(['/', ':'], $depr, $template);
+
 		// 获取视图根目录
 		if(strpos($template, '@')){
 			// 跨模块调用
-			[$app, $template] = explode('@', $template);
-		}
-
-		if(isset($app)){
 			$view = $this->config['view_dir_name'];
-			$viewPath = $this->app->getBasePath().$app.DIRECTORY_SEPARATOR.$view.DIRECTORY_SEPARATOR;
-
-			if(is_dir($viewPath)){
-				$path = $viewPath;
-			}else{
-				$path = $this->app->getRootPath().$view.DIRECTORY_SEPARATOR.$app.DIRECTORY_SEPARATOR;
-			}
-
-			$this->config['view_path'] = $path;
-		}else{
-			$path = $this->config['view_path'];
-		}
-
-		$depr = $this->config['view_depr'];
-
-		if(0 !== strpos($template, '/')){
-			$template = str_replace(['/', ':'], $depr, $template);
+			[$appName, $template] = explode('@', $template);
+		}elseif(0 !== strpos($template, '/')){
 			$controller = $request->controller();
 
 			if(strpos($controller, '.')){
@@ -151,8 +136,21 @@ trait FindTemplate{
 					$template = str_replace('.', DIRECTORY_SEPARATOR, $controller).$depr.$template;
 				}
 			}
+		}
+
+		if(isset($appName)){
+			$view = $this->config['view_dir_name'];
+			$viewPath = $this->app->getBasePath().$appName.DIRECTORY_SEPARATOR.$view.DIRECTORY_SEPARATOR;
+
+			if(is_dir($viewPath)){
+				$path = $viewPath;
+			}else{
+				$path = $this->app->getRootPath().$view.DIRECTORY_SEPARATOR.$appName.DIRECTORY_SEPARATOR;
+			}
+
+			$this->config['view_path'] = $path;
 		}else{
-			$template = str_replace(['/', ':'], $depr, substr($template, 1));
+			$path = $this->config['view_path'];
 		}
 
 		$templateFile = $path.ltrim($template, '/').'.'.ltrim($this->config['view_suffix'], '.');
@@ -161,7 +159,7 @@ trait FindTemplate{
 			// 记录模板文件的更新时间
 			$this->includeFile[$templateFile] = filemtime($templateFile);
 		}elseif($failException){
-			throw new TemplateNotFoundException('template not exists:'.$template);
+			throw new TemplateNotFoundException('template not exists:'.$templateFile);
 		}
 
 		return $templateFile;

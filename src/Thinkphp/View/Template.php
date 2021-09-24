@@ -46,6 +46,7 @@ class Template{
 	protected $config = [
 		'auto_rule'     => 1, // 默认模板渲染规则 1 解析为小写+下划线 2 全部转换小写 3 保持操作方法
 		'view_dir_name' => 'view', // 视图目录名
+		'locations'     => [], // 扩展视图目录
 
 		'view_path'          => '', // 模板路径
 		'view_suffix'        => 'html', // 默认模板文件后缀

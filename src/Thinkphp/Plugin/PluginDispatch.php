@@ -185,10 +185,20 @@ class PluginDispatch extends Controller{
 
 		/** @var \think\View $view */
 		$view = $this->app->make('view');
+
+		$viewDirName = $view->engine()->getConfig('view_dir_name');
+		$defaultViewPath = $this->app->getBasePath().$appName.DIRECTORY_SEPARATOR.$viewDirName.DIRECTORY_SEPARATOR;
+		if(!is_dir($defaultViewPath)){
+			$defaultViewPath = $this->app->getRootPath().$viewDirName.DIRECTORY_SEPARATOR.$appName.DIRECTORY_SEPARATOR;
+		}
+
 		$viewLayer = $appName.DIRECTORY_SEPARATOR."view";
 		$viewPath = $this->pluginManager->pluginPath($this->plugin).$viewLayer.DIRECTORY_SEPARATOR;
 		$view->engine()->config([
 			"view_path" => $viewPath,
+			'locations' => [
+				$defaultViewPath,
+			],
 		]);
 	}
 }
