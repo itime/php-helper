@@ -70,7 +70,7 @@ class Bootstrap4 extends Bootstrap{
 	 * @return string
 	 */
 	protected function getDisabledTextWrapper(string $text):string{
-		return '<li class="page-item disabled"><a  class="page-link" href="#">'.$text.'</a></li>';
+		return '<li class="page-item disabled"><a  class="page-link" href="javascript:void(0);">'.$text.'</a></li>';
 	}
 
 	/**
@@ -80,6 +80,6 @@ class Bootstrap4 extends Bootstrap{
 	 * @return string
 	 */
 	protected function getActivePageWrapper(string $text):string{
-		return '<li class="page-item active"><a class="page-link" href="#">'.$text.'</a></li>';
+		return '<li class="page-item active"><a class="page-link" href="javascript:void(0);">'.$text.'</a></li>';
 	}
 }

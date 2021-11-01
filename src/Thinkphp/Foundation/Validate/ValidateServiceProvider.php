@@ -28,6 +28,10 @@ class ValidateServiceProvider extends Service{
 			$v->extend('phone', function($value) use ($v){
 				return $v->regex($value, '/^1\d{10}+$/');
 			}, ':attribute不是一个合法的手机号');
+
+			$v->extend('password', function($value) use ($v){
+				return $v->regex($value, '/^[\\~!@#$%^&*()-_=+|{}\[\],.?\/:;\'\"\d\w]{6,16}/');
+			}, ':attribute无效');
 		});
 	}
 }

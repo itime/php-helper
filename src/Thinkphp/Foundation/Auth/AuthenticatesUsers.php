@@ -47,14 +47,6 @@ trait AuthenticatesUsers{
 		}
 	}
 
-	//	/**
-	//	 * The user found does not exist.
-	//	 *
-	//	 * @param mixed $credentials
-	//	 */
-	//	protected function notExistUser($credentials){
-	//	}
-
 	/**
 	 * Pre check before login.
 	 *
@@ -85,7 +77,7 @@ trait AuthenticatesUsers{
 
 		$validate->rule([
 			$this->username() => 'require|alphaDash',
-			$this->password() => 'require|alphaDash',
+			$this->password() => 'require|length:6,16',
 		], [
 			$this->username() => '用户名',
 			$this->password() => '密码',

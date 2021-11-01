@@ -130,7 +130,7 @@ trait UploadToken{
 				'audio/ogg' => 'ogg',
 			],
 			'video' => [
-				'video/mp3' => 'mp4',
+				'video/mp4' => 'mp4',
 			],
 		];
 	}

@@ -77,7 +77,7 @@ trait ResetsPasswords{
 
 		$validate->rule([
 			$passwordField        => 'require|alphaDash',
-			$newPasswordField     => "require|alphaDash|different:{$passwordField}",
+			$newPasswordField     => "require|password|length:6,16|different:{$passwordField}",
 			$confirmPasswordField => "require|confirm:{$newPasswordField}",
 		], [
 			'password'         => '旧密码',
