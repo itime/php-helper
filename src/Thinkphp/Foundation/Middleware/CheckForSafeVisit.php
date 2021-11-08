@@ -50,13 +50,17 @@ class CheckForSafeVisit{
 	public function handle(Request $request, \Closure $next){
 		$safeKey = $this->localSafeKey($request);
 
-		if($safeKey != $this->resolveSafeKey($request)){
-			// 要排除的URL
-			if($this->isExcept($request)){
-				return $next($request);
-			}
+		if($safeKey == $request->pathinfo()){
+			$this->app->cookie->set($this->cookieSafeKeyName(), $safeKey);
+		}else{
+			if($safeKey != $this->clientSafeKey($request)){
+				// 要排除的URL
+				if($this->isExcept($request)){
+					return $next($request);
+				}
 
-			throw new HttpException(404, '页面不存在！');
+				throw new HttpException(404, '页面不存在！');
+			}
 		}
 
 		return $next($request);
@@ -78,18 +82,8 @@ class CheckForSafeVisit{
 	 * @param \think\Request $request
 	 * @return string
 	 */
-	protected function resolveSafeKey(Request $request){
-		$safeKey = $request->cookie($this->cookieSafeKeyName());
-
-		if(empty($safeKey)){
-			$safeKey = $request->param($this->requestSafeKeyName(), '', 'trim');
-
-			if($safeKey){
-				$this->app->cookie->set($this->cookieSafeKeyName(), $safeKey);
-			}
-		}
-
-		return $safeKey;
+	protected function clientSafeKey(Request $request){
+		return $request->cookie($this->cookieSafeKeyName());
 	}
 
 	/**
@@ -100,14 +94,4 @@ class CheckForSafeVisit{
 	protected function cookieSafeKeyName(){
 		return '__safe_key__';
 	}
-
-	/**
-	 * 获取 当前请求的存储的[safe_key]参数名称
-	 *
-	 * @return string
-	 */
-	protected function requestSafeKeyName(){
-		return '_safe_key';
-	}
-
 }

@@ -29,6 +29,15 @@ trait HasApp{
 	}
 
 	/**
+	 * 应用获取器是否存在
+	 *
+	 * @return bool
+	 */
+	public function hasAppResolver(){
+		return $this->appResolverCallback != null;
+	}
+
+	/**
 	 * 获取当前应用信息
 	 *
 	 * @param string $field

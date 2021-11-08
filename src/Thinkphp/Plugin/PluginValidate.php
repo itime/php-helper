@@ -20,8 +20,8 @@ class PluginValidate extends Validate{
 	 */
 	protected $rule = [
 		'name'    => 'require|alphaDash|length:3,32|unique:plugin',
-		'title'   => 'require|length:2,12',
-		'author'  => 'require|length:2,12',
+		'title'   => 'require|length:2,24',
+		'author'  => 'require|length:2,50',
 		'version' => 'require',
 	];
 

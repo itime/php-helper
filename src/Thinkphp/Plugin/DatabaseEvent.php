@@ -224,7 +224,7 @@ class DatabaseEvent extends Model{
 			case 0:
 				return "weight";
 			case 1:
-				return "event";
+				return "listener";
 		}
 		return "";
 	}

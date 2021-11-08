@@ -114,7 +114,7 @@ final class File{
 		foreach($files as $key => $value){
 			$deep = substr($value, -1);
 			if($deep == DIRECTORY_SEPARATOR){
-				mkdir($value);
+				@mkdir($value, 0777, true);
 			}else{
 				@file_put_contents($value, '');
 			}

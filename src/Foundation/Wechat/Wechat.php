@@ -47,6 +47,13 @@ class Wechat implements WechatContract{
 	/**
 	 * @inheritDoc
 	 */
+	public function hasOpenPlatform(){
+		return $this->hasConfig('open_platform');
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function official(array $options = []){
 		if(!isset($this->config['official']) || empty($this->config['official'])){
 			throw new WechatNotConfigureException("wechat config 'official' not defined.");
@@ -65,6 +72,13 @@ class Wechat implements WechatContract{
 	/**
 	 * @inheritDoc
 	 */
+	public function hasOfficial(){
+		return $this->hasConfig('official');
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function miniProgram(array $options = []){
 		if(!isset($this->config['miniprogram']) || empty($this->config['miniprogram'])){
 			throw new WechatNotConfigureException("wechat config 'miniprogram' not defined.");
@@ -78,6 +92,13 @@ class Wechat implements WechatContract{
 			Factory::miniProgram($config),
 			$options
 		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function hasMiniProgram(){
+		return $this->hasConfig('miniprogram');
 	}
 
 	/**
@@ -131,14 +152,24 @@ class Wechat implements WechatContract{
 	/**
 	 * 获取配置
 	 *
-	 * @param string|null $name
+	 * @param string|null $type
 	 * @return mixed
 	 */
-	protected function getConfig($name = null){
-		if(null === $name){
+	public function getConfig($type = null, $default = null){
+		if(null === $type){
 			return $this->config;
 		}
 
-		return isset($this->config[$name]) ? $this->config[$name] : null;
+		return isset($this->config[$type]) ? $this->config[$type] : null;
+	}
+
+	/**
+	 * 指定类型的配置是否存在
+	 *
+	 * @param string $type
+	 * @return bool
+	 */
+	public function hasConfig($type = null){
+		return !isset($this->config[$type]) || empty($this->config[$type]);
 	}
 }
