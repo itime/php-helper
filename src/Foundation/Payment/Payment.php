@@ -46,6 +46,13 @@ class Payment implements PaymentContract{
 	/**
 	 * @inheritDoc
 	 */
+	public function hasWechat(){
+		return isset($this->config['wechat']) && !empty($this->config['wechat']);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function alipay(array $options = []){
 		if(!isset($this->config['alipay']) || empty($this->config['alipay'])){
 			throw new PaymentNotConfigureException("payment config 'alipay' not defined.");
@@ -57,6 +64,13 @@ class Payment implements PaymentContract{
 			Pay::alipay($config),
 			$options
 		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function hasAlipay(){
+		return isset($this->config['alipay']) && !empty($this->config['alipay']);
 	}
 
 	/**

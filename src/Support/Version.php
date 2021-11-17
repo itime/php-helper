@@ -42,8 +42,8 @@ final class Version{
 			return 0;
 		}
 
-		$current = explode(".", $current);
-		$new = explode(".", $new);
+		$current = explode(".", ltrim($current, 'v'));
+		$new = explode(".", ltrim($new, 'v'));
 
 		foreach($current as $k => $cur){
 			if(isset($new[$k])){
@@ -57,7 +57,7 @@ final class Version{
 			}
 		}
 
-		return count($new) > count($current) ? -1 : 0;
+		return count($new) == count($current) ? 0 : -1;
 	}
 
 	/**

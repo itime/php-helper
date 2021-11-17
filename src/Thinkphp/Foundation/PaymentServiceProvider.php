@@ -18,7 +18,8 @@ class PaymentServiceProvider extends Service{
 	 */
 	public function register(){
 		$this->app->bind('payment', PaymentContract::class);
-		$this->app->bind(PaymentContract::class, function(){
+		$this->app->bind(PaymentContract::class, PaymentContract::class);
+		$this->app->bind(Payment::class, function(){
 			return new Payment(
 				$this->app->config->get('payment')
 			);
