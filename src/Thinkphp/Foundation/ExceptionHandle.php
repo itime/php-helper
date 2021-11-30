@@ -164,13 +164,14 @@ class ExceptionHandle extends Handle{
 
 		// 调试模式，获取详细的错误信息
 		$extend = $this->app->isDebug() ? [
-			'name'   => get_class($exception),
-			'file'   => $exception->getFile(),
-			'line'   => $exception->getLine(),
-			'trace'  => $exception->getTrace(),
-			'source' => $this->getSourceCode($exception),
-			'datas'  => $this->getExtendData($exception),
-			'tables' => [
+			'name'    => get_class($exception),
+			'message' => $this->getMessage($exception),
+			'file'    => $exception->getFile(),
+			'line'    => $exception->getLine(),
+			'trace'   => $exception->getTrace(),
+			'source'  => $this->getSourceCode($exception),
+			'datas'   => $this->getExtendData($exception),
+			'tables'  => [
 				'GET Data'              => $_GET,
 				'POST Data'             => $_POST,
 				'Files'                 => $_FILES,

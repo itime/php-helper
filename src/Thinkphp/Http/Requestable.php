@@ -57,6 +57,10 @@ trait Requestable{
 			'page' => $this->page(),
 		];
 
+		if($this->has('limit')){
+			$param['list_rows'] = $this->limit();
+		}
+
 		if($withQuery){
 			$param['query'] = $this->get();
 		}

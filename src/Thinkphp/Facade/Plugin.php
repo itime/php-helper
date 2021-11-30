@@ -31,7 +31,7 @@ class Plugin extends Facade{
 	 * @return string
 	 */
 	protected static function getFacadeClass(){
-		return 'PluginManager';
+		return 'pluginManager';
 	}
 
 	/**
