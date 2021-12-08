@@ -614,4 +614,16 @@ final class Str{
 
 		return static::substr($subject, 0, $pos);
 	}
+
+	/**
+	 * 移除Emoji表情
+	 *
+	 * @param string $str
+	 * @return string
+	 */
+	public static function rejectEmoji($str){
+		return preg_replace_callback('/./u', function(array $match){
+			return strlen($match[0]) >= 4 ? '' : $match[0];
+		}, $str);
+	}
 }

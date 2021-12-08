@@ -154,6 +154,7 @@ trait Requestable{
 				$keywords = $this->post($field, '');
 			}
 			$keywords = trim($keywords);
+			$keywords = Str::rejectEmoji($keywords);
 			$this->data[$key] = $keywords;
 		}
 		return $this->data[$key];
