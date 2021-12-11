@@ -53,8 +53,9 @@ trait UploadToken{
 		);
 
 		return Hint::result([
-			'key'   => $key,
-			'token' => $token,
+			'key'    => $key,
+			'token'  => $token,
+			'policy' => $policy,
 		]);
 	}
 

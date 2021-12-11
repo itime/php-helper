@@ -149,13 +149,13 @@ trait Requestable{
 		$key = 'keywords_'.$field;
 		if(!isset($this->data[$key])){
 			if($this->has($field, 'get')){
-				$keywords = $this->get($field);
+				$keywords = $this->get($field.'/s', '');
 			}else{
-				$keywords = $this->post($field, '');
+				$keywords = $this->post($field.'/s', '');
 			}
 			$keywords = trim($keywords);
 			$keywords = Str::rejectEmoji($keywords);
-			$this->data[$key] = $keywords;
+			$this->data[$key] = $keywords ?? '';
 		}
 		return $this->data[$key];
 	}
