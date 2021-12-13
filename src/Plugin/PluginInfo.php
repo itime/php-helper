@@ -67,7 +67,7 @@ class PluginInfo implements PluginInfoContract{
 			$this->info = require_once $path;
 		}
 
-		return $name ? $this->info[$name] : $this->info;
+		return $name ? isset($this->info[$name]) ? $this->info[$name] : null : $this->info;
 	}
 
 	/**
