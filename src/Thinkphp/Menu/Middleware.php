@@ -8,16 +8,22 @@
 namespace Xin\Thinkphp\Menu;
 
 use think\App;
+use Xin\Contracts\Menu\Factory;
 use Xin\Menu\MenuManager;
 use Xin\Thinkphp\Facade\Auth;
-use Xin\Thinkphp\Facade\Plugin;
+use Xin\Thinkphp\Foundation\RequestUtil;
 
 class Middleware{
 
 	/**
 	 * @var \think\App
 	 */
-	protected $app = null;
+	protected $app;
+
+	/**
+	 * @var \think\Request
+	 */
+	protected $request;
 
 	/**
 	 * Middleware constructor.
@@ -36,6 +42,8 @@ class Middleware{
 	 * @return mixed
 	 */
 	public function handle($request, \Closure $next){
+		$this->request = $request;
+
 		$this->registerServices($request);
 
 		$this->registerDrivers();
@@ -50,24 +58,24 @@ class Middleware{
 	 */
 	protected function registerServices($request){
 		$this->app->bind([
-			'menu'        => function(){
+			'menu'             => Factory::class,
+			Factory::class     => MenuManager::class,
+			MenuManager::class => function(){
 				return new MenuManager($this->app, $this->app->config->get('menu'));
 			},
-			'menu.driver' => function(){
+			'menu.driver'      => function(){
 				return $this->app['menu']->menu();
 			},
-			'menu.show'   => function() use ($request){
+			'menu.show'        => function() use ($request){
 				/** @var \Xin\Menu\MenuManager $manager */
 				$manager = $this->app['menu'];
 
 				$this->shouldUse($manager);
 
-				[$menus, $breads] = $manager->generate($request->user(), [
-					'rule'             => $this->getPathRule($request),
-					'query'            => $request->get() + $request->route(),
-					'is_administrator' => $this->isAdministrator(),
-					'is_develop'       => $this->isDevMode(),
-				]);
+				[$menus, $breads] = $manager->generate(
+					$this->getFilterResolver(),
+					$this->getGenerateOptions()
+				);
 
 				$std = new \stdClass();
 				$std->menus = $menus;
@@ -91,6 +99,29 @@ class Middleware{
 	}
 
 	/**
+	 * 获取菜单过滤器
+	 *
+	 * @return callable|null
+	 */
+	protected function getFilterResolver(){
+		return null;
+	}
+
+	/**
+	 * 获取生成器配置参数
+	 *
+	 * @return array
+	 */
+	protected function getGenerateOptions(){
+		return [
+			'rule'             => $this->getPathRule(),
+			'query'            => $this->getQuery(),
+			'is_administrator' => $this->isAdministrator(),
+			'is_develop'       => $this->isDevMode(),
+		];
+	}
+
+	/**
 	 * 应该使用哪个菜单
 	 *
 	 * @param \Xin\Menu\MenuManager $manager
@@ -102,20 +133,19 @@ class Middleware{
 	/**
 	 * 获取路径规则
 	 *
-	 * @param \think\Request $request
 	 * @return string
 	 */
-	protected function getPathRule($request){
-		plugin_url();
-		$path = $request->path();
+	protected function getPathRule(){
+		return RequestUtil::getPathRule($this->request);
+	}
 
-		if(method_exists($request, Plugin::getPrefix()) && $plugin = $request->plugin()){
-			// $pulgin = substr($path, 7, strpos($path, '/', 7) - 7);
-			$path = substr($path, strpos($path, '/', 7) + 1);
-			$path = $plugin.">".$path;
-		}
-
-		return $path;
+	/**
+	 * 获取当前请求参数
+	 *
+	 * @return array
+	 */
+	protected function getQuery(){
+		return $this->request->get() + $this->request->route();
 	}
 
 	/**

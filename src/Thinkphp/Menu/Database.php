@@ -14,25 +14,25 @@ use Xin\Support\Arr;
 class Database extends Driver{
 
 	/**
-	 * @var array
+	 * @var \think\Collection
 	 */
 	protected $data = null;
 
 	/**
 	 * 加载数据
 	 */
-	protected function load($app = null){
+	protected function load($plugin = null){
 		if($this->data === null){
-			$this->data = $this->model()->select()->all();
+			$this->data = $this->model()->order('sort')->select();
 		}
 
-		if($app === null){
+		if($plugin === null){
 			return [];
 		}
 
 		$result = [];
 		foreach($this->data as &$item){
-			if($item['app'] == $app){
+			if($item['plugin'] == $plugin){
 				$result[] = &$item;
 			}
 		}
@@ -50,9 +50,9 @@ class Database extends Driver{
 	/**
 	 * @inheritDoc
 	 */
-	public function get($user){
+	public function get($filter = null){
 		$this->load();
-		return Arr::tree($this->data);
+		return Arr::tree($this->data->toArray());
 	}
 
 	/**
@@ -60,16 +60,16 @@ class Database extends Driver{
 	 *
 	 * @param array  $menus
 	 * @param string $url
-	 * @param string $app
+	 * @param string $plugin
 	 * @return \think\Model
 	 */
-	protected function &find($menus, $url, $app){
+	protected function &find($menus, $url, $plugin){
 		$default = null;
 
 		foreach($menus as &$item){
 			if(Arr::where($item, [
-				'app' => $app,
-				'url' => $url,
+				'plugin' => $plugin,
+				'url'    => $url,
 			])){
 				return $item;
 			}
@@ -79,59 +79,85 @@ class Database extends Driver{
 	}
 
 	/**
+	 * 查找父级ID
+	 *
+	 * @param array $current
+	 * @param array $parent
+	 * @return int
+	 */
+	protected function findParentId($current, $parent){
+		if(isset($current['parent'])){
+			foreach($this->data as $item){
+				$name = $item['name'] ?? $item['url'] ?? '';
+				if($name == $current['parent']){
+					return $item['id'] ?? 0;
+				}
+			}
+
+			return 0;
+		}
+
+		return $parent ? $parent['id'] : 0;
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	public function puts($menus, $plugin = null, $append = []){
 		$plugin = empty($plugin) ? '' : $plugin;
 
-		$originAppMenus = $this->load($plugin);
+		$addedMenuIdList = [];
 		$updatedMenuIdList = [];
-		self::eachTree(function(&$item, &$parent) use (&$append, $plugin, &$originAppMenus, &$updatedMenuIdList){
-			$item = [
+		$originAppMenus = $this->load($plugin);
+		self::eachTree(function(&$item, &$parent) use (&$append, $plugin, &$originAppMenus, &$addedMenuIdList, &$updatedMenuIdList){
+			$saveItem = array_merge([
 				'title'      => $item['title'],
 				'url'        => $item['url'] ?? $menu['name'] ?? '',
 				'show'       => $item['show'] ?? 0,
 				'only_admin' => $item['only_admin'] ?? 0,
 				'only_dev'   => $item['only_dev'] ?? 0,
+				'link'       => $item['link'] ?? (isset($item['child']) ? 0 : 1) ?? 1,
 				'sort'       => $item['sort'] ?? 0,
-				'pid'        => $parent ? $parent['id'] : 0,
-				'icon'       => $menu['icon'] ?? '',
-				'app'        => empty($plugin) ? '' : $plugin,
-			];
+				'pid'        => $this->findParentId($item, $parent),
+				'icon'       => $item['icon'] ?? '',
+				'plugin'     => empty($plugin) ? '' : $plugin,
+			], $append);
 
-			$findMenu = $this->find($originAppMenus, $item['url'], $plugin);
-			if(empty($findMenu)){
-				$data = array_merge($item, $append);
-				$model = $this->model($data);
-				$model->save();
-				$this->data[] = $model;
+			$menuModel = $this->find($originAppMenus, $saveItem['url'], $plugin);
+			if(empty($menuModel)){
+				$menuModel = $this->model($saveItem);
+				$menuModel->save();
 
-				$item['id'] = $model['id'];
+				$addedMenuIdList[] = $menuModel['id'];
+
+				$this->data[] = $menuModel;
 			}else{
-				$findMenu->data([
-					'show'       => $item['show'],
-					'only_admin' => $item['only_admin'],
-					'only_dev'   => $item['only_dev'],
-					'sort'       => $item['sort'],
-					'pid'        => $item['pid'],
-					'icon'       => $item['icon'],
+				$menuModel->save([
+					'show'       => $saveItem['show'],
+					'only_admin' => $saveItem['only_admin'],
+					'only_dev'   => $saveItem['only_dev'],
+					'link'       => $saveItem['link'],
+					'sort'       => $saveItem['sort'],
+					'pid'        => $saveItem['pid'],
+					'icon'       => $saveItem['icon'],
 				]);
-				$findMenu->save();
 
-				$updatedMenuIdList[] = $findMenu['id'];
+				$updatedMenuIdList[] = $menuModel['id'];
 			}
+
+			$item['id'] = $menuModel['id'];
 		}, $menus);
 
 		// 删除不存在的菜单
 		$deleteMenuIdList = [];
 		foreach($originAppMenus as $menu){
-			if(!in_array($menu['id'], $deleteMenuIdList)){
-				$deleteMenuIdList = $menu['id'];
+			if(!in_array($menu['id'], $updatedMenuIdList)){
+				$deleteMenuIdList[] = $menu['id'];
 			}
 		}
-		if(empty($deleteMenuIdList)){
+		if(!empty($deleteMenuIdList)){
 			$this->forget([
-				'id', 'in', $deleteMenuIdList,
+				['id', 'in', $deleteMenuIdList,],
 			]);
 		}
 	}

@@ -100,7 +100,7 @@ class Generator implements GeneratorContract{
 	 * @param array $menu
 	 * @return bool
 	 */
-	protected function resolveIshow(array $menu){
+	protected function resolveIshow($menu){
 		if(isset($menu['only_admin']) && $menu['only_admin']){
 			if(!$this->isAdministrator){
 				return false;
@@ -113,7 +113,7 @@ class Generator implements GeneratorContract{
 			}
 		}
 
-		return isset($menu['show']) ? (bool)value($menu['show']) : false;
+		return isset($menu['show']) && value($menu['show']);
 	}
 
 	/**

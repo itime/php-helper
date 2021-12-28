@@ -225,8 +225,8 @@ trait Requestable{
 	 */
 	public function urlWithQuery(array $query, $complete = false){
 		$queryString = $this->query();
-		parse_str($queryString, $queryString);
-		$query = array_merge($queryString, $query);
+		parse_str($queryString, $originalQuery);
+		$query = array_merge($originalQuery, $query);
 
 		return count($query) > 0
 			? $this->baseUrl($complete)."?".static::normalizeQueryString($query)

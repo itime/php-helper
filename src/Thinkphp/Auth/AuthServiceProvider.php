@@ -14,6 +14,7 @@ use Xin\Auth\AuthManager;
 use Xin\Contracts\Auth\Access\Gate as GateContract;
 use Xin\Contracts\Auth\Factory as AuthFactory;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
+use Xin\Thinkphp\Auth\Access\CheckForRoute;
 
 class AuthServiceProvider extends Service{
 
@@ -35,6 +36,8 @@ class AuthServiceProvider extends Service{
 		$this->registerRequestUserResolver();
 
 		$this->registerAccessGate();
+
+		$this->registerPolicies();
 	}
 
 	/**
@@ -105,7 +108,11 @@ class AuthServiceProvider extends Service{
 			return;
 		}
 
-		$request->setUserResolver($this->userResolver());
+		/** @var AuthManager $auth */
+		$auth = $this->app->make('auth');
+		$request->setUserResolver(function($field = null, $default = null, $abort = true) use ($auth){
+			return $auth->guard()->getUser($field, $default, $abort);
+		});
 	}
 
 	/**
@@ -115,33 +122,25 @@ class AuthServiceProvider extends Service{
 	 */
 	protected function registerAccessGate(){
 		$this->app->bind('gate', GateContract::class);
-		$this->app->bind(GateContract::class, function(App $app){
-			$gate = new Gate($app, function() use ($app){
+		$this->app->bind(GateContract::class, Gate::class);
+		$this->app->bind(Gate::class, function(App $app){
+			return new Gate($app, function() use ($app){
 				return $app['auth']->guard()->getUser(null, null, false);
 			});
-
-			//			$routeClass = \Xin\Thinkphp\Auth\Access\Abilities\RouteCheck::class;
-			//			$app->bind('ability_route', $routeClass);
-			//			$gate->define('route', "ability_route@handle");
-
-			return $gate;
 		});
 	}
 
 	/**
-	 * 用户解析器
+	 * 注册授权策略
 	 *
-	 * @return callable|\Closure
+	 * @return void
 	 */
-	protected function userResolver(){
-		if(!$this->userResolver){
-			/** @var AuthManager $auth */
-			$auth = $this->app->make('auth');
-			$this->userResolver = function($field = null, $default = null, $abort = true) use ($auth){
-				return $auth->guard()->getUser($field, $default, $abort);
-			};
-		}
+	protected function registerPolicies(){
+		$this->app->bind('abilities.route', CheckForRoute::class);
 
-		return $this->userResolver;
+		/** @var Gate $gate */
+		$gate = $this->app->make('gate');
+		$gate->define('route', "abilities.route@handle");
 	}
+
 }

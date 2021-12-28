@@ -19,10 +19,10 @@ interface Repository{
 	/**
 	 * 获取菜单
 	 *
-	 * @param mixed $user
+	 * @param callable $filter
 	 * @return mixed
 	 */
-	public function get($user);
+	public function get($filter = null);
 
 	/**
 	 * 写入一组菜单
@@ -32,7 +32,7 @@ interface Repository{
 	 * @param array  $append
 	 * @return bool
 	 */
-	public function puts($menus, $plugin = null, $append = []);
+	public function puts($menus, $app = null, $append = []);
 
 	/**
 	 * 移除菜单

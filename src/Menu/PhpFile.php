@@ -56,7 +56,7 @@ class PhpFile extends Driver{
 	/**
 	 * @inheritDoc
 	 */
-	public function get($user){
+	public function get($filter = null){
 		$this->load();
 		return $this->data;
 	}
@@ -85,6 +85,7 @@ class PhpFile extends Driver{
 	protected function insert($menu, $plugin, $append = []){
 		$menu = array_merge($menu, $append);
 		$menu['plugin'] = $plugin;
+		$menu['link'] = $menu['link'] ?? (isset($menu['child']) ? 0 : 1) ?? 1;
 
 		if(isset($menu['child'])){
 			self::eachTree(function(&$item) use ($plugin, $append){

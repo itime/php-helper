@@ -14,9 +14,10 @@ use Xin\Support\Manager;
 /**
  * Class MenuManager
  * @method \Xin\Contracts\Menu\Repository driver($driver = null)
- * @method array|\iterable get($menu)
- * @method bool puts($menus)
- * @method bool forget($name)
+ * @method array|\iterable all()
+ * @method array|\iterable get($filter = null)
+ * @method bool puts($menus, $app = null, $append = [])
+ * @method bool forget($condition)
  */
 class MenuManager extends Manager implements Factory{
 
@@ -156,6 +157,9 @@ class MenuManager extends Manager implements Factory{
 		$generator = $this->resolveGenerator();
 
 		$menus = $this->driver()->get($user);
+		if(method_exists($menus, 'toArray')){
+			$menus = $menus->toArray();
+		}
 
 		return $generator->generate($menus, $options);
 	}

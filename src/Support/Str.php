@@ -423,6 +423,38 @@ final class Str{
 	}
 
 	/**
+	 * 匹配URL
+	 *
+	 * @param string $checkUrl
+	 * @param string $currentPath
+	 * @param string $currentQuery
+	 * @return bool
+	 */
+	public static function matchUrl($checkUrl, $currentPath, $currentQuery = []){
+		$checkUrl = explode("?", $checkUrl, 2);
+		$checkPath = $checkUrl[0];
+
+		if($checkPath != $currentPath){
+			return false;
+		}
+
+		$checkQueryStr = isset($checkUrl[1]) ? $checkUrl[1] : '';
+		if($checkQueryStr){
+			parse_str($checkQueryStr, $checkQuery);
+		}else{
+			$checkQuery = [];
+		}
+
+		foreach($checkQuery as $k => $v){
+			if(!isset($currentQuery[$k]) || $currentQuery[$k] != $v){
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * 把数组所有元素按照“参数=参数值”的模式用“&”字符拼接成字符串
 	 *
 	 * @param array    $params 关联数组
