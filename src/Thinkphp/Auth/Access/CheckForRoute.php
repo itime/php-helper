@@ -42,6 +42,10 @@ class CheckForRoute{
 			return true;
 		}
 
+		if(method_exists($user, 'isAdministrator') && $user->isAdministrator()){
+			return true;
+		}
+
 		$menu = $this->findByUrl($checkUrl);
 		if(!$menu){
 			return false;
