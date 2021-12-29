@@ -7,6 +7,7 @@
 namespace Xin\Thinkphp\Foundation;
 
 use think\facade\App;
+use Xin\Thinkphp\Plugin\Url;
 
 class RequestUtil{
 
@@ -20,9 +21,14 @@ class RequestUtil{
 		$request = $request ?: App::make('request');
 		$path = $request->path();
 
-		if(method_exists($request, 'plugin') && $plugin = $request->plugin()){
-			$path = substr($path, strpos($path, '/', 7) + 1);
-			$path = $plugin.">".$path;
+		if(Url::$pluginPrefix && strpos($path, Url::$pluginPrefix."/") === 0){
+			$info = explode('/', $path, 3);
+			if(isset($info[1])){
+				$plugin = $info[1];
+				$path = isset($info[2]) ? $info[2] : '';
+
+				$path = $plugin.">".$path;
+			}
 		}
 
 		return $path;
