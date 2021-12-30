@@ -20,6 +20,12 @@ class Database extends Driver{
 
 	/**
 	 * 加载数据
+	 *
+	 * @param string $plugin
+	 * @return array|\think\Collection|\think\Model[]
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	protected function load($plugin = null){
 		if($this->data === null){
@@ -27,16 +33,12 @@ class Database extends Driver{
 		}
 
 		if($plugin === null){
-			return [];
+			return $this->data;
 		}
 
-		$result = [];
-		foreach($this->data as &$item){
-			if($item['plugin'] == $plugin){
-				$result[] = &$item;
-			}
-		}
-		return $result;
+		return $this->data->filter(function($plugin){
+			return $item['plugin'] == $plugin;
+		});
 	}
 
 	/**
@@ -52,6 +54,11 @@ class Database extends Driver{
 	 */
 	public function get($filter = null){
 		$this->load();
+
+		if($filter){
+			return Arr::tree($this->data->filter($filter)->toArray());
+		}
+
 		return Arr::tree($this->data->toArray());
 	}
 

@@ -7,6 +7,7 @@
 
 namespace Xin\Thinkphp\Http;
 
+use Xin\Contracts\Auth\AuthVerifyType;
 use Xin\Thinkphp\Facade\Auth;
 
 trait HasUser{
@@ -33,9 +34,9 @@ trait HasUser{
 	 * @param int    $verifyType
 	 * @return mixed
 	 */
-	public function user($field = null, $default = null, $verifyType = 1){
+	public function user($field = null, $default = null, $verifyType = AuthVerifyType::BASE){
 		if(is_null($this->userResolverCallback)){
-			$this->userResolverCallback = function($field = null, $default = null, $verifyType = 1){
+			$this->userResolverCallback = function($field = null, $default = null, $verifyType = AuthVerifyType::BASE){
 				return Auth::getUser($field, $default, $verifyType);
 			};
 		}

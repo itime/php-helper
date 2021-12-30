@@ -149,14 +149,14 @@ class MenuManager extends Manager implements Factory{
 	/**
 	 * 生成菜单
 	 *
-	 * @param mixed $user
+	 * @param callable $filter
 	 * @param array $options
 	 * @return array
 	 */
-	public function generate($user, array $options = []){
+	public function generate($filter, array $options = []){
 		$generator = $this->resolveGenerator();
 
-		$menus = $this->driver()->get($user);
+		$menus = $this->driver()->get($filter);
 		if(method_exists($menus, 'toArray')){
 			$menus = $menus->toArray();
 		}
