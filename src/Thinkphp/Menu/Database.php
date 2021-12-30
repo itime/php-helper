@@ -36,7 +36,7 @@ class Database extends Driver{
 			return $this->data;
 		}
 
-		return $this->data->filter(function($plugin){
+		return $this->data->filter(function($item) use ($plugin){
 			return $item['plugin'] == $plugin;
 		});
 	}
@@ -140,12 +140,10 @@ class Database extends Driver{
 				$this->data[] = $menuModel;
 			}else{
 				$menuModel->save([
-					'show'       => $saveItem['show'],
 					'only_admin' => $saveItem['only_admin'],
 					'only_dev'   => $saveItem['only_dev'],
 					'link'       => $saveItem['link'],
 					'sort'       => $saveItem['sort'],
-					'pid'        => $saveItem['pid'],
 					'icon'       => $saveItem['icon'],
 				]);
 
