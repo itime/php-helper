@@ -4,12 +4,13 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Bus\Balance;
 
 /**
  * 余额变动场景枚举类
  */
-class SceneEnum{
+class SceneEnum {
 
 	// 用户充值
 	const RECHARGE = 10;
@@ -28,22 +29,22 @@ class SceneEnum{
 	 *
 	 * @return array
 	 */
-	public static function data(){
+	public static function data() {
 		return [
 			self::RECHARGE => [
-				'name'     => '用户充值',
+				'name' => '用户充值',
 				'describe' => '用户充值：%s',
 			],
-			self::CONSUME  => [
-				'name'     => '用户消费',
+			self::CONSUME => [
+				'name' => '用户消费',
 				'describe' => '用户消费：%s',
 			],
-			self::ADMIN    => [
-				'name'     => '管理员操作',
+			self::ADMIN => [
+				'name' => '管理员操作',
 				'describe' => '后台管理员 [%s] 操作',
 			],
-			self::REFUND   => [
-				'name'     => '订单退款',
+			self::REFUND => [
+				'name' => '订单退款',
 				'describe' => '订单退款：%s',
 			],
 		];

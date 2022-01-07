@@ -13,7 +13,7 @@ use Xin\Auth\Events\Lockout;
 use Xin\Support\Str;
 use Xin\Thinkphp\Cache\RateLimiter;
 
-trait ThrottlesLogins{
+trait ThrottlesLogins {
 
 	/**
 	 * Determine if the user has too many failed login attempts.
@@ -21,7 +21,7 @@ trait ThrottlesLogins{
 	 * @param Request $request
 	 * @return bool
 	 */
-	protected function hasTooManyLoginAttempts(Request $request){
+	protected function hasTooManyLoginAttempts(Request $request) {
 		return $this->limiter()->tooManyAttempts(
 			$this->throttleKey($request), $this->maxAttempts()
 		);
@@ -33,7 +33,7 @@ trait ThrottlesLogins{
 	 * @param Request $request
 	 * @return void
 	 */
-	protected function incrementLoginAttempts(Request $request){
+	protected function incrementLoginAttempts(Request $request) {
 		$this->limiter()->hit(
 			$this->throttleKey($request), $this->decayMinutes() * 60
 		);
@@ -45,7 +45,7 @@ trait ThrottlesLogins{
 	 * @param Request $request
 	 * @return void
 	 */
-	protected function sendLockoutResponse(Request $request){
+	protected function sendLockoutResponse(Request $request) {
 		$seconds = $this->limiter()->availableIn(
 			$this->throttleKey($request)
 		);
@@ -61,7 +61,7 @@ trait ThrottlesLogins{
 	 * @param Request $request
 	 * @return void
 	 */
-	protected function clearLoginAttempts(Request $request){
+	protected function clearLoginAttempts(Request $request) {
 		$this->limiter()->clear($this->throttleKey($request));
 	}
 
@@ -71,7 +71,7 @@ trait ThrottlesLogins{
 	 * @param Request $request
 	 * @return void
 	 */
-	protected function fireLockoutEvent(Request $request){
+	protected function fireLockoutEvent(Request $request) {
 		event(new Lockout($request));
 	}
 
@@ -81,8 +81,8 @@ trait ThrottlesLogins{
 	 * @param Request $request
 	 * @return string
 	 */
-	protected function throttleKey(Request $request){
-		return Str::lower($request->input($this->username())).'|'.$request->ip();
+	protected function throttleKey(Request $request) {
+		return Str::lower($request->input($this->username())) . '|' . $request->ip();
 	}
 
 	/**
@@ -90,7 +90,7 @@ trait ThrottlesLogins{
 	 *
 	 * @return object|\think\App|\Xin\Thinkphp\Cache\RateLimiter
 	 */
-	protected function limiter(){
+	protected function limiter() {
 		return app(RateLimiter::class);
 	}
 
@@ -99,7 +99,7 @@ trait ThrottlesLogins{
 	 *
 	 * @return int
 	 */
-	public function maxAttempts(){
+	public function maxAttempts() {
 		return property_exists($this, 'maxAttempts') ? $this->maxAttempts : 5;
 	}
 
@@ -108,7 +108,8 @@ trait ThrottlesLogins{
 	 *
 	 * @return int
 	 */
-	public function decayMinutes(){
+	public function decayMinutes() {
 		return property_exists($this, 'decayMinutes') ? $this->decayMinutes : 1;
 	}
+
 }

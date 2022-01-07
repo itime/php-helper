@@ -4,9 +4,10 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Auth\Events;
 
-class PasswordReset{
+class PasswordReset {
 
 	/**
 	 * The user.
@@ -21,7 +22,8 @@ class PasswordReset{
 	 * @param \Illuminate\Contracts\Auth\Authenticatable $user
 	 * @return void
 	 */
-	public function __construct($user){
+	public function __construct($user) {
 		$this->user = $user;
 	}
+
 }

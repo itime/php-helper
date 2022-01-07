@@ -4,12 +4,13 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Support;
 
 use EasyWeChat\Kernel\Exceptions\HttpException;
 use EasyWeChat\Kernel\Http\StreamResponse;
 
-class WechatResult implements \ArrayAccess{
+class WechatResult implements \ArrayAccess {
 
 	// 全部错误类型
 	const ERROR_ALL = '*';
@@ -44,22 +45,22 @@ class WechatResult implements \ArrayAccess{
 	 *
 	 * @param mixed $result
 	 */
-	protected function __construct($result){
-		if(is_callable($result)){
-			try{
+	protected function __construct($result) {
+		if (is_callable($result)) {
+			try {
 				$result = call_user_func_array($result, []);
-			}catch(\Throwable $e){
-				if($e instanceof HttpException && $e->formattedResponse){
+			} catch (\Throwable $e) {
+				if ($e instanceof HttpException && $e->formattedResponse) {
 					$result = $e->formattedResponse;
-				}else{
+				} else {
 					$this->exception = $e;
 					$result = null;
 				}
 			}
-		}elseif($result instanceof Retry){
-			try{
+		} elseif ($result instanceof Retry) {
+			try {
 				$result = $result->invoke();
-			}catch(\Throwable $e){
+			} catch (\Throwable $e) {
 				$this->exception = $e;
 				$result = null;
 			}
@@ -74,12 +75,12 @@ class WechatResult implements \ArrayAccess{
 	 *
 	 * @return bool
 	 */
-	public function isValid(){
-		if(!$this->result){
+	public function isValid() {
+		if (!$this->result) {
 			return false;
 		}
 
-		if($this->isStream || !isset($this->result['errcode'])){
+		if ($this->isStream || !isset($this->result['errcode'])) {
 			return true;
 		}
 
@@ -91,7 +92,7 @@ class WechatResult implements \ArrayAccess{
 	 *
 	 * @return bool
 	 */
-	public function isStream(){
+	public function isStream() {
 		return $this->isStream;
 	}
 
@@ -100,8 +101,8 @@ class WechatResult implements \ArrayAccess{
 	 *
 	 * @return int
 	 */
-	public function getErrCode(){
-		if(!$this->result){
+	public function getErrCode() {
+		if (!$this->result) {
 			return -10000;
 		}
 
@@ -113,8 +114,8 @@ class WechatResult implements \ArrayAccess{
 	 *
 	 * @return string
 	 */
-	public function getErrMsg(){
-		if(!$this->result){
+	public function getErrMsg() {
+		if (!$this->result) {
 			return '';
 		}
 
@@ -126,7 +127,7 @@ class WechatResult implements \ArrayAccess{
 	 *
 	 * @return bool
 	 */
-	public function isException(){
+	public function isException() {
 		return $this->exception != null;
 	}
 
@@ -135,7 +136,7 @@ class WechatResult implements \ArrayAccess{
 	 *
 	 * @return \Exception|\Throwable|null
 	 */
-	public function getException(){
+	public function getException() {
 		return $this->exception;
 	}
 
@@ -146,11 +147,11 @@ class WechatResult implements \ArrayAccess{
 	 * @return static
 	 * @throws \Throwable
 	 */
-	public function throwException(callable $callback = null){
-		if($this->exception){
-			if($callback){
+	public function throwException(callable $callback = null) {
+		if ($this->exception) {
+			if ($callback) {
 				$callback($this->exception);
-			}else{
+			} else {
 				throw $this->exception;
 			}
 		}
@@ -164,12 +165,13 @@ class WechatResult implements \ArrayAccess{
 	 * @param bool $throw
 	 * @return $this
 	 */
-	public function throw($throw = true){
-		if($throw === false){
+	public function throw($throw = true) {
+		if ($throw === false) {
 			$this->throw = null;
-		}else{
+		} else {
 			$this->throw = $throw === true ? '\\LogicException' : $throw;
 		}
+
 		return $this;
 	}
 
@@ -180,9 +182,9 @@ class WechatResult implements \ArrayAccess{
 	 * @param callable  $callback
 	 * @return $this
 	 */
-	public function onError($errCode, callable $callback){
+	public function onError($errCode, callable $callback) {
 		$errCode = is_array($errCode) ? $errCode : [$errCode];
-		foreach($errCode as $code){
+		foreach ($errCode as $code) {
 			$this->errorListeners[$code] = $callback;
 		}
 
@@ -195,7 +197,7 @@ class WechatResult implements \ArrayAccess{
 	 * @param callable $callback
 	 * @return $this
 	 */
-	public function onAppIdOrAppSecretInvalid(callable $callback){
+	public function onAppIdOrAppSecretInvalid(callable $callback) {
 		return $this->onError([40125, 40013], $callback);
 	}
 
@@ -206,13 +208,13 @@ class WechatResult implements \ArrayAccess{
 	 * @param callable|null $reject
 	 * @return mixed
 	 */
-	public function then(callable $resolve = null, callable $reject = null){
-		if($this->isValid()){
-			if(is_callable($resolve)){
+	public function then(callable $resolve = null, callable $reject = null) {
+		if ($this->isValid()) {
+			if (is_callable($resolve)) {
 				return call_user_func_array($resolve, [$this->result]);
 			}
-		}else{
-			if(is_callable($reject)){
+		} else {
+			if (is_callable($reject)) {
 				return call_user_func_array($reject, [$this->result]);
 			}
 		}
@@ -227,42 +229,42 @@ class WechatResult implements \ArrayAccess{
 	 * @param mixed        $default
 	 * @return mixed
 	 */
-	public function result($fields = null, $default = null){
-		return $this->then(function() use ($fields){
-			if($this->isStream){
+	public function result($fields = null, $default = null) {
+		return $this->then(function () use ($fields) {
+			if ($this->isStream) {
 				return $this->result;
 			}
 
-			if($fields === null){
+			if ($fields === null) {
 				$result = $this->result;
 
 				unset($result['errcode'], $result['errmsg']);
 
 				return $result;
-			}elseif(is_array($fields)){
+			} elseif (is_array($fields)) {
 				$result = [];
 
-				foreach($fields as $field){
-					if(isset($this->result[$field])){
+				foreach ($fields as $field) {
+					if (isset($this->result[$field])) {
 						$result[$field] = $this->result[$field];
 					}
 				}
 
 				return $result;
-			}else{
+			} else {
 				return isset($this->result[$fields]) ? $this->result[$fields] : null;
 			}
-		}, function() use ($default){
+		}, function () use ($default) {
 			$errCode = $this->getErrCode();
-			if(isset($this->errorListeners[static::ERROR_ALL])){
+			if (isset($this->errorListeners[static::ERROR_ALL])) {
 				$callback = $this->errorListeners[static::ERROR_ALL];
 				$callback($this->result);
 			}
 
-			if(isset($this->errorListeners[$errCode])){
+			if (isset($this->errorListeners[$errCode])) {
 				$callback = $this->errorListeners[$errCode];
 				$callback($this->result);
-			}elseif($this->throw){
+			} elseif ($this->throw) {
 				$exception = $this->throw;
 				$errMsg = $this->getErrMsg();
 				throw new $exception($errMsg ? $errMsg : '数据错误！');
@@ -276,7 +278,7 @@ class WechatResult implements \ArrayAccess{
 	 * @param string $name
 	 * @return bool
 	 */
-	public function __isset($name){
+	public function __isset($name) {
 		return isset($this->result[$name]);
 	}
 
@@ -284,7 +286,7 @@ class WechatResult implements \ArrayAccess{
 	 * @param string $name
 	 * @return mixed
 	 */
-	public function __get($name){
+	public function __get($name) {
 		return $this->result[$name];
 	}
 
@@ -294,7 +296,7 @@ class WechatResult implements \ArrayAccess{
 	 * @param mixed $result
 	 * @return static
 	 */
-	public static function make($result){
+	public static function make($result) {
 		return new static($result);
 	}
 
@@ -304,7 +306,7 @@ class WechatResult implements \ArrayAccess{
 	 * @param mixed $result
 	 * @return bool
 	 */
-	public static function valid($result){
+	public static function valid($result) {
 		return self::make($result)->isValid();
 	}
 
@@ -315,7 +317,7 @@ class WechatResult implements \ArrayAccess{
 	 * @param bool  $exception
 	 * @return static
 	 */
-	public static function toThrow($result, $exception = true){
+	public static function toThrow($result, $exception = true) {
 		return static::make($result)->throw($exception);
 	}
 
@@ -327,7 +329,7 @@ class WechatResult implements \ArrayAccess{
 	 * @param mixed        $default
 	 * @return mixed
 	 */
-	public static function toResult($result, $fields = null, $default = null){
+	public static function toResult($result, $fields = null, $default = null) {
 		return self::make($result)->result($fields, $default);
 	}
 
@@ -339,35 +341,36 @@ class WechatResult implements \ArrayAccess{
 	 * @param bool         $exception
 	 * @return mixed
 	 */
-	public static function toThrowsResult($result, $fields = null, $exception = true){
+	public static function toThrowsResult($result, $fields = null, $exception = true) {
 		return self::make($result)->throw($exception)->result($fields);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function offsetExists($offset){
+	public function offsetExists($offset) {
 		return isset($this->result[$offset]);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function offsetGet($offset){
+	public function offsetGet($offset) {
 		return $this->result[$offset];
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function offsetSet($offset, $value){
+	public function offsetSet($offset, $value) {
 		$this->result[$offset] = $value;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function offsetUnset($offset){
+	public function offsetUnset($offset) {
 		unset($this->result[$offset]);
 	}
+
 }

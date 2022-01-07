@@ -14,7 +14,7 @@ use Xin\Support\Str;
  * @property-read string access_id
  * @property-read string access_key
  */
-class DatabaseApp extends Model{
+class DatabaseApp extends Model {
 
 	use AppPluginable;
 
@@ -38,8 +38,9 @@ class DatabaseApp extends Model{
 	 * @param \Xin\Thinkphp\Saas\DatabaseApp $model
 	 * @return mixed|void
 	 */
-	public static function onBeforeInsert(DatabaseApp $model){
-		$model->access_id = substr(md5(microtime().uniqid()), 0, 22);
+	public static function onBeforeInsert(DatabaseApp $model) {
+		$model->access_id = substr(md5(microtime() . uniqid()), 0, 22);
 		$model->access_key = Str::random(32);
 	}
+
 }

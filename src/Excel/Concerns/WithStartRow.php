@@ -2,10 +2,11 @@
 
 namespace Xin\Excel\Concerns;
 
-interface WithStartRow
-{
-    /**
-     * @return int
-     */
-    public function startRow(): int;
+interface WithStartRow {
+
+	/**
+	 * @return int
+	 */
+	public function startRow(): int;
+
 }

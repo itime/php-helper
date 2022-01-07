@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Sms;
 
-interface Message{
+interface Message {
 
 	/**
 	 * 获取内容
@@ -29,4 +29,5 @@ interface Message{
 	 * @return string
 	 */
 	public function template();
+
 }

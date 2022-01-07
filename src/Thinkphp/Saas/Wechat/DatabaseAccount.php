@@ -23,7 +23,7 @@ use Xin\Thinkphp\Foundation\Model\Appable;
  * @property-read array  authorizer_func_info_arr 小程序/公众号权限信息（前台显示）
  * @property-read int    closed 是否解除授权
  */
-class DatabaseAccount extends Model{
+class DatabaseAccount extends Model {
 
 	use Appable;
 
@@ -37,9 +37,9 @@ class DatabaseAccount extends Model{
 	 *
 	 * @return array
 	 */
-	protected function getAuthorizerFuncInfoAttr(){
+	protected function getAuthorizerFuncInfoAttr() {
 		$authorizerInfo = $this->getData('authorizer_info');
-		if(empty($authorizerInfo)){
+		if (empty($authorizerInfo)) {
 			return [];
 		}
 
@@ -51,11 +51,11 @@ class DatabaseAccount extends Model{
 	 *
 	 * @return array
 	 */
-	protected function getAuthorizerFuncInfoArrAttr(){
+	protected function getAuthorizerFuncInfoArrAttr() {
 		$funcInfo = $this->getData('authorizer_func_info');
 
 		$result = [];
-		foreach($funcInfo as $item){
+		foreach ($funcInfo as $item) {
 			$funcScopeId = $item['funcscope_category']['id'];
 			$result[] = array_merge(AuthEnum::getDesc($funcScopeId), $item['confirm_info'] ?? []);
 		}
@@ -68,8 +68,8 @@ class DatabaseAccount extends Model{
 	 *
 	 * @return $this
 	 */
-	public function sync(){
-		if($this->getOrigin('authorization_type')){
+	public function sync() {
+		if ($this->getOrigin('authorization_type')) {
 			$data = $this->loadAuthorizeInfo();
 			$this->save($data);
 		}
@@ -82,7 +82,7 @@ class DatabaseAccount extends Model{
 	 *
 	 * @return array
 	 */
-	public function loadAuthorizeInfo(){
+	public function loadAuthorizeInfo() {
 		return $this->getAuthorizerInfoByAppId($this->getOrigin('appid'));
 	}
 
@@ -92,17 +92,17 @@ class DatabaseAccount extends Model{
 	 * @param string $appId
 	 * @return array
 	 */
-	protected static function getAuthorizerInfoByAppId($appId){
+	protected static function getAuthorizerInfoByAppId($appId) {
 		/** @var \EasyWeChat\OpenPlatform\Application $openPlatform */
 		$openPlatform = app('wechat')->openPlatformOfAppId($appId);
 		$result = $openPlatform->getAuthorizer($appId);
 
-		if(isset($result['errcode']) && $result['errcode'] != 0){
+		if (isset($result['errcode']) && $result['errcode'] != 0) {
 			// 已取消授权
-			if(61003 == $result['errcode']){
+			if (61003 == $result['errcode']) {
 				return [
 					'third_appid' => $appId,
-					'closed'      => 1,
+					'closed' => 1,
 				];
 			}
 
@@ -115,26 +115,26 @@ class DatabaseAccount extends Model{
 		$thirdAppid = $authorizationInfo['authorizer_appid'];
 
 		return [
-			'third_id'                 => $authorizerInfo['user_name'],
-			'appid'                    => $thirdAppid,
-			'nick_name'                => $authorizerInfo['nick_name'] ?? '',
-			'head_img'                 => $authorizerInfo['head_img'] ?? '',
-			'qrcode_url'               => $authorizerInfo['qrcode_url'] ?? '',
-			'principal_name'           => $authorizerInfo['principal_name'] ?? '',
-			'signature'                => $authorizerInfo['signature'] ?? '',
-			'service_type'             => $authorizerInfo['service_type']['id'] ?? 0,
-			'verify_type'              => $authorizerInfo['verify_type']['id'] ?? -1,
-			'business_info'            => json_encode(
+			'third_id' => $authorizerInfo['user_name'],
+			'appid' => $thirdAppid,
+			'nick_name' => $authorizerInfo['nick_name'] ?? '',
+			'head_img' => $authorizerInfo['head_img'] ?? '',
+			'qrcode_url' => $authorizerInfo['qrcode_url'] ?? '',
+			'principal_name' => $authorizerInfo['principal_name'] ?? '',
+			'signature' => $authorizerInfo['signature'] ?? '',
+			'service_type' => $authorizerInfo['service_type']['id'] ?? 0,
+			'verify_type' => $authorizerInfo['verify_type']['id'] ?? -1,
+			'business_info' => json_encode(
 				$authorizerInfo['business_info'] ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
 			),
-			'miniprogram_info'         => json_encode(
+			'miniprogram_info' => json_encode(
 				$authorizerInfo['MiniProgramInfo'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
 			),
 			'authorizer_refresh_token' => $authorizerRefreshToken,
-			'authorization_info'       => json_encode(
+			'authorization_info' => json_encode(
 				$authorizationInfo, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
 			),
-			'closed'                   => 0,
+			'closed' => 0,
 		];
 	}
 
@@ -144,24 +144,25 @@ class DatabaseAccount extends Model{
 	 * @param array $data
 	 * @return static|\think\Model
 	 */
-	public static function fastCreate(array $data = []){
-		if(isset($data['authorization_type']) && $data['authorization_type'] == 1){
+	public static function fastCreate(array $data = []) {
+		if (isset($data['authorization_type']) && $data['authorization_type'] == 1) {
 			$data = array_merge(self::getAuthorizerInfoByAppId($data['appid']), $data);
 		}
 
 		$data = array_merge([
-			'third_id'                 => '',
-			'nick_name'                => '',
-			'head_img'                 => '',
-			'qrcode_url'               => '',
-			'principal_name'           => '',
-			'signature'                => '',
+			'third_id' => '',
+			'nick_name' => '',
+			'head_img' => '',
+			'qrcode_url' => '',
+			'principal_name' => '',
+			'signature' => '',
 			'authorizer_refresh_token' => '',
-			'authorizer_info'          => '',
-			'business_info'            => '',
-			'miniprogram_info'         => '',
+			'authorizer_info' => '',
+			'business_info' => '',
+			'miniprogram_info' => '',
 		], $data);
 
 		return self::create($data);
 	}
+
 }

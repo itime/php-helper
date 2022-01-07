@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\RedPacket;
 
-interface Factory{
+interface Factory {
 
 	/**
 	 * 生成红包金额记录
@@ -40,4 +40,5 @@ interface Factory{
 	 * @return bool
 	 */
 	public function hasReceiver($type);
+
 }

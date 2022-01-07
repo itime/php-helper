@@ -9,7 +9,7 @@ namespace Xin\Foundation\Payment;
 
 use Throwable;
 
-class PaymentInvalidConfigException extends \LogicException{
+class PaymentInvalidConfigException extends \LogicException {
 
 	/**
 	 * PaymentInvalidConfigException constructor.
@@ -18,7 +18,8 @@ class PaymentInvalidConfigException extends \LogicException{
 	 * @param int             $code
 	 * @param \Throwable|null $previous
 	 */
-	public function __construct($message = "", $code = 0, Throwable $previous = null){
+	public function __construct($message = "", $code = 0, Throwable $previous = null) {
 		parent::__construct($message, $code, $previous);
 	}
+
 }

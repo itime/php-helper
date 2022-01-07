@@ -12,7 +12,7 @@ use Xin\Contracts\Saas\WechatRepository;
 use Xin\Foundation\Wechat\Wechat as WechatBase;
 use Xin\Foundation\Wechat\WechatNotConfigureException;
 
-class Wechat extends WechatBase implements WechatRepository{
+class Wechat extends WechatBase implements WechatRepository {
 
 	/**
 	 * @var \closure
@@ -22,12 +22,12 @@ class Wechat extends WechatBase implements WechatRepository{
 	/**
 	 * @inheritDoc
 	 */
-	public function openPlatformOfId($id, array $options = []){
-		if($id == 0){
+	public function openPlatformOfId($id, array $options = []) {
+		if ($id == 0) {
 			return $this->openPlatform($options);
 		}
 
-		if(!$this->openPlatformCallback){
+		if (!$this->openPlatformCallback) {
 			throw new \RuntimeException("未配置微信开放平台配置获取器");
 		}
 
@@ -43,12 +43,12 @@ class Wechat extends WechatBase implements WechatRepository{
 	/**
 	 * @inheritDoc
 	 */
-	public function openPlatformOfAppId($appId, array $options = []){
-		if($appId == 0){
+	public function openPlatformOfAppId($appId, array $options = []) {
+		if ($appId == 0) {
 			return $this->openPlatform($options);
 		}
 
-		if(!$this->openPlatformCallback){
+		if (!$this->openPlatformCallback) {
 			throw new \RuntimeException("未配置微信开放平台配置获取器");
 		}
 
@@ -67,13 +67,13 @@ class Wechat extends WechatBase implements WechatRepository{
 	 * @throws \think\db\exception\ModelNotFoundException
 	 * @throws \think\db\exception\DbException
 	 */
-	public function officialOfId($id, array $options = []){
-		if($id == 0){
+	public function officialOfId($id, array $options = []) {
+		if ($id == 0) {
 			return $this->official($options);
 		}
 
 		$weapp = DatabaseAccount::where('id', $id)->find();
-		if(empty($weapp)){
+		if (empty($weapp)) {
 			throw new WechatNotConfigureException("未配置或授权公众号！");
 		}
 
@@ -86,16 +86,16 @@ class Wechat extends WechatBase implements WechatRepository{
 	 * @throws \think\db\exception\ModelNotFoundException
 	 * @throws \think\db\exception\DbException
 	 */
-	public function officialOfAppId($appId, array $options = []){
-		if($appId == 0){
+	public function officialOfAppId($appId, array $options = []) {
+		if ($appId == 0) {
 			return $this->official($options);
 		}
 
 		$weapp = DatabaseAccount::where([
-			'app_id'   => $appId,
+			'app_id' => $appId,
 			'app_type' => 1,
 		])->find();
-		if(empty($weapp)){
+		if (empty($weapp)) {
 			throw new WechatNotConfigureException("未配置或授权公众号！");
 		}
 
@@ -109,13 +109,13 @@ class Wechat extends WechatBase implements WechatRepository{
 	 * @param array                                     $options
 	 * @return \EasyWeChat\MiniProgram\Application|\EasyWeChat\OpenPlatform\Authorizer\MiniProgram\Application
 	 */
-	protected function newOfficialInstance(DatabaseAccount $weapp, array $options){
+	protected function newOfficialInstance(DatabaseAccount $weapp, array $options) {
 		$config = $this->resolveWeappConfig($weapp);
 
-		if($config['mode'] === 1){
+		if ($config['mode'] === 1) {
 			$wApp = $this->openPlatformOfAppId($weapp['app_id'], $options['open_platform'] ?? []);
 			$miniProgram = $wApp->officialAccount($config['appid'], $config['authorizer_refresh_token']);
-		}else{
+		} else {
 			$miniProgram = Factory::officialAccount($config);
 		}
 
@@ -128,13 +128,13 @@ class Wechat extends WechatBase implements WechatRepository{
 	 * @throws \think\db\exception\ModelNotFoundException
 	 * @throws \think\db\exception\DbException
 	 */
-	public function miniProgramOfId($id, array $options = []){
-		if($id == 0){
+	public function miniProgramOfId($id, array $options = []) {
+		if ($id == 0) {
 			return $this->miniProgram($options);
 		}
 
 		$weapp = DatabaseAccount::where('id', $id)->find();
-		if(empty($weapp)){
+		if (empty($weapp)) {
 			throw new WechatNotConfigureException("未配置或授权小程序！");
 		}
 
@@ -147,16 +147,16 @@ class Wechat extends WechatBase implements WechatRepository{
 	 * @throws \think\db\exception\ModelNotFoundException
 	 * @throws \think\db\exception\DbException
 	 */
-	public function miniProgramOfAppId($appId, array $options = []){
-		if($appId == 0){
+	public function miniProgramOfAppId($appId, array $options = []) {
+		if ($appId == 0) {
 			return $this->miniProgram($options);
 		}
 
 		$weapp = DatabaseAccount::where([
-			'app_id'   => $appId,
+			'app_id' => $appId,
 			'app_type' => 0,
 		])->find();
-		if(empty($weapp)){
+		if (empty($weapp)) {
 			throw new WechatNotConfigureException("未配置或授权小程序！");
 		}
 
@@ -170,13 +170,13 @@ class Wechat extends WechatBase implements WechatRepository{
 	 * @param array                                     $options
 	 * @return \EasyWeChat\MiniProgram\Application|\EasyWeChat\OpenPlatform\Authorizer\MiniProgram\Application
 	 */
-	protected function newMiniProgramInstance(DatabaseAccount $weapp, array $options){
+	protected function newMiniProgramInstance(DatabaseAccount $weapp, array $options) {
 		$config = $this->resolveWeappConfig($weapp);
 
-		if($config['mode'] === 1){
+		if ($config['mode'] === 1) {
 			$wApp = $this->openPlatformOfAppId($weapp['app_id'], $options['open_platform'] ?? []);
 			$miniProgram = $wApp->miniProgram($config['appid'], $config['authorizer_refresh_token']);
-		}else{
+		} else {
 			$miniProgram = Factory::miniProgram($config);
 		}
 
@@ -189,11 +189,11 @@ class Wechat extends WechatBase implements WechatRepository{
 	 * @param \Xin\Thinkphp\Saas\Wechat\DatabaseAccount $weapp
 	 * @return array
 	 */
-	protected function resolveWeappConfig(DatabaseAccount $weapp){
+	protected function resolveWeappConfig(DatabaseAccount $weapp) {
 		return $this->checkConfig([
-			'mode'                     => $weapp['mode'],
-			'app_id'                   => $weapp['appid'],
-			'secret'                   => $weapp['appsecret'],
+			'mode' => $weapp['mode'],
+			'app_id' => $weapp['appid'],
+			'secret' => $weapp['appsecret'],
 			'authorizer_refresh_token' => $weapp['authorizer_refresh_token'],
 		]);
 	}
@@ -203,7 +203,7 @@ class Wechat extends WechatBase implements WechatRepository{
 	 *
 	 * @param \Closure|null $openPlatformCallback
 	 */
-	public function setOpenPlatformCallback(?\Closure $openPlatformCallback){
+	public function setOpenPlatformCallback(?\Closure $openPlatformCallback) {
 		$this->openPlatformCallback = $openPlatformCallback;
 	}
 

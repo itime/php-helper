@@ -12,12 +12,12 @@ use think\console\Input;
 use think\console\Output;
 use Xin\Thinkphp\Foundation\Setting\DatabaseSetting;
 
-class Update extends Command{
+class Update extends Command {
 
 	/**
 	 * @inheritDoc
 	 */
-	protected function configure(){
+	protected function configure() {
 		$this->setName('setting:update')
 			->setDescription('刷新站点配置');
 	}
@@ -26,9 +26,10 @@ class Update extends Command{
 	 * @param \think\console\Input  $input
 	 * @param \think\console\Output $output
 	 */
-	protected function execute(Input $input, Output $output){
+	protected function execute(Input $input, Output $output) {
 		DatabaseSetting::updateCache();
 
 		$output->highlight("已更新配置！");
 	}
+
 }

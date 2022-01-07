@@ -4,9 +4,10 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Auth\Events;
 
-class Logged{
+class Logged {
 
 	/**
 	 * The authentication guard name.
@@ -37,9 +38,10 @@ class Logged{
 	 * @param bool                      $remember
 	 * @return void
 	 */
-	public function __construct($guard, $user, $remember){
+	public function __construct($guard, $user, $remember) {
 		$this->user = $user;
 		$this->guard = $guard;
 		$this->remember = $remember;
 	}
+
 }

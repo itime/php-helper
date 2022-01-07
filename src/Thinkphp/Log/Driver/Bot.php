@@ -15,7 +15,7 @@ use think\contract\LogHandlerInterface;
 use Xin\Bot\WeworkBot;
 use Xin\Support\LimitThrottle;
 
-class Bot implements LogHandlerInterface{
+class Bot implements LogHandlerInterface {
 
 	/**
 	 * @var \think\App
@@ -33,7 +33,7 @@ class Bot implements LogHandlerInterface{
 	 * @param \think\App $app
 	 * @param array      $config
 	 */
-	public function __construct(App $app, array $config){
+	public function __construct(App $app, array $config) {
 		$this->app = $app;
 		$this->config = $config;
 	}
@@ -44,32 +44,32 @@ class Bot implements LogHandlerInterface{
 	 * @param array $log
 	 * @return bool
 	 */
-	public function save(array $log):bool{
-		if(!isset($log['error']) || !($botKey = $this->key())
+	public function save(array $log): bool {
+		if (!isset($log['error']) || !($botKey = $this->key())
 			|| ($env = env('app_env')) !== 'production'
-			|| !$this->isAllowSendBotMessage($errCount)){
+			|| !$this->isAllowSendBotMessage($errCount)) {
 			return true;
 		}
 
 		$log = substr($log['error'][0], 0, 512);
 		$ip = $this->app->request->server('SERVER_ADDR');
 		$clientId = $this->app->request->ip();
-		if($this->app->runningInConsole()){
+		if ($this->app->runningInConsole()) {
 			$input = new Input();
-			$arguments = array_map(function(Argument $argument){
+			$arguments = array_map(function (Argument $argument) {
 				return $argument->getName();
 			}, $input->getArguments());
 
-			$options = array_map(function(Option $option){
+			$options = array_map(function (Option $option) {
 				return $option->getName();
 			}, $input->getOptions());
 
 			$command = array_shift($arguments);
-			$info = $command.
-				"->args:".json_encode($arguments).
-				":options:".json_encode($options);
-		}else{
-			$info = $this->app->request->method()." ".$this->app->request->url(true);
+			$info = $command .
+				"->args:" . json_encode($arguments) .
+				":options:" . json_encode($options);
+		} else {
+			$info = $this->app->request->method() . " " . $this->app->request->url(true);
 		}
 
 		$contents = <<<MARKDOWN
@@ -78,10 +78,10 @@ class Bot implements LogHandlerInterface{
 <font color="comment">{$log}</font>
 MARKDOWN;
 
-		try{
+		try {
 			$bot = new WeworkBot($botKey);
 			$bot->sendMarkdownMessage($contents);
-		}catch(\Throwable $e){
+		} catch (\Throwable $e) {
 			return false;
 		}
 
@@ -93,8 +93,8 @@ MARKDOWN;
 	 *
 	 * @return string
 	 */
-	protected function key(){
-		if(isset($this->config['key']) && $this->config['key']){
+	protected function key() {
+		if (isset($this->config['key']) && $this->config['key']) {
 			return $this->config['key'];
 		}
 
@@ -107,16 +107,16 @@ MARKDOWN;
 	 * @param int $count
 	 * @return bool
 	 */
-	protected function isAllowSendBotMessage(&$count = 0){
-		try{
+	protected function isAllowSendBotMessage(&$count = 0) {
+		try {
 			$count = $this->resolveErrorCount();
-		}catch(\Exception $e){
+		} catch (\Exception $e) {
 			return false;
 		}
 
-		return (bool)LimitThrottle::general(function() use ($count){
+		return (bool)LimitThrottle::general(function () use ($count) {
 			return $count;
-		}, function(){
+		}, function () {
 			return true;
 		});
 	}
@@ -126,14 +126,14 @@ MARKDOWN;
 	 *
 	 * @return int
 	 */
-	private function resolveErrorCount(){
+	private function resolveErrorCount() {
 		$key = $this->resolveErrorCacheKey();
 		$count = $this->app->cache->get($key);
 
-		if($count === null){
+		if ($count === null) {
 			$count = 0;
 			$this->app->cache->set($key, 1, now()->addMinutes(10));
-		}else{
+		} else {
 			$this->app->cache->inc($key);
 		}
 
@@ -145,9 +145,11 @@ MARKDOWN;
 	 *
 	 * @return string
 	 */
-	private function resolveErrorCacheKey(){
+	private function resolveErrorCacheKey() {
 		$url = $this->app->request->url();
 		$url = preg_replace('/\&timestamp=\d{0,10}/', '', $url);
-		return "error:count:".md5($url);
+
+		return "error:count:" . md5($url);
 	}
+
 }

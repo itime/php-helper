@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Bus\Balance;
 
-interface BalanceRepository{
+interface BalanceRepository {
 
 	/**
 	 * 充值
@@ -38,4 +38,5 @@ interface BalanceRepository{
 	 * @return mixed
 	 */
 	public function value($userId);
+
 }

@@ -10,7 +10,7 @@ namespace Xin\Thinkphp\Http;
 /**
  * @mixin Requestable
  */
-trait HasPlatform{
+trait HasPlatform {
 
 	/**
 	 * @var string
@@ -22,28 +22,28 @@ trait HasPlatform{
 	 *
 	 * @return string
 	 */
-	public function platform(){
-		if(is_null($this->platform)){
+	public function platform() {
+		if (is_null($this->platform)) {
 			$userAgent = $this->server('HTTP_USER_AGENT');
 			$referer = $this->server('HTTP_REFERER');
 
-			if(stripos($userAgent, "wechatdevtools") !== false
+			if (stripos($userAgent, "wechatdevtools") !== false
 				|| stripos($userAgent, "MicroMessenger") !== false
-				|| stripos($referer, "servicewechat.com") !== false){
+				|| stripos($referer, "servicewechat.com") !== false) {
 				$this->platform = 'wechat';
-			}elseif(stripos($userAgent, "AliApp") !== false
+			} elseif (stripos($userAgent, "AliApp") !== false
 				|| stripos($userAgent, "Alipay") !== false
 				|| stripos($userAgent, "AlipayDefined") !== false
 				|| stripos($userAgent, "AlipayClient") !== false
 				|| stripos($userAgent, "支付宝") !== false
-				|| stripos(urldecode($userAgent), "支付宝") !== false){
+				|| stripos(urldecode($userAgent), "支付宝") !== false) {
 				$this->platform = 'alipay';
-			}elseif(stripos($userAgent, "swandevtools") !== false
+			} elseif (stripos($userAgent, "swandevtools") !== false
 				|| stripos($userAgent, "baiduboxapp") !== false
 				|| stripos($userAgent, "baiduboxapp") !== false
-				|| stripos($referer, "smartapp.baidu.com") !== false){
+				|| stripos($referer, "smartapp.baidu.com") !== false) {
 				$this->platform = 'baidu';
-			}else{
+			} else {
 				$this->platform = 'browser';
 			}
 		}
@@ -56,7 +56,7 @@ trait HasPlatform{
 	 *
 	 * @return bool
 	 */
-	public function isFromWechat(){
+	public function isFromWechat() {
 		return "wechat" === $this->platform();
 	}
 
@@ -65,7 +65,7 @@ trait HasPlatform{
 	 *
 	 * @return bool
 	 */
-	public function isFromAlipay(){
+	public function isFromAlipay() {
 		return "alipay" === $this->platform();
 	}
 
@@ -74,7 +74,7 @@ trait HasPlatform{
 	 *
 	 * @return bool
 	 */
-	public function isFromBaidu(){
+	public function isFromBaidu() {
 		return "baidu" === $this->platform();
 	}
 
@@ -83,7 +83,8 @@ trait HasPlatform{
 	 *
 	 * @return bool
 	 */
-	public function isFromBrowser(){
+	public function isFromBrowser() {
 		return "browser" === $this->platform();
 	}
+
 }

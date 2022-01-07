@@ -7,7 +7,7 @@
 
 namespace Xin\Support;
 
-class Reflect{
+class Reflect {
 
 	const VISIBLE_PUBLIC = 0;
 
@@ -23,13 +23,13 @@ class Reflect{
 	 * @return int
 	 * @throws \ReflectionException
 	 */
-	public static function getMethodVisible($class, $method){
+	public static function getMethodVisible($class, $method) {
 		$ref = new \ReflectionMethod($class, $method);
-		if($ref->isPublic()){
+		if ($ref->isPublic()) {
 			return self::VISIBLE_PUBLIC;
-		}elseif($ref->isProtected()){
+		} elseif ($ref->isProtected()) {
 			return self::VISIBLE_PROTECTED;
-		}else{
+		} else {
 			return self::VISIBLE_PRIVATE;
 		}
 	}
@@ -41,10 +41,10 @@ class Reflect{
 	 * @param string $method
 	 * @return int
 	 */
-	public static function methodVisible($class, $method){
-		try{
+	public static function methodVisible($class, $method) {
+		try {
 			return self::getMethodVisible($class, $method);
-		}catch(\ReflectionException $e){
+		} catch (\ReflectionException $e) {
 		}
 
 		return self::VISIBLE_PRIVATE;
@@ -59,13 +59,14 @@ class Reflect{
 	 * @return mixed
 	 * @throws \ReflectionException
 	 */
-	public static function fallbackCalls($class, $methods, $args = []){
-		foreach($methods as $method){
-			if(self::VISIBLE_PUBLIC == self::getMethodVisible($class, $method)){
+	public static function fallbackCalls($class, $methods, $args = []) {
+		foreach ($methods as $method) {
+			if (self::VISIBLE_PUBLIC == self::getMethodVisible($class, $method)) {
 				return call_user_func_array([$class, $method], $args);
 			}
 		}
 
 		return null;
 	}
+
 }

@@ -24,7 +24,7 @@ use Xin\Support\Arr;
  * @property string extra
  * @property int    group
  */
-class DatabaseSetting extends Model{
+class DatabaseSetting extends Model {
 
 	/**
 	 * 缓存数据的key
@@ -73,13 +73,13 @@ class DatabaseSetting extends Model{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function load(array $settings = null){
+	public static function load(array $settings = null) {
 		// 批量保存配置
-		if(is_array($settings)){
-			foreach($settings as $name => $value){
+		if (is_array($settings)) {
+			foreach ($settings as $name => $value) {
 				$map = ['name' => $name];
 
-				if(is_array($value)){
+				if (is_array($value)) {
 					$value = json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 				}
 
@@ -92,7 +92,7 @@ class DatabaseSetting extends Model{
 		}
 
 		$config = Cache::get(static::CACHE_KEY);
-		if(empty($config)){
+		if (empty($config)) {
 			$config = static::resolveCache(static::CACHE_KEY);
 		}
 
@@ -107,12 +107,12 @@ class DatabaseSetting extends Model{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function loadPublic(){
+	public static function loadPublic() {
 		$config = Cache::get(static::CACHE_PUBLIC_KEY);
-		if(empty($config)){
+		if (empty($config)) {
 			$config = static::resolveCache(static::CACHE_PUBLIC_KEY, [
 				'public' => 1,
-			]);;
+			]);
 		}
 
 		return $config;
@@ -126,22 +126,23 @@ class DatabaseSetting extends Model{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function getSettings(){
+	public static function getSettings() {
 		$data = static::loadData();
 
 		$settings = [];
-		foreach($data as $key => $item){
+		foreach ($data as $key => $item) {
 			$name = explode('.', $item['name'], 2);
 			$rootName = isset($name[1]) ? $name[0] : 'web';
 			$name = isset($name[1]) ? $name[1] : $name[0];
 
-			if(!isset($settings[$rootName])){
+			if (!isset($settings[$rootName])) {
 				$settings[$rootName] = [];
 			}
 
 			$settings[$rootName][$name] = $item->value;
 			unset($data[$key]);
 		}
+
 		return $settings;
 	}
 
@@ -150,7 +151,7 @@ class DatabaseSetting extends Model{
 	 *
 	 * @noinspection PhpUnhandledExceptionInspection
 	 */
-	public static function updateCache(){
+	public static function updateCache() {
 		static::resolveCache(static::CACHE_KEY);
 
 		static::resolveCache(static::CACHE_PUBLIC_KEY, [
@@ -168,14 +169,14 @@ class DatabaseSetting extends Model{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	protected static function resolveCache($cacheKey, $where = []){
+	protected static function resolveCache($cacheKey, $where = []) {
 		$data = self::loadData($where);
 
 		$settings = [];
-		foreach($data as $key => $item){
+		foreach ($data as $key => $item) {
 			$name = $item['name'];
-			if(!strpos($name, '.')){
-				$name = 'web.'.$name;
+			if (!strpos($name, '.')) {
+				$name = 'web.' . $name;
 			}
 
 			$settings[$name] = $item->value;
@@ -197,7 +198,7 @@ class DatabaseSetting extends Model{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	protected static function loadData($where = []){
+	protected static function loadData($where = []) {
 		return static::field('type,name,value')
 			->where('status', 1)
 			->where($where)
@@ -212,7 +213,7 @@ class DatabaseSetting extends Model{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function refreshThinkConfig(){
+	public static function refreshThinkConfig() {
 		/** @var \think\Config $config */
 		$thinkConfig = App::get('config');
 
@@ -221,7 +222,7 @@ class DatabaseSetting extends Model{
 		$globalConfig = $configRef->getValue($thinkConfig);
 
 		$config = DatabaseSetting::load();
-		foreach($config as $key => $value){
+		foreach ($config as $key => $value) {
 			Arr::set($globalConfig, $key, $value);
 		}
 
@@ -234,16 +235,16 @@ class DatabaseSetting extends Model{
 	 * @return array
 	 * @throws \Xin\Thinkphp\Foundation\Setting\InvalidConfigureException
 	 */
-	public static function getGroupList(){
+	public static function getGroupList() {
 		$groups = Config::get('web.config_group_list');
 
-		if(empty($groups)){
+		if (empty($groups)) {
 			throw new InvalidConfigureException(
 				"请手动配置 settings 数据表 ‘config_group_list’标识"
 			);
 		}
 
-		if(!is_array($groups)){
+		if (!is_array($groups)) {
 			throw new InvalidConfigureException(
 				'获取配置分组数据格式异常！'
 			);
@@ -258,9 +259,10 @@ class DatabaseSetting extends Model{
 	 * @return mixed
 	 * @throws \Xin\Thinkphp\Foundation\Setting\InvalidConfigureException
 	 */
-	protected function getGroupTextAttr(){
+	protected function getGroupTextAttr() {
 		$groups = static::getGroupList();
 		$group = $this->getData('group');
+
 		return isset($groups[$group]) ? $groups[$group] : "无";
 	}
 
@@ -270,10 +272,10 @@ class DatabaseSetting extends Model{
 	 * @return array
 	 * @throws \Xin\Thinkphp\Foundation\Setting\InvalidConfigureException
 	 */
-	public static function getTypeList(){
+	public static function getTypeList() {
 		$types = Config::get('web.config_type_list');
 
-		if(empty($types)){
+		if (empty($types)) {
 			throw new InvalidConfigureException(
 				"请手动配置数据库settings数据表 ‘config_type_list’ 标识。"
 			);
@@ -288,9 +290,10 @@ class DatabaseSetting extends Model{
 	 * @return string
 	 * @throws \Xin\Thinkphp\Foundation\Setting\InvalidConfigureException
 	 */
-	protected function getTypeTextAttr(){
+	protected function getTypeTextAttr() {
 		$types = static::getTypeList();
 		$type = $this->getData('type');
+
 		return isset($types[$type]) ? $types[$type] : "无";
 	}
 
@@ -300,21 +303,21 @@ class DatabaseSetting extends Model{
 	 * @param $string
 	 * @return array
 	 */
-	protected function getExtraAttr($string){
+	protected function getExtraAttr($string) {
 		$type = $this->getOrigin('type');
 
-		if($type == 'object'){
+		if ($type == 'object') {
 			$result = json_decode($string, true);
-			if($result === null){
+			if ($result === null) {
 				$result = [];
 			}
 
 			$values = $this->getAttr('value');
-			foreach($result as &$item){
+			foreach ($result as &$item) {
 				$key = $item['name'];
-				if(isset($values[$key])){
+				if (isset($values[$key])) {
 					$item['value'] = $values[$key];
-				}elseif(!isset($item['value'])){
+				} elseif (!isset($item['value'])) {
 					$item['value'] = '';
 				}
 			}
@@ -332,14 +335,14 @@ class DatabaseSetting extends Model{
 	 * @param string $val
 	 * @return mixed
 	 */
-	protected function getValueAttr($val){
+	protected function getValueAttr($val) {
 		$type = $this->getData('type');
 
-		if($type == 'array'){
+		if ($type == 'array') {
 			return Arr::parse($val);
-		}elseif($type == 'switch'){
+		} elseif ($type == 'switch') {
 			return (int)$val;
-		}elseif($type == 'object'){
+		} elseif ($type == 'object') {
 			return json_decode($val, true);
 		}
 
@@ -349,14 +352,14 @@ class DatabaseSetting extends Model{
 	/**
 	 * 数据写入后
 	 */
-	public static function onAfterWrite(){
+	public static function onAfterWrite() {
 		static::updateCache();
 	}
 
 	/**
 	 * 数据删除后
 	 */
-	public static function onAfterDelete(){
+	public static function onAfterDelete() {
 		static::updateCache();
 	}
 
@@ -365,36 +368,36 @@ class DatabaseSetting extends Model{
 	 *
 	 * @param array $settings
 	 */
-	public static function setup($settings){
+	public static function setup($settings) {
 		$keys = array_keys($settings);
 		$existKeys = static::where('name', 'in', $keys)->column('name');
 		$attachKeys = array_diff($keys, $existKeys);
 		$detachKeys = array_diff($existKeys, $keys);
 		$updateKeys = array_diff($existKeys, $detachKeys);
 
-		if(!empty($attachKeys)){
-			foreach($attachKeys as $attachKey){
+		if (!empty($attachKeys)) {
+			foreach ($attachKeys as $attachKey) {
 				$setting = $settings[$attachKey];
 				static::create([
-					'title'   => $setting['title'],
-					'name'    => $attachKey,
-					'value'   => isset($setting['value']) ? $setting['value'] : '',
-					'type'    => isset($setting['type']) ? $setting['type'] : 'string',
-					'extra'   => isset($setting['extra']) ? $setting['type'] : '',
-					'group'   => isset($setting['group']) ? $setting['group'] : '',
-					'sort'    => isset($setting['sort']) ? $setting['sort'] : 0,
-					'system'  => 0,
+					'title' => $setting['title'],
+					'name' => $attachKey,
+					'value' => isset($setting['value']) ? $setting['value'] : '',
+					'type' => isset($setting['type']) ? $setting['type'] : 'string',
+					'extra' => isset($setting['extra']) ? $setting['type'] : '',
+					'group' => isset($setting['group']) ? $setting['group'] : '',
+					'sort' => isset($setting['sort']) ? $setting['sort'] : 0,
+					'system' => 0,
 					'display' => isset($setting['display']) ? $setting['display'] : 1,
 				]);
 			}
 		}
 
-		if(!empty($updateKeys)){
-			foreach($updateKeys as $updateKey){
+		if (!empty($updateKeys)) {
+			foreach ($updateKeys as $updateKey) {
 				static::update([
-					'type'    => isset($setting['type']) ? $setting['type'] : 'string',
-					'extra'   => isset($setting['extra']) ? $setting['type'] : '',
-					'group'   => isset($setting['group']) ? $setting['group'] : '',
+					'type' => isset($setting['type']) ? $setting['type'] : 'string',
+					'extra' => isset($setting['extra']) ? $setting['type'] : '',
+					'group' => isset($setting['group']) ? $setting['group'] : '',
 					'display' => isset($setting['display']) ? $setting['display'] : 1,
 				], [
 					'name' => $updateKey,
@@ -402,7 +405,7 @@ class DatabaseSetting extends Model{
 			}
 		}
 
-		if(!empty($detachKeys)){
+		if (!empty($detachKeys)) {
 			static::unsetup($detachKeys);
 		}
 	}
@@ -413,7 +416,8 @@ class DatabaseSetting extends Model{
 	 * @param array $keys
 	 * @return bool
 	 */
-	public static function unsetup($keys){
+	public static function unsetup($keys) {
 		return static::where('name', 'in', $keys)->delete();
 	}
+
 }

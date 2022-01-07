@@ -10,7 +10,7 @@ namespace Xin\Support;
 /**
  * Class Manager
  */
-abstract class Manager{
+abstract class Manager {
 
 	/**
 	 * The application instance.
@@ -46,7 +46,7 @@ abstract class Manager{
 	 * @param \Psr\Container\ContainerInterface $app
 	 * @return void
 	 */
-	public function __construct($app){
+	public function __construct($app) {
 		$this->app = $app;
 	}
 
@@ -80,10 +80,10 @@ abstract class Manager{
 	 * @return mixed
 	 * @throws \InvalidArgumentException
 	 */
-	public function driver($name = null){
+	public function driver($name = null) {
 		$name = $name ?: $this->getDefaultDriver();
 
-		if(is_null($name)){
+		if (is_null($name)) {
 			throw new \InvalidArgumentException(sprintf(
 				'Unable to resolve NULL driver for [%s].', static::class
 			));
@@ -98,7 +98,7 @@ abstract class Manager{
 	 * @param string $name
 	 * @return mixed
 	 */
-	protected function getDriver($name){
+	protected function getDriver($name) {
 		return $this->drivers[$name] ?? $this->createDriver($name);
 	}
 
@@ -108,8 +108,9 @@ abstract class Manager{
 	 * @param $name
 	 * @return array
 	 */
-	protected function resolveParams($name){
+	protected function resolveParams($name) {
 		$config = $this->resolveConfig($name);
+
 		return [$config];
 	}
 
@@ -120,19 +121,19 @@ abstract class Manager{
 	 * @return mixed
 	 * @throws \InvalidArgumentException
 	 */
-	protected function createDriver($name){
+	protected function createDriver($name) {
 		$type = $this->resolveType($name);
 		$params = $this->resolveParams($name);
 
 		// First, we will determine if a custom driver creator exists for the given driver and
 		// if it does not we will check for a creator method for the driver. Custom creator
 		// callbacks allow developers to build their own "drivers" easily using Closures.
-		if(isset($this->customCreators[$type])){
+		if (isset($this->customCreators[$type])) {
 			return $this->callCustomCreator($type, $params);
-		}else{
-			$method = 'create'.Str::studly($type).$this->driverSuffix;
+		} else {
+			$method = 'create' . Str::studly($type) . $this->driverSuffix;
 
-			if(method_exists($this, $method)){
+			if (method_exists($this, $method)) {
 				return call_user_func_array([$this, $method], $params);
 			}
 		}
@@ -147,7 +148,7 @@ abstract class Manager{
 	 * @param array  $params
 	 * @return mixed
 	 */
-	protected function callCustomCreator($name, $params){
+	protected function callCustomCreator($name, $params) {
 		return call_user_func_array(
 			$this->customCreators[$name],
 			$params
@@ -161,7 +162,7 @@ abstract class Manager{
 	 * @param \Closure $callback
 	 * @return $this
 	 */
-	public function extend($driver, \Closure $callback){
+	public function extend($driver, \Closure $callback) {
 		$this->customCreators[$driver] = $callback;
 
 		return $this;
@@ -172,7 +173,7 @@ abstract class Manager{
 	 *
 	 * @return array
 	 */
-	public function getDrivers(){
+	public function getDrivers() {
 		return $this->drivers;
 	}
 
@@ -183,7 +184,8 @@ abstract class Manager{
 	 * @param array  $parameters
 	 * @return mixed
 	 */
-	public function __call($method, $parameters){
+	public function __call($method, $parameters) {
 		return $this->driver()->$method(...$parameters);
 	}
+
 }

@@ -4,9 +4,10 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Contracts\Plugin;
 
-interface PluginInfo{
+interface PluginInfo {
 
 	/**
 	 * 获取插件名字
@@ -66,4 +67,5 @@ interface PluginInfo{
 	 * @return \Xin\Contracts\Plugin\Plugin
 	 */
 	public function plugin();
+
 }

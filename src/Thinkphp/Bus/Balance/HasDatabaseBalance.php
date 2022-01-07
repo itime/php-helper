@@ -12,15 +12,17 @@ use Xin\Bus\Balance\SceneEnum;
 /**
  * Trait HasDatabaseBalance
  */
-trait HasDatabaseBalance{
+trait HasDatabaseBalance {
 
 	/**
 	 * 余额消费场景
 	 *
 	 * @return string
 	 */
-	protected function getSceneTextAttr(){
+	protected function getSceneTextAttr() {
 		$val = $this->getOrigin('scene');
+
 		return SceneEnum::data()[$val]['title'];
 	}
+
 }

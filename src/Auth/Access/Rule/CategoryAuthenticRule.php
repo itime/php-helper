@@ -7,7 +7,7 @@
 
 namespace Xin\Auth\Access\Rule;
 
-class CategoryAuthenticRule extends AuthenticRule{
+class CategoryAuthenticRule extends AuthenticRule {
 
 	/**
 	 * 规则方案
@@ -19,7 +19,8 @@ class CategoryAuthenticRule extends AuthenticRule{
 	 *
 	 * @param string $id
 	 */
-	public function __construct($id){
+	public function __construct($id) {
 		parent::__construct(self::SCHEME_NAME, $id);
 	}
+
 }

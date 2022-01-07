@@ -9,7 +9,7 @@ namespace Xin\Contracts\Saas;
 
 use Xin\Contracts\Foundation\Payment;
 
-interface PaymentRepository extends Payment{
+interface PaymentRepository extends Payment {
 
 	/**
 	 * 根据id获取微信支付的实例

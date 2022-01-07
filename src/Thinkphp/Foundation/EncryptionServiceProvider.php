@@ -4,6 +4,7 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Thinkphp\Foundation;
 
 use Opis\Closure\SerializableClosure;
@@ -11,14 +12,14 @@ use think\Service;
 use Xin\Support\Encrypter;
 use Xin\Support\Str;
 
-class EncryptionServiceProvider extends Service{
+class EncryptionServiceProvider extends Service {
 
 	/**
 	 * Register the service provider.
 	 *
 	 * @return void
 	 */
-	public function register(){
+	public function register() {
 		$this->registerEncrypter();
 		$this->registerOpisSecurityKey();
 	}
@@ -28,8 +29,8 @@ class EncryptionServiceProvider extends Service{
 	 *
 	 * @return void
 	 */
-	protected function registerEncrypter(){
-		$this->app->bind('encrypter', function(){
+	protected function registerEncrypter() {
+		$this->app->bind('encrypter', function () {
 			$config = $this->app->config->get('app');
 
 			return new Encrypter($this->parseKey($config), $config['cipher']);
@@ -41,10 +42,10 @@ class EncryptionServiceProvider extends Service{
 	 *
 	 * @return void
 	 */
-	protected function registerOpisSecurityKey(){
+	protected function registerOpisSecurityKey() {
 		$config = $this->app->config->get('app');
 
-		if(!class_exists(SerializableClosure::class) || empty($config['key'])){
+		if (!class_exists(SerializableClosure::class) || empty($config['key'])) {
 			return;
 		}
 
@@ -57,8 +58,8 @@ class EncryptionServiceProvider extends Service{
 	 * @param array $config
 	 * @return string
 	 */
-	protected function parseKey(array $config){
-		if(Str::startsWith($key = $this->key($config), $prefix = 'base64:')){
+	protected function parseKey(array $config) {
+		if (Str::startsWith($key = $this->key($config), $prefix = 'base64:')) {
 			$key = base64_decode(Str::after($key, $prefix));
 		}
 
@@ -72,8 +73,8 @@ class EncryptionServiceProvider extends Service{
 	 * @return string
 	 * @throws \RuntimeException
 	 */
-	protected function key(array $config){
-		if(!isset($config['key']) || empty($config['key'])){
+	protected function key(array $config) {
+		if (!isset($config['key']) || empty($config['key'])) {
 			throw new \RuntimeException(
 				'No application encryption key has been specified.'
 			);
@@ -81,4 +82,5 @@ class EncryptionServiceProvider extends Service{
 
 		return $config['key'];
 	}
+
 }

@@ -4,6 +4,7 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Thinkphp\Database;
 
 use think\facade\Env;
@@ -13,7 +14,7 @@ use think\facade\Env;
  *
  * @mixin \think\migration\Seeder
  */
-trait FakerSeeder{
+trait FakerSeeder {
 
 	/**
 	 * 构建数据
@@ -22,15 +23,15 @@ trait FakerSeeder{
 	 * @param int      $num
 	 * @param string   $locale
 	 */
-	protected function factory($callback, $num = 0, $locale = 'zh_CN'){
+	protected function factory($callback, $num = 0, $locale = 'zh_CN') {
 		$faker = $this->faker(!empty($locale) ? $locale : Env::get('faker_locale', 'zh_CN'));
 
-		if($num < 1){
+		if ($num < 1) {
 			$num = rand(1, 100);
 		}
 
-		for($i = 0; $i < $num; $i++){
-			if(call_user_func($callback, $faker) === false){
+		for ($i = 0; $i < $num; $i++) {
+			if (call_user_func($callback, $faker) === false) {
 				break;
 			}
 		}
@@ -44,13 +45,13 @@ trait FakerSeeder{
 	 * @param int      $num
 	 * @param string   $locale
 	 */
-	protected function factoryToTable($table, $callback, $num = 0, $locale = 'zh_CN'){
+	protected function factoryToTable($table, $callback, $num = 0, $locale = 'zh_CN') {
 		$table = $this->table($table);
-		$this->factory(function($faker) use (&$table, &$callback){
+		$this->factory(function ($faker) use (&$table, &$callback) {
 			$data = call_user_func($callback, $faker);
-			if($data === false) return false;
+			if ($data === false) return false;
 
-			if(is_array($data)){
+			if (is_array($data)) {
 				$table->insert($data)->save();
 			}
 
@@ -64,7 +65,8 @@ trait FakerSeeder{
 	 * @param string $locale
 	 * @return \Faker\Generator
 	 */
-	protected function faker($locale = 'zh_CN'){
+	protected function faker($locale = 'zh_CN') {
 		return \Faker\Factory::create($locale);
 	}
+
 }

@@ -5,9 +5,10 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0
  * @author 晋<657306123@qq.com>
  */
+
 namespace Xin\Support\Contracts;
 
-interface Jsonable{
+interface Jsonable {
 
 	/**
 	 * Convert the object to its JSON representation.
@@ -16,4 +17,5 @@ interface Jsonable{
 	 * @return string
 	 */
 	public function toJson($options = 0);
+
 }

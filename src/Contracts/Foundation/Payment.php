@@ -7,7 +7,10 @@
 
 namespace Xin\Contracts\Foundation;
 
-interface Payment{
+/**
+ * @deprecated
+ */
+interface Payment {
 
 	/**
 	 * 微信支付
@@ -38,4 +41,5 @@ interface Payment{
 	 * @return bool
 	 */
 	public function hasAlipay();
+
 }

@@ -10,7 +10,7 @@ namespace Xin\Contracts\Auth;
 /**
  * Interface UserProvider
  */
-interface UserProvider{
+interface UserProvider {
 
 	/**
 	 * 根据唯一ID取用户
@@ -43,4 +43,5 @@ interface UserProvider{
 	 * @return string
 	 */
 	public function getPasswordName();
+
 }

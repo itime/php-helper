@@ -7,6 +7,6 @@
 
 namespace Xin\Contracts\Transaction;
 
-class TransactionNotFoundException extends \Exception{
+class TransactionNotFoundException extends \Exception {
 
 }

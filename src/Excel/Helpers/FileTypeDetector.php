@@ -2,53 +2,52 @@
 
 namespace Xin\Excel\Helpers;
 
-use Xin\Excel\Exceptions\NoTypeDetectedException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Xin\Excel\Exceptions\NoTypeDetectedException;
 
-class FileTypeDetector
-{
-    /**
-     * @param             $filePath
-     * @param string|null $type
-     *
-     * @throws NoTypeDetectedException
-     * @return string|null
-     */
-    public static function detect($filePath, string $type = null)
-    {
-        if (null !== $type) {
-            return $type;
-        }
+class FileTypeDetector {
 
-        if (!$filePath instanceof UploadedFile) {
-            $pathInfo  = pathinfo($filePath);
-            $extension = $pathInfo['extension'] ?? '';
-        } else {
-            $extension = $filePath->getClientOriginalExtension();
-        }
+	/**
+	 * @param             $filePath
+	 * @param string|null $type
+	 *
+	 * @return string|null
+	 * @throws NoTypeDetectedException
+	 */
+	public static function detect($filePath, string $type = null) {
+		if (null !== $type) {
+			return $type;
+		}
 
-        if (null === $type && trim($extension) === '') {
-            throw new NoTypeDetectedException();
-        }
+		if (!$filePath instanceof UploadedFile) {
+			$pathInfo = pathinfo($filePath);
+			$extension = $pathInfo['extension'] ?? '';
+		} else {
+			$extension = $filePath->getClientOriginalExtension();
+		}
 
-        return config('excel.extension_detector.' . strtolower($extension));
-    }
+		if (null === $type && trim($extension) === '') {
+			throw new NoTypeDetectedException();
+		}
 
-    /**
-     * @param string      $filePath
-     * @param string|null $type
-     *
-     * @throws NoTypeDetectedException
-     * @return string
-     */
-    public static function detectStrict(string $filePath, string $type = null): string
-    {
-        $type = static::detect($filePath, $type);
+		return config('excel.extension_detector.' . strtolower($extension));
+	}
 
-        if (!$type) {
-            throw new NoTypeDetectedException();
-        }
+	/**
+	 * @param string      $filePath
+	 * @param string|null $type
+	 *
+	 * @return string
+	 * @throws NoTypeDetectedException
+	 */
+	public static function detectStrict(string $filePath, string $type = null): string {
+		$type = static::detect($filePath, $type);
 
-        return $type;
-    }
+		if (!$type) {
+			throw new NoTypeDetectedException();
+		}
+
+		return $type;
+	}
+
 }

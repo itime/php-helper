@@ -11,7 +11,7 @@ use Xin\Contracts\Foundation\Payment as PaymentContract;
 use Xin\Support\File;
 use Yansongda\Pay\Pay;
 
-class Payment implements PaymentContract{
+class Payment implements PaymentContract {
 
 	/**
 	 * @var array
@@ -23,15 +23,15 @@ class Payment implements PaymentContract{
 	 *
 	 * @param array $config
 	 */
-	public function __construct(array $config){
+	public function __construct(array $config) {
 		$this->config = $config;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function wechat(array $options = []){
-		if(!isset($this->config['wechat']) || empty($this->config['wechat'])){
+	public function wechat(array $options = []) {
+		if (!isset($this->config['wechat']) || empty($this->config['wechat'])) {
 			throw new PaymentNotConfigureException("payment config 'wechat' not defined.");
 		}
 
@@ -46,15 +46,15 @@ class Payment implements PaymentContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function hasWechat(){
+	public function hasWechat() {
 		return isset($this->config['wechat']) && !empty($this->config['wechat']);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function alipay(array $options = []){
-		if(!isset($this->config['alipay']) || empty($this->config['alipay'])){
+	public function alipay(array $options = []) {
+		if (!isset($this->config['alipay']) || empty($this->config['alipay'])) {
 			throw new PaymentNotConfigureException("payment config 'alipay' not defined.");
 		}
 
@@ -69,7 +69,7 @@ class Payment implements PaymentContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function hasAlipay(){
+	public function hasAlipay() {
 		return isset($this->config['alipay']) && !empty($this->config['alipay']);
 	}
 
@@ -80,7 +80,7 @@ class Payment implements PaymentContract{
 	 * @param array $options
 	 * @return mixed
 	 */
-	protected function initApplication($driver, array $options = []){
+	protected function initApplication($driver, array $options = []) {
 		return $driver;
 	}
 
@@ -90,30 +90,31 @@ class Payment implements PaymentContract{
 	 * @param array $config
 	 * @return array
 	 */
-	protected function initWechatConfig($config, $options){
-		if(isset($config['appid'])){
+	protected function initWechatConfig($config, $options) {
+		if (isset($config['appid'])) {
 			// fix official
-			if(!isset($config['app_id'])){
+			if (!isset($config['app_id'])) {
 				$config['app_id'] = $config['appid'];
 			}
 
 			// fix miniapp
-			if(!isset($config['miniapp_id'])){
+			if (!isset($config['miniapp_id'])) {
 				$config['miniapp_id'] = $config['appid'];
 			}
 		}
 
 		// cert support
-		if(isset($options['cert'])){
-			if(isset($config['cert_client_content'])){
+		if (isset($options['cert'])) {
+			if (isset($config['cert_client_content'])) {
 				$config['cert_client'] = File::putTempFile($config['cert_client_content']);
 			}
 
-			if(isset($config['cert_key_content'])){
+			if (isset($config['cert_key_content'])) {
 				$config['cert_key'] = File::putTempFile($config['cert_key_content']);
 			}
 		}
 
 		return $config;
 	}
+
 }

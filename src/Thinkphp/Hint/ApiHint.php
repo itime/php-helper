@@ -11,7 +11,7 @@ use think\Request;
 use think\Response;
 use Xin\Contracts\Hint\Hint as HintContract;
 
-class ApiHint implements HintContract{
+class ApiHint implements HintContract {
 
 	use HintHelper;
 
@@ -25,22 +25,22 @@ class ApiHint implements HintContract{
 	 *
 	 * @param \think\Request $request
 	 */
-	public function __construct(Request $request){
+	public function __construct(Request $request) {
 		$this->request = $request;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function result($data = [], array $extend = []){
+	public function result($data = [], array $extend = []) {
 		return $this->success('OK', null, $data, $extend);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function success($msg, $url = null, $data = null, array $extend = []){
-		if($url){
+	public function success($msg, $url = null, $data = null, array $extend = []) {
+		if ($url) {
 			$url = $this->resolveSuccessUrl($url);
 			$extend['url'] = $url;
 		}
@@ -51,8 +51,8 @@ class ApiHint implements HintContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function error($msg, $code = 0, $url = null, array $extend = []){
-		if($msg instanceof \Exception){
+	public function error($msg, $code = 0, $url = null, array $extend = []) {
+		if ($msg instanceof \Exception) {
 			$code = $msg->getCode();
 			$msg = $msg->getMessage();
 			$extend = is_array($code) ? $code : [];
@@ -70,10 +70,10 @@ class ApiHint implements HintContract{
 	 * @param array  $extend
 	 * @return \think\response
 	 */
-	protected function resolve($code, $msg, $data, array $extend = []){
+	protected function resolve($code, $msg, $data, array $extend = []) {
 		return Response::create(array_merge([
 			'code' => $code,
-			'msg'  => $msg,
+			'msg' => $msg,
 			'data' => $data,
 			'time' => request()->time(),
 		], $extend), 'json');

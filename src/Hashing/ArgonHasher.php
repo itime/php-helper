@@ -10,7 +10,7 @@ namespace Xin\Hashing;
 use RuntimeException;
 use Xin\Contracts\Hashing\Hasher as HasherContract;
 
-class ArgonHasher extends AbstractHasher implements HasherContract{
+class ArgonHasher extends AbstractHasher implements HasherContract {
 
 	/**
 	 * The default memory cost factor.
@@ -46,7 +46,7 @@ class ArgonHasher extends AbstractHasher implements HasherContract{
 	 * @param array $options
 	 * @return void
 	 */
-	public function __construct(array $options = []){
+	public function __construct(array $options = []) {
 		$this->time = $options['time'] ?? $this->time;
 		$this->memory = $options['memory'] ?? $this->memory;
 		$this->threads = $options['threads'] ?? $this->threads;
@@ -61,14 +61,14 @@ class ArgonHasher extends AbstractHasher implements HasherContract{
 	 * @return string
 	 * @throws \RuntimeException
 	 */
-	public function make($value, array $options = []){
+	public function make($value, array $options = []) {
 		$hash = @password_hash($value, $this->algorithm(), [
 			'memory_cost' => $this->memory($options),
-			'time_cost'   => $this->time($options),
-			'threads'     => $this->threads($options),
+			'time_cost' => $this->time($options),
+			'threads' => $this->threads($options),
 		]);
 
-		if(!is_string($hash)){
+		if (!is_string($hash)) {
 			throw new RuntimeException('Argon2 hashing not supported.');
 		}
 
@@ -80,7 +80,7 @@ class ArgonHasher extends AbstractHasher implements HasherContract{
 	 *
 	 * @return int
 	 */
-	protected function algorithm(){
+	protected function algorithm() {
 		return PASSWORD_ARGON2I;
 	}
 
@@ -93,8 +93,8 @@ class ArgonHasher extends AbstractHasher implements HasherContract{
 	 * @return bool
 	 * @throws \RuntimeException
 	 */
-	public function check($value, $hashedValue, array $options = []){
-		if($this->verifyAlgorithm && $this->info($hashedValue)['algoName'] !== 'argon2i'){
+	public function check($value, $hashedValue, array $options = []) {
+		if ($this->verifyAlgorithm && $this->info($hashedValue)['algoName'] !== 'argon2i') {
 			throw new RuntimeException('This password does not use the Argon2i algorithm.');
 		}
 
@@ -108,11 +108,11 @@ class ArgonHasher extends AbstractHasher implements HasherContract{
 	 * @param array  $options
 	 * @return bool
 	 */
-	public function needsRehash($hashedValue, array $options = []){
+	public function needsRehash($hashedValue, array $options = []) {
 		return password_needs_rehash($hashedValue, $this->algorithm(), [
 			'memory_cost' => $this->memory($options),
-			'time_cost'   => $this->time($options),
-			'threads'     => $this->threads($options),
+			'time_cost' => $this->time($options),
+			'threads' => $this->threads($options),
 		]);
 	}
 
@@ -122,7 +122,7 @@ class ArgonHasher extends AbstractHasher implements HasherContract{
 	 * @param int $memory
 	 * @return $this
 	 */
-	public function setMemory(int $memory){
+	public function setMemory(int $memory) {
 		$this->memory = $memory;
 
 		return $this;
@@ -134,7 +134,7 @@ class ArgonHasher extends AbstractHasher implements HasherContract{
 	 * @param int $time
 	 * @return $this
 	 */
-	public function setTime(int $time){
+	public function setTime(int $time) {
 		$this->time = $time;
 
 		return $this;
@@ -146,7 +146,7 @@ class ArgonHasher extends AbstractHasher implements HasherContract{
 	 * @param int $threads
 	 * @return $this
 	 */
-	public function setThreads(int $threads){
+	public function setThreads(int $threads) {
 		$this->threads = $threads;
 
 		return $this;
@@ -158,7 +158,7 @@ class ArgonHasher extends AbstractHasher implements HasherContract{
 	 * @param array $options
 	 * @return int
 	 */
-	protected function memory(array $options){
+	protected function memory(array $options) {
 		return $options['memory'] ?? $this->memory;
 	}
 
@@ -168,7 +168,7 @@ class ArgonHasher extends AbstractHasher implements HasherContract{
 	 * @param array $options
 	 * @return int
 	 */
-	protected function time(array $options){
+	protected function time(array $options) {
 		return $options['time'] ?? $this->time;
 	}
 
@@ -178,7 +178,8 @@ class ArgonHasher extends AbstractHasher implements HasherContract{
 	 * @param array $options
 	 * @return int
 	 */
-	protected function threads(array $options){
+	protected function threads(array $options) {
 		return $options['threads'] ?? $this->threads;
 	}
+
 }

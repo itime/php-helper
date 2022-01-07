@@ -9,7 +9,7 @@ namespace Xin\Contracts\Saas;
 
 use Xin\Contracts\Foundation\Wechat as BaseWechat;
 
-interface WechatRepository extends BaseWechat{
+interface WechatRepository extends BaseWechat {
 
 	/**
 	 * 获取id微信开放平台实例
@@ -64,4 +64,5 @@ interface WechatRepository extends BaseWechat{
 	 * @return \EasyWeChat\MiniProgram\Application|\EasyWeChat\OpenPlatform\Authorizer\MiniProgram\Application
 	 */
 	public function miniProgramOfAppId($appId, array $options = []);
+
 }

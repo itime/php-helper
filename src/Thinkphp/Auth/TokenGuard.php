@@ -14,7 +14,7 @@ use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 /**
  * Class TokenUser
  */
-class TokenGuard extends AbstractStatefulGuard{
+class TokenGuard extends AbstractStatefulGuard {
 
 	use EventHelpers, TokenGuardHelpers;
 
@@ -40,7 +40,7 @@ class TokenGuard extends AbstractStatefulGuard{
 	 * @param array                $config
 	 * @param UserProviderContract $provider
 	 */
-	public function __construct($name, array $config, UserProviderContract $provider){
+	public function __construct($name, array $config, UserProviderContract $provider) {
 		parent::__construct($name, $config, $provider);
 
 		$this->app = Container::getInstance();
@@ -54,7 +54,7 @@ class TokenGuard extends AbstractStatefulGuard{
 	/**
 	 * @inheritDoc
 	 */
-	public function logout(){
+	public function logout() {
 		parent::logout();
 		$this->cache->delete($this->getAuthToken());
 	}
@@ -62,14 +62,14 @@ class TokenGuard extends AbstractStatefulGuard{
 	/**
 	 * @inheritDoc
 	 */
-	protected function updateSession($user){
+	protected function updateSession($user) {
 		$this->cache->set($this->getAuthToken(), $user);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	protected function resolveUser(){
+	protected function resolveUser() {
 		return $this->cache->get($this->getAuthToken());
 	}
 

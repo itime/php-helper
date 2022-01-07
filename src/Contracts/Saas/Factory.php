@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Saas;
 
-interface Factory{
+interface Factory {
 
 	/**
 	 * 获取应用信息
@@ -39,4 +39,5 @@ interface Factory{
 	 * @return \Xin\Contracts\Config\Repository
 	 */
 	public function getConfig();
+
 }

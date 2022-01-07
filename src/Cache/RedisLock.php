@@ -7,7 +7,7 @@
 
 namespace Xin\Cache;
 
-class RedisLock extends AbstractLock{
+class RedisLock extends AbstractLock {
 
 	/**
 	 * The Redis factory implementation.
@@ -25,7 +25,7 @@ class RedisLock extends AbstractLock{
 	 * @param string|null $owner
 	 * @return void
 	 */
-	public function __construct($redis, $name, $seconds, $owner = null){
+	public function __construct($redis, $name, $seconds, $owner = null) {
 		parent::__construct($name, $seconds, $owner);
 
 		$this->redis = $redis;
@@ -36,10 +36,10 @@ class RedisLock extends AbstractLock{
 	 *
 	 * @return bool
 	 */
-	public function acquire(){
+	public function acquire() {
 		$result = $this->redis->setnx($this->name, $this->owner);
 
-		if($result != 0 && $this->seconds > 0){
+		if ($result != 0 && $this->seconds > 0) {
 			$this->redis->expire($this->name, $this->seconds);
 		}
 
@@ -51,7 +51,7 @@ class RedisLock extends AbstractLock{
 	 *
 	 * @return void
 	 */
-	public function release(){
+	public function release() {
 		$this->redis->eval(LuaScripts::releaseLock(), [$this->name, $this->owner], 1);
 	}
 
@@ -60,7 +60,7 @@ class RedisLock extends AbstractLock{
 	 *
 	 * @return void
 	 */
-	public function forceRelease(){
+	public function forceRelease() {
 		$this->redis->del($this->name);
 	}
 
@@ -69,7 +69,8 @@ class RedisLock extends AbstractLock{
 	 *
 	 * @return string
 	 */
-	protected function getCurrentOwner(){
+	protected function getCurrentOwner() {
 		return $this->redis->get($this->name);
 	}
+
 }

@@ -9,7 +9,7 @@ namespace Xin\Thinkphp\Plugin;
 
 use Xin\Support\Arr;
 
-trait PluginConfigGetter{
+trait PluginConfigGetter {
 
 	/**
 	 * @var string
@@ -23,8 +23,9 @@ trait PluginConfigGetter{
 	 * @param null   $default
 	 * @return mixed
 	 */
-	protected function config($name, $default = null){
+	protected function config($name, $default = null) {
 		$config = DatabasePlugin::getPluginConfig($this->getPluginName());
+
 		return Arr::get($config, $name, $default);
 	}
 
@@ -33,14 +34,16 @@ trait PluginConfigGetter{
 	 *
 	 * @return string
 	 */
-	protected function getPluginName(){
-		if(empty($this->pluginName)){
+	protected function getPluginName() {
+		if (empty($this->pluginName)) {
 			$class = get_class($this);
 			$startIndex = strpos($class, "\\");
 			$endIndex = strpos($class, "\\", $startIndex + 1) - 1;
+
 			return substr($class, $startIndex + 1, $endIndex - $startIndex);
 		}
 
 		return $this->pluginName;
 	}
+
 }

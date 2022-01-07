@@ -9,7 +9,7 @@ namespace Xin\Thinkphp\Auth;
 
 use think\Request;
 
-trait TokenGuardHelpers{
+trait TokenGuardHelpers {
 
 	/**
 	 * @var \Closure
@@ -19,17 +19,19 @@ trait TokenGuardHelpers{
 	/**
 	 * @return string
 	 */
-	public function getAuthToken(){
+	public function getAuthToken() {
 		return call_user_func($this->authTokenResolver, $this->request, $this);
 	}
 
 	/**
 	 * @return \Closure
 	 */
-	protected function getDefaultAuthTokenResolver(){
-		return function(Request $request){
+	protected function getDefaultAuthTokenResolver() {
+		return function (Request $request) {
 			$varSessionId = $this->app->config->get('session.var_session_id');
+
 			return $request->request($varSessionId);
 		};
 	}
+
 }

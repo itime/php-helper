@@ -12,13 +12,13 @@ use Xin\Foundation\Payment\Payment as BasePayment;
 use Xin\Foundation\Payment\PaymentNotConfigureException;
 use Yansongda\Pay\Pay;
 
-class Payment extends BasePayment implements PaymentRepository{
+class Payment extends BasePayment implements PaymentRepository {
 
 	/**
 	 * @inheritDoc
 	 */
-	public function wechatOfId($id, array $options){
-		if($id == 0){
+	public function wechatOfId($id, array $options) {
+		if ($id == 0) {
 			return $this->wechat($options);
 		}
 
@@ -30,8 +30,8 @@ class Payment extends BasePayment implements PaymentRepository{
 	/**
 	 * @inheritDoc
 	 */
-	public function wechatOfAppId($appId, array $options = []){
-		if($appId == 0){
+	public function wechatOfAppId($appId, array $options = []) {
+		if ($appId == 0) {
 			return $this->wechat($options);
 		}
 
@@ -43,8 +43,8 @@ class Payment extends BasePayment implements PaymentRepository{
 	/**
 	 * @inheritDoc
 	 */
-	public function alipayOfId($id, array $options = []){
-		if($id == 0){
+	public function alipayOfId($id, array $options = []) {
+		if ($id == 0) {
 			return $this->alipay($options);
 		}
 
@@ -56,8 +56,8 @@ class Payment extends BasePayment implements PaymentRepository{
 	/**
 	 * @inheritDoc
 	 */
-	public function alipayOfAppId($appId, array $options = []){
-		if($appId == 0){
+	public function alipayOfAppId($appId, array $options = []) {
+		if ($appId == 0) {
 			return $this->alipay($options);
 		}
 
@@ -73,8 +73,9 @@ class Payment extends BasePayment implements PaymentRepository{
 	 * @param array $options
 	 * @return \Yansongda\Pay\Gateways\Wechat
 	 */
-	protected function newWechatInstance($config, array $options){
+	protected function newWechatInstance($config, array $options) {
 		$instance = Pay::wechat($config);
+
 		return $this->initApplication($instance, $options);
 	}
 
@@ -85,8 +86,9 @@ class Payment extends BasePayment implements PaymentRepository{
 	 * @param array $options
 	 * @return \Yansongda\Pay\Gateways\Alipay
 	 */
-	protected function newAlipayInstance($config, array $options){
+	protected function newAlipayInstance($config, array $options) {
 		$instance = Pay::alipay($config);
+
 		return $this->initApplication($instance, $options);
 	}
 
@@ -100,9 +102,9 @@ class Payment extends BasePayment implements PaymentRepository{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	protected function resolveConfig($query, $type){
+	protected function resolveConfig($query, $type) {
 		$payment = DatabasePayment::where($query)->find();
-		if(empty($payment)){
+		if (empty($payment)) {
 			throw new PaymentNotConfigureException("未配置支付信息！");
 		}
 
@@ -110,4 +112,5 @@ class Payment extends BasePayment implements PaymentRepository{
 
 		return $config;
 	}
+
 }

@@ -5,9 +5,10 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0
  * @author 晋<657306123@qq.com>
  */
+
 namespace Xin\Support;
 
-class Collection extends Fluent implements \Countable, \IteratorAggregate{
+class Collection extends Fluent implements \Countable, \IteratorAggregate {
 
 	/**
 	 * (PHP 5 &gt;= 5.0.0)<br/>
@@ -17,7 +18,7 @@ class Collection extends Fluent implements \Countable, \IteratorAggregate{
 	 * @return \ArrayIterator An instance of an object implementing <b>Iterator</b> or
 	 *                        <b>Traversable</b>
 	 */
-	public function getIterator(){
+	public function getIterator() {
 		return new \ArrayIterator($this->items);
 	}
 
@@ -31,7 +32,7 @@ class Collection extends Fluent implements \Countable, \IteratorAggregate{
 	 *             <p>
 	 *             The return value is cast to an integer
 	 */
-	public function count(){
+	public function count() {
 		return count($this->items);
 	}
 
@@ -40,7 +41,8 @@ class Collection extends Fluent implements \Countable, \IteratorAggregate{
 	 *
 	 * @return array
 	 */
-	public function __set_state(){
+	public function __set_state() {
 		return $this->all();
 	}
+
 }

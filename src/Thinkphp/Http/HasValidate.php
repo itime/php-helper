@@ -15,7 +15,7 @@ use think\Validate;
  *
  * @mixin Requestable
  */
-trait HasValidate{
+trait HasValidate {
 
 	/**
 	 * 验证数据
@@ -25,22 +25,22 @@ trait HasValidate{
 	 * @param bool         $batch 是否批量验证
 	 * @return array
 	 */
-	public function validate($name, $validate, bool $batch = false){
-		if(!is_array($validate)){
+	public function validate($name, $validate, bool $batch = false) {
+		if (!is_array($validate)) {
 			$validate = [
 				'rules' => $validate,
 			];
 		}
 
-		if(is_array($validate['rules'])){
+		if (is_array($validate['rules'])) {
 			$v = new Validate();
 			$v->rule(
 				$validate['rules'],
 				isset($validate['fields']) ? $validate['fields'] : []
 			);
-		}else{
+		} else {
 			$validator = $validate['rules'];
-			if(strpos($validator, '.')){
+			if (strpos($validator, '.')) {
 				// 支持场景
 				[$validator, $scene] = explode('.', $validator);
 			}
@@ -48,25 +48,25 @@ trait HasValidate{
 			/** @var Validate $v */
 			$v = app($validator);
 
-			if(isset($scene)){
+			if (isset($scene)) {
 				$v->scene($scene);
 			}
 		}
 
-		if(isset($validate['messages'])){
+		if (isset($validate['messages'])) {
 			$v->message($validate['messages']);
 		}
 
 		// 是否批量验证
 		$v->batch($batch);
 
-		if(empty($name)){
+		if (empty($name)) {
 			$data = $this->param();
-		}else{
+		} else {
 			$data = $this->only($name);
 		}
 
-		if(!$v->check($data)){
+		if (!$v->check($data)) {
 			throw new ValidateException($v->getError());
 		}
 
@@ -79,9 +79,9 @@ trait HasValidate{
 	 * @param string $field
 	 * @return array
 	 */
-	public function idsWithValid($field = 'ids'){
+	public function idsWithValid($field = 'ids') {
 		$ids = $this->ids($field);
-		if(empty($ids)){
+		if (empty($ids)) {
 			throw new ValidateException("param {$field} invalid.");
 		}
 
@@ -94,9 +94,9 @@ trait HasValidate{
 	 * @param string $field
 	 * @return int
 	 */
-	public function idWithValid($field = 'id'){
+	public function idWithValid($field = 'id') {
 		$id = $this->param("{$field}/d");
-		if($id < 1){
+		if ($id < 1) {
 			throw new ValidateException("param {$field} invalid.");
 		}
 
@@ -111,9 +111,9 @@ trait HasValidate{
 	 * @param mixed  $default
 	 * @return mixed
 	 */
-	public function intWithValidArray($field, $array, $default = null){
+	public function intWithValidArray($field, $array, $default = null) {
 		$int = $this->param("{$field}/d", $default);
-		if(!in_array($int, $array)){
+		if (!in_array($int, $array)) {
 			throw new ValidateException("param {$field} invalid.");
 		}
 
@@ -128,13 +128,14 @@ trait HasValidate{
 	 * @param string $filter
 	 * @return int
 	 */
-	public function stringWithValid($field, $default = null, $filter = ''){
+	public function stringWithValid($field, $default = null, $filter = '') {
 		$value = $this->param("{$field}", $default, $filter);
 
-		if(empty($value)){
+		if (empty($value)) {
 			throw new ValidateException("param {$field} invalid.");
 		}
 
 		return $value;
 	}
+
 }

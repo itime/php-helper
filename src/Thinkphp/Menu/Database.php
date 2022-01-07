@@ -11,7 +11,7 @@ use think\exception\ClassNotFoundException;
 use Xin\Menu\Driver;
 use Xin\Support\Arr;
 
-class Database extends Driver{
+class Database extends Driver {
 
 	/**
 	 * @var \think\Collection
@@ -27,16 +27,16 @@ class Database extends Driver{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	protected function load($plugin = null){
-		if($this->data === null){
+	protected function load($plugin = null) {
+		if ($this->data === null) {
 			$this->data = $this->model()->order('sort')->select();
 		}
 
-		if($plugin === null){
+		if ($plugin === null) {
 			return $this->data;
 		}
 
-		return $this->data->filter(function($item) use ($plugin){
+		return $this->data->filter(function ($item) use ($plugin) {
 			return $item['plugin'] == $plugin;
 		});
 	}
@@ -44,18 +44,19 @@ class Database extends Driver{
 	/**
 	 * @inheritDoc
 	 */
-	public function all(){
+	public function all() {
 		$this->load();
+
 		return $this->data;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get($filter = null){
+	public function get($filter = null) {
 		$this->load();
 
-		if($filter){
+		if ($filter) {
 			return Arr::tree($this->data->filter($filter)->toArray());
 		}
 
@@ -70,14 +71,14 @@ class Database extends Driver{
 	 * @param string $plugin
 	 * @return \think\Model
 	 */
-	protected function &find($menus, $url, $plugin){
+	protected function &find($menus, $url, $plugin) {
 		$default = null;
 
-		foreach($menus as &$item){
-			if(Arr::where($item, [
+		foreach ($menus as &$item) {
+			if (Arr::where($item, [
 				'plugin' => $plugin,
-				'url'    => $url,
-			])){
+				'url' => $url,
+			])) {
 				return $item;
 			}
 		}
@@ -92,11 +93,11 @@ class Database extends Driver{
 	 * @param array $parent
 	 * @return int
 	 */
-	protected function findParentId($current, $parent){
-		if(isset($current['parent'])){
-			foreach($this->data as $item){
+	protected function findParentId($current, $parent) {
+		if (isset($current['parent'])) {
+			foreach ($this->data as $item) {
 				$name = $item['name'] ?? $item['url'] ?? '';
-				if($name == $current['parent']){
+				if ($name == $current['parent']) {
 					return $item['id'] ?? 0;
 				}
 			}
@@ -110,41 +111,43 @@ class Database extends Driver{
 	/**
 	 * @inheritDoc
 	 */
-	public function puts($menus, $plugin = null, $append = []){
+	public function puts($menus, $plugin = null, $append = []) {
 		$plugin = empty($plugin) ? '' : $plugin;
 
 		$addedMenuIdList = [];
 		$updatedMenuIdList = [];
 		$originAppMenus = $this->load($plugin);
-		self::eachTree(function(&$item, &$parent) use (&$append, $plugin, &$originAppMenus, &$addedMenuIdList, &$updatedMenuIdList){
+		self::eachTree(function (&$item, &$parent) use (&$append, $plugin, &$originAppMenus, &$addedMenuIdList, &$updatedMenuIdList) {
 			$saveItem = array_merge([
-				'title'      => $item['title'],
-				'url'        => $item['url'] ?? $menu['name'] ?? '',
-				'show'       => $item['show'] ?? 0,
+				'title' => $item['title'],
+				'url' => $item['url'] ?? $menu['name'] ?? '',
+				'show' => $item['show'] ?? 0,
 				'only_admin' => $item['only_admin'] ?? 0,
-				'only_dev'   => $item['only_dev'] ?? 0,
-				'link'       => $item['link'] ?? (isset($item['child']) ? 0 : 1) ?? 1,
-				'sort'       => $item['sort'] ?? 0,
-				'pid'        => $this->findParentId($item, $parent),
-				'icon'       => $item['icon'] ?? '',
-				'plugin'     => empty($plugin) ? '' : $plugin,
+				'only_dev' => $item['only_dev'] ?? 0,
+				'link' => $item['link'] ?? (isset($item['child']) ? 0 : 1) ?? 1,
+				'sort' => $item['sort'] ?? 0,
+				'pid' => $this->findParentId($item, $parent),
+				'icon' => $item['icon'] ?? '',
+				'plugin' => empty($plugin) ? '' : $plugin,
+				'system' => 1,
 			], $append);
 
 			$menuModel = $this->find($originAppMenus, $saveItem['url'], $plugin);
-			if(empty($menuModel)){
+			if (empty($menuModel)) {
 				$menuModel = $this->model($saveItem);
 				$menuModel->save();
 
 				$addedMenuIdList[] = $menuModel['id'];
 
 				$this->data[] = $menuModel;
-			}else{
+			} else {
 				$menuModel->save([
 					'only_admin' => $saveItem['only_admin'],
-					'only_dev'   => $saveItem['only_dev'],
-					'link'       => $saveItem['link'],
-					'sort'       => $saveItem['sort'],
-					'icon'       => $saveItem['icon'],
+					'only_dev' => $saveItem['only_dev'],
+					'link' => $saveItem['link'],
+					'sort' => $saveItem['sort'],
+					'icon' => $saveItem['icon'],
+					'system' => 1,
 				]);
 
 				$updatedMenuIdList[] = $menuModel['id'];
@@ -155,12 +158,12 @@ class Database extends Driver{
 
 		// 删除不存在的菜单
 		$deleteMenuIdList = [];
-		foreach($originAppMenus as $menu){
-			if(!in_array($menu['id'], $updatedMenuIdList)){
+		foreach ($originAppMenus as $menu) {
+			if (!in_array($menu['id'], $updatedMenuIdList)) {
 				$deleteMenuIdList[] = $menu['id'];
 			}
 		}
-		if(!empty($deleteMenuIdList)){
+		if (!empty($deleteMenuIdList)) {
 			$this->forget([
 				['id', 'in', $deleteMenuIdList,],
 			]);
@@ -170,11 +173,11 @@ class Database extends Driver{
 	/**
 	 * @inheritDoc
 	 */
-	public function forget($condition){
+	public function forget($condition) {
 		$this->model()->where($condition)->delete();
 
-		foreach($this->data as $key => &$menu){
-			if(Arr::where($menu, $condition) === true){
+		foreach ($this->data as $key => &$menu) {
+			if (Arr::where($menu, $condition) === true) {
 				unset($this->data[$key]);
 			}
 		}
@@ -189,8 +192,9 @@ class Database extends Driver{
 	 * @param array $data
 	 * @return \think\Model
 	 */
-	protected function model(array $data = []){
+	protected function model(array $data = []) {
 		$modelClass = $this->modelClass();
+
 		return new $modelClass($data);
 	}
 
@@ -199,17 +203,18 @@ class Database extends Driver{
 	 *
 	 * @return string
 	 */
-	protected function modelClass(){
+	protected function modelClass() {
 		$class = $this->config('model');
 
-		if(!class_exists($class)){
+		if (!class_exists($class)) {
 			throw new ClassNotFoundException("[$class] not found!");
 		}
 
 		return $class;
 	}
 
-	public function refresh($plugin = null){
+	public function refresh($plugin = null) {
 		// TODO: Implement refresh() method.
 	}
+
 }

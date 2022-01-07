@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Auth;
 
-interface AuthVerifyType{
+interface AuthVerifyType {
 
 	/**
 	 * 不验证
@@ -18,4 +18,5 @@ interface AuthVerifyType{
 	 * 验证基础信息
 	 */
 	const BASE = 1;
+
 }

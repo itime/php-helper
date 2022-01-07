@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Plugin;
 
-interface Plugin{
+interface Plugin {
 
 	/**
 	 * 插件安装
@@ -45,4 +45,5 @@ interface Plugin{
 	 * @return mixed
 	 */
 	public function boot(PluginInfo $pluginInfo, Factory $pluginManager);
+
 }

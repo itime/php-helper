@@ -10,7 +10,7 @@ namespace Xin\Menu;
 use Xin\Contracts\Menu\Repository;
 use Xin\Support\Arr;
 
-abstract class Driver implements Repository{
+abstract class Driver implements Repository {
 
 	/**
 	 * @var $config
@@ -22,7 +22,7 @@ abstract class Driver implements Repository{
 	 *
 	 * @param $config
 	 */
-	public function __construct($config){
+	public function __construct($config) {
 		$this->config = $config;
 	}
 
@@ -33,8 +33,8 @@ abstract class Driver implements Repository{
 	 * @param mixed  $default
 	 * @return array|\ArrayAccess|mixed
 	 */
-	public function config($key, $default = null){
-		if(empty($key)){
+	public function config($key, $default = null) {
+		if (empty($key)) {
 			return $this->config;
 		}
 
@@ -48,10 +48,10 @@ abstract class Driver implements Repository{
 	 * @param array    $menus
 	 * @param mixed    $parent
 	 */
-	protected static function eachTree($callback, &$menus, &$parent = null){
-		foreach($menus as &$menu){
+	protected static function eachTree($callback, &$menus, &$parent = null) {
+		foreach ($menus as &$menu) {
 			call_user_func_array($callback, [&$menu, &$parent]);
-			if(isset($menu['child'])){
+			if (isset($menu['child'])) {
 				self::eachTree($callback, $menu['child'], $menu);
 			}
 		}
@@ -64,14 +64,15 @@ abstract class Driver implements Repository{
 	 * @param callable $callback
 	 * @param array    $menus
 	 */
-	public static function eachTreeFilter($callback, &$menus){
-		foreach($menus as $key => &$menu){
-			if(call_user_func_array($callback, [$menu]) === true){
+	public static function eachTreeFilter($callback, &$menus) {
+		foreach ($menus as $key => &$menu) {
+			if (call_user_func_array($callback, [$menu]) === true) {
 				unset($menus[$key]);
-			}elseif(isset($menu['child'])){
+			} elseif (isset($menu['child'])) {
 				self::eachTreeFilter($callback, $menu['child']);
 			}
 		}
 		unset($menu);
 	}
+
 }

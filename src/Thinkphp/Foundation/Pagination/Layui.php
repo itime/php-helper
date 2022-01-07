@@ -4,26 +4,27 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Thinkphp\Foundation\Pagination;
 
 use think\Paginator;
 
-class Layui extends Paginator{
+class Layui extends Paginator {
 
 	/**
 	 * 渲染分页html
 	 *
 	 * @return mixed
 	 */
-	public function render(){
-		if($this->hasPages()){
-			if($this->simple){
+	public function render() {
+		if ($this->hasPages()) {
+			if ($this->simple) {
 				return sprintf(
 					'<div class="layui-box layui-laypage layui-laypage-default">%s %s</div>',
 					$this->getPreviousButton(),
 					$this->getNextButton()
 				);
-			}else{
+			} else {
 				return sprintf(
 					'<div class="layui-box layui-laypage layui-laypage-default">%s %s %s</div>',
 					$this->getPreviousButton(),
@@ -32,6 +33,7 @@ class Layui extends Paginator{
 				);
 			}
 		}
+
 		return "";
 	}
 
@@ -41,8 +43,8 @@ class Layui extends Paginator{
 	 * @param string $text
 	 * @return string
 	 */
-	protected function getPreviousButton($text = "上一页"){
-		if($this->currentPage() <= 1){
+	protected function getPreviousButton($text = "上一页") {
+		if ($this->currentPage() <= 1) {
 			return $this->getDisabledTextWrapper($text);
 		}
 
@@ -59,8 +61,8 @@ class Layui extends Paginator{
 	 * @param string $text
 	 * @return string
 	 */
-	protected function getDisabledTextWrapper($text){
-		return '<span class="layui-disabled">'.$text.'</span>';
+	protected function getDisabledTextWrapper($text) {
+		return '<span class="layui-disabled">' . $text . '</span>';
 	}
 
 	/**
@@ -70,8 +72,8 @@ class Layui extends Paginator{
 	 * @param int    $page
 	 * @return string
 	 */
-	protected function getPageLinkWrapper($url, $page){
-		if($this->currentPage() == $page){
+	protected function getPageLinkWrapper($url, $page) {
+		if ($this->currentPage() == $page) {
 			return $this->getActivePageWrapper($page);
 		}
 
@@ -84,8 +86,8 @@ class Layui extends Paginator{
 	 * @param string $text
 	 * @return string
 	 */
-	protected function getActivePageWrapper($text){
-		return '<span class="layui-laypage-curr"><em class="layui-laypage-em"></em><em>'.$text.'</em></span>';
+	protected function getActivePageWrapper($text) {
+		return '<span class="layui-laypage-curr"><em class="layui-laypage-em"></em><em>' . $text . '</em></span>';
 	}
 
 	/**
@@ -95,8 +97,8 @@ class Layui extends Paginator{
 	 * @param int    $page
 	 * @return string
 	 */
-	protected function getAvailablePageWrapper($url, $page){
-		return '<a href="'.htmlentities($url).'">'.$page.'</a>';
+	protected function getAvailablePageWrapper($url, $page) {
+		return '<a href="' . htmlentities($url) . '">' . $page . '</a>';
 	}
 
 	/**
@@ -105,8 +107,8 @@ class Layui extends Paginator{
 	 * @param string $text
 	 * @return string
 	 */
-	protected function getNextButton($text = '下一页'){
-		if(!$this->hasMore){
+	protected function getNextButton($text = '下一页') {
+		if (!$this->hasMore) {
 			return $this->getDisabledTextWrapper($text);
 		}
 
@@ -120,29 +122,29 @@ class Layui extends Paginator{
 	 *
 	 * @return string
 	 */
-	protected function getLinks(){
-		if($this->simple){
+	protected function getLinks() {
+		if ($this->simple) {
 			return '';
 		}
 
 		$block = [
-			'first'  => null,
+			'first' => null,
 			'slider' => null,
-			'last'   => null,
+			'last' => null,
 		];
 
 		$side = 3;
 		$window = $side * 2;
 
-		if($this->lastPage < $window + 6){
+		if ($this->lastPage < $window + 6) {
 			$block['first'] = $this->getUrlRange(1, $this->lastPage);
-		}elseif($this->currentPage <= $window){
+		} elseif ($this->currentPage <= $window) {
 			$block['first'] = $this->getUrlRange(1, $window + 2);
 			$block['last'] = $this->getUrlRange($this->lastPage - 1, $this->lastPage);
-		}elseif($this->currentPage > ($this->lastPage - $window)){
+		} elseif ($this->currentPage > ($this->lastPage - $window)) {
 			$block['first'] = $this->getUrlRange(1, 2);
 			$block['last'] = $this->getUrlRange($this->lastPage - ($window + 2), $this->lastPage);
-		}else{
+		} else {
 			$block['first'] = $this->getUrlRange(1, 2);
 			$block['slider'] = $this->getUrlRange($this->currentPage - $side, $this->currentPage + $side);
 			$block['last'] = $this->getUrlRange($this->lastPage - 1, $this->lastPage);
@@ -150,16 +152,16 @@ class Layui extends Paginator{
 
 		$html = '';
 
-		if(is_array($block['first'])){
+		if (is_array($block['first'])) {
 			$html .= $this->getUrlLinks($block['first']);
 		}
 
-		if(is_array($block['slider'])){
+		if (is_array($block['slider'])) {
 			$html .= $this->getDots();
 			$html .= $this->getUrlLinks($block['slider']);
 		}
 
-		if(is_array($block['last'])){
+		if (is_array($block['last'])) {
 			$html .= $this->getDots();
 			$html .= $this->getUrlLinks($block['last']);
 		}
@@ -173,10 +175,10 @@ class Layui extends Paginator{
 	 * @param array $urls
 	 * @return string
 	 */
-	protected function getUrlLinks(array $urls){
+	protected function getUrlLinks(array $urls) {
 		$html = '';
 
-		foreach($urls as $page => $url){
+		foreach ($urls as $page => $url) {
 			$html .= $this->getPageLinkWrapper($url, $page);
 		}
 
@@ -188,7 +190,8 @@ class Layui extends Paginator{
 	 *
 	 * @return string
 	 */
-	protected function getDots(){
+	protected function getDots() {
 		return $this->getDisabledTextWrapper('...');
 	}
+
 }

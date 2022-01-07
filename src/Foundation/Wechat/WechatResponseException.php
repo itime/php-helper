@@ -9,7 +9,7 @@ namespace Xin\Foundation\Wechat;
 
 use Throwable;
 
-class WechatResponseException extends WechatException{
+class WechatResponseException extends WechatException {
 
 	/**
 	 * @var \Psr\Http\Message\ResponseInterface|\Psr\Http\Message\StreamInterface
@@ -24,7 +24,7 @@ class WechatResponseException extends WechatException{
 	 * @param mixed           $response
 	 * @param \Throwable|null $previous
 	 */
-	public function __construct($message = "", $code = 0, $response = null, Throwable $previous = null){
+	public function __construct($message = "", $code = 0, $response = null, Throwable $previous = null) {
 		parent::__construct($message, $code, $previous);
 
 		$this->response = $response;
@@ -33,7 +33,7 @@ class WechatResponseException extends WechatException{
 	/**
 	 * @return \Psr\Http\Message\ResponseInterface|\Psr\Http\Message\StreamInterface
 	 */
-	public function getResponse(){
+	public function getResponse() {
 		return $this->response;
 	}
 

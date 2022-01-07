@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Cache;
 
-interface Lock{
+interface Lock {
 
 	/**
 	 * Attempt to acquire the lock.
@@ -46,4 +46,5 @@ interface Lock{
 	 * @return void
 	 */
 	public function forceRelease();
+
 }

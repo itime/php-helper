@@ -7,7 +7,25 @@
 
 namespace Xin\Contracts\Foundation;
 
-interface Repository{
+interface Repository {
+
+	const SCENE_FILTER = 'filter';
+
+	const SCENE_DETAIL = 'detail';
+
+	const SCENE_SHOW = 'show';
+
+	const SCENE_STORE = 'store';
+
+	const SCENE_UPDATE = 'update';
+
+	const SCENE_DELETE = 'delete';
+
+	const SCENE_RECOVERY = 'recovery';
+
+	const SCENE_RESTORE = 'restore';
+
+	const SCENE_VALIDATE = 'validate';
 
 	/**
 	 * 获取数据列表
@@ -17,7 +35,7 @@ interface Repository{
 	 * @param array          $options
 	 * @return mixed
 	 */
-	public function lists($where = [], array $with = [], array $options = []);
+	public function lists($search = [], array $with = [], array $options = []);
 
 	/**
 	 * 获取数据分页
@@ -27,7 +45,7 @@ interface Repository{
 	 * @param array          $options
 	 * @return mixed
 	 */
-	public function paginate($where = [], array $with = [], array $options = []);
+	public function paginate($search = [], array $with = [], array $options = []);
 
 	/**
 	 * 数据过滤
@@ -47,7 +65,7 @@ interface Repository{
 	 * @param array          $options
 	 * @return mixed
 	 */
-	public function get($where = [], $with = [], array $options = []);
+	public function show($filter = [], $with = [], array $options = []);
 
 	/**
 	 * 获取一条数据
@@ -57,7 +75,7 @@ interface Repository{
 	 * @param array $options
 	 * @return mixed
 	 */
-	public function getById($id, $with = [], array $options = []);
+	public function showById($id, $with = [], array $options = []);
 
 	/**
 	 * 获取数据详情
@@ -67,7 +85,7 @@ interface Repository{
 	 * @param array          $options
 	 * @return mixed
 	 */
-	public function info($where = [], $with = [], array $options = []);
+	public function detail($where = [], $with = [], array $options = []);
 
 	/**
 	 * 获取数据详情
@@ -76,82 +94,93 @@ interface Repository{
 	 * @param array $options
 	 * @return mixed
 	 */
-	public function infoById($id, array $with = [], $options = []);
+	public function detailById($id, array $with = [], $options = []);
 
 	/**
 	 * 创建数据
 	 *
 	 * @param array $data
+	 * @param array $options
 	 * @return mixed
 	 */
-	public function create(array $data);
+	public function store(array $data, array $options = []);
 
 	/**
 	 * 更新数据
 	 *
 	 * @param array|callable $where
 	 * @param array          $data
+	 * @param array          $options
 	 * @return mixed
 	 */
-	public function update($where, array $data);
+	public function update($where, array $data, array $options = []);
 
 	/**
 	 * 根据id更新数据
 	 *
 	 * @param int   $id
 	 * @param array $data
+	 * @param array $options
 	 * @return mixed
 	 */
-	public function updateById($id, array $data);
+	public function updateById($id, array $data, array $options = []);
 
 	/**
 	 * 验证数据合法性
 	 *
 	 * @param array  $data
 	 * @param string $scene
+	 * @param array  $options
 	 * @return array
 	 */
-	public function validate(array $data, $scene = 'create');
+	public function validate(array $data, $scene = null, array $options = []);
 
 	/**
 	 * 设置数据字段值
 	 *
-	 * @param        $ids
+	 * @param array  $ids
 	 * @param string $field
 	 * @param mixed  $value
+	 * @param array  $options
 	 * @return array
 	 */
-	public function setField($ids, $field, $value);
+	public function setField(array $ids, $field, $value, array $options = []);
 
 	/**
 	 * 删除数据
 	 *
 	 * @param array|string|int $where
+	 * @param bool             $force
+	 * @param array            $options
 	 */
-	public function delete($where, $force = false);
+	public function delete($where, $force = false, array $options = []);
 
 	/**
 	 * 根据ID列表删除数据
 	 *
 	 * @param array|string|int $ids
+	 * @param bool             $force
+	 * @param array            $options
 	 */
-	public function deleteByIdList($ids, $force = false);
+	public function deleteByIdList(array $ids, $force = false, array $options = []);
 
 	/**
 	 * 恢复数据
 	 *
 	 * @param array $where
+	 * @param array $options
 	 * @return int
 	 */
-	public function restore($where);
+	public function restore($where, array $options = []);
 
 	/**
 	 * 根据id恢复数据
 	 *
 	 * @param array $ids
+	 * @param array $options
 	 * @return int
 	 */
-	public function restoreByIdList($ids);
+	public function restoreByIdList(array $ids, array $options = []);
 
 	/**
 	 * 导入
@@ -159,7 +188,7 @@ interface Repository{
 	 * @param \iterable $list
 	 * @return mixed
 	 */
-	public function import($list);
+	public function import($list, array $options = []);
 
 	/**
 	 * 导出
@@ -167,5 +196,6 @@ interface Repository{
 	 * @param string $path
 	 * @return mixed
 	 */
-	public function export($path);
+	public function export($path, array $options = []);
+
 }

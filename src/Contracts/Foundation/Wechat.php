@@ -7,7 +7,10 @@
 
 namespace Xin\Contracts\Foundation;
 
-interface Wechat{
+/**
+ * @deprecated
+ */
+interface Wechat {
 
 	/**
 	 * 获取默认微信开放平台实例
@@ -61,4 +64,5 @@ interface Wechat{
 	 * @return array
 	 */
 	public function getConfig($type = null, $default = null);
+
 }

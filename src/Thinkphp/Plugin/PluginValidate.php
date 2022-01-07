@@ -4,6 +4,7 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Thinkphp\Plugin;
 
 use think\Validate;
@@ -11,7 +12,7 @@ use think\Validate;
 /**
  * 配置验证器
  */
-class PluginValidate extends Validate{
+class PluginValidate extends Validate {
 
 	/**
 	 * 验证规则
@@ -19,9 +20,9 @@ class PluginValidate extends Validate{
 	 * @var array
 	 */
 	protected $rule = [
-		'name'    => 'require|alphaDash|length:3,32|unique:plugin',
-		'title'   => 'require|length:2,24',
-		'author'  => 'require|length:2,50',
+		'name' => 'require|alphaDash|length:3,32|unique:plugin',
+		'title' => 'require|length:2,24',
+		'author' => 'require|length:2,50',
 		'version' => 'require',
 	];
 
@@ -31,9 +32,9 @@ class PluginValidate extends Validate{
 	 * @var array
 	 */
 	protected $field = [
-		'name'    => '插件标识',
-		'title'   => '插件名称',
-		'author'  => '作者姓名',
+		'name' => '插件标识',
+		'title' => '插件名称',
+		'author' => '作者姓名',
 		'version' => '版本号',
 	];
 
@@ -43,4 +44,5 @@ class PluginValidate extends Validate{
 	 * @var array
 	 */
 	protected $scene = [];
+
 }

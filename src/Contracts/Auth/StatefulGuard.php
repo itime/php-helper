@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Auth;
 
-interface StatefulGuard extends Guard{
+interface StatefulGuard extends Guard {
 
 	/**
 	 * 登录
@@ -34,7 +34,7 @@ interface StatefulGuard extends Guard{
 	 * @return \Xin\Contracts\Auth\Guard
 	 */
 	public function loginUsingCredential(
-		array $credentials,
+		array    $credentials,
 		\Closure $notExistCallback = null,
 		\Closure $preCheckCallback = null
 	);
@@ -45,4 +45,5 @@ interface StatefulGuard extends Guard{
 	 * @return void
 	 */
 	public function logout();
+
 }

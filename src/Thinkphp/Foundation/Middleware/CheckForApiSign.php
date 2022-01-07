@@ -13,7 +13,7 @@ use think\Request;
 use Xin\Support\Arr;
 use Xin\Support\Str;
 
-class CheckForApiSign{
+class CheckForApiSign {
 
 	/**
 	 * @var \think\App
@@ -28,7 +28,7 @@ class CheckForApiSign{
 	/**
 	 * @param \think\App $app
 	 */
-	public function __construct(App $app){
+	public function __construct(App $app) {
 		$this->app = $app;
 	}
 
@@ -40,8 +40,8 @@ class CheckForApiSign{
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	public function handle(Request $request, \Closure $next){
-		if($this->app->config->get('app.env') != 'local'){
+	public function handle(Request $request, \Closure $next) {
+		if ($this->app->config->get('app.env') != 'local') {
 			self::setSecretKey($request->app('access_key'));
 			$this->check($request);
 		}
@@ -54,14 +54,14 @@ class CheckForApiSign{
 	 *
 	 * @param \think\Request $request
 	 */
-	protected function check(Request $request){
+	protected function check(Request $request) {
 		$timestamp = $request->get('timestamp');
-		if($timestamp < $request->time() - 600){
+		if ($timestamp < $request->time() - 600) {
 			throw new HttpException(404, '页面不存在！');
 		}
 
 		$data = [];
-		if(!$request->isGet()){
+		if (!$request->isGet()) {
 			$method = $request->method();
 			$data = $request->$method();
 		}
@@ -73,7 +73,7 @@ class CheckForApiSign{
 		$signType = $this->resolveSignType($request);
 		$makeSign = $this->makeSign($data, $signType);
 
-		if($makeSign != $sign){
+		if ($makeSign != $sign) {
 			throw new \LogicException("sign invalid.");
 		}
 	}
@@ -84,13 +84,13 @@ class CheckForApiSign{
 	 * @param \think\Request $request
 	 * @return string
 	 */
-	protected function resolveSign(Request $request){
+	protected function resolveSign(Request $request) {
 		$sign = $request->get('sign');
-		if(empty($sign)){
+		if (empty($sign)) {
 			$sign = $request->header('sign');
 		}
 
-		if(empty($sign) || !is_string($sign)){
+		if (empty($sign) || !is_string($sign)) {
 			throw new \LogicException("sign invalid.");
 		}
 
@@ -103,13 +103,13 @@ class CheckForApiSign{
 	 * @param \think\Request $request
 	 * @return array|mixed|string
 	 */
-	protected function resolveSignType(Request $request){
+	protected function resolveSignType(Request $request) {
 		$signType = $request->get('sign_type');
-		if(empty($signType)){
+		if (empty($signType)) {
 			$signType = $request->header('sign_type');
 		}
 
-		if(empty($signType)){
+		if (empty($signType)) {
 			$signType = 'md5';
 		}
 
@@ -119,7 +119,7 @@ class CheckForApiSign{
 	/**
 	 * 加密密钥
 	 */
-	protected static function secretKey(){
+	protected static function secretKey() {
 		return self::$secretKey;
 	}
 
@@ -131,9 +131,10 @@ class CheckForApiSign{
 	 * @param string $signType
 	 * @return string
 	 */
-	protected function makeSign($data, $signType){
+	protected function makeSign($data, $signType) {
 		Arr::sort($data);
-		$queryString = Str::buildUrlQuery($data).static::secretKey();
+		$queryString = Str::buildUrlQuery($data) . static::secretKey();
+
 		return md5($queryString);
 	}
 
@@ -142,7 +143,8 @@ class CheckForApiSign{
 	 *
 	 * @param string $secretKey
 	 */
-	public static function setSecretKey($secretKey){
+	public static function setSecretKey($secretKey) {
 		self::$secretKey = $secretKey;
 	}
+
 }

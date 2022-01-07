@@ -11,7 +11,7 @@ use app\Request;
 use Xin\Thinkphp\Saas\DatabaseApp;
 use Xin\Thinkphp\Saas\Exceptions\AppNotFoundException;
 
-class SetApiApp{
+class SetApiApp {
 
 	/**
 	 * api模式下检查当前应用是否合法
@@ -20,10 +20,10 @@ class SetApiApp{
 	 * @param \Closure                  $next
 	 * @return mixed
 	 */
-	public function handle($request, \Closure $next){
-		$request->setAppResolver(function(Request $request){
+	public function handle($request, \Closure $next) {
+		$request->setAppResolver(function (Request $request) {
 			$accessId = $request->get('access_id', '', 'trim');
-			if(empty($accessId)){
+			if (empty($accessId)) {
 				throw new \LogicException('access_id param invalid.');
 			}
 
@@ -42,12 +42,13 @@ class SetApiApp{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	protected function resolve($accessId){
+	protected function resolve($accessId) {
 		$xApp = DatabaseApp::where('access_id', $accessId)->find();
-		if(!$xApp){
+		if (!$xApp) {
 			throw AppNotFoundException::ofAccessId($accessId);
 		}
 
 		return $xApp;
 	}
+
 }

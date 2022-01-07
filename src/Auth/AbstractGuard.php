@@ -11,7 +11,7 @@ use Xin\Contracts\Auth\AuthVerifyType;
 use Xin\Contracts\Auth\Guard as GuardContract;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 
-abstract class AbstractGuard implements GuardContract{
+abstract class AbstractGuard implements GuardContract {
 
 	/**
 	 * @var string
@@ -45,7 +45,7 @@ abstract class AbstractGuard implements GuardContract{
 	 * @param array                     $config
 	 * @param UserProviderContract|null $provider
 	 */
-	public function __construct($name, array $config, UserProviderContract $provider = null){
+	public function __construct($name, array $config, UserProviderContract $provider = null) {
 		$this->name = $name;
 		$this->config = $config;
 		$this->provider = $provider;
@@ -55,12 +55,12 @@ abstract class AbstractGuard implements GuardContract{
 	 * @inheritDoc
 	 * @throws \Xin\Auth\AuthenticationException
 	 */
-	public function getUser($field = null, $default = null, $verifyType = AuthVerifyType::BASE){
-		if(is_null($this->user)){
+	public function getUser($field = null, $default = null, $verifyType = AuthVerifyType::BASE) {
+		if (is_null($this->user)) {
 			$this->user = $this->resolveUser();
 		}
 
-		if($verifyType && is_null($this->user)){
+		if ($verifyType && is_null($this->user)) {
 			throw new AuthenticationException(
 				$this->name,
 				isset($this->config['auth_url']) ? $this->config['auth_url'] : '',
@@ -68,7 +68,7 @@ abstract class AbstractGuard implements GuardContract{
 			);
 		}
 
-		if($verifyType){
+		if ($verifyType) {
 			$this->preCheck($this->user, $verifyType);
 		}
 
@@ -81,8 +81,8 @@ abstract class AbstractGuard implements GuardContract{
 	 * @param mixed $user
 	 * @param int   $verifyType
 	 */
-	protected function preCheck($user, $verifyType){
-		if(!$this->preCheckCallback){
+	protected function preCheck($user, $verifyType) {
+		if (!$this->preCheckCallback) {
 			return;
 		}
 
@@ -93,24 +93,24 @@ abstract class AbstractGuard implements GuardContract{
 	 * @inheritDoc
 	 * @throws \Xin\Auth\AuthenticationException
 	 */
-	public function getUserId($verifyType = AuthVerifyType::BASE){
+	public function getUserId($verifyType = AuthVerifyType::BASE) {
 		return $this->getUser('id', 0, $verifyType);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function temporaryUser($user){
+	public function temporaryUser($user) {
 		$this->user = $user;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function check(){
-		try{
+	public function check() {
+		try {
 			return $this->getUserId(AuthVerifyType::NOT);
-		}catch(AuthenticationException $e){
+		} catch (AuthenticationException $e) {
 			return false;
 		}
 	}
@@ -118,7 +118,7 @@ abstract class AbstractGuard implements GuardContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function guest(){
+	public function guest() {
 		return !$this->check();
 	}
 
@@ -130,15 +130,15 @@ abstract class AbstractGuard implements GuardContract{
 	/**
 	 * @return array
 	 */
-	public function getConfig(){
+	public function getConfig() {
 		return $this->config;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function setPreCheckCallback(\Closure $preCheckCallback){
-		if(!is_callable($preCheckCallback)){
+	public function setPreCheckCallback(\Closure $preCheckCallback) {
+		if (!is_callable($preCheckCallback)) {
 			throw new \RuntimeException("setPreCheckCallback first parameter must callback.");
 		}
 
@@ -150,7 +150,8 @@ abstract class AbstractGuard implements GuardContract{
 	 *
 	 * @return \Xin\Contracts\Auth\UserProvider|null
 	 */
-	public function getProvider(){
+	public function getProvider() {
 		return $this->provider;
 	}
+
 }

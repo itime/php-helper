@@ -5,7 +5,7 @@
 
 namespace Xin\Contracts\Auth;
 
-interface Guard{
+interface Guard {
 
 	/**
 	 * 获取用户信息

@@ -4,9 +4,10 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Contracts\Menu;
 
-interface Factory{
+interface Factory {
 
 	/**
 	 * 使用菜单仓库
@@ -20,4 +21,5 @@ interface Factory{
 	 * @return \Xin\Contracts\Menu\Repository
 	 */
 	public function menu($name = null);
+
 }

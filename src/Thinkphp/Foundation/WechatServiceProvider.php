@@ -11,20 +11,21 @@ use think\Service;
 use Xin\Contracts\Foundation\Wechat as WechatContract;
 use Xin\Foundation\Wechat\Wechat;
 
-class WechatServiceProvider extends Service{
+class WechatServiceProvider extends Service {
 
 	/**
 	 * 启动器
 	 */
-	public function register(){
+	public function register() {
 		$this->app->bind([
-			'wechat'              => WechatContract::class,
+			'wechat' => WechatContract::class,
 			WechatContract::class => Wechat::class,
-			Wechat::class         => function(){
+			Wechat::class => function () {
 				return new Wechat(
 					$this->app->config->get('wechat')
 				);
 			},
 		]);
 	}
+
 }

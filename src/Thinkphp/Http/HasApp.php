@@ -7,7 +7,7 @@
 
 namespace Xin\Thinkphp\Http;
 
-trait HasApp{
+trait HasApp {
 
 	/**
 	 * @var mixed
@@ -24,7 +24,7 @@ trait HasApp{
 	 *
 	 * @param \Closure $resolverCallback
 	 */
-	public function setAppResolver(\Closure $resolverCallback){
+	public function setAppResolver(\Closure $resolverCallback) {
 		$this->appResolverCallback = $resolverCallback;
 	}
 
@@ -33,7 +33,7 @@ trait HasApp{
 	 *
 	 * @return bool
 	 */
-	public function hasAppResolver(){
+	public function hasAppResolver() {
 		return $this->appResolverCallback != null;
 	}
 
@@ -44,12 +44,12 @@ trait HasApp{
 	 * @param mixed  $default
 	 * @return \Xin\Thinkphp\Saas\DatabaseApp|mixed
 	 */
-	public function app($field = null, $default = null){
-		if(is_null($this->appResolverCallback)){
+	public function app($field = null, $default = null) {
+		if (is_null($this->appResolverCallback)) {
 			throw new \RuntimeException('not defined app getter.');
 		}
 
-		if(is_null($this->xApp)){
+		if (is_null($this->xApp)) {
 			$this->xApp = call_user_func($this->appResolverCallback, $this);
 		}
 
@@ -61,7 +61,8 @@ trait HasApp{
 	 *
 	 * @return int
 	 */
-	public function appId(){
+	public function appId() {
 		return $this->app('id', 0);
 	}
+
 }

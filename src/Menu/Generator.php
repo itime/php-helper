@@ -9,7 +9,7 @@ namespace Xin\Menu;
 
 use Xin\Contracts\Menu\Generator as GeneratorContract;
 
-class Generator implements GeneratorContract{
+class Generator implements GeneratorContract {
 
 	/**
 	 * @var array
@@ -39,7 +39,7 @@ class Generator implements GeneratorContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function generate(array $menus, array $options = []){
+	public function generate(array $menus, array $options = []) {
 		$this->menus = $menus;
 		$this->query = isset($options['query']) ? $options['query'] : [];
 		$this->isAdministrator = isset($options['is_administrator']) ? $options['is_administrator'] : false;
@@ -61,30 +61,30 @@ class Generator implements GeneratorContract{
 	 * @param array  $menus
 	 * @return bool
 	 */
-	protected function tree($rule, &$menus){
+	protected function tree($rule, &$menus) {
 		$isActive = false;
 
-		foreach($menus as &$menu){
+		foreach ($menus as &$menu) {
 			$menu['active'] = false;
 			$menu['show'] = $this->resolveIshow($menu);
 
-			if(isset($menu['child']) && $this->tree($rule, $menu['child'])){
+			if (isset($menu['child']) && $this->tree($rule, $menu['child'])) {
 				$menu['active'] = $isActive = true;
-			}elseif($menu['url'] != ''){
+			} elseif ($menu['url'] != '') {
 				$menuRule = explode("?", $menu['url'], 2);
-				if($menuRule[0] != $rule){
+				if ($menuRule[0] != $rule) {
 					continue;
 				}
 
 				// 校验参数
-				if(!isset($menuRule[1]) || $this->checkQueryParams($menuRule[1])){
+				if (!isset($menuRule[1]) || $this->checkQueryParams($menuRule[1])) {
 					$menu['active'] = $isActive = true;
 				}
 			}
 
-			if($menu['active'] && isset($menu['title']) && !empty($menu['title'])){
+			if ($menu['active'] && isset($menu['title']) && !empty($menu['title'])) {
 				$this->breads[] = [
-					'name'  => $this->getFirstUrl($menu),
+					'name' => $this->getFirstUrl($menu),
 					'title' => $menu['title'],
 				];
 			}
@@ -100,15 +100,15 @@ class Generator implements GeneratorContract{
 	 * @param array $menu
 	 * @return bool
 	 */
-	protected function resolveIshow($menu){
-		if(isset($menu['only_admin']) && $menu['only_admin']){
-			if(!$this->isAdministrator){
+	protected function resolveIshow($menu) {
+		if (isset($menu['only_admin']) && $menu['only_admin']) {
+			if (!$this->isAdministrator) {
 				return false;
 			}
 		}
 
-		if(isset($menu['only_dev']) && $menu['only_dev']){
-			if(!$this->isDevelop){
+		if (isset($menu['only_dev']) && $menu['only_dev']) {
+			if (!$this->isDevelop) {
 				return false;
 			}
 		}
@@ -122,12 +122,12 @@ class Generator implements GeneratorContract{
 	 * @param array $menu
 	 * @return string
 	 */
-	protected function getFirstUrl($menu){
-		if(isset($menu['url']) && strpos($menu['url'], '/')){
+	protected function getFirstUrl($menu) {
+		if (isset($menu['url']) && strpos($menu['url'], '/')) {
 			return $menu['url'];
 		}
 
-		if(isset($menu['child']) && isset($menu['child'][0])){
+		if (isset($menu['child']) && isset($menu['child'][0])) {
 			return $this->getFirstUrl($menu['child'][0]);
 		}
 
@@ -140,11 +140,11 @@ class Generator implements GeneratorContract{
 	 * @param string $queryStr
 	 * @return bool
 	 */
-	protected function checkQueryParams($queryStr){
+	protected function checkQueryParams($queryStr) {
 		parse_str($queryStr, $query);
 
-		foreach($query as $k => $v){
-			if(!isset($this->query[$k]) || $this->query[$k] != $v){
+		foreach ($query as $k => $v) {
+			if (!isset($this->query[$k]) || $this->query[$k] != $v) {
 				return false;
 			}
 		}

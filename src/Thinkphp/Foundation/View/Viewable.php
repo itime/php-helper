@@ -10,7 +10,7 @@ namespace Xin\Thinkphp\Foundation\View;
 /**
  * @property-read \think\App app
  */
-trait Viewable{
+trait Viewable {
 
 	/**
 	 * 模板变量赋值
@@ -19,7 +19,7 @@ trait Viewable{
 	 * @param mixed        $value 变量值
 	 * @return $this
 	 */
-	protected function assign($name, $value = null){
+	protected function assign($name, $value = null) {
 		$this->app['view']->assign($name, $value);
 
 		return $this;
@@ -34,7 +34,7 @@ trait Viewable{
 	 * @noinspection PhpUnhandledExceptionInspection
 	 * @noinspection PhpDocMissingThrowsInspection
 	 */
-	protected function fetch(string $template = '', array $vars = []){
+	protected function fetch(string $template = '', array $vars = []) {
 		return $this->app['view']->fetch($template, $vars);
 	}
 
@@ -45,7 +45,8 @@ trait Viewable{
 	 * @param array  $vars 模板变量
 	 * @return string
 	 */
-	protected function display(string $template = '', array $vars = []){
+	protected function display(string $template = '', array $vars = []) {
 		return $this->app['view']->display($template, $vars);
 	}
+
 }

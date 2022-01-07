@@ -11,7 +11,7 @@ use app\Request;
 use think\App;
 use think\exception\HttpException;
 
-abstract class CheckForPluginAccess{
+abstract class CheckForPluginAccess {
 
 	/**
 	 * @var \think\App
@@ -28,7 +28,7 @@ abstract class CheckForPluginAccess{
 	 *
 	 * @param \think\App $app
 	 */
-	public function __construct(App $app){
+	public function __construct(App $app) {
 		$this->app = $app;
 	}
 
@@ -37,11 +37,11 @@ abstract class CheckForPluginAccess{
 	 * @param callable     $next
 	 * @return \think\response\View
 	 */
-	public function handle(Request $request, $next){
-		$this->app->middleware->add(function($request, \Closure $next){
-			if(!$this->hasPluginAccess($request)){
+	public function handle(Request $request, $next) {
+		$this->app->middleware->add(function ($request, \Closure $next) {
+			if (!$this->hasPluginAccess($request)) {
 				$e = new HttpException(403, '无此权限！');
-				if($request->isAjax()){
+				if ($request->isAjax()) {
 					throw $e;
 				}
 
@@ -60,9 +60,9 @@ abstract class CheckForPluginAccess{
 	 * @param \app\Request $request
 	 * @return bool
 	 */
-	protected function hasPluginAccess(Request $request){
+	protected function hasPluginAccess(Request $request) {
 		$plugin = $request->plugin();
-		if(empty($plugin) || in_array($plugin, $this->exclude)){
+		if (empty($plugin) || in_array($plugin, $this->exclude)) {
 			return true;
 		}
 
@@ -79,4 +79,5 @@ abstract class CheckForPluginAccess{
 	 * @return \think\Response
 	 */
 	abstract protected function notAccessView(HttpException $e);
+
 }

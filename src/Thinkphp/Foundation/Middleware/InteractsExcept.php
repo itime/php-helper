@@ -4,6 +4,7 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Thinkphp\Foundation\Middleware;
 
 use think\Request;
@@ -11,14 +12,16 @@ use think\Request;
 /**
  * @property array $except
  */
-trait InteractsExcept{
+trait InteractsExcept {
 
 	/**
 	 * @param \Xin\Thinkphp\Http\Requestable $request
 	 * @return bool
 	 */
-	protected function isExcept(Request $request){
+	protected function isExcept(Request $request) {
 		$except = property_exists($this, 'except') ? $this->except : [];
+
 		return $request->pathIs($except);
 	}
+
 }

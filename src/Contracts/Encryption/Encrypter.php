@@ -4,9 +4,10 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Contracts\Encryption;
 
-interface Encrypter{
+interface Encrypter {
 
 	/**
 	 * Encrypt the given value.
@@ -27,4 +28,5 @@ interface Encrypter{
 	 * @throws \Xin\Contracts\Encryption\DecryptException
 	 */
 	public function decrypt($payload, $unserialize = true);
+
 }

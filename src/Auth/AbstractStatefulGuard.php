@@ -9,13 +9,13 @@ namespace Xin\Auth;
 
 use Xin\Contracts\Auth\StatefulGuard as StatefulGuardContract;
 
-abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGuardContract{
+abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGuardContract {
 
 	/**
 	 * @inheritDoc
 	 */
-	public function temporaryUser($user, $abort = true){
-		if(!$this->check()){
+	public function temporaryUser($user, $abort = true) {
+		if (!$this->check()) {
 			return;
 		}
 
@@ -27,7 +27,7 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	/**
 	 * @inheritDoc
 	 */
-	public function login($user){
+	public function login($user) {
 		$this->updateSession($user);
 
 		$this->user = $user;
@@ -40,9 +40,9 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	/**
 	 * @inheritDoc
 	 */
-	public function loginUsingId($id){
+	public function loginUsingId($id) {
 		$user = $this->provider->getById($id);
-		if(empty($user)){
+		if (empty($user)) {
 			throw new LoginException('用户不存在!', 40401);
 		}
 
@@ -53,16 +53,16 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	 * @inheritDoc
 	 */
 	public function loginUsingCredential(
-		array $credentials,
+		array    $credentials,
 		\Closure $notExistCallback = null,
 		\Closure $preCheckCallback = null
-	){
+	) {
 		$user = $this->credentials($credentials, $notExistCallback);
 
 		// password field exist.
-		if($this->hasPasswordInCredential($credentials)){
+		if ($this->hasPasswordInCredential($credentials)) {
 			$password = $this->resolvePasswordInCredential($credentials);
-			if(!$this->provider->validatePassword($user, $password)){
+			if (!$this->provider->validatePassword($user, $password)) {
 				// If the authentication attempt fails we will fire an event so that the user
 				// may be notified of any suspicious attempts to access their account from
 				// an unrecognized user. A developer may listen to this event as needed.
@@ -72,7 +72,7 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 			}
 		}
 
-		if(is_callable($preCheckCallback)){
+		if (is_callable($preCheckCallback)) {
 			call_user_func($preCheckCallback, $user);
 		}
 
@@ -85,7 +85,7 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	 * @param array $credentials
 	 * @return bool
 	 */
-	protected function hasPasswordInCredential($credentials){
+	protected function hasPasswordInCredential($credentials) {
 		$passwordName = $this->provider->getPasswordName();
 
 		return isset($credentials[$passwordName]);
@@ -97,7 +97,7 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	 * @param array $credentials
 	 * @return mixed
 	 */
-	protected function resolvePasswordInCredential(array $credentials){
+	protected function resolvePasswordInCredential(array $credentials) {
 		$passwordName = $this->provider->getPasswordName();
 
 		return $credentials[$passwordName];
@@ -108,16 +108,16 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	 * @param \Closure|null  $notExistCallback
 	 * @return mixed
 	 */
-	protected function credentials(array $credentials, \Closure $notExistCallback = null){
-		if(isset($credentials['password'])){
+	protected function credentials(array $credentials, \Closure $notExistCallback = null) {
+		if (isset($credentials['password'])) {
 			unset($credentials['password']);
 		}
 
 		$user = $this->provider->getByCredentials($credentials);
-		if(empty($user)){
-			if(is_callable($notExistCallback)){
+		if (empty($user)) {
+			if (is_callable($notExistCallback)) {
 				$user = call_user_func($notExistCallback, $credentials);
-			}else{
+			} else {
 				throw new LoginException("用户不存在！", 40402);
 			}
 		}
@@ -128,7 +128,7 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	/**
 	 * @inheritDoc
 	 */
-	public function logout(){
+	public function logout() {
 		$this->fireLogoutEvent($this->user);
 
 		$this->user = null;
@@ -139,8 +139,8 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	 *
 	 * @return string
 	 */
-	public function getName(){
-		return 'login_'.$this->name.'_'.sha1(static::class);
+	public function getName() {
+		return 'login_' . $this->name . '_' . sha1(static::class);
 	}
 
 	/**
@@ -149,8 +149,8 @@ abstract class AbstractStatefulGuard extends AbstractGuard implements StatefulGu
 	 * @param mixed $user
 	 * @return string
 	 */
-	protected function makeAuthSign($user){
-		return sha1(md5($user['id']).time());
+	protected function makeAuthSign($user) {
+		return sha1(md5($user['id']) . time());
 	}
 
 	/**

@@ -9,7 +9,7 @@ namespace Xin\Hint;
 
 use Xin\Contracts\Hint\Factory as HintFactory;
 
-class HintManager implements HintFactory{
+class HintManager implements HintFactory {
 
 	/**
 	 * @var \Psr\Container\ContainerInterface
@@ -46,7 +46,7 @@ class HintManager implements HintFactory{
 	 * @param string $name
 	 * @return \Xin\Contracts\Hint\Hint
 	 */
-	public function hint($name = null){
+	public function hint($name = null) {
 		$name = $name ?: $this->getDefaultDriver();
 
 		return $this->hints[$name] ?? $this->hints[$name] = $this->resolve($name);
@@ -57,7 +57,7 @@ class HintManager implements HintFactory{
 	 *
 	 * @return $this|\Xin\Hint\HintManager
 	 */
-	public function shouldUseApi(){
+	public function shouldUseApi() {
 		return $this->shouldUse('api');
 	}
 
@@ -66,7 +66,7 @@ class HintManager implements HintFactory{
 	 *
 	 * @return $this|\Xin\Hint\HintManager
 	 */
-	public function shouldUseWeb(){
+	public function shouldUseWeb() {
 		return $this->shouldUse('web');
 	}
 
@@ -75,8 +75,9 @@ class HintManager implements HintFactory{
 	 *
 	 * @return $this|\Xin\Hint\HintManager
 	 */
-	public function shouldUse($name){
+	public function shouldUse($name) {
 		$this->setDefaultDriver($name);
+
 		return $this;
 	}
 
@@ -86,13 +87,13 @@ class HintManager implements HintFactory{
 	 * @param string $name
 	 * @return \Xin\Contracts\Hint\Hint
 	 */
-	protected function resolve($name){
-		if(isset($this->customCreators[$name])){
+	protected function resolve($name) {
+		if (isset($this->customCreators[$name])) {
 			return $this->callCustomCreator($name);
 		}
 
-		$driverMethod = 'create'.ucfirst($name).'Driver';
-		if(method_exists($this, $driverMethod)){
+		$driverMethod = 'create' . ucfirst($name) . 'Driver';
+		if (method_exists($this, $driverMethod)) {
 			return $this->{$driverMethod}();
 		}
 
@@ -107,7 +108,7 @@ class HintManager implements HintFactory{
 	 * @param string $name
 	 * @return \Xin\Contracts\Hint\Hint
 	 */
-	protected function callCustomCreator($name){
+	protected function callCustomCreator($name) {
 		return $this->customCreators[$name]($name);
 	}
 
@@ -116,7 +117,7 @@ class HintManager implements HintFactory{
 	 *
 	 * @param \Closure $resolverCallback
 	 */
-	public function setAutoResolver(\Closure $resolverCallback){
+	public function setAutoResolver(\Closure $resolverCallback) {
 		$this->autoResolverCallback = $resolverCallback;
 	}
 
@@ -127,7 +128,7 @@ class HintManager implements HintFactory{
 	 * @param \Closure $callback
 	 * @return $this
 	 */
-	public function extend($driver, \Closure $callback){
+	public function extend($driver, \Closure $callback) {
 		$this->customCreators[$driver] = $callback;
 
 		return $this;
@@ -138,12 +139,12 @@ class HintManager implements HintFactory{
 	 *
 	 * @return string
 	 */
-	public function getDefaultDriver(){
-		if($this->default){
+	public function getDefaultDriver() {
+		if ($this->default) {
 			return $this->default;
 		}
 
-		if($this->autoResolverCallback){
+		if ($this->autoResolverCallback) {
 			return call_user_func($this->autoResolverCallback);
 		}
 
@@ -155,7 +156,7 @@ class HintManager implements HintFactory{
 	 *
 	 * @param string $name
 	 */
-	public function setDefaultDriver($name){
+	public function setDefaultDriver($name) {
 		$this->default = $name;
 	}
 
@@ -166,7 +167,7 @@ class HintManager implements HintFactory{
 	 * @param array  $arguments
 	 * @return mixed
 	 */
-	public function __call($name, $arguments){
+	public function __call($name, $arguments) {
 		return call_user_func_array([$this->hint(), $name], $arguments);
 	}
 

@@ -10,7 +10,7 @@ namespace Xin\Thinkphp\Saas;
 use think\model\concern\SoftDelete;
 use think\model\Pivot;
 
-class DatabaseAppPlugin extends Pivot{
+class DatabaseAppPlugin extends Pivot {
 
 	use SoftDelete;
 
@@ -28,4 +28,5 @@ class DatabaseAppPlugin extends Pivot{
 	 * @var bool
 	 */
 	protected $autoWriteTimestamp = true;
+
 }

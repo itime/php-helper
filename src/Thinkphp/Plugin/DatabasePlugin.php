@@ -22,7 +22,7 @@ use Xin\Support\Version;
  * @property-read string local_version
  * @property array       config
  */
-class DatabasePlugin extends Model{
+class DatabasePlugin extends Model {
 
 	// 缓存前缀
 	const CACHE_PREFIX = 'plugin:';
@@ -51,14 +51,14 @@ class DatabasePlugin extends Model{
 	 *
 	 * @param static $model
 	 */
-	public static function onAfterWrite(self $model):void{
+	public static function onAfterWrite(self $model): void {
 		// 检查改变后的数据是否存在config字段，如果存在则更新缓存
 		$changeData = $model->getChangedData();
 
 		// 安全更新
-		try{
+		try {
 			static::setPluginConfigCache($model->getOrigin('name'), $model->getAttr('config'));
-		}catch(\Throwable $e){
+		} catch (\Throwable $e) {
 		}
 	}
 
@@ -70,27 +70,27 @@ class DatabasePlugin extends Model{
 	 * @param false  $isUpdateCache
 	 * @return mixed
 	 */
-	public static function getPluginConfig($plugin, $default = null, $isUpdateCache = false){
-		if(isset(static::$pluginConfigCacheList[$plugin])){
+	public static function getPluginConfig($plugin, $default = null, $isUpdateCache = false) {
+		if (isset(static::$pluginConfigCacheList[$plugin])) {
 			$config = static::$pluginConfigCacheList[$plugin];
-		}else{
+		} else {
 			$key = static::resolvePluginConfigKey($plugin);
 			$config = Cache::get($key);
 
 			// 加载数据库数据
-			if(!$config){
+			if (!$config) {
 				$config = static::where('name', $plugin)->value('config');
 				$config = json_decode($config, true);
 				static::setPluginConfigCache($plugin, $config);
 			}
 		}
 
-		if(is_null($config)){
+		if (is_null($config)) {
 			$config = $default instanceof \Closure ? $default() : $default;
 
 			static::$pluginConfigCacheList[$plugin] = $default;
 
-			if($isUpdateCache){
+			if ($isUpdateCache) {
 				static::setPluginConfigCache($plugin, $config);
 			}
 		}
@@ -104,7 +104,7 @@ class DatabasePlugin extends Model{
 	 * @param string $plugin
 	 * @param mixed  $config
 	 */
-	public static function setPluginConfigCache($plugin, $config){
+	public static function setPluginConfigCache($plugin, $config) {
 		$key = static::resolvePluginConfigKey($plugin);
 
 		Cache::set($key, $config instanceof \Closure ? $config() : $config);
@@ -115,9 +115,9 @@ class DatabasePlugin extends Model{
 	 *
 	 * @param string $plugin
 	 */
-	public static function refreshPluginConfigCache($plugin){
+	public static function refreshPluginConfigCache($plugin) {
 		$config = static::where('name', $plugin)->value('config');
-		if(!$config){
+		if (!$config) {
 			return;
 		}
 
@@ -131,8 +131,8 @@ class DatabasePlugin extends Model{
 	 * @param string $plugin
 	 * @return string
 	 */
-	public static function resolvePluginConfigKey($plugin){
-		return static::CACHE_PREFIX.$plugin;
+	public static function resolvePluginConfigKey($plugin) {
+		return static::CACHE_PREFIX . $plugin;
 	}
 
 	/**
@@ -142,20 +142,21 @@ class DatabasePlugin extends Model{
 	 * @return \Xin\Contracts\Plugin\PluginInfo|null
 	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
-	public function getLocalInfo($attr = null){
+	public function getLocalInfo($attr = null) {
 		/** @var PluginFactory $pluginFactory */
 		$pluginFactory = app(PluginFactory::class);
-		try{
+		try {
 			/** @var \Xin\Plugin\PluginInfo $info */
 			$info = $pluginFactory->plugin($this->getOrigin('name'));
 
-			if($attr){
+			if ($attr) {
 				return $info->getInfo($attr);
 			}
 
 			return $info;
-		}catch(PluginNotFoundException $e){
+		} catch (PluginNotFoundException $e) {
 		}
+
 		return null;
 	}
 
@@ -165,7 +166,7 @@ class DatabasePlugin extends Model{
 	 * @return \Xin\Contracts\Plugin\PluginInfo|null
 	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
-	protected function getLocalInfoAttr(){
+	protected function getLocalInfoAttr() {
 		return $this->getLocalInfo();
 	}
 
@@ -175,7 +176,7 @@ class DatabasePlugin extends Model{
 	 * @return \Xin\Contracts\Plugin\PluginInfo|null
 	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
-	protected function getLocalVersionAttr(){
+	protected function getLocalVersionAttr() {
 		return $this->getLocalInfo('version');
 	}
 
@@ -184,9 +185,9 @@ class DatabasePlugin extends Model{
 	 *
 	 * @return bool
 	 */
-	protected function getIsNewVersionAttr(){
+	protected function getIsNewVersionAttr() {
 		$localVersion = $this->getAttr('local_version');
-		if(!$localVersion){
+		if (!$localVersion) {
 			return false;
 		}
 

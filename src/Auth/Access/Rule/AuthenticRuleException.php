@@ -7,6 +7,6 @@
 
 namespace Xin\Auth\Access\Rule;
 
-class AuthenticRuleException extends \Exception{
+class AuthenticRuleException extends \Exception {
 
 }

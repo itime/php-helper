@@ -4,9 +4,10 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Auth\Events;
 
-class Logout{
+class Logout {
 
 	/**
 	 * The authentication guard name.
@@ -29,8 +30,9 @@ class Logout{
 	 * @param \Xin\Contracts\Auth\Guard $user
 	 * @return void
 	 */
-	public function __construct($guard, $user){
+	public function __construct($guard, $user) {
 		$this->user = $user;
 		$this->guard = $guard;
 	}
+
 }

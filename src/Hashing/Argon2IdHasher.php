@@ -9,7 +9,7 @@ namespace Xin\Hashing;
 
 use RuntimeException;
 
-class Argon2IdHasher extends ArgonHasher{
+class Argon2IdHasher extends ArgonHasher {
 
 	/**
 	 * Check the given plain value against a hash.
@@ -20,12 +20,12 @@ class Argon2IdHasher extends ArgonHasher{
 	 * @return bool
 	 * @throws \RuntimeException
 	 */
-	public function check($value, $hashedValue, array $options = []){
-		if($this->verifyAlgorithm && $this->info($hashedValue)['algoName'] !== 'argon2id'){
+	public function check($value, $hashedValue, array $options = []) {
+		if ($this->verifyAlgorithm && $this->info($hashedValue)['algoName'] !== 'argon2id') {
 			throw new RuntimeException('This password does not use the Argon2id algorithm.');
 		}
 
-		if(strlen($hashedValue) === 0){
+		if (strlen($hashedValue) === 0) {
 			return false;
 		}
 
@@ -37,7 +37,8 @@ class Argon2IdHasher extends ArgonHasher{
 	 *
 	 * @return int
 	 */
-	protected function algorithm(){
+	protected function algorithm() {
 		return PASSWORD_ARGON2ID;
 	}
+
 }

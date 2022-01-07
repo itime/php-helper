@@ -2,68 +2,64 @@
 
 namespace Xin\Excel;
 
-trait HasEventBus
-{
-    /**
-     * @var array
-     */
-    protected static $globalEvents = [];
+trait HasEventBus {
 
-    /**
-     * @var array
-     */
-    protected $events = [];
+	/**
+	 * @var array
+	 */
+	protected static $globalEvents = [];
 
-    /**
-     * Register local event listeners.
-     *
-     * @param array $listeners
-     */
-    public function registerListeners(array $listeners)
-    {
-        foreach ($listeners as $event => $listener) {
-            $this->events[$event][] = $listener;
-        }
-    }
+	/**
+	 * @var array
+	 */
+	protected $events = [];
 
-    public function clearListeners()
-    {
-        $this->events = [];
-    }
+	/**
+	 * Register local event listeners.
+	 *
+	 * @param array $listeners
+	 */
+	public function registerListeners(array $listeners) {
+		foreach ($listeners as $event => $listener) {
+			$this->events[$event][] = $listener;
+		}
+	}
 
-    /**
-     * Register a global event listener.
-     *
-     * @param string   $event
-     * @param callable $listener
-     */
-    public static function listen(string $event, callable $listener)
-    {
-        static::$globalEvents[$event][] = $listener;
-    }
+	public function clearListeners() {
+		$this->events = [];
+	}
 
-    /**
-     * @param object $event
-     */
-    public function raise($event)
-    {
-        foreach ($this->listeners($event) as $listener) {
-            $listener($event);
-        }
-    }
+	/**
+	 * Register a global event listener.
+	 *
+	 * @param string   $event
+	 * @param callable $listener
+	 */
+	public static function listen(string $event, callable $listener) {
+		static::$globalEvents[$event][] = $listener;
+	}
 
-    /**
-     * @param object $event
-     *
-     * @return callable[]
-     */
-    public function listeners($event): array
-    {
-        $name = \get_class($event);
+	/**
+	 * @param object $event
+	 */
+	public function raise($event) {
+		foreach ($this->listeners($event) as $listener) {
+			$listener($event);
+		}
+	}
 
-        $localListeners  = $this->events[$name] ?? [];
-        $globalListeners = static::$globalEvents[$name] ?? [];
+	/**
+	 * @param object $event
+	 *
+	 * @return callable[]
+	 */
+	public function listeners($event): array {
+		$name = \get_class($event);
 
-        return array_merge($globalListeners, $localListeners);
-    }
+		$localListeners = $this->events[$name] ?? [];
+		$globalListeners = static::$globalEvents[$name] ?? [];
+
+		return array_merge($globalListeners, $localListeners);
+	}
+
 }

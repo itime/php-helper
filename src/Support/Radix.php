@@ -10,7 +10,7 @@ namespace Xin\Support;
 /**
  * 进制转化器
  */
-class Radix{
+class Radix {
 
 	/**
 	 * @var array
@@ -37,7 +37,7 @@ class Radix{
 	 *
 	 * @param string $sequence
 	 */
-	public function __construct($sequence){
+	public function __construct($sequence) {
 		$this->chars = str_split($sequence);
 		$this->chars2 = array_flip($this->chars);
 		$this->radix = strlen($sequence);
@@ -49,24 +49,24 @@ class Radix{
 	 * @param int $num
 	 * @return string
 	 */
-	public function generate($num){
-		if(is_nan($num)){
+	public function generate($num) {
+		if (is_nan($num)) {
 			return '';
 		}
 
 		$value = +$num;
 		$result = [];
 
-		do{
+		do {
 			$mod = abs($value % $this->radix);
 			$value = ($value - $mod) / $this->radix;
 
-			if($value < $this->radix){
+			if ($value < $this->radix) {
 				$value = intval($value);
 			}
 
 			array_unshift($result, $this->chars[$mod]);
-		}while($value);
+		} while ($value);
 
 		return implode('', $result);
 	}
@@ -77,21 +77,21 @@ class Radix{
 	 * @param string $str
 	 * @return int
 	 */
-	public function parse($str){
+	public function parse($str) {
 		$strLastIndex = strlen($str) - 1;
 
 		$pow = 0;
 		$result = 0;
-		do{
+		do {
 			$char = $str[$strLastIndex];
-			if(!isset($this->chars2[$char])){
+			if (!isset($this->chars2[$char])) {
 				return 0;
 			}
 
 			$value = $this->chars2[$char];
 			$result += $value * pow($this->radix, $pow);
 			$pow++;
-		}while(--$strLastIndex >= 0);
+		} while (--$strLastIndex >= 0);
 
 		return $result;
 	}
@@ -101,8 +101,8 @@ class Radix{
 	 *
 	 * @return $this|null
 	 */
-	public static function gain62(){
-		if(static::$instance62 === null){
+	public static function gain62() {
+		if (static::$instance62 === null) {
 			static::$instance62 = new static(
 				'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 			);
@@ -110,4 +110,5 @@ class Radix{
 
 		return static::$instance62;
 	}
+
 }

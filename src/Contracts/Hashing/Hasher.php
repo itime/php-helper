@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Hashing;
 
-interface Hasher{
+interface Hasher {
 
 	/**
 	 * Get information about the given hashed value.
@@ -44,4 +44,5 @@ interface Hasher{
 	 * @return bool
 	 */
 	public function needsRehash($hashedValue, array $options = []);
+
 }

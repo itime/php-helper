@@ -11,7 +11,7 @@ use think\exception\HttpException;
 use think\facade\Db;
 use think\file\UploadedFile;
 
-trait UploadFinder{
+trait UploadFinder {
 
 	/**
 	 * 查找文件
@@ -23,7 +23,7 @@ trait UploadFinder{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	protected function findByFile($type, UploadedFile $file){
+	protected function findByFile($type, UploadedFile $file) {
 		return $this->findBySHA1($type, $file->md5());
 	}
 
@@ -37,7 +37,7 @@ trait UploadFinder{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	protected function findBySHA1($type, $sha1){
+	protected function findBySHA1($type, $sha1) {
 		return $this->db($type)->where([
 			'sha1' => $sha1,
 		])->find();
@@ -53,7 +53,7 @@ trait UploadFinder{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	protected function findByMD5($type, $md5){
+	protected function findByMD5($type, $md5) {
 		return $this->db($type)->where([
 			'md5' => $md5,
 		])->find();
@@ -66,18 +66,18 @@ trait UploadFinder{
 	 * @param array  $data
 	 * @return array
 	 */
-	protected function saveDb($type, $data){
+	protected function saveDb($type, $data) {
 		$this->onSaveData($type, $data);
 
 		$data['create_time'] = request()->time();
 
 		$id = $this->db($type)->insertGetId($data);
-		if($id < 1){
+		if ($id < 1) {
 			throw new HttpException(500, "文件保存失败！");
 		}
 
 		return [
-			'id'   => $id,
+			'id' => $id,
 			'path' => $data['path'],
 		];
 	}
@@ -88,13 +88,15 @@ trait UploadFinder{
 	 * @param string $type
 	 * @param array  $data
 	 */
-	protected function onSaveData($type, &$data){ }
+	protected function onSaveData($type, &$data) {
+	}
 
 	/**
 	 * @param null $type
 	 * @return \think\facade\Db|\think\db\Query
 	 */
-	protected function db($type = null){
+	protected function db($type = null) {
 		return Db::name($type !== 'image' ? 'file' : 'image');
 	}
+
 }

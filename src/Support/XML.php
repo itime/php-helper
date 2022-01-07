@@ -7,7 +7,7 @@
 
 namespace Xin\Support;
 
-class XML{
+class XML {
 
 	/**
 	 * 将XML转换成数组
@@ -15,9 +15,10 @@ class XML{
 	 * @param string $xml
 	 * @return mixed
 	 */
-	public static function parse($xml){
+	public static function parse($xml) {
 		//将XML转为array,禁止引用外部xml实体
 		libxml_disable_entity_loader(true);
+
 		return json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
 	}
 
@@ -29,25 +30,27 @@ class XML{
 	 * @param string $tag 指定元素标签名称，主要用于索引数组
 	 * @return string
 	 */
-	public static function encode($param, $root = 'xml', $tag = ''){
-		if(!is_array($param) || count($param) <= 0) return '';
+	public static function encode($param, $root = 'xml', $tag = '') {
+		if (!is_array($param) || count($param) <= 0) return '';
 
 		$xml = '';
-		foreach($param as $key => $val){
+		foreach ($param as $key => $val) {
 			$key = empty($tag) ? $key : $tag;
-			if(is_int($val)){
-				$xml .= "<".$key.">".$val."</".$key.">";
+			if (is_int($val)) {
+				$xml .= "<" . $key . ">" . $val . "</" . $key . ">";
 				$root = !empty($tag) ? '' : $root;
-			}elseif(is_array($val)){
+			} elseif (is_array($val)) {
 				$tempRoot = Arr::isAssoc($param) ? $key : '';
 				$tempTag = (Arr::isAssoc($param) && !Arr::isAssoc($val)) ? $key : '';
 				$xml .= self::encode($val, $tempRoot, $tempTag);
-			}else{
-				$xml .= "<".$key."><![CDATA[".$val."]]></".$key.">";
+			} else {
+				$xml .= "<" . $key . "><![CDATA[" . $val . "]]></" . $key . ">";
 				$root = !empty($tag) ? '' : $root;
 			}
 		}
-		$xml = (empty($root) ? "" : "<$root>").$xml.(empty($root) ? "" : "</$root>");
+		$xml = (empty($root) ? "" : "<$root>") . $xml . (empty($root) ? "" : "</$root>");
+
 		return $xml;
 	}
+
 }

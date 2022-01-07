@@ -4,13 +4,14 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Thinkphp\Foundation\Middleware;
 
 use think\App;
 use Xin\Auth\AuthenticationException;
 use Xin\Contracts\Auth\Factory as Auth;
 
-class Authenticate{
+class Authenticate {
 
 	use InteractsExcept;
 
@@ -39,7 +40,7 @@ class Authenticate{
 	 * @param \think\App                  $app
 	 * @param \Xin\Contracts\Auth\Factory $auth
 	 */
-	public function __construct(App $app, Auth $auth){
+	public function __construct(App $app, Auth $auth) {
 		$this->app = $app;
 		$this->auth = $auth;
 	}
@@ -53,7 +54,7 @@ class Authenticate{
 	 * @return mixed
 	 * @throws \Xin\Auth\AuthenticationException
 	 */
-	public function handle($request, \Closure $next, ...$guards){
+	public function handle($request, \Closure $next, ...$guards) {
 		$this->authenticate($request, $guards);
 
 		return $next($request);
@@ -67,18 +68,18 @@ class Authenticate{
 	 * @return \Xin\Contracts\Auth\Guard|\Xin\Contracts\Auth\StatefulGuard
 	 * @throws \Xin\Auth\AuthenticationException
 	 */
-	protected function authenticate($request, array $guards){
-		if(empty($guards)){
+	protected function authenticate($request, array $guards) {
+		if (empty($guards)) {
 			$guards = [null];
 		}
 
-		foreach($guards as $guard){
-			if($this->auth->guard($guard)->check()){
+		foreach ($guards as $guard) {
+			if ($this->auth->guard($guard)->check()) {
 				return $this->auth->shouldUse($guard);
 			}
 		}
 
-		if($this->isExcept($request) === true){
+		if ($this->isExcept($request) === true) {
 			return null;
 		}
 
@@ -96,8 +97,8 @@ class Authenticate{
 	 * @param \think\Request $request
 	 * @return string|void
 	 */
-	protected function redirectTo($request){
-		if($request->isJson() || $request->isAjax()){
+	protected function redirectTo($request) {
+		if ($request->isJson() || $request->isAjax()) {
 			return;
 		}
 	}

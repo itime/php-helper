@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Menu;
 
-interface Repository{
+interface Repository {
 
 	/**
 	 * 获取所有菜单

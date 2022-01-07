@@ -4,13 +4,14 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Thinkphp\Foundation\Middleware;
 
 use think\App;
 use think\exception\HttpException;
 use think\Request;
 
-class CheckForSafeVisit{
+class CheckForSafeVisit {
 
 	use InteractsExcept;
 
@@ -34,7 +35,7 @@ class CheckForSafeVisit{
 	 *
 	 * @param \think\App $app
 	 */
-	public function __construct(App $app){
+	public function __construct(App $app) {
 		$this->app = $app;
 		$this->config = $app['config'];
 	}
@@ -47,15 +48,15 @@ class CheckForSafeVisit{
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	public function handle(Request $request, \Closure $next){
+	public function handle(Request $request, \Closure $next) {
 		$safeKey = $this->localSafeKey($request);
 
-		if($safeKey == $request->pathinfo()){
+		if ($safeKey == $request->pathinfo()) {
 			$this->app->cookie->set($this->cookieSafeKeyName(), $safeKey);
-		}else{
-			if($safeKey != $this->clientSafeKey($request)){
+		} else {
+			if ($safeKey != $this->clientSafeKey($request)) {
 				// 要排除的URL
-				if($this->isExcept($request)){
+				if ($this->isExcept($request)) {
 					return $next($request);
 				}
 
@@ -72,7 +73,7 @@ class CheckForSafeVisit{
 	 * @param \think\Request $request
 	 * @return string
 	 */
-	protected function localSafeKey(Request $request){
+	protected function localSafeKey(Request $request) {
 		return $this->config->get('app.safe_key');
 	}
 
@@ -82,7 +83,7 @@ class CheckForSafeVisit{
 	 * @param \think\Request $request
 	 * @return string
 	 */
-	protected function clientSafeKey(Request $request){
+	protected function clientSafeKey(Request $request) {
 		return $request->cookie($this->cookieSafeKeyName());
 	}
 
@@ -91,7 +92,8 @@ class CheckForSafeVisit{
 	 *
 	 * @return string
 	 */
-	protected function cookieSafeKeyName(){
+	protected function cookieSafeKeyName() {
 		return '__safe_key__';
 	}
+
 }

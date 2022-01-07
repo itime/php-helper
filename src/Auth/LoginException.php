@@ -4,8 +4,9 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Auth;
 
-class LoginException extends \LogicException{
+class LoginException extends \LogicException {
 
 }

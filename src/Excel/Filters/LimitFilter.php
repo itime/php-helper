@@ -4,37 +4,36 @@ namespace Xin\Excel\Filters;
 
 use PhpOffice\PhpSpreadsheet\Reader\IReadFilter;
 
-class LimitFilter implements IReadFilter
-{
-    /**
-     * @var int
-     */
-    private $startRow;
+class LimitFilter implements IReadFilter {
 
-    /**
-     * @var int
-     */
-    private $endRow;
+	/**
+	 * @var int
+	 */
+	private $startRow;
 
-    /**
-     * @param int $startRow
-     * @param int $limit
-     */
-    public function __construct(int $startRow, int $limit)
-    {
-        $this->startRow = $startRow;
-        $this->endRow   = $startRow + $limit;
-    }
+	/**
+	 * @var int
+	 */
+	private $endRow;
 
-    /**
-     * @param string $column
-     * @param int    $row
-     * @param string $worksheetName
-     *
-     * @return bool
-     */
-    public function readCell($column, $row, $worksheetName = '')
-    {
-        return $row >= $this->startRow && $row < $this->endRow;
-    }
+	/**
+	 * @param int $startRow
+	 * @param int $limit
+	 */
+	public function __construct(int $startRow, int $limit) {
+		$this->startRow = $startRow;
+		$this->endRow = $startRow + $limit;
+	}
+
+	/**
+	 * @param string $column
+	 * @param int    $row
+	 * @param string $worksheetName
+	 *
+	 * @return bool
+	 */
+	public function readCell($column, $row, $worksheetName = '') {
+		return $row >= $this->startRow && $row < $this->endRow;
+	}
+
 }

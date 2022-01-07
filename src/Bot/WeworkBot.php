@@ -4,9 +4,10 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Bot;
 
-class WeworkBot{
+class WeworkBot {
 
 	/**
 	 * @var string
@@ -18,7 +19,7 @@ class WeworkBot{
 	 *
 	 * @param string $key
 	 */
-	public function __construct($key){
+	public function __construct($key) {
 		$this->key = $key;
 	}
 
@@ -30,12 +31,12 @@ class WeworkBot{
 	 * @param array  $mentionedMobileList
 	 * @return array|null
 	 */
-	public function sendTextMessage($content, $mentionedList = [], $mentionedMobileList = []){
+	public function sendTextMessage($content, $mentionedList = [], $mentionedMobileList = []) {
 		return $this->sendMessage([
 			"msgtype" => "text",
-			"text"    => [
-				"content"               => $content,
-				"mentioned_list"        => $mentionedList,
+			"text" => [
+				"content" => $content,
+				"mentioned_list" => $mentionedList,
 				"mentioned_mobile_list" => $mentionedMobileList,
 			],
 		]);
@@ -47,9 +48,9 @@ class WeworkBot{
 	 * @param string $content
 	 * @return array|null
 	 */
-	public function sendMarkdownMessage($content){
+	public function sendMarkdownMessage($content) {
 		return $this->sendMessage([
-			"msgtype"  => "markdown",
+			"msgtype" => "markdown",
 			"markdown" => [
 				"content" => $content,
 			],
@@ -62,12 +63,12 @@ class WeworkBot{
 	 * @param string $content
 	 * @return array|null
 	 */
-	public function sendImageMessage($content, $fileMD5){
+	public function sendImageMessage($content, $fileMD5) {
 		return $this->sendMessage([
 			"msgtype" => "image",
-			"image"   => [
+			"image" => [
 				"base64" => $content,
-				"md5"    => $fileMD5,
+				"md5" => $fileMD5,
 			],
 		]);
 	}
@@ -78,10 +79,10 @@ class WeworkBot{
 	 * @param array $articles
 	 * @return array|null
 	 */
-	public function sendNewMessage($articles){
+	public function sendNewMessage($articles) {
 		return $this->sendMessage([
 			"msgtype" => "news",
-			"news"    => [
+			"news" => [
 				"articles" => $articles,
 			],
 		]);
@@ -93,10 +94,10 @@ class WeworkBot{
 	 * @param string $mediaId
 	 * @return array|null
 	 */
-	public function sendFileMessage($mediaId){
+	public function sendFileMessage($mediaId) {
 		return $this->sendMessage([
 			"msgtype" => "file",
-			"file"    => [
+			"file" => [
 				"media_id" => $mediaId,
 			],
 		]);
@@ -108,8 +109,9 @@ class WeworkBot{
 	 * @param array $data
 	 * @return array|null
 	 */
-	public function sendMessage($data){
+	public function sendMessage($data) {
 		$url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={$this->key}";
+
 		return $this->httpPostJson($url, $data);
 	}
 
@@ -120,8 +122,9 @@ class WeworkBot{
 	 * @param string $type
 	 * @return array|null
 	 */
-	public function uploadFile($path, $type = 'file'){
+	public function uploadFile($path, $type = 'file') {
 		$url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/upload_media?key={$this->key}&type={$type}";
+
 		return $this->httpUpload($url, $path);
 	}
 
@@ -133,7 +136,7 @@ class WeworkBot{
 	 * @param array $headers
 	 * @return mixed|null
 	 */
-	protected function httpPostJson($url, $data = [], $headers = []){
+	protected function httpPostJson($url, $data = [], $headers = []) {
 		$ch = curl_init($url);
 
 		//设置头文件的信息作为数据流输出
@@ -167,9 +170,9 @@ class WeworkBot{
 		$data = curl_exec($ch);
 
 		// 显示错误信息
-		if(curl_error($ch)){
+		if (curl_error($ch)) {
 			return null;
-		}else{
+		} else {
 			// 打印返回的内容
 			curl_close($ch);
 		}
@@ -184,7 +187,7 @@ class WeworkBot{
 	 * @param string $path
 	 * @return mixed|null
 	 */
-	protected function httpUpload($url, $path){
+	protected function httpUpload($url, $path) {
 		$ch = curl_init($url);
 
 		//设置头文件的信息作为数据流输出
@@ -208,13 +211,14 @@ class WeworkBot{
 		$data = curl_exec($ch);
 
 		// 显示错误信息
-		if(curl_error($ch)){
+		if (curl_error($ch)) {
 			return null;
-		}else{
+		} else {
 			// 打印返回的内容
 			curl_close($ch);
 		}
 
 		return json_decode($data, true);
 	}
+
 }

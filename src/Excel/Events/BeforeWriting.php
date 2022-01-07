@@ -4,49 +4,46 @@ namespace Xin\Excel\Events;
 
 use Xin\Excel\Writer;
 
-class BeforeWriting extends Event
-{
-    /**
-     * @var Writer
-     */
-    public $writer;
+class BeforeWriting extends Event {
 
-    /**
-     * @var object
-     */
-    private $exportable;
+	/**
+	 * @var Writer
+	 */
+	public $writer;
 
-    /**
-     * @param Writer $writer
-     * @param object $exportable
-     */
-    public function __construct(Writer $writer, $exportable)
-    {
-        $this->writer     = $writer;
-        $this->exportable = $exportable;
-    }
+	/**
+	 * @var object
+	 */
+	private $exportable;
 
-    /**
-     * @return Writer
-     */
-    public function getWriter(): Writer
-    {
-        return $this->writer;
-    }
+	/**
+	 * @param Writer $writer
+	 * @param object $exportable
+	 */
+	public function __construct(Writer $writer, $exportable) {
+		$this->writer = $writer;
+		$this->exportable = $exportable;
+	}
 
-    /**
-     * @return object
-     */
-    public function getConcernable()
-    {
-        return $this->exportable;
-    }
+	/**
+	 * @return Writer
+	 */
+	public function getWriter(): Writer {
+		return $this->writer;
+	}
 
-    /**
-     * @return mixed
-     */
-    public function getDelegate()
-    {
-        return $this->writer;
-    }
+	/**
+	 * @return object
+	 */
+	public function getConcernable() {
+		return $this->exportable;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getDelegate() {
+		return $this->writer;
+	}
+
 }

@@ -2,25 +2,25 @@
 
 namespace Xin\Excel\Events;
 
-abstract class Event
-{
-    /**
-     * @return object
-     */
-    abstract public function getConcernable();
+abstract class Event {
 
-    /**
-     * @return mixed
-     */
-    abstract public function getDelegate();
+	/**
+	 * @return object
+	 */
+	abstract public function getConcernable();
 
-    /**
-     * @param string $concern
-     *
-     * @return bool
-     */
-    public function appliesToConcern(string $concern): bool
-    {
-        return $this->getConcernable() instanceof $concern;
-    }
+	/**
+	 * @return mixed
+	 */
+	abstract public function getDelegate();
+
+	/**
+	 * @param string $concern
+	 *
+	 * @return bool
+	 */
+	public function appliesToConcern(string $concern): bool {
+		return $this->getConcernable() instanceof $concern;
+	}
+
 }

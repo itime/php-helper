@@ -7,31 +7,31 @@
 
 use Xin\Thinkphp\Facade\Plugin;
 
-if(!function_exists('plugin_has')){
+if (!function_exists('plugin_has')) {
 	/**
 	 * 插件是否存在
 	 *
 	 * @param string $plugin
 	 * @return bool
 	 */
-	function plugin_has($plugin){
+	function plugin_has($plugin) {
 		return Plugin::has($plugin);
 	}
 }
 
-if(!function_exists('plugin_path')){
+if (!function_exists('plugin_path')) {
 	/**
 	 * 获取插件目录
 	 *
 	 * @param string $plugin
 	 * @return string
 	 */
-	function plugin_path($plugin){
+	function plugin_path($plugin) {
 		return Plugin::path($plugin);
 	}
 }
 
-if(!function_exists('plugin_invoke')){
+if (!function_exists('plugin_invoke')) {
 	/**
 	 * 调用插件操作
 	 *
@@ -41,12 +41,12 @@ if(!function_exists('plugin_invoke')){
 	 * @param string $action
 	 * @return mixed
 	 */
-	function plugin_invoke(\think\Request $request, $plugin, $controller, $action){
+	function plugin_invoke(\think\Request $request, $plugin, $controller, $action) {
 		return Plugin::invoke($request, $plugin, $controller, $action);
 	}
 }
 
-if(!function_exists('plugin_url')){
+if (!function_exists('plugin_url')) {
 	/**
 	 * 生成插件url
 	 *
@@ -56,14 +56,14 @@ if(!function_exists('plugin_url')){
 	 * @param bool   $domain
 	 * @return \think\route\Url
 	 */
-	function plugin_url(string $url = '', array $vars = [], $suffix = true, $domain = false){
-		if(strpos($url, "http:") === 0 || strpos($url, "https:") === 0){
+	function plugin_url(string $url = '', array $vars = [], $suffix = true, $domain = false) {
+		if (strpos($url, "http:") === 0 || strpos($url, "https:") === 0) {
 			return url($url);
 		}
 
 		// 支持插件路由地址解析
-		if(request()->plugin()){
-			$url = strpos($url, '>') ? $url : request()->plugin().">".$url;
+		if (request()->plugin()) {
+			$url = strpos($url, '>') ? $url : request()->plugin() . ">" . $url;
 		}
 
 		return url($url, $vars, $suffix, $domain);

@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Config;
 
-interface Repository extends \ArrayAccess{
+interface Repository extends \ArrayAccess {
 
 	/**
 	 * 检测指定的 key 是否存在
@@ -49,4 +49,5 @@ interface Repository extends \ArrayAccess{
 	 * @return array
 	 */
 	public function all();
+
 }

@@ -7,7 +7,7 @@
 
 namespace Xin\Support;
 
-class LimitThrottle{
+class LimitThrottle {
 
 	/**
 	 * @var array
@@ -31,7 +31,7 @@ class LimitThrottle{
 	 * @param callable $valueCallback
 	 * @param callable $thenCallback
 	 */
-	public function __construct(array $limits, callable $valueCallback, callable $thenCallback){
+	public function __construct(array $limits, callable $valueCallback, callable $thenCallback) {
 		$this->limits = array_reverse($limits);
 		$this->valueCallback = $valueCallback;
 		$this->thenCallback = $thenCallback;
@@ -42,15 +42,15 @@ class LimitThrottle{
 	 *
 	 * @return mixed
 	 */
-	public function exec(){
+	public function exec() {
 		$value = $this->getValue();
-		if($value == 1){
+		if ($value == 1) {
 			return $this->call($value);
 		}
 
 		$limit = $this->getLimit($value);
-		if($limit){
-			if($value % $limit === 0){
+		if ($limit) {
+			if ($value % $limit === 0) {
 				return $this->call($value);
 			}
 		}
@@ -64,9 +64,9 @@ class LimitThrottle{
 	 * @param int $value
 	 * @return int
 	 */
-	protected function getLimit($value){
-		foreach($this->limits as $limit){
-			if($value >= $limit){
+	protected function getLimit($value) {
+		foreach ($this->limits as $limit) {
+			if ($value >= $limit) {
 				return $limit;
 			}
 		}
@@ -79,10 +79,10 @@ class LimitThrottle{
 	 *
 	 * @return int
 	 */
-	protected function getValue(){
-		try{
+	protected function getValue() {
+		try {
 			return call_user_func($this->valueCallback);
-		}catch(\Throwable $e){
+		} catch (\Throwable $e) {
 		}
 
 		return 0;
@@ -94,10 +94,10 @@ class LimitThrottle{
 	 * @param int $value
 	 * @return mixed
 	 */
-	protected function call($value){
-		try{
+	protected function call($value) {
+		try {
 			return call_user_func($this->thenCallback, $this->limits, $value);
-		}catch(\Throwable $e){
+		} catch (\Throwable $e) {
 		}
 
 		return null;
@@ -110,10 +110,11 @@ class LimitThrottle{
 	 * @param callable $thenCallback
 	 * @return mixed|null
 	 */
-	public static function general(callable $valueCallback, callable $thenCallback){
+	public static function general(callable $valueCallback, callable $thenCallback) {
 		return (new static(
 			[50, 100, 500, 1000, 5000, 10000, 50000, 100000],
 			$valueCallback, $thenCallback
 		))->exec();
 	}
+
 }

@@ -4,6 +4,7 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Thinkphp\Foundation\Middleware;
 
 use think\Response;
@@ -11,7 +12,7 @@ use think\Response;
 /**
  * Class AllowCrossDomain
  */
-class AllowCrossDomain{
+class AllowCrossDomain {
 
 	/**
 	 * 初始化应用
@@ -20,10 +21,10 @@ class AllowCrossDomain{
 	 * @param \Closure       $next
 	 * @return mixed
 	 */
-	public function handle($request, \Closure $next){
+	public function handle($request, \Closure $next) {
 		$httpOrigin = $this->httpOrigin($request);
 
-		if($request->isOptions()){
+		if ($request->isOptions()) {
 			return $this->resolveResponse(
 				$request,
 				Response::create()->code(204),
@@ -44,9 +45,9 @@ class AllowCrossDomain{
 	 * @param \think\Request $request
 	 * @return string
 	 */
-	protected function httpOrigin($request){
+	protected function httpOrigin($request) {
 		$httpOrigin = $request->header('origin');
-		if(empty($httpOrigin)){
+		if (empty($httpOrigin)) {
 			$httpOrigin = '*';
 		}
 
@@ -59,7 +60,7 @@ class AllowCrossDomain{
 	 * @param \think\Request $request
 	 * @return array
 	 */
-	protected function headers($request){
+	protected function headers($request) {
 		return [];
 	}
 
@@ -71,17 +72,17 @@ class AllowCrossDomain{
 	 * @param string         $httpOrigin
 	 * @return mixed
 	 */
-	protected function resolveResponse($request, $response, $httpOrigin){
-		if(!$response instanceof Response){
+	protected function resolveResponse($request, $response, $httpOrigin) {
+		if (!$response instanceof Response) {
 			return $response;
 		}
 
 		$header = array_merge([
-			'Access-Control-Allow-Origin'      => $httpOrigin,
+			'Access-Control-Allow-Origin' => $httpOrigin,
 			'Access-Control-Allow-Credentials' => 'true',
-			'Access-Control-Allow-Methods'     => 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
-			'Access-Control-Allow-Headers'     => 'Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since, X-Requested-With',
-			'Access-Control-Max-Age'           => '3600',
+			'Access-Control-Allow-Methods' => 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
+			'Access-Control-Allow-Headers' => 'Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since, X-Requested-With',
+			'Access-Control-Max-Age' => '3600',
 		], $this->headers($request));
 
 		return $response->header($header);

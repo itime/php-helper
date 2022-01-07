@@ -4,6 +4,7 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Http;
 
 use GuzzleHttp\Exception\BadResponseException;
@@ -17,7 +18,7 @@ use GuzzleHttp\Exception\BadResponseException;
  * @method Response delete($url, $data = null, $options = [])
  * @method Response upload($url, $data = null, $options = [])
  */
-class Client{
+class Client {
 
 	/**
 	 * @var array
@@ -39,7 +40,7 @@ class Client{
 	 *
 	 * @param array $options
 	 */
-	public function __construct($options = []){
+	public function __construct($options = []) {
 		$this->options = $options;
 		$this->client = new \GuzzleHttp\Client($options);
 	}
@@ -54,16 +55,16 @@ class Client{
 	 * @return \Xin\Http\Response
 	 * @throws \GuzzleHttp\Exception\GuzzleException
 	 */
-	public function request($method, $url, $data = null, $options = []){
+	public function request($method, $url, $data = null, $options = []) {
 		$method = strtoupper($method);
 
-		if($data){
-			if('POST' == $method){
+		if ($data) {
+			if ('POST' == $method) {
 				$options['form_params'] = $data;
-			}elseif('POSTJSON' == $method){
+			} elseif ('POSTJSON' == $method) {
 				$method = 'POST';
 
-				if(!isset($options['headers'])){
+				if (!isset($options['headers'])) {
 					$options['headers'] = [];
 				}
 
@@ -71,20 +72,20 @@ class Client{
 				$options['body'] = json_encode($data);
 
 				$data = null;
-			}elseif('PUT' == $method){
+			} elseif ('PUT' == $method) {
 				$options['form_params'] = $data;
-			}elseif('UPLOAD' == $method){
+			} elseif ('UPLOAD' == $method) {
 				$options['multipart'] = $data;
-			}elseif('DELETE' == $method){
+			} elseif ('DELETE' == $method) {
 				$options['query'] = $data;
-			}else{
+			} else {
 				$options['query'] = $data;
 			}
 		}
 
-		try{
+		try {
 			$response = $this->client->request($method, $url, $options);
-		}catch(BadResponseException $e){
+		} catch (BadResponseException $e) {
 			return new Response($e->getResponse(), $e);
 		}
 
@@ -96,16 +97,16 @@ class Client{
 	 *
 	 * @return static
 	 */
-	public static function instance(){
-		if(static::$instance === null){
+	public static function instance() {
+		if (static::$instance === null) {
 			static::$instance = new static([
-				'timeout'         => 30,
+				'timeout' => 30,
 				'connect_timeout' => 5,
 				'allow_redirects' => [
-					'max'             => 5,
-					'strict'          => false,
-					'referer'         => true,
-					'protocols'       => ['http', 'https'],
+					'max' => 5,
+					'strict' => false,
+					'referer' => true,
+					'protocols' => ['http', 'https'],
 					'track_redirects' => false,
 				],
 			]);
@@ -121,8 +122,9 @@ class Client{
 	 * @param array  $arguments
 	 * @return false|mixed
 	 */
-	public function __call($name, $arguments){
+	public function __call($name, $arguments) {
 		array_unshift($arguments, $name);
+
 		return call_user_func_array([$this, 'request'], $arguments);
 	}
 
@@ -133,7 +135,7 @@ class Client{
 	 * @param array  $arguments
 	 * @return false|mixed
 	 */
-	public static function __callStatic($name, $arguments){
+	public static function __callStatic($name, $arguments) {
 		return call_user_func_array([static::instance(), $name], $arguments);
 	}
 

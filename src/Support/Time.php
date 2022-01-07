@@ -1,15 +1,17 @@
 <?php
+
 namespace Xin\Support;
 
-class Time{
+class Time {
 
 	/**
 	 * 返回今日开始和结束的时间戳
 	 *
 	 * @return array
 	 */
-	public static function today(){
+	public static function today() {
 		[$y, $m, $d] = explode('-', date('Y-m-d'));
+
 		return [
 			mktime(0, 0, 0, $m, $d, $y),
 			mktime(23, 59, 59, $m, $d, $y),
@@ -21,8 +23,9 @@ class Time{
 	 *
 	 * @return array
 	 */
-	public static function yesterday(){
+	public static function yesterday() {
 		$yesterday = date('d') - 1;
+
 		return [
 			mktime(0, 0, 0, date('m'), $yesterday, date('Y')),
 			mktime(23, 59, 59, date('m'), $yesterday, date('Y')),
@@ -34,9 +37,10 @@ class Time{
 	 *
 	 * @return array
 	 */
-	public static function week(){
+	public static function week() {
 		[$y, $m, $d, $w] = explode('-', date('Y-m-d-w'));
-		if($w == 0) $w = 7; //修正周日的问题
+		if ($w == 0) $w = 7; //修正周日的问题
+
 		return [
 			mktime(0, 0, 0, $m, $d - $w + 1, $y), mktime(23, 59, 59, $m, $d - $w + 7, $y),
 		];
@@ -47,8 +51,9 @@ class Time{
 	 *
 	 * @return array
 	 */
-	public static function lastWeek(){
+	public static function lastWeek() {
 		$timestamp = time();
+
 		return [
 			strtotime(date('Y-m-d', strtotime("last week Monday", $timestamp))),
 			strtotime(date('Y-m-d', strtotime("last week Sunday", $timestamp))) + 24 * 3600 - 1,
@@ -60,8 +65,9 @@ class Time{
 	 *
 	 * @return array
 	 */
-	public static function month(){
+	public static function month() {
 		[$y, $m, $t] = explode('-', date('Y-m-t'));
+
 		return [
 			mktime(0, 0, 0, $m, 1, $y),
 			mktime(23, 59, 59, $m, $t, $y),
@@ -73,7 +79,7 @@ class Time{
 	 *
 	 * @return array
 	 */
-	public static function lastMonth(){
+	public static function lastMonth() {
 		$y = date('Y');
 		$m = date('m');
 		$begin = mktime(0, 0, 0, $m - 1, 1, $y);
@@ -87,8 +93,9 @@ class Time{
 	 *
 	 * @return array
 	 */
-	public static function year(){
+	public static function year() {
 		$y = date('Y');
+
 		return [
 			mktime(0, 0, 0, 1, 1, $y),
 			mktime(23, 59, 59, 12, 31, $y),
@@ -100,8 +107,9 @@ class Time{
 	 *
 	 * @return array
 	 */
-	public static function lastYear(){
+	public static function lastYear() {
 		$year = date('Y') - 1;
+
 		return [
 			mktime(0, 0, 0, 1, 1, $year),
 			mktime(23, 59, 59, 12, 31, $year),
@@ -115,9 +123,9 @@ class Time{
 	 * @param bool $now 返回现在或者昨天结束时间戳
 	 * @return array
 	 */
-	public static function dayToNow($day = 1, $now = true){
+	public static function dayToNow($day = 1, $now = true) {
 		$end = time();
-		if(!$now){
+		if (!$now) {
 			[$foo, $end] = self::yesterday();
 		}
 
@@ -133,8 +141,9 @@ class Time{
 	 * @param int $day
 	 * @return int
 	 */
-	public static function daysAgo($day = 1){
+	public static function daysAgo($day = 1) {
 		$nowTime = time();
+
 		return $nowTime - self::daysToSecond($day);
 	}
 
@@ -144,8 +153,9 @@ class Time{
 	 * @param int $day
 	 * @return int
 	 */
-	public static function daysAfter($day = 1){
+	public static function daysAfter($day = 1) {
 		$nowTime = time();
+
 		return $nowTime + self::daysToSecond($day);
 	}
 
@@ -155,7 +165,7 @@ class Time{
 	 * @param int $day
 	 * @return int
 	 */
-	public static function daysToSecond($day = 1){
+	public static function daysToSecond($day = 1) {
 		return $day * 86400;
 	}
 
@@ -165,18 +175,19 @@ class Time{
 	 * @param int $week
 	 * @return int
 	 */
-	public static function weekToSecond($week = 1){
+	public static function weekToSecond($week = 1) {
 		return self::daysToSecond() * 7 * $week;
 	}
 
 	/**
 	 * 获取毫秒级别的时间戳
 	 */
-	public static function getMillisecond(){
+	public static function getMillisecond() {
 		$time = explode(" ", microtime());
-		$time = $time[1].($time[0] * 1000);
+		$time = $time[1] . ($time[0] * 1000);
 		$time2 = explode(".", $time);
 		$time = $time2[0];
+
 		return $time;
 	}
 
@@ -186,7 +197,7 @@ class Time{
 	 * @param int $timeStamp
 	 * @return string
 	 */
-	public static function formatRelative($timeStamp){
+	public static function formatRelative($timeStamp) {
 		$currentTime = time();
 
 		// 判断传入时间戳是否早于当前时间戳
@@ -197,17 +208,17 @@ class Time{
 
 		$dirStr = $isEarly ? '前' : '后';
 
-		if($diff < 60){ // 一分钟之内
-			$resStr = $diff.'秒'.$dirStr;
-		}elseif($diff >= 60 && $diff < 3600){ // 多于59秒，少于等于59分钟59秒
-			$resStr = floor($diff / 60).'分钟'.$dirStr;
-		}elseif($diff >= 3600 && $diff < 86400){ // 多于59分钟59秒，少于等于23小时59分钟59秒
-			$resStr = floor($diff / 3600).'小时'.$dirStr;
-		}elseif($diff >= 86400 && $diff < 2623860){ // 多于23小时59分钟59秒，少于等于29天59分钟59秒
-			$resStr = floor($diff / 86400).'天'.$dirStr;
-		}elseif($diff >= 2623860 && $diff <= 31567860 && $isEarly){ // 多于29天59分钟59秒，少于364天23小时59分钟59秒，且传入的时间戳早于当前
+		if ($diff < 60) { // 一分钟之内
+			$resStr = $diff . '秒' . $dirStr;
+		} elseif ($diff >= 60 && $diff < 3600) { // 多于59秒，少于等于59分钟59秒
+			$resStr = floor($diff / 60) . '分钟' . $dirStr;
+		} elseif ($diff >= 3600 && $diff < 86400) { // 多于59分钟59秒，少于等于23小时59分钟59秒
+			$resStr = floor($diff / 3600) . '小时' . $dirStr;
+		} elseif ($diff >= 86400 && $diff < 2623860) { // 多于23小时59分钟59秒，少于等于29天59分钟59秒
+			$resStr = floor($diff / 86400) . '天' . $dirStr;
+		} elseif ($diff >= 2623860 && $diff <= 31567860 && $isEarly) { // 多于29天59分钟59秒，少于364天23小时59分钟59秒，且传入的时间戳早于当前
 			$resStr = date('m-d H:i', $timeStamp);
-		}else{
+		} else {
 			$resStr = date('Y-m-d', $timeStamp);
 		}
 
@@ -222,18 +233,18 @@ class Time{
 	 * @param string $delimiter
 	 * @return array
 	 */
-	public static function parseRange($rangeDatetime, $maxRange = 0, $delimiter = ' - '){
+	public static function parseRange($rangeDatetime, $maxRange = 0, $delimiter = ' - ') {
 		$rangeDatetime = explode($delimiter, $rangeDatetime, 2);
 		$rangeDatetime[0] = strtotime($rangeDatetime[0]);
 		$rangeDatetime[1] = isset($rangeDatetime[1]) ? strtotime($rangeDatetime[1]) : time();
 
 		// 如果结束时间小于或等于开始时间 直接返回null
-		if($rangeDatetime[1] < $rangeDatetime[0]){
+		if ($rangeDatetime[1] < $rangeDatetime[0]) {
 			return null;
 		}
 
 		// 如果大于最大时间间隔 则用结束时间减去最大时间间隔获得开始时间
-		if($maxRange > 0 && $rangeDatetime[1] - $rangeDatetime[0] > $maxRange){
+		if ($maxRange > 0 && $rangeDatetime[1] - $rangeDatetime[0] > $maxRange) {
 			$rangeDatetime[0] = $rangeDatetime[1] - $maxRange;
 		}
 
@@ -246,13 +257,15 @@ class Time{
 	 * @param array $times
 	 * @return array
 	 */
-	public static function sort($times){
-		usort($times, function($com1, $com2){
+	public static function sort($times) {
+		usort($times, function ($com1, $com2) {
 			$com1 = strtotime($com1);
 			$com2 = strtotime($com2);
+
 			return $com1 < $com2 ? -1 : 1;
 		});
 
 		return $times;
 	}
+
 }

@@ -16,7 +16,7 @@ use Xin\Contracts\Auth\Factory as AuthFactory;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 use Xin\Thinkphp\Auth\Access\CheckForRoute;
 
-class AuthServiceProvider extends Service{
+class AuthServiceProvider extends Service {
 
 	/**
 	 * @var callable
@@ -26,7 +26,7 @@ class AuthServiceProvider extends Service{
 	/**
 	 * @inheritDoc
 	 */
-	public function register(){
+	public function register() {
 		$this->registerAuthManager();
 
 		$this->registerGuards();
@@ -45,10 +45,10 @@ class AuthServiceProvider extends Service{
 	 *
 	 * @return void
 	 */
-	protected function registerAuthManager(){
+	protected function registerAuthManager() {
 		$this->app->bind([
-			'auth'             => AuthFactory::class,
-			AuthFactory::class => function(){
+			'auth' => AuthFactory::class,
+			AuthFactory::class => function () {
 				return new AuthManager(
 					$this->app->config->get('auth')
 				);
@@ -59,22 +59,22 @@ class AuthServiceProvider extends Service{
 	/**
 	 * 注册守卫者
 	 */
-	protected function registerGuards(){
+	protected function registerGuards() {
 		/** @var AuthManager $auth */
 		$auth = $this->app->make('auth');
 
 		// 注册无状态守卫者
-		$auth->extend('token', function($name, $config, UserProviderContract $provider){
+		$auth->extend('token', function ($name, $config, UserProviderContract $provider) {
 			return new TokenGuard($name, $config, $provider);
 		});
 
 		// 注册有状态守卫者
-		$auth->extend('session', function($name, $config, UserProviderContract $provider){
+		$auth->extend('session', function ($name, $config, UserProviderContract $provider) {
 			return new SessionGuard($name, $config, $provider);
 		});
 
 		// 注册有状态守卫者
-		$auth->extend('token_session', function($name, $config, UserProviderContract $provider){
+		$auth->extend('token_session', function ($name, $config, UserProviderContract $provider) {
 			return new SessionTokenGuard($name, $config, $provider);
 		});
 	}
@@ -82,19 +82,19 @@ class AuthServiceProvider extends Service{
 	/**
 	 * 注册数据提供者
 	 */
-	protected function registerProviders(){
+	protected function registerProviders() {
 		/** @var AuthManager $auth */
 		$auth = $this->app->make('auth');
 
 		// Database Provider
-		$auth->provider('database', function($config){
+		$auth->provider('database', function ($config) {
 			return new DatabaseUserProvider(
 				$this->app['db'], $config
 			);
 		});
 
 		// Model Provider
-		$auth->provider('model', function($config){
+		$auth->provider('model', function ($config) {
 			return new ModelUserProvider($config);
 		});
 	}
@@ -102,15 +102,15 @@ class AuthServiceProvider extends Service{
 	/**
 	 * 注册Request用户完成器
 	 */
-	protected function registerRequestUserResolver(){
+	protected function registerRequestUserResolver() {
 		$request = $this->app->request;
-		if(!method_exists($request, 'setUserResolver')){
+		if (!method_exists($request, 'setUserResolver')) {
 			return;
 		}
 
 		/** @var AuthManager $auth */
 		$auth = $this->app->make('auth');
-		$request->setUserResolver(function($field = null, $default = null, $abort = true) use ($auth){
+		$request->setUserResolver(function ($field = null, $default = null, $abort = true) use ($auth) {
 			return $auth->guard()->getUser($field, $default, $abort);
 		});
 	}
@@ -120,11 +120,11 @@ class AuthServiceProvider extends Service{
 	 *
 	 * @return void
 	 */
-	protected function registerAccessGate(){
+	protected function registerAccessGate() {
 		$this->app->bind('gate', GateContract::class);
 		$this->app->bind(GateContract::class, Gate::class);
-		$this->app->bind(Gate::class, function(App $app){
-			return new Gate($app, function() use ($app){
+		$this->app->bind(Gate::class, function (App $app) {
+			return new Gate($app, function () use ($app) {
 				return $app['auth']->guard()->getUser(null, null, false);
 			});
 		});
@@ -135,7 +135,7 @@ class AuthServiceProvider extends Service{
 	 *
 	 * @return void
 	 */
-	protected function registerPolicies(){
+	protected function registerPolicies() {
 		$this->app->bind('abilities.route', CheckForRoute::class);
 
 		/** @var Gate $gate */

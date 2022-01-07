@@ -4,11 +4,12 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Thinkphp\Notification\Message;
 
 use Xin\Support\Contracts\Arrayable;
 
-class WxSubscribeMessage implements Arrayable{
+class WxSubscribeMessage implements Arrayable {
 
 	/**
 	 * @var string
@@ -38,7 +39,7 @@ class WxSubscribeMessage implements Arrayable{
 	/**
 	 * @return string
 	 */
-	public function getOpenid(){
+	public function getOpenid() {
 		return $this->openid;
 	}
 
@@ -46,15 +47,16 @@ class WxSubscribeMessage implements Arrayable{
 	 * @param string $openid
 	 * @return $this
 	 */
-	public function setOpenid($openid){
+	public function setOpenid($openid) {
 		$this->openid = $openid;
+
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getTemplateId(){
+	public function getTemplateId() {
 		return $this->templateId;
 	}
 
@@ -62,15 +64,16 @@ class WxSubscribeMessage implements Arrayable{
 	 * @param string $templateId
 	 * @return $this
 	 */
-	public function setTemplateId($templateId){
+	public function setTemplateId($templateId) {
 		$this->templateId = $templateId;
+
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getPage(){
+	public function getPage() {
 		return $this->page;
 	}
 
@@ -78,15 +81,16 @@ class WxSubscribeMessage implements Arrayable{
 	 * @param string $page
 	 * @return $this
 	 */
-	public function setPage($page){
+	public function setPage($page) {
 		$this->page = $page;
+
 		return $this;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getMiniprogram(){
+	public function getMiniprogram() {
 		return $this->miniprogram;
 	}
 
@@ -94,15 +98,16 @@ class WxSubscribeMessage implements Arrayable{
 	 * @param array $miniprogram
 	 * @return $this
 	 */
-	public function setMiniprogram(array $miniprogram){
+	public function setMiniprogram(array $miniprogram) {
 		$this->miniprogram = $miniprogram;
+
 		return $this;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getData(){
+	public function getData() {
 		return $this->data;
 	}
 
@@ -110,29 +115,31 @@ class WxSubscribeMessage implements Arrayable{
 	 * @param array $data
 	 * @return $this
 	 */
-	public function setData(array $data){
+	public function setData(array $data) {
 		$this->data = $data;
+
 		return $this;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function toArray(){
+	public function toArray() {
 		$data = [
-			'touser'      => $this->openid,
+			'touser' => $this->openid,
 			'template_id' => $this->templateId,
-			'data'        => $this->data,
+			'data' => $this->data,
 		];
 
-		if(!empty($this->page)){
+		if (!empty($this->page)) {
 			$data['page'] = $this->page;
 		}
 
-		if(!empty($this->miniprogram)){
+		if (!empty($this->miniprogram)) {
 			$data['miniprogram'] = $this->miniprogram;
 		}
 
 		return $data;
 	}
+
 }

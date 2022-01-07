@@ -4,11 +4,12 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Contracts\Encryption;
 
 use RuntimeException;
 
-class EncryptException extends RuntimeException{
+class EncryptException extends RuntimeException {
 
 	//
 }

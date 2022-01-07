@@ -7,6 +7,6 @@
 
 namespace Xin\Alipay;
 
-class AlipayEncryptException extends AlipayException{
+class AlipayEncryptException extends AlipayException {
 
 }

@@ -11,7 +11,7 @@ use think\exception\ValidateException;
 use think\facade\Db;
 use Xin\Support\Str;
 
-trait Attribute{
+trait Attribute {
 
 	/**
 	 * 获取模型实例
@@ -19,16 +19,16 @@ trait Attribute{
 	 * @param array $data
 	 * @return \think\db\BaseQuery|\think\Model
 	 */
-	protected function model($data = []){
+	protected function model($data = []) {
 		$model = $this->property('model', $this->getClassName());
 
-		if(is_string($model)){
+		if (is_string($model)) {
 			$model = $this->resolveCommonClass($model, 'model', false);
-		}elseif(is_object($model)){
+		} elseif (is_object($model)) {
 			$model = get_class($model);
 		}
 
-		if($model){
+		if ($model) {
 			return new $model($data);
 		}
 
@@ -41,11 +41,11 @@ trait Attribute{
 	 * @param string $scene
 	 * @return \think\Validate
 	 */
-	protected function validator($scene){
+	protected function validator($scene) {
 		$validator = $this->property('validator', $this->getClassName());
 
 		$validator = $this->resolveCommonClass($validator, 'validate');
-		if(!$validator){
+		if (!$validator) {
 			return null;
 		}
 
@@ -63,13 +63,13 @@ trait Attribute{
 	 * @param string $scene
 	 * @return array
 	 */
-	protected function validateData($data, $scene){
+	protected function validateData($data, $scene) {
 		$validator = $this->validator($scene);
-		if(!$validator){
+		if (!$validator) {
 			return $data;
 		}
 
-		if(!$validator->check($data)){
+		if (!$validator->check($data)) {
 			throw new ValidateException($validator->getError());
 		}
 
@@ -83,8 +83,8 @@ trait Attribute{
 	 * @param array  $vars
 	 * @return mixed
 	 */
-	protected function invokeMethod($method, $vars = []){
-		if(!method_exists($this, $method)){
+	protected function invokeMethod($method, $vars = []) {
+		if (!method_exists($this, $method)) {
 			return null;
 		}
 
@@ -96,10 +96,11 @@ trait Attribute{
 	 *
 	 * @return string
 	 */
-	protected function getClassName(){
+	protected function getClassName() {
 		$class = explode('\\', get_class($this));
 		$class = end($class);
 		$class = substr($class, 0, strpos($class, "Controller"));
+
 		return $class;
 	}
 
@@ -110,8 +111,8 @@ trait Attribute{
 	 * @param mixed  $default
 	 * @return mixed
 	 */
-	protected function property($property, $default = null){
-		if(property_exists($this, $property)){
+	protected function property($property, $default = null) {
+		if (property_exists($this, $property)) {
 			return $this->{$property};
 		}
 
@@ -126,18 +127,19 @@ trait Attribute{
 	 * @param bool   $appendSuffix
 	 * @return string|null
 	 */
-	private function resolveCommonClass($baseClass, $layer, $appendSuffix = true){
-		if(strpos($baseClass, "\\") !== false){
+	private function resolveCommonClass($baseClass, $layer, $appendSuffix = true) {
+		if (strpos($baseClass, "\\") !== false) {
 			return $baseClass;
 		}
 
-		$baseClass = $baseClass.($appendSuffix ? Str::studly($layer) : '');
+		$baseClass = $baseClass . ($appendSuffix ? Str::studly($layer) : '');
 		$class = "\\app\\common\\{$layer}\\{$baseClass}";
 
-		if(!class_exists($class)){
+		if (!class_exists($class)) {
 			return null;
 		}
 
 		return $class;
 	}
+
 }

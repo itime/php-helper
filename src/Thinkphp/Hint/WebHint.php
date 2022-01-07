@@ -13,7 +13,7 @@ use think\Response;
 use Xin\Contracts\Hint\Hint as HintContract;
 use Xin\Support\Reflect;
 
-class WebHint implements HintContract{
+class WebHint implements HintContract {
 
 	use HintHelper;
 
@@ -33,7 +33,7 @@ class WebHint implements HintContract{
 	 * @param \think\Request $request
 	 * @param \think\Config  $config
 	 */
-	public function __construct(Request $request, Config $config){
+	public function __construct(Request $request, Config $config) {
 		$this->request = $request;
 		$this->config = $config;
 	}
@@ -41,21 +41,21 @@ class WebHint implements HintContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function result($data = [], array $extend = []){
+	public function result($data = [], array $extend = []) {
 		return $this->success('操作成功！', null, $data, $extend);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function success($msg = '', $url = null, $data = null, array $extend = []){
+	public function success($msg = '', $url = null, $data = null, array $extend = []) {
 		$url = $this->resolveSuccessUrl($url);
 
 		$result = array_merge([
 			'code' => 1,
-			'msg'  => $msg,
+			'msg' => $msg,
 			'data' => $data,
-			'url'  => $url,
+			'url' => $url,
 			'wait' => 1,
 		], $extend);
 
@@ -65,14 +65,14 @@ class WebHint implements HintContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function error($msg, $code = 0, $url = null, array $extend = []){
+	public function error($msg, $code = 0, $url = null, array $extend = []) {
 		$url = $this->resolveErrorUrl($url);
 
 		$result = array_merge([
 			'code' => 0,
-			'msg'  => $msg,
+			'msg' => $msg,
 			'data' => null,
-			'url'  => $url,
+			'url' => $url,
 			'wait' => 3,
 		], $extend);
 
@@ -86,14 +86,14 @@ class WebHint implements HintContract{
 	 * @param array $result
 	 * @return \think\response\View
 	 */
-	protected function resolve($isSuccess, array $result){
+	protected function resolve($isSuccess, array $result) {
 		$configPrefix = Reflect::methodVisible($this->config, 'pull') == Reflect::VISIBLE_PUBLIC
 			? 'app' : 'hint.web';
 
-		if($isSuccess){
-			$data = $this->config->get($configPrefix.'.dispatch_success_tmpl');
-		}else{
-			$data = $this->config->get($configPrefix.'.dispatch_error_tmpl');
+		if ($isSuccess) {
+			$data = $this->config->get($configPrefix . '.dispatch_success_tmpl');
+		} else {
+			$data = $this->config->get($configPrefix . '.dispatch_error_tmpl');
 		}
 
 		/** @var \think\response\View $response */

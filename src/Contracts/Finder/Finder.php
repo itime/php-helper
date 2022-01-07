@@ -4,9 +4,10 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Contracts\Finder;
 
-interface Finder{
+interface Finder {
 
 	/**
 	 * Hint path delimiter value.
@@ -72,4 +73,5 @@ interface Finder{
 	 * @return void
 	 */
 	public function flush();
+
 }

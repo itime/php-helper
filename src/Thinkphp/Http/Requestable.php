@@ -4,6 +4,7 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Thinkphp\Http;
 
 use Xin\Support\Str;
@@ -12,7 +13,7 @@ use Xin\Support\Time;
 /**
  * @mixin \think\Request
  */
-trait Requestable{
+trait Requestable {
 
 	use HasValidate, HasPlatform, HasUser, HasApp;
 
@@ -41,8 +42,9 @@ trait Requestable{
 	 * @param string $field
 	 * @return array
 	 */
-	public function ids($field = 'ids'):array{
+	public function ids($field = 'ids'): array {
 		$ids = $this->only([$field]);
+
 		return isset($ids[$field]) ? Str::explode($ids[$field]) : [];
 	}
 
@@ -52,16 +54,16 @@ trait Requestable{
 	 * @param bool $withQuery
 	 * @return array
 	 */
-	public function paginate($withQuery = true){
+	public function paginate($withQuery = true) {
 		$param = [
 			'page' => $this->page(),
 		];
 
-		if($this->has('limit')){
+		if ($this->has('limit')) {
 			$param['list_rows'] = $this->limit();
 		}
 
-		if($withQuery){
+		if ($withQuery) {
 			$param['query'] = $this->get();
 		}
 
@@ -73,8 +75,8 @@ trait Requestable{
 	 *
 	 * @return int
 	 */
-	public function page():int{
-		if(!isset($this->data['page'])){
+	public function page(): int {
+		if (!isset($this->data['page'])) {
 			$page = $this->param('page/d', 0);
 			$this->data['page'] = $page < 1 ? 1 : $page;
 		}
@@ -89,12 +91,12 @@ trait Requestable{
 	 * @param int $default
 	 * @return int
 	 */
-	public function limit(int $max = 100, int $default = 15):int{
-		if(!isset($this->data['limit'])){
+	public function limit(int $max = 100, int $default = 15): int {
+		if (!isset($this->data['limit'])) {
 			$limit = $this->param('limit/d', 0);
-			if($limit < 1){
+			if ($limit < 1) {
 				$this->data['limit'] = $default;
-			}else{
+			} else {
 				$this->data['limit'] = $limit > $max ? $max : $limit;
 			}
 		}
@@ -107,8 +109,8 @@ trait Requestable{
 	 *
 	 * @return int
 	 */
-	public function offset():int{
-		if(!isset($this->data['offset'])){
+	public function offset(): int {
+		if (!isset($this->data['offset'])) {
 			$offset = $this->param('offset/d', 0);
 			$this->data['offset'] = $offset < 1 ? 1 : $offset;
 		}
@@ -121,7 +123,7 @@ trait Requestable{
 	 *
 	 * @return string
 	 */
-	public function sort():string{
+	public function sort(): string {
 		// todo 重新优化
 		return isset($_GET['sort']) ? trim($_GET['sort']) : '';
 	}
@@ -134,8 +136,9 @@ trait Requestable{
 	 * @param string $delimiter
 	 * @return array
 	 */
-	public function rangeTime(string $field = 'datetime', int $maxRange = 0, string $delimiter = ' ~ '):array{
+	public function rangeTime(string $field = 'datetime', int $maxRange = 0, string $delimiter = ' ~ '): array {
 		$rangeTime = $this->param($field, '');
+
 		return Time::parseRange($rangeTime, $maxRange, $delimiter);
 	}
 
@@ -145,18 +148,19 @@ trait Requestable{
 	 * @param string $field
 	 * @return string
 	 */
-	public function keywords(string $field = 'keywords'):string{
-		$key = 'keywords_'.$field;
-		if(!isset($this->data[$key])){
-			if($this->has($field, 'get')){
-				$keywords = $this->get($field.'/s', '');
-			}else{
-				$keywords = $this->post($field.'/s', '');
+	public function keywords(string $field = 'keywords'): string {
+		$key = 'keywords_' . $field;
+		if (!isset($this->data[$key])) {
+			if ($this->has($field, 'get')) {
+				$keywords = $this->get($field . '/s', '');
+			} else {
+				$keywords = $this->post($field . '/s', '');
 			}
 			$keywords = trim($keywords);
 			$keywords = Str::rejectEmoji($keywords);
 			$this->data[$key] = $keywords ?? '';
 		}
+
 		return $this->data[$key];
 	}
 
@@ -166,7 +170,7 @@ trait Requestable{
 	 * @param string $field
 	 * @return array
 	 */
-	public function keywordsSql(string $field = 'keywords'):array{
+	public function keywordsSql(string $field = 'keywords'): array {
 		return build_keyword_sql($this->keywords($field));
 	}
 
@@ -176,7 +180,7 @@ trait Requestable{
 	 * @access public
 	 * @return string
 	 */
-	public function plugin():string{
+	public function plugin(): string {
 		return $this->plugin ?: '';
 	}
 
@@ -187,8 +191,9 @@ trait Requestable{
 	 * @param string $plugin 插件名
 	 * @return $this
 	 */
-	public function setPlugin(string $plugin):self{
+	public function setPlugin(string $plugin): self {
 		$this->plugin = $plugin;
+
 		return $this;
 	}
 
@@ -196,12 +201,13 @@ trait Requestable{
 	 * @param string $key
 	 * @return mixed|null
 	 */
-	public function postJSON(string $key){
-		if(!$this->has($key, 'post')){
+	public function postJSON(string $key) {
+		if (!$this->has($key, 'post')) {
 			return null;
 		}
 
 		$value = $this->post($key);
+
 		return json_decode($value, true, 512, JSON_PRESERVE_ZERO_FRACTION);
 	}
 
@@ -212,7 +218,7 @@ trait Requestable{
 	 *
 	 * @return string A normalized query string for the Request
 	 */
-	public function getQueryString(){
+	public function getQueryString() {
 		return static::normalizeQueryString($this->query());
 	}
 
@@ -223,13 +229,13 @@ trait Requestable{
 	 * @param bool  $complete
 	 * @return string
 	 */
-	public function urlWithQuery(array $query, $complete = false){
+	public function urlWithQuery(array $query, $complete = false) {
 		$queryString = $this->query();
 		parse_str($queryString, $originalQuery);
 		$query = array_merge($originalQuery, $query);
 
 		return count($query) > 0
-			? $this->baseUrl($complete)."?".static::normalizeQueryString($query)
+			? $this->baseUrl($complete) . "?" . static::normalizeQueryString($query)
 			: $this->baseUrl($complete);
 	}
 
@@ -238,7 +244,7 @@ trait Requestable{
 	 *
 	 * @return bool
 	 */
-	public function prefetch(){
+	public function prefetch() {
 		return strcasecmp($this->server('HTTP_X_MOZ'), 'prefetch') === 0 ||
 			strcasecmp($this->header('Purpose'), 'prefetch') === 0;
 	}
@@ -249,10 +255,10 @@ trait Requestable{
 	 * @param string $fallback
 	 * @return string
 	 */
-	public function previousUrl($fallback = null){
+	public function previousUrl($fallback = null) {
 		$url = $this->cookie('_previous_url');
 
-		if(!$url){
+		if (!$url) {
 			$url = (string)url($fallback);
 		}
 
@@ -265,27 +271,27 @@ trait Requestable{
 	 * @param bool $complete
 	 * @return string
 	 */
-	public function path($complete = false){
-		if(is_null($this->path) === false){
+	public function path($complete = false) {
+		if (is_null($this->path) === false) {
 			return $this->path;
 		}
 
 		$pathinfo = $this->pathinfo();
-		if($complete){
-			$pathinfo = $this->root().'/'.$pathinfo;
+		if ($complete) {
+			$pathinfo = $this->root() . '/' . $pathinfo;
 		}
 		$pathinfo = trim($pathinfo, '/');
 
 		$suffix = app()->route->config('url_html_suffix');
-		if(false === $suffix){
+		if (false === $suffix) {
 			// 禁止伪静态访问
 			$path = $pathinfo;
-		}elseif($suffix){
+		} elseif ($suffix) {
 			// 去除正常的URL后缀
-			$path = preg_replace('/\.('.ltrim($suffix, '.').')$/i', '', $pathinfo);
-		}else{
+			$path = preg_replace('/\.(' . ltrim($suffix, '.') . ')$/i', '', $pathinfo);
+		} else {
 			// 允许任何后缀访问
-			$path = preg_replace('/\.'.$this->ext().'$/i', '', $pathinfo);
+			$path = preg_replace('/\.' . $this->ext() . '$/i', '', $pathinfo);
 		}
 
 		return $path;
@@ -297,7 +303,7 @@ trait Requestable{
 	 * @param string|array $patterns
 	 * @return bool
 	 */
-	public function pathIs($patterns){
+	public function pathIs($patterns) {
 		return Str::is($patterns, $this->path());
 	}
 
@@ -309,8 +315,8 @@ trait Requestable{
 	 * @param string $qs Query string
 	 * @return string A normalized query string for the Request
 	 */
-	public static function normalizeQueryString($qs){
-		if(empty($qs)){
+	public static function normalizeQueryString($qs) {
+		if (empty($qs)) {
 			return '';
 		}
 
@@ -321,4 +327,5 @@ trait Requestable{
 
 		return http_build_query($qs, '', '&', \PHP_QUERY_RFC3986);
 	}
+
 }

@@ -15,7 +15,7 @@ use Xin\Excel\Concerns\WithProperties;
 use Xin\Excel\Factories\WriterFactory;
 use Xin\Support\Arr;
 
-class Writer{
+class Writer {
 
 	use HasEventBus;
 
@@ -24,17 +24,17 @@ class Writer{
 	 */
 	protected $config = [
 		'properties' => [
-			'creator'        => '',
+			'creator' => '',
 			'lastModifiedBy' => '',
-			'title'          => '',
-			'description'    => '',
-			'subject'        => '',
-			'keywords'       => '',
-			'category'       => '',
-			'manager'        => '',
-			'company'        => '',
+			'title' => '',
+			'description' => '',
+			'subject' => '',
+			'keywords' => '',
+			'category' => '',
+			'manager' => '',
+			'company' => '',
 		],
-		'styles'     => [],
+		'styles' => [],
 	];
 
 	/**
@@ -75,7 +75,7 @@ class Writer{
 	/**
 	 * @param array $config
 	 */
-	public function __construct($config = []){
+	public function __construct($config = []) {
 		$this->config = array_merge_recursive($this->config, $config);
 
 		$this->setDefaultValueBinder();
@@ -84,7 +84,7 @@ class Writer{
 	/**
 	 * @return Writer
 	 */
-	public function setDefaultValueBinder(){
+	public function setDefaultValueBinder() {
 		$valueBinder = $this->config['value_binder'] ?? DefaultValueBinder::class;
 		Cell::setValueBinder(app($valueBinder));
 
@@ -101,7 +101,7 @@ class Writer{
 	 * @throws \PhpOffice\PhpSpreadsheet\Exception
 	 * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
 	 */
-	public function write($export, $filePath, $writerType = null){
+	public function write($export, $filePath, $writerType = null) {
 		$this->open($export);
 
 		$this->initColumns();
@@ -114,12 +114,12 @@ class Writer{
 	/**
 	 * @param Exportable $export
 	 */
-	protected function open($export){
+	protected function open($export) {
 		$this->exportable = $export;
 		$this->spreadsheet = new Spreadsheet;
 		$this->spreadsheet->disconnectWorksheets();
 
-		if($export instanceof WithCustomValueBinder){
+		if ($export instanceof WithCustomValueBinder) {
 			SpreadsheetCell::setValueBinder($export);
 		}
 
@@ -134,19 +134,19 @@ class Writer{
 	 *
 	 * @throws \PhpOffice\PhpSpreadsheet\Exception
 	 */
-	protected function initColumns(){
+	protected function initColumns() {
 		$startRow = 1;
 
 		$columnIndex = 1;
-		foreach($this->columns as $column){
+		foreach ($this->columns as $column) {
 			$columnDimension = $this->worksheet->getColumnDimensionByColumn($columnIndex);
 			$columnDimension->setWidth($column->getWidth());
 			$columnDimension->setAutoSize($column->isAutoSize());
 
 			$colCoordinate = Coordinate::stringFromColumnIndex($columnIndex);
-			$columnCellStyle = $this->worksheet->getStyle($colCoordinate.':'.$colCoordinate);
+			$columnCellStyle = $this->worksheet->getStyle($colCoordinate . ':' . $colCoordinate);
 
-			if($column->getType()){
+			if ($column->getType()) {
 				$columnCellStyle->getNumberFormat()->setFormatCode(static::getFormatCode($column->getType()));
 			}
 
@@ -158,7 +158,7 @@ class Writer{
 		$headingCellStyle = $this->worksheet->getStyle("$startRow:$startRow");
 		$headingCellStyle->getFont()->setBold(true);
 
-		$this->appendRow(array_map(function(Column $column){
+		$this->appendRow(array_map(function (Column $column) {
 			return $column->getTitle();
 		}, $this->columns), 'A1');
 
@@ -170,23 +170,23 @@ class Writer{
 	/**
 	 * 数据导出处理
 	 */
-	protected function handleData(){
+	protected function handleData() {
 		$currentPage = 1;
 		$chunkSize = $this->exportable->chunkSize();
 
-		if($chunkSize){ // 需要分块处理
-			while(true){
+		if ($chunkSize) { // 需要分块处理
+			while (true) {
 				$data = $this->exportable->data($currentPage);
 
 				$flag = $this->handleDataItems($data);
 
-				if(count($data) < $chunkSize || !$flag){
+				if (count($data) < $chunkSize || !$flag) {
 					break;
 				}
 
 				$currentPage += 1;
 			}
-		}else{ // 不需要分块处理
+		} else { // 不需要分块处理
 			$data = $this->exportable->data();
 
 			$this->handleDataItems($data);
@@ -199,24 +199,24 @@ class Writer{
 	 * @param array $data
 	 * @return bool
 	 */
-	protected function handleDataItems($data){
-		foreach($data as $index => $row){
+	protected function handleDataItems($data) {
+		foreach ($data as $index => $row) {
 			$this->exportCount++;
 
-			try{
+			try {
 				// 控制中断后续导出
-				if($row === false){
+				if ($row === false) {
 					return false;
-				}elseif($row === null){ // 跳过本次数据导出
+				} elseif ($row === null) { // 跳过本次数据导出
 					continue;
 				}
 
 				$values = [];
-				foreach($this->columns as $column){
-					if($column->hasValueResolver()){
+				foreach ($this->columns as $column) {
+					if ($column->hasValueResolver()) {
 						$callback = $column->getValueResolver();
 						$value = call_user_func($callback, $row, $index, $data);
-					}else{
+					} else {
 						$name = $column->getKey();
 						$value = Arr::get($row, $name);
 					}
@@ -224,7 +224,7 @@ class Writer{
 				}
 
 				$this->appendRow($values);
-			}catch(\Throwable $e){
+			} catch (\Throwable $e) {
 				$this->exportErrorCount++;
 				$this->lastExportError = $e;
 			}
@@ -236,17 +236,17 @@ class Writer{
 	/**
 	 * 处理文档描述信息
 	 */
-	protected function handleDocumentProperties(){
+	protected function handleDocumentProperties() {
 		$properties = $this->config['properties'];
 
-		if($this->exportable instanceof WithProperties){
+		if ($this->exportable instanceof WithProperties) {
 			$properties = array_merge($properties, $this->exportable->properties());
 		}
 
 		$props = $this->spreadsheet->getProperties();
 
-		foreach(array_filter($properties) as $property => $value){
-			switch($property){
+		foreach (array_filter($properties) as $property => $value) {
+			switch ($property) {
 				case 'title':
 					$props->setTitle($value);
 
@@ -294,10 +294,10 @@ class Writer{
 	 * @param Spreadsheet $spreadsheet
 	 * @throws \PhpOffice\PhpSpreadsheet\Exception
 	 */
-	protected function handleDocumentStyles($exportObj, $spreadsheet){
+	protected function handleDocumentStyles($exportObj, $spreadsheet) {
 		$defaultStyles = $this->config['styles'];
 
-		if($exportObj instanceof WithDefaultStyles){
+		if ($exportObj instanceof WithDefaultStyles) {
 			$defaultStyles = array_merge($defaultStyles, $exportObj->defaultStyles());
 		}
 
@@ -310,7 +310,7 @@ class Writer{
 	 * @param array $row
 	 * @param null  $startCell
 	 */
-	protected function appendRow($row, $startCell = null){
+	protected function appendRow($row, $startCell = null) {
 		return $this->appendRows([$row], $startCell);
 	}
 
@@ -321,9 +321,9 @@ class Writer{
 	 * @param null    $startCell
 	 * @return Worksheet
 	 */
-	protected function appendRows($rows, $startCell = null){
-		if(!$startCell){
-			$startCell = 'A'.($this->worksheet->getHighestRow() + 1);
+	protected function appendRows($rows, $startCell = null) {
+		if (!$startCell) {
+			$startCell = 'A' . ($this->worksheet->getHighestRow() + 1);
 		}
 
 		return $this->worksheet->fromArray($rows, null, $startCell, true);
@@ -337,7 +337,7 @@ class Writer{
 	 * @return string
 	 * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
 	 */
-	protected function save($filePath, $writerType){
+	protected function save($filePath, $writerType) {
 		$writer = WriterFactory::make(
 			$writerType,
 			$this->spreadsheet,
@@ -362,22 +362,23 @@ class Writer{
 	 * @param string $type
 	 * @return string
 	 */
-	public static function getFormatCode($type){
+	public static function getFormatCode($type) {
 		$codes = [
-			'number'           => NumberFormat::FORMAT_NUMBER,
-			'integer'          => NumberFormat::FORMAT_NUMBER,
-			'int'              => NumberFormat::FORMAT_NUMBER,
-			'float'            => NumberFormat::FORMAT_NUMBER_00,
-			'double'           => NumberFormat::FORMAT_NUMBER_00,
-			'percentage'       => NumberFormat::FORMAT_PERCENTAGE,
+			'number' => NumberFormat::FORMAT_NUMBER,
+			'integer' => NumberFormat::FORMAT_NUMBER,
+			'int' => NumberFormat::FORMAT_NUMBER,
+			'float' => NumberFormat::FORMAT_NUMBER_00,
+			'double' => NumberFormat::FORMAT_NUMBER_00,
+			'percentage' => NumberFormat::FORMAT_PERCENTAGE,
 			'percentage_float' => NumberFormat::FORMAT_PERCENTAGE_00,
-			'price'            => '￥'.NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-			'RMB'              => '￥'.NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-			'USD'              => '$'.NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-			'date'             => NumberFormat::FORMAT_DATE_YYYYMMDD,
-			'datetime'         => NumberFormat::FORMAT_DATE_YYYYMMDD.' h:mm:ss',
+			'price' => '￥' . NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
+			'RMB' => '￥' . NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
+			'USD' => '$' . NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
+			'date' => NumberFormat::FORMAT_DATE_YYYYMMDD,
+			'datetime' => NumberFormat::FORMAT_DATE_YYYYMMDD . ' h:mm:ss',
 		];
 
 		return $codes[$type] ?? NumberFormat::FORMAT_TEXT;
 	}
+
 }

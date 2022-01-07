@@ -18,7 +18,7 @@ use think\Request;
  * @property string uploadName
  * @property string uploadType
  */
-trait UploadFile{
+trait UploadFile {
 
 	use UploadFinder, UploadLocal, UploadToken;
 
@@ -28,8 +28,8 @@ trait UploadFile{
 	 * @param \think\Request $request
 	 * @return string
 	 */
-	protected function uploadType(Request $request){
-		if(property_exists($this, 'uploadType')){
+	protected function uploadType(Request $request) {
+		if (property_exists($this, 'uploadType')) {
 			return $this->uploadType;
 		}
 
@@ -41,8 +41,8 @@ trait UploadFile{
 	 *
 	 * @return string
 	 */
-	protected function disk(){
-		if(property_exists($this, 'disk')){
+	protected function disk() {
+		if (property_exists($this, 'disk')) {
 			return $this->disk;
 		}
 
@@ -55,8 +55,8 @@ trait UploadFile{
 	 * @param string $type
 	 * @return string
 	 */
-	protected function savePath($type){
-		if(property_exists($this, 'savePath')){
+	protected function savePath($type) {
+		if (property_exists($this, 'savePath')) {
 			return $this->savePath;
 		}
 
@@ -68,8 +68,8 @@ trait UploadFile{
 	 *
 	 * @return string
 	 */
-	protected function saveRule(){
-		if(property_exists($this, 'saveRule')){
+	protected function saveRule() {
+		if (property_exists($this, 'saveRule')) {
 			return $this->saveRule;
 		}
 
@@ -81,11 +81,12 @@ trait UploadFile{
 	 *
 	 * @return string
 	 */
-	protected function uploadName(){
-		if(property_exists($this, 'uploadName')){
+	protected function uploadName() {
+		if (property_exists($this, 'uploadName')) {
 			return $this->uploadName;
 		}
 
 		return "file";
 	}
+
 }

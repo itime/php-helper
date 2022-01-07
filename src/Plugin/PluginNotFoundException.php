@@ -10,7 +10,7 @@ namespace Xin\Plugin;
 use Throwable;
 use Xin\Contracts\Plugin\PluginNotFoundException as PluginNotFoundExceptionContract;
 
-class PluginNotFoundException extends \Exception implements PluginNotFoundExceptionContract{
+class PluginNotFoundException extends \Exception implements PluginNotFoundExceptionContract {
 
 	/**
 	 * PluginNotFoundException constructor.
@@ -18,7 +18,8 @@ class PluginNotFoundException extends \Exception implements PluginNotFoundExcept
 	 * @param string     $plugin
 	 * @param \Throwable $previous
 	 */
-	public function __construct($plugin, Throwable $previous = null){
+	public function __construct($plugin, Throwable $previous = null) {
 		parent::__construct("plugin {$plugin} not found!", 404, $previous);
 	}
+
 }

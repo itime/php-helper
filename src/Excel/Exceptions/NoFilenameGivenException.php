@@ -5,18 +5,19 @@ namespace Xin\Excel\Exceptions;
 use InvalidArgumentException;
 use Throwable;
 
-class NoFilenameGivenException extends InvalidArgumentException
-{
-    /**
-     * @param string $message
-     * @param int $code
-     * @param Throwable|null $previous
-     */
-    public function __construct(
-        $message = 'A filename needs to be passed in order to download the export',
-        $code = 0,
-        Throwable $previous = null
-    ) {
-        parent::__construct($message, $code, $previous);
-    }
+class NoFilenameGivenException extends InvalidArgumentException {
+
+	/**
+	 * @param string         $message
+	 * @param int            $code
+	 * @param Throwable|null $previous
+	 */
+	public function __construct(
+		$message = 'A filename needs to be passed in order to download the export',
+		$code = 0,
+		Throwable $previous = null
+	) {
+		parent::__construct($message, $code, $previous);
+	}
+
 }

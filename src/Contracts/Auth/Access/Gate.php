@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Auth\Access;
 
-interface Gate{
+interface Gate {
 
 	/**
 	 * 确定给定的能力是否已定义
@@ -110,4 +110,5 @@ interface Gate{
 	 * @return array
 	 */
 	public function abilities();
+
 }

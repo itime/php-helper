@@ -9,7 +9,7 @@ namespace Xin\Thinkphp\Bus\Balance;
 
 use Xin\Support\Str;
 
-trait Balanceable{
+trait Balanceable {
 
 	/**
 	 * @var \Xin\Contracts\Bus\Balance\BalanceRepository
@@ -21,13 +21,13 @@ trait Balanceable{
 	 *
 	 * @return \Xin\Contracts\Bus\Balance\BalanceRepository
 	 */
-	public function balance($bag = 'default'){
-		if(isset($this->balancers[$bag])){
+	public function balance($bag = 'default') {
+		if (isset($this->balancers[$bag])) {
 			return $this->balancers[$bag];
 		}
 
-		$method = 'make'.Str::camel($bag).'Balance';
-		if(!method_exists($this, $method)){
+		$method = 'make' . Str::camel($bag) . 'Balance';
+		if (!method_exists($this, $method)) {
 			throw new \RuntimeException("{$bag} balance not defined.");
 		}
 
@@ -39,13 +39,13 @@ trait Balanceable{
 	 *
 	 * @return \Xin\Contracts\Bus\Balance\BalanceRepository
 	 */
-	protected function makeDefaultBalance(){
+	protected function makeDefaultBalance() {
 		return new Balance([
 			'model' => static::class,
 			'field' => 'balance',
-			'log'   => [
-				'type'  => 'table',
-				'table' => $this->name."_balance_log",
+			'log' => [
+				'type' => 'table',
+				'table' => $this->name . "_balance_log",
 			],
 		]);
 	}
@@ -58,7 +58,7 @@ trait Balanceable{
 	 * @param array  $attributes
 	 * @return mixed
 	 */
-	public function recharge($amount, $remark = '', $attributes = [], $bag = 'default'){
+	public function recharge($amount, $remark = '', $attributes = [], $bag = 'default') {
 		return $this->balance($bag)->recharge($this->getOrigin('id'), $amount, $remark, $attributes);
 	}
 
@@ -70,7 +70,7 @@ trait Balanceable{
 	 * @param array  $attributes
 	 * @return mixed
 	 */
-	public function consume($amount, $remark = '', $attributes = [], $bag = 'default'){
+	public function consume($amount, $remark = '', $attributes = [], $bag = 'default') {
 		return $this->balance($bag)->consume($this->getOrigin('id'), $amount, $remark, $attributes);
 	}
 
@@ -79,9 +79,10 @@ trait Balanceable{
 	 *
 	 * @return float
 	 */
-	public function getBalance($bag = 'default'){
+	public function getBalance($bag = 'default') {
 		return $this->balance($bag)->value(
 			$this->getOrigin('id')
 		);
 	}
+
 }

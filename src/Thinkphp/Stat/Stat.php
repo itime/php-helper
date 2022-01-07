@@ -12,7 +12,7 @@ use Xin\Contracts\Stat\Provider as StatProviderContract;
 use Xin\Contracts\Stat\Repository as StatRepository;
 use Xin\Support\Time;
 
-class Stat implements StatRepository{
+class Stat implements StatRepository {
 
 	/**
 	 * @var \think\App
@@ -46,7 +46,7 @@ class Stat implements StatRepository{
 	 * @param array                             $config
 	 * @param \Xin\Contracts\Stat\Provider|null $provider
 	 */
-	public function __construct(App $app, array $config = [], StatProviderContract $provider = null){
+	public function __construct(App $app, array $config = [], StatProviderContract $provider = null) {
 		$this->app = $app;
 		$this->request = $app['request'];
 		$this->cache = $app['cache'];
@@ -61,7 +61,7 @@ class Stat implements StatRepository{
 	/**
 	 * @inheritDoc
 	 */
-	public function tally($name, $step = 1, array $options = []){
+	public function tally($name, $step = 1, array $options = []) {
 		$statId = $this->resolveStatID($name, $options);
 
 		$this->provider->incById($statId, $step, $options);
@@ -70,8 +70,8 @@ class Stat implements StatRepository{
 	/**
 	 * @inheritDoc
 	 */
-	public function tallyIP(array $options = []){
-		if($this->existIp($options)){
+	public function tallyIP(array $options = []) {
+		if ($this->existIp($options)) {
 			return;
 		}
 
@@ -80,10 +80,10 @@ class Stat implements StatRepository{
 		$userAgent = substr($userAgent, 0, 500);
 
 		$this->provider->insertIpLog([
-			'ip'          => $this->request->ip(),
-			'time'        => Time::today()[0],
-			'referer'     => $referer ? $referer : '',
-			'user_agent'  => $userAgent ? $userAgent : '',
+			'ip' => $this->request->ip(),
+			'time' => Time::today()[0],
+			'referer' => $referer ? $referer : '',
+			'user_agent' => $userAgent ? $userAgent : '',
 			'create_time' => $this->request->time(),
 		], $options);
 
@@ -93,11 +93,12 @@ class Stat implements StatRepository{
 	/**
 	 * @inheritDoc
 	 */
-	public function value($name, $time = null, array $options = []){
-		if($time){
+	public function value($name, $time = null, array $options = []) {
+		if ($time) {
 			return $this->provider->getValueByTime($name, $time, $options);
-		}else{
+		} else {
 			$statId = $this->resolveStatID($name, $options);
+
 			return $this->provider->getValueById($statId);
 		}
 	}
@@ -105,7 +106,7 @@ class Stat implements StatRepository{
 	/**
 	 * @inheritDoc
 	 */
-	public function total($name, array $options = []){
+	public function total($name, array $options = []) {
 		return $this->provider->getTotal($name, $options);
 	}
 
@@ -116,20 +117,20 @@ class Stat implements StatRepository{
 	 * @param array  $options
 	 * @return int
 	 */
-	protected function resolveStatID($name, array $options){
+	protected function resolveStatID($name, array $options) {
 		$todayBeginTime = Time::today()[0];
 		$cacheKey = $this->provider->getCacheKey($name, $options);
 
 		$id = $this->cache->get($cacheKey);
-		if(empty($id)){
+		if (empty($id)) {
 			// 查询数据库有没有今天的数据
 			$id = $this->provider->getIdByTime($name, $todayBeginTime, $options);
 
 			// 如果存在的话，插入一条数据
-			if(!$id){
+			if (!$id) {
 				$id = $this->provider->insert([
-					'name'        => $name,
-					'value'       => 0,
+					'name' => $name,
+					'value' => 0,
 					'create_time' => $todayBeginTime,
 				], $options);
 			}
@@ -146,7 +147,7 @@ class Stat implements StatRepository{
 	 * @param array $options
 	 * @return bool
 	 */
-	protected function existIp(array $options){
+	protected function existIp(array $options) {
 		return $this->provider->getIPIdByTime(
 				$this->request->ip(),
 				Time::today()[0],

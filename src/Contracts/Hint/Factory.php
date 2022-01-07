@@ -4,9 +4,10 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Contracts\Hint;
 
-interface Factory{
+interface Factory {
 
 	/**
 	 * 使用 Api 提示器
@@ -37,4 +38,5 @@ interface Factory{
 	 * @return \Xin\Contracts\Hint\Hint
 	 */
 	public function hint($name = null);
+
 }

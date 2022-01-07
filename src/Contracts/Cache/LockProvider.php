@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Cache;
 
-interface LockProvider{
+interface LockProvider {
 
 	/**
 	 * Get a lock instance.
@@ -27,4 +27,5 @@ interface LockProvider{
 	 * @return \Xin\Contracts\Cache\Lock
 	 */
 	public function restoreLock($name, $owner);
+
 }

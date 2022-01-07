@@ -16,7 +16,7 @@ use Xin\Thinkphp\Facade\Auth;
 /**
  * Trait RegistersUsers
  */
-trait RegistersUsers{
+trait RegistersUsers {
 
 	use RedirectsUsers, AuthenticatesFields;
 
@@ -26,7 +26,7 @@ trait RegistersUsers{
 	 * @param \think\Request $request
 	 * @return \think\response\View
 	 */
-	protected function showRegistrationForm(Request $request){
+	protected function showRegistrationForm(Request $request) {
 		return view('auth/register');
 	}
 
@@ -36,8 +36,8 @@ trait RegistersUsers{
 	 * @param Request $request
 	 * @return mixed|\think\Response|\think\response\Redirect
 	 */
-	public function register(Request $request){
-		if($request->isGet()){
+	public function register(Request $request) {
+		if ($request->isGet()) {
 			return $this->showRegistrationForm($request);
 		}
 
@@ -60,7 +60,7 @@ trait RegistersUsers{
 	 *
 	 * @return \Xin\Contracts\Auth\Guard|\Xin\Contracts\Auth\StatefulGuard
 	 */
-	protected function guard(){
+	protected function guard() {
 		return Auth::guard();
 	}
 
@@ -71,7 +71,7 @@ trait RegistersUsers{
 	 * @param mixed   $user
 	 * @return mixed|void
 	 */
-	protected function registered(Request $request, $user){
+	protected function registered(Request $request, $user) {
 	}
 
 	/**
@@ -88,13 +88,13 @@ trait RegistersUsers{
 	 * @param \think\Request $request
 	 * @return array
 	 */
-	protected function validateRegister(Request $request){
+	protected function validateRegister(Request $request) {
 		$validate = new Validate();
 		$validate->failException(true);
 
 		$validate->rule([
-			$this->username()        => 'require|alphaDash',
-			$this->password()        => 'require|alphaDash|confirm:'.$this->confirmPassword(),
+			$this->username() => 'require|alphaDash',
+			$this->password() => 'require|alphaDash|confirm:' . $this->confirmPassword(),
 			$this->confirmPassword() => "require|alphaDash",
 		], [
 			$this->username() => '用户名',
@@ -112,7 +112,7 @@ trait RegistersUsers{
 		$info = $provider->getByCredentials([
 			$this->username() => $username,
 		]);
-		if(!empty($info)){
+		if (!empty($info)) {
 			throw new ValidateException("该账号已被注册！");
 		}
 
@@ -125,10 +125,11 @@ trait RegistersUsers{
 	 * @param array $data
 	 * @return array
 	 */
-	protected function encryptPassword($data){
+	protected function encryptPassword($data) {
 		$passwordField = $this->password();
 		$data[$passwordField] = app('hash')->make($data[$passwordField]);
 
 		return $data;
 	}
+
 }

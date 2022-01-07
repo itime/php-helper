@@ -12,7 +12,7 @@ namespace Xin\Thinkphp\Console;
  *
  * @mixin \think\console\Command
  */
-trait ConfirmableTrait{
+trait ConfirmableTrait {
 
 	/**
 	 * Confirm before proceeding with the action.
@@ -22,13 +22,13 @@ trait ConfirmableTrait{
 	 * @param \Closure|bool|null $callback
 	 * @return bool
 	 */
-	public function confirmToProceed($warning = 'Application In Production!', $callback = null){
+	public function confirmToProceed($warning = 'Application In Production!', $callback = null) {
 		$callback = is_null($callback) ? $this->getDefaultConfirmCallback() : $callback;
 
 		$shouldConfirm = value($callback);
 
-		if($shouldConfirm){
-			if($this->input->hasOption('force') && $this->input->getOption('force')){
+		if ($shouldConfirm) {
+			if ($this->input->hasOption('force') && $this->input->getOption('force')) {
 				return true;
 			}
 
@@ -36,7 +36,7 @@ trait ConfirmableTrait{
 
 			$confirmed = $this->output->confirm($this->input, 'Do you really wish to run this command?');
 
-			if(!$confirmed){
+			if (!$confirmed) {
 				$this->output->comment('Command Canceled!');
 
 				return false;
@@ -51,9 +51,10 @@ trait ConfirmableTrait{
 	 *
 	 * @return \Closure
 	 */
-	protected function getDefaultConfirmCallback(){
-		return function(){
+	protected function getDefaultConfirmCallback() {
+		return function () {
 			return $this->getApp()->config->get('app.env') === 'production';
 		};
 	}
+
 }

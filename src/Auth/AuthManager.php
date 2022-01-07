@@ -4,6 +4,7 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Auth;
 
 use Closure;
@@ -23,7 +24,7 @@ use Xin\Contracts\Auth\Guard as GuardContract;
  * @method bool loginUsingCredential(array $credentials, \Closure $notExistCallback = null)
  * @method void setPreCheckCallback(\Closure $preCheckCallback)
  */
-class AuthManager implements FactoryContract{
+class AuthManager implements FactoryContract {
 
 	/**
 	 * @var array
@@ -56,17 +57,17 @@ class AuthManager implements FactoryContract{
 	 *
 	 * @param array $config
 	 */
-	public function __construct(array $config){
+	public function __construct(array $config) {
 		$this->config = $config;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function guard($name = null){
+	public function guard($name = null) {
 		$name = $name ?: $this->getDefaultDriver();
 
-		if(!isset($this->guards[$name])){
+		if (!isset($this->guards[$name])) {
 			$this->guards[$name] = $this->resolve($name);
 		}
 
@@ -76,7 +77,7 @@ class AuthManager implements FactoryContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function shouldUse($name){
+	public function shouldUse($name) {
 		$name = $name ?: $this->getDefaultDriver();
 
 		$this->setDefaultDriver($name);
@@ -89,19 +90,19 @@ class AuthManager implements FactoryContract{
 	 * @return \Xin\Contracts\Auth\Guard
 	 * @throws \InvalidArgumentException
 	 */
-	protected function resolve($name){
+	protected function resolve($name) {
 		$config = $this->getGuardConfig($name);
 
-		if(is_null($config)){
+		if (is_null($config)) {
 			throw new InvalidArgumentException("Auth guard [{$name}] is not defined.");
 		}
 
-		if(isset($this->customCreators[$config['driver']])){
+		if (isset($this->customCreators[$config['driver']])) {
 			return $this->callCustomCreator($name, $config);
 		}
 
-		$driverMethod = 'create'.ucfirst($config['driver']).'Driver';
-		if(method_exists($this, $driverMethod)){
+		$driverMethod = 'create' . ucfirst($config['driver']) . 'Driver';
+		if (method_exists($this, $driverMethod)) {
 			return $this->{$driverMethod}($name, $config);
 		}
 
@@ -117,7 +118,7 @@ class AuthManager implements FactoryContract{
 	 * @param array  $config
 	 * @return mixed
 	 */
-	protected function callCustomCreator($name, array $config){
+	protected function callCustomCreator($name, array $config) {
 		return $this->customCreators[$config['driver']](
 			$name, $config,
 			$this->createUserProvider($config['provider'])
@@ -129,7 +130,7 @@ class AuthManager implements FactoryContract{
 	 *
 	 * @return string
 	 */
-	public function getDefaultUserProvider(){
+	public function getDefaultUserProvider() {
 		return $this->config['defaults']['provider'];
 	}
 
@@ -139,9 +140,9 @@ class AuthManager implements FactoryContract{
 	 * @param string $provider
 	 * @return array|void
 	 */
-	public function getProviderConfiguration($provider){
-		if($provider = $provider ?: $this->getDefaultUserProvider()){
-			if(!isset($this->config['providers'][$provider])){
+	public function getProviderConfiguration($provider) {
+		if ($provider = $provider ?: $this->getDefaultUserProvider()) {
+			if (!isset($this->config['providers'][$provider])) {
 				throw new \RuntimeException(
 					"auth config provider [{$provider}] not defined."
 				);
@@ -157,23 +158,23 @@ class AuthManager implements FactoryContract{
 	 * @param string|null $provider
 	 * @return \Xin\Contracts\Auth\UserProvider
 	 */
-	public function createUserProvider($provider = null){
-		if(is_null($config = $this->getProviderConfiguration($provider))){
+	public function createUserProvider($provider = null) {
+		if (is_null($config = $this->getProviderConfiguration($provider))) {
 			throw new InvalidArgumentException(
 				"Authentication user provider [{$provider}] is not defined."
 			);
 		}
 
 		$driver = isset($config['driver']) ? $config['driver'] : null;
-		if(isset($this->customProviderCreators[$driver])){
+		if (isset($this->customProviderCreators[$driver])) {
 			return call_user_func(
 				$this->customProviderCreators[$driver],
 				$config
 			);
 		}
 
-		$driverMethod = 'create'.ucfirst($config['driver']).'Provider';
-		if(method_exists($this, $driverMethod)){
+		$driverMethod = 'create' . ucfirst($config['driver']) . 'Provider';
+		if (method_exists($this, $driverMethod)) {
 			return $this->{$driverMethod}($config);
 		}
 
@@ -185,7 +186,7 @@ class AuthManager implements FactoryContract{
 	 *
 	 * @return string
 	 */
-	public function getDefaultDriver(){
+	public function getDefaultDriver() {
 		return $this->config['defaults']['guard'];
 	}
 
@@ -194,7 +195,7 @@ class AuthManager implements FactoryContract{
 	 *
 	 * @param string $name
 	 */
-	public function setDefaultDriver($name){
+	public function setDefaultDriver($name) {
 		$this->config['defaults']['guard'] = $name;
 	}
 
@@ -205,7 +206,7 @@ class AuthManager implements FactoryContract{
 	 * @param GuardContract $user
 	 * @return $this
 	 */
-	public function setGuard($name, GuardContract $user){
+	public function setGuard($name, GuardContract $user) {
 		$this->guards[$name] = $user;
 
 		return $this;
@@ -217,8 +218,8 @@ class AuthManager implements FactoryContract{
 	 * @param string $name
 	 * @return array
 	 */
-	public function getGuardConfig($name){
-		if(!isset($this->config['guards'][$name])){
+	public function getGuardConfig($name) {
+		if (!isset($this->config['guards'][$name])) {
 			throw new \RuntimeException(
 				"not configure [{$name}] guard."
 			);
@@ -234,7 +235,7 @@ class AuthManager implements FactoryContract{
 	 * @param \Closure $callback
 	 * @return \Xin\Auth\AuthManager
 	 */
-	public function extend($driver, Closure $callback){
+	public function extend($driver, Closure $callback) {
 		$this->customCreators[$driver] = $callback;
 
 		return $this;
@@ -247,7 +248,7 @@ class AuthManager implements FactoryContract{
 	 * @param \Closure $callback
 	 * @return \Xin\Auth\AuthManager
 	 */
-	public function provider($name, Closure $callback){
+	public function provider($name, Closure $callback) {
 		$this->customProviderCreators[$name] = $callback;
 
 		return $this;
@@ -258,7 +259,7 @@ class AuthManager implements FactoryContract{
 	 *
 	 * @return mixed
 	 */
-	public function user(){
+	public function user() {
 		return $this->getUser(null, null, 0);
 	}
 
@@ -267,7 +268,7 @@ class AuthManager implements FactoryContract{
 	 *
 	 * @return int
 	 */
-	public function id(){
+	public function id() {
 		return $this->getUserId(0);
 	}
 
@@ -276,12 +277,12 @@ class AuthManager implements FactoryContract{
 	 *
 	 * @return bool
 	 */
-	public function isAdministrator(){
+	public function isAdministrator() {
 		$config = $this->getGuardConfig(
 			$this->getDefaultDriver()
 		);
 
-		if(!isset($config['administrator_id'])){
+		if (!isset($config['administrator_id'])) {
 			return false;
 		}
 
@@ -295,7 +296,8 @@ class AuthManager implements FactoryContract{
 	 * @param array  $parameters
 	 * @return mixed
 	 */
-	public function __call($method, $parameters){
+	public function __call($method, $parameters) {
 		return $this->guard()->{$method}(...$parameters);
 	}
+
 }

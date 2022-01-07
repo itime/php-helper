@@ -11,7 +11,7 @@ namespace Xin\Support;
 /**
  * 安全相关工具类
  */
-final class Secure{
+final class Secure {
 
 	/**
 	 * 获取签名证书ID
@@ -20,12 +20,13 @@ final class Secure{
 	 * @param string $cert_pwd 签名证书密码
 	 * @return mixed
 	 */
-	public static function getSignCertId($cert_path, $cert_pwd){
+	public static function getSignCertId($cert_path, $cert_pwd) {
 		$pkcs12certdata = file_get_contents($cert_path);
 		openssl_pkcs12_read($pkcs12certdata, $certs, $cert_pwd);
 		$x509data = $certs ['cert'];
 		openssl_x509_read($x509data);
 		$certdata = openssl_x509_parse($x509data);
+
 		return $certdata ['serialNumber'];
 	}
 
@@ -36,9 +37,10 @@ final class Secure{
 	 * @param $cert_pwd
 	 * @return mixed
 	 */
-	public static function getPrivateKey($cert_path, $cert_pwd){
+	public static function getPrivateKey($cert_path, $cert_pwd) {
 		$pkcs12 = file_get_contents($cert_path);
 		openssl_pkcs12_read($pkcs12, $certs, $cert_pwd);
+
 		return $certs ['pkey'];
 	}
 
@@ -49,22 +51,24 @@ final class Secure{
 	 * @param $cert_dir
 	 * @return string
 	 */
-	public static function getPulbicKeyByCertId($certId, $cert_dir){
+	public static function getPulbicKeyByCertId($certId, $cert_dir) {
 		$handle = opendir($cert_dir);
-		if(!$handle) return null;
+		if (!$handle) return null;
 
-		while($file = readdir($handle)){
+		while ($file = readdir($handle)) {
 			clearstatcache();
-			$filePath = $cert_dir.'/'.$file;
-			if(is_file($filePath) && pathinfo($file, PATHINFO_EXTENSION) == 'cer'){
-				if(self::getCertIdByCerPath($filePath) == $certId){
+			$filePath = $cert_dir . '/' . $file;
+			if (is_file($filePath) && pathinfo($file, PATHINFO_EXTENSION) == 'cer') {
+				if (self::getCertIdByCerPath($filePath) == $certId) {
 					closedir($handle);
+
 					return file_get_contents($filePath);
 				}
 			}
 		}
 
 		closedir($handle);
+
 		return null;
 	}
 
@@ -74,10 +78,11 @@ final class Secure{
 	 * @param string $cert_path 证书路径
 	 * @return string
 	 */
-	public static function getCertIdByCerPath($cert_path){
+	public static function getCertIdByCerPath($cert_path) {
 		$x509data = file_get_contents($cert_path);
 		openssl_x509_read($x509data);
 		$certdata = openssl_x509_parse($x509data);
+
 		return $certdata ['serialNumber'];
 	}
 
@@ -88,11 +93,12 @@ final class Secure{
 	 * @param string $public_key 证书公钥
 	 * @return string
 	 */
-	public static function rsaSign($content, $public_key){
+	public static function rsaSign($content, $public_key) {
 		$pkeyid = openssl_get_privatekey($public_key);
 		openssl_sign($content, $sign, $pkeyid);
 		openssl_free_key($pkeyid);
 		$sign = base64_encode($sign);
+
 		return $sign;
 	}
 
@@ -104,17 +110,17 @@ final class Secure{
 	 * @param string $public_key 证书公钥
 	 * @return bool
 	 */
-	public static function rsaVerify($content, $sign, $public_key){
+	public static function rsaVerify($content, $sign, $public_key) {
 		$sign = base64_decode($sign);
 		$pkeyid = openssl_get_publickey($public_key);
 		$verify = '';
-		if($pkeyid){
+		if ($pkeyid) {
 			$verify = openssl_verify($content, $sign, $pkeyid);
 			openssl_free_key($pkeyid);
 		}
-		if($verify){
+		if ($verify) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -128,7 +134,7 @@ final class Secure{
 	 * @return string
 	 * @author 麦当苗儿 <zuojiazi@vip.qq.com>
 	 */
-	public static function encrypt($data, $key = '', $expire = 0){
+	public static function encrypt($data, $key = '', $expire = 0) {
 		$key = md5($key);
 		$data = base64_encode($data);
 		$x = 0;
@@ -136,17 +142,18 @@ final class Secure{
 		$l = strlen($key);
 		$char = '';
 
-		for($i = 0; $i < $len; $i++){
-			if($x == $l) $x = 0;
+		for ($i = 0; $i < $len; $i++) {
+			if ($x == $l) $x = 0;
 			$char .= substr($key, $x, 1);
 			$x++;
 		}
 
 		$str = sprintf('%010d', $expire ? $expire + time() : 0);
 
-		for($i = 0; $i < $len; $i++){
+		for ($i = 0; $i < $len; $i++) {
 			$str .= chr(ord(substr($data, $i, 1)) + (ord(substr($char, $i, 1))) % 256);
 		}
+
 		return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($str));
 	}
 
@@ -158,18 +165,18 @@ final class Secure{
 	 * @return string
 	 * @author 麦当苗儿 <zuojiazi@vip.qq.com>
 	 */
-	public static function decrypt($data, $key = ''){
+	public static function decrypt($data, $key = '') {
 		$key = md5($key);
 		$data = str_replace(['-', '_'], ['+', '/'], $data);
 		$mod4 = strlen($data) % 4;
-		if($mod4){
+		if ($mod4) {
 			$data .= substr('====', $mod4);
 		}
 		$data = base64_decode($data);
 		$expire = substr($data, 0, 10);
 		$data = substr($data, 10);
 
-		if($expire > 0 && $expire < time()){
+		if ($expire > 0 && $expire < time()) {
 			return '';
 		}
 		$x = 0;
@@ -177,19 +184,20 @@ final class Secure{
 		$l = strlen($key);
 		$char = $str = '';
 
-		for($i = 0; $i < $len; $i++){
-			if($x == $l) $x = 0;
+		for ($i = 0; $i < $len; $i++) {
+			if ($x == $l) $x = 0;
 			$char .= substr($key, $x, 1);
 			$x++;
 		}
 
-		for($i = 0; $i < $len; $i++){
-			if(ord(substr($data, $i, 1)) < ord(substr($char, $i, 1))){
+		for ($i = 0; $i < $len; $i++) {
+			if (ord(substr($data, $i, 1)) < ord(substr($char, $i, 1))) {
 				$str .= chr((ord(substr($data, $i, 1)) + 256) - ord(substr($char, $i, 1)));
-			}else{
+			} else {
 				$str .= chr(ord(substr($data, $i, 1)) - ord(substr($char, $i, 1)));
 			}
 		}
+
 		return base64_decode($str);
 	}
 

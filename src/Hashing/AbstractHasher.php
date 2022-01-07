@@ -7,7 +7,7 @@
 
 namespace Xin\Hashing;
 
-abstract class AbstractHasher{
+abstract class AbstractHasher {
 
 	/**
 	 * Get information about the given hashed value.
@@ -15,7 +15,7 @@ abstract class AbstractHasher{
 	 * @param string $hashedValue
 	 * @return array
 	 */
-	public function info($hashedValue){
+	public function info($hashedValue) {
 		return password_get_info($hashedValue);
 	}
 
@@ -27,11 +27,12 @@ abstract class AbstractHasher{
 	 * @param array  $options
 	 * @return bool
 	 */
-	public function check($value, $hashedValue, array $options = []){
-		if(strlen($hashedValue) === 0){
+	public function check($value, $hashedValue, array $options = []) {
+		if (strlen($hashedValue) === 0) {
 			return false;
 		}
 
 		return password_verify($value, $hashedValue);
 	}
+
 }

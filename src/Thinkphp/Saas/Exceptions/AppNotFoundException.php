@@ -7,13 +7,13 @@
 
 namespace Xin\Thinkphp\Saas\Exceptions;
 
-class AppNotFoundException extends \LogicException{
+class AppNotFoundException extends \LogicException {
 
 	/**
 	 * @param int $id
 	 * @return static
 	 */
-	public static function ofId($id){
+	public static function ofId($id) {
 		return new static("App not found [id:{$id}]!");
 	}
 
@@ -21,7 +21,8 @@ class AppNotFoundException extends \LogicException{
 	 * @param string $accessId
 	 * @return static
 	 */
-	public static function ofAccessId($accessId){
+	public static function ofAccessId($accessId) {
 		return new static("App not found [accessId:{$accessId}]!");
 	}
+
 }

@@ -11,12 +11,12 @@ use think\Service;
 use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Plugin\PluginManager;
 
-class PluginServiceProvider extends Service{
+class PluginServiceProvider extends Service {
 
 	/**
 	 * 注册插件管理器
 	 */
-	public function register(){
+	public function register() {
 		$this->registerPluginManager();
 
 		$this->registerMiddleware();
@@ -25,8 +25,8 @@ class PluginServiceProvider extends Service{
 	/**
 	 * 启动程序
 	 */
-	public function boot(){
-		$this->app->event->listen('HttpRun', function(){
+	public function boot() {
+		$this->app->event->listen('HttpRun', function () {
 			$this->app->bind([
 				'think\route\Url' => Url::class,
 			]);
@@ -36,16 +36,16 @@ class PluginServiceProvider extends Service{
 	/**
 	 * 注册插件管理器
 	 */
-	protected function registerPluginManager(){
+	protected function registerPluginManager() {
 		$this->app->bind("pluginManager", PluginFactory::class);
-		$this->app->bind(PluginFactory::class, function(){
+		$this->app->bind(PluginFactory::class, function () {
 			return new PluginManager(array_merge([
 				'default' => [
 					'app_name' => 'admin',
 				],
 
 				'namespace' => 'plugin',
-				'path'      => root_path('plugin'),
+				'path' => root_path('plugin'),
 			], config('plugin')));
 		});
 	}
@@ -53,9 +53,9 @@ class PluginServiceProvider extends Service{
 	/**
 	 * 注册中间件
 	 */
-	protected function registerMiddleware(){
-		$this->app->event->listen('HttpRun', function(){
-			$this->app->middleware->add(function($request, \Closure $next){
+	protected function registerMiddleware() {
+		$this->app->event->listen('HttpRun', function () {
+			$this->app->middleware->add(function ($request, \Closure $next) {
 				/** @var PluginFactory $pm */
 				$pm = $this->app['pluginManager'];
 				$pm->pluginBoot();

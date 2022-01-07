@@ -10,7 +10,7 @@ namespace Xin\Thinkphp\Saas\Middleware;
 use think\Model;
 use Xin\Thinkphp\Foundation\Model\AppContext;
 
-class EnableGlobalApp{
+class EnableGlobalApp {
 
 	/**
 	 * @var \think\Request
@@ -24,7 +24,7 @@ class EnableGlobalApp{
 	 * @param \Closure       $next
 	 * @return mixed
 	 */
-	public function handle($request, \Closure $next){
+	public function handle($request, \Closure $next) {
 		$this->request = $request;
 
 		$this->registerModelMaker();
@@ -39,13 +39,13 @@ class EnableGlobalApp{
 	/**
 	 * 注入模型 maker
 	 */
-	protected function registerModelMaker(){
-		Model::maker(function(/**@var Model $model */ $model) use (&$initialized){
+	protected function registerModelMaker() {
+		Model::maker(function (/**@var Model $model */ $model) use (&$initialized) {
 			$context = AppContext::getInstance();
 
 			// 是否启用App全局作用域
-			if($context->isEnableGlobalAppId()
-				&& method_exists($model, 'withGlobalAppScope')){
+			if ($context->isEnableGlobalAppId()
+				&& method_exists($model, 'withGlobalAppScope')) {
 				$model->withGlobalAppScope();
 			}
 		});
@@ -54,7 +54,8 @@ class EnableGlobalApp{
 	/**
 	 * @return int
 	 */
-	public function getGlobalAppId(){
+	public function getGlobalAppId() {
 		return $this->request->appId();
 	}
+
 }

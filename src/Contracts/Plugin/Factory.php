@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Plugin;
 
-interface Factory{
+interface Factory {
 
 	/**
 	 * 插件根路径

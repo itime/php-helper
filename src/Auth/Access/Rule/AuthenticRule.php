@@ -9,7 +9,7 @@ namespace Xin\Auth\Access\Rule;
 
 use Xin\Contracts\Auth\Access\AuthenticRule as AuthenticRuleContract;
 
-class AuthenticRule implements AuthenticRuleContract{
+class AuthenticRule implements AuthenticRuleContract {
 
 	/**
 	 * 规则方案
@@ -39,7 +39,7 @@ class AuthenticRule implements AuthenticRuleContract{
 	 * @param string $rule
 	 * @param array  $options
 	 */
-	public function __construct($scheme, $rule, array $options = []){
+	public function __construct($scheme, $rule, array $options = []) {
 		$this->scheme = $scheme;
 		$this->rule = $rule;
 		$this->options = $options;
@@ -50,7 +50,7 @@ class AuthenticRule implements AuthenticRuleContract{
 	 *
 	 * @return string
 	 */
-	public function getScheme(){
+	public function getScheme() {
 		return $this->scheme;
 	}
 
@@ -59,7 +59,7 @@ class AuthenticRule implements AuthenticRuleContract{
 	 *
 	 * @return string
 	 */
-	public function getEntity(){
+	public function getEntity() {
 		return $this->rule;
 	}
 
@@ -68,15 +68,15 @@ class AuthenticRule implements AuthenticRuleContract{
 	 *
 	 * @return array
 	 */
-	public function getOptions(){
+	public function getOptions() {
 		return $this->options;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function __toString(){
-		return $this->scheme.':'.$this->rule;
+	public function __toString() {
+		return $this->scheme . ':' . $this->rule;
 	}
 
 	/**
@@ -86,24 +86,24 @@ class AuthenticRule implements AuthenticRuleContract{
 	 * @return static
 	 * @throws \Xin\Auth\Rule\AuthenticRuleException
 	 */
-	public static function parse($fullRule){
-		if(empty($fullRule)){
+	public static function parse($fullRule) {
+		if (empty($fullRule)) {
 			throw new AuthenticRuleException("authentic rule invalid.");
 		}
 
 		$result = parse_url($fullRule);
 
-		if(!isset($result['scheme']) || empty($scheme = $result['scheme'])){
+		if (!isset($result['scheme']) || empty($scheme = $result['scheme'])) {
 			throw new AuthenticRuleException("authentic rule scheme invalid.");
 		}
 
-		$path = ($result['host'] ?: '').($result['path'] ?: '');
-		if(empty($path)){
+		$path = ($result['host'] ?: '') . ($result['path'] ?: '');
+		if (empty($path)) {
 			throw new AuthenticRuleException("authentic rule path invalid.");
 		}
 
 		$options = $result['query'] ?: [];
-		if(is_string($options)){
+		if (is_string($options)) {
 			parse_str($options, $options);
 		}
 

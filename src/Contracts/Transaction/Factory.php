@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Transaction;
 
-interface Factory{
+interface Factory {
 
 
 	public function transaction($name = null);

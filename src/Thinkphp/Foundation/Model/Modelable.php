@@ -4,12 +4,13 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Thinkphp\Foundation\Model;
 
 /**
  * @mixin \think\Model
  */
-trait Modelable{
+trait Modelable {
 
 	/**
 	 * 获取数据列表
@@ -21,7 +22,7 @@ trait Modelable{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function getList($query = [], $options = []){
+	public static function getList($query = [], $options = []) {
 		return static::newPlainQuery($query, $options)->select();
 	}
 
@@ -35,7 +36,7 @@ trait Modelable{
 	 * @return \think\Paginator
 	 * @throws \think\db\exception\DbException
 	 */
-	public static function getPaginate($query, $options = [], $listRows = 15, $simple = false){
+	public static function getPaginate($query, $options = [], $listRows = 15, $simple = false) {
 		return static::newPlainQuery($query, $options)->paginate($listRows, $simple);
 	}
 
@@ -49,7 +50,7 @@ trait Modelable{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function getPlain($query, $options = []){
+	public static function getPlain($query, $options = []) {
 		$info = static::newPlainQuery($query, $options)->find();
 
 		return static::resolvePlain($info, $options);
@@ -65,7 +66,7 @@ trait Modelable{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function getPlainById($id, $options = []){
+	public static function getPlainById($id, $options = []) {
 		$info = static::newPlainQuery(null, $options)->find($id);
 
 		return static::resolvePlain($info, $options);
@@ -78,7 +79,7 @@ trait Modelable{
 	 * @param array $options
 	 * @return self
 	 */
-	protected static function resolvePlain($info, $options = []){
+	protected static function resolvePlain($info, $options = []) {
 		return $info;
 	}
 
@@ -93,7 +94,7 @@ trait Modelable{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function getDetail($query, $with = [], $options = []){
+	public static function getDetail($query, $with = [], $options = []) {
 		$query = static::with($with)->where($query);
 
 		$info = static::applyOptions($query, $options)->find();
@@ -112,7 +113,7 @@ trait Modelable{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function getDetailById($id, $with = [], $options = []){
+	public static function getDetailById($id, $with = [], $options = []) {
 		$info = static::applyOptions(static::with($with), $options)->find($id);
 
 		return static::resolveDetail($info, $options);
@@ -125,7 +126,7 @@ trait Modelable{
 	 * @param array $options
 	 * @return self
 	 */
-	protected static function resolveDetail($info, $options = []){
+	protected static function resolveDetail($info, $options = []) {
 		return $info;
 	}
 
@@ -136,12 +137,12 @@ trait Modelable{
 	 * @param array $options
 	 * @return \think\db\Query|\think\Model
 	 */
-	public static function newPlainQuery($query = null, $options = []){
+	public static function newPlainQuery($query = null, $options = []) {
 		$fields = static::getPlainFields();
-		if(isset($options['field'])){
-			if(is_callable($options['field'])){
+		if (isset($options['field'])) {
+			if (is_callable($options['field'])) {
 				$fields = $options['field']($fields);
-			}else{
+			} else {
 				$fields = $options['field'];
 			}
 			unset($options['field']);
@@ -149,7 +150,7 @@ trait Modelable{
 
 		$newQuery = static::field($fields);
 
-		if($query){
+		if ($query) {
 			$newQuery->where($query);
 		}
 
@@ -161,7 +162,7 @@ trait Modelable{
 	 *
 	 * @return array
 	 */
-	public static function getPlainFields(){
+	public static function getPlainFields() {
 		return [];
 	}
 
@@ -172,19 +173,19 @@ trait Modelable{
 	 * @param array $options
 	 * @return \think\Model|\think\db\Query
 	 */
-	public static function applyOptions($baseQuery, $options = null){
-		if($options === null){
+	public static function applyOptions($baseQuery, $options = null) {
+		if ($options === null) {
 			return $baseQuery;
 		}
 
-		if(is_callable($options)){
+		if (is_callable($options)) {
 			return $options($baseQuery);
-		}else{
-			foreach($options as $method => $option){
-				if(method_exists($baseQuery, $method)){
-					if(in_array($method, ['limit', 'page']) && is_array($option)){
+		} else {
+			foreach ($options as $method => $option) {
+				if (method_exists($baseQuery, $method)) {
+					if (in_array($method, ['limit', 'page']) && is_array($option)) {
 						$baseQuery->$method(...$option);
-					}else{
+					} else {
 						$baseQuery->$method($option);
 					}
 				}
@@ -193,4 +194,5 @@ trait Modelable{
 
 		return $baseQuery;
 	}
+
 }

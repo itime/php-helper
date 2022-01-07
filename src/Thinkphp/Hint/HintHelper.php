@@ -14,16 +14,16 @@ use think\exception\HttpResponseException;
  *
  * @mixin \Xin\Contracts\Hint\Hint
  */
-trait HintHelper{
+trait HintHelper {
 
 	/**
 	 * @param string $url
 	 * @return mixed|string
 	 */
-	protected function resolveSuccessUrl($url){
-		if(is_null($url) && isset($_SERVER["HTTP_REFERER"])){
+	protected function resolveSuccessUrl($url) {
+		if (is_null($url) && isset($_SERVER["HTTP_REFERER"])) {
 			$url = $_SERVER["HTTP_REFERER"];
-		}elseif($url){
+		} elseif ($url) {
 			$url = $this->resolveUrl($url);
 		}
 
@@ -34,12 +34,13 @@ trait HintHelper{
 	 * @param string $url
 	 * @return mixed|string
 	 */
-	protected function resolveErrorUrl($url){
-		if(is_null($url)){
+	protected function resolveErrorUrl($url) {
+		if (is_null($url)) {
 			$url = $this->request->isAjax() ? '' : 'javascript:history.back(-1);';
-		}elseif($url){
+		} elseif ($url) {
 			$url = $this->resolveUrl($url);
 		}
+
 		return $url;
 	}
 
@@ -49,14 +50,14 @@ trait HintHelper{
 	 * @param string $url
 	 * @return string
 	 */
-	private function resolveUrl($url){
+	private function resolveUrl($url) {
 		return (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : (string)url($url ?: '');
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function outputSuccess($msg, $url = null, $data = null, array $extend = [], callable $callback = null){
+	public function outputSuccess($msg, $url = null, $data = null, array $extend = [], callable $callback = null) {
 		$this->output(
 			$this->success($msg, $url, $data, $extend),
 			$callback
@@ -66,7 +67,7 @@ trait HintHelper{
 	/**
 	 * @inheritDoc
 	 */
-	public function outputError($msg, $code = 0, $url = null, array $extend = [], callable $callback = null){
+	public function outputError($msg, $code = 0, $url = null, array $extend = [], callable $callback = null) {
 		$this->output(
 			$this->error($msg, $code, $url, $extend),
 			$callback
@@ -76,7 +77,7 @@ trait HintHelper{
 	/**
 	 * @inheritDoc
 	 */
-	public function outputAlert($msg, $code = 0, $url = null, array $extend = [], callable $callback = null){
+	public function outputAlert($msg, $code = 0, $url = null, array $extend = [], callable $callback = null) {
 		$this->output(
 			$this->alert($msg, $code, $url, $extend),
 			$callback
@@ -89,8 +90,8 @@ trait HintHelper{
 	 * @param mixed         $response
 	 * @param callable|null $callback
 	 */
-	protected function output($response, callable $callback = null){
-		if(is_callable($callback)){
+	protected function output($response, callable $callback = null) {
+		if (is_callable($callback)) {
 			call_user_func($callback, $response);
 		}
 
@@ -100,9 +101,10 @@ trait HintHelper{
 	/**
 	 * @inheritDoc
 	 */
-	public function alert($msg, $code = 0, $url = null, array $extend = []){
+	public function alert($msg, $code = 0, $url = null, array $extend = []) {
 		return $this->error($msg, $code, $url, array_merge([
 			'tips_type' => 'alert',
 		], $extend));
 	}
+
 }

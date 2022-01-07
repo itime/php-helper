@@ -12,14 +12,14 @@ use Xin\Thinkphp\Foundation\Setting\Command\Clear;
 use Xin\Thinkphp\Foundation\Setting\Command\Show;
 use Xin\Thinkphp\Foundation\Setting\Command\Update;
 
-class SettingServiceProvider extends Service{
+class SettingServiceProvider extends Service {
 
 	/**
 	 * @inheritDoc
 	 */
-	public function register(){
-		if($this->app->runningInConsole()){
-			$this->app->event->listen('AppInit', function(){
+	public function register() {
+		if ($this->app->runningInConsole()) {
+			$this->app->event->listen('AppInit', function () {
 				$initializersRef = new \ReflectionProperty($this->app, 'initializers');
 				$initializersRef->setAccessible(true);
 				$initializers = $initializersRef->getValue($this->app);
@@ -32,15 +32,15 @@ class SettingServiceProvider extends Service{
 	/**
 	 * @inheritDoc
 	 */
-	public function boot(){
-		if($this->app->runningInConsole()){
+	public function boot() {
+		if ($this->app->runningInConsole()) {
 			$this->commands([
 				Show::class,
 				Clear::class,
 				Update::class,
 			]);
-		}else{
-			$this->app->event->listen('HttpRun', function(){
+		} else {
+			$this->app->event->listen('HttpRun', function () {
 				DatabaseSetting::refreshThinkConfig();
 			});
 		}
@@ -52,7 +52,8 @@ class SettingServiceProvider extends Service{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public function init(){
+	public function init() {
 		DatabaseSetting::refreshThinkConfig();
 	}
+
 }

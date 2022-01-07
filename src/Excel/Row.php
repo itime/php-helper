@@ -7,127 +7,118 @@ use Closure;
 use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\Worksheet\Row as SpreadsheetRow;
 
-class Row implements ArrayAccess
-{
-    /**
-     * @var array
-     */
-    protected $headingRow = [];
+class Row implements ArrayAccess {
 
-    /**
-     * @var \Closure
-     */
-    protected $preparationCallback;
+	/**
+	 * @var array
+	 */
+	protected $headingRow = [];
 
-    /**
-     * @var SpreadsheetRow
-     */
-    protected $row;
+	/**
+	 * @var \Closure
+	 */
+	protected $preparationCallback;
 
-    /**
-     * @var array|null
-     */
-    protected $rowCache;
+	/**
+	 * @var SpreadsheetRow
+	 */
+	protected $row;
 
-    /**
-     * @param SpreadsheetRow $row
-     * @param array          $headingRow
-     */
-    public function __construct(SpreadsheetRow $row, array $headingRow = [])
-    {
-        $this->row = $row;
-        $this->headingRow = $headingRow;
-    }
+	/**
+	 * @var array|null
+	 */
+	protected $rowCache;
 
-    /**
-     * @return SpreadsheetRow
-     */
-    public function getDelegate(): SpreadsheetRow
-    {
-        return $this->row;
-    }
+	/**
+	 * @param SpreadsheetRow $row
+	 * @param array          $headingRow
+	 */
+	public function __construct(SpreadsheetRow $row, array $headingRow = []) {
+		$this->row = $row;
+		$this->headingRow = $headingRow;
+	}
 
-    /**
-     * @param null        $nullValue
-     * @param bool        $calculateFormulas
-     * @param bool        $formatData
-     * @param string|null $endColumn
-     *
-     * @return array
-     */
-    public function toArray($nullValue = null, $calculateFormulas = false, $formatData = true, ?string $endColumn = null)
-    {
-        if (is_array($this->rowCache)) {
-            return $this->rowCache;
-        }
+	/**
+	 * @return SpreadsheetRow
+	 */
+	public function getDelegate(): SpreadsheetRow {
+		return $this->row;
+	}
 
-        $cells = [];
+	/**
+	 * @param null        $nullValue
+	 * @param bool        $calculateFormulas
+	 * @param bool        $formatData
+	 * @param string|null $endColumn
+	 *
+	 * @return array
+	 */
+	public function toArray($nullValue = null, $calculateFormulas = false, $formatData = true, ?string $endColumn = null) {
+		if (is_array($this->rowCache)) {
+			return $this->rowCache;
+		}
 
-        $i = 0;
-        foreach ($this->row->getCellIterator('A', $endColumn) as $cell) {
-            $value = (new Cell($cell))->getValue($nullValue, $calculateFormulas, $formatData);
+		$cells = [];
 
-            if (isset($this->headingRow[$i])) {
-                $cells[$this->headingRow[$i]] = $value;
-            } else {
-                $cells[] = $value;
-            }
+		$i = 0;
+		foreach ($this->row->getCellIterator('A', $endColumn) as $cell) {
+			$value = (new Cell($cell))->getValue($nullValue, $calculateFormulas, $formatData);
 
-            $i++;
-        }
+			if (isset($this->headingRow[$i])) {
+				$cells[$this->headingRow[$i]] = $value;
+			} else {
+				$cells[] = $value;
+			}
 
-        if (isset($this->preparationCallback)) {
-            $cells = ($this->preparationCallback)($cells, $this->row->getRowIndex());
-        }
+			$i++;
+		}
 
-        $this->rowCache = $cells;
+		if (isset($this->preparationCallback)) {
+			$cells = ($this->preparationCallback)($cells, $this->row->getRowIndex());
+		}
 
-        return $cells;
-    }
+		$this->rowCache = $cells;
 
-    /**
-     * @param bool $calculateFormulas
-     * @return bool
-     */
-    public function isEmpty($calculateFormulas = false): bool
-    {
-        return count(array_filter($this->toArray(null, $calculateFormulas, false))) === 0;
-    }
+		return $cells;
+	}
 
-    /**
-     * @return int
-     */
-    public function getIndex(): int
-    {
-        return $this->row->getRowIndex();
-    }
+	/**
+	 * @param bool $calculateFormulas
+	 * @return bool
+	 */
+	public function isEmpty($calculateFormulas = false): bool {
+		return count(array_filter($this->toArray(null, $calculateFormulas, false))) === 0;
+	}
 
-    public function offsetExists($offset)
-    {
-        return isset(($this->toArray())[$offset]);
-    }
+	/**
+	 * @return int
+	 */
+	public function getIndex(): int {
+		return $this->row->getRowIndex();
+	}
 
-    public function offsetGet($offset)
-    {
-        return ($this->toArray())[$offset];
-    }
+	public function offsetExists($offset) {
+		return isset(($this->toArray())[$offset]);
+	}
 
-    public function offsetSet($offset, $value)
-    {
-        //
-    }
+	public function offsetGet($offset) {
+		return ($this->toArray())[$offset];
+	}
 
-    public function offsetUnset($offset)
-    {
-        //
-    }
+	public function offsetSet($offset, $value) {
+		//
+	}
 
-    /**
-     * @param Closure|null $preparationCallback
-     * @internal
-     */
-    public function setPreparationCallback(Closure $preparationCallback = null)
-    {
-        $this->preparationCallback = $preparationCallback;
-    }
+	public function offsetUnset($offset) {
+		//
+	}
+
+	/**
+	 * @param Closure|null $preparationCallback
+	 * @internal
+	 */
+	public function setPreparationCallback(Closure $preparationCallback = null) {
+		$this->preparationCallback = $preparationCallback;
+	}
+
 }

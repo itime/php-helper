@@ -5,9 +5,10 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0
  * @author 晋<657306123@qq.com>
  */
+
 namespace Xin\Support\Contracts;
 
-interface Renderable{
+interface Renderable {
 
 	/**
 	 * Get the evaluated contents of the object.
@@ -15,4 +16,5 @@ interface Renderable{
 	 * @return string
 	 */
 	public function render();
+
 }

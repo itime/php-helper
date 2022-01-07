@@ -4,9 +4,10 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Thinkphp\Foundation\Model;
 
-class Morph{
+class Morph {
 
 	/**
 	 * 多态关联类型
@@ -20,7 +21,7 @@ class Morph{
 	 *
 	 * @return array
 	 */
-	public static function getTypeList(){
+	public static function getTypeList() {
 		return self::$morphList;
 	}
 
@@ -30,8 +31,8 @@ class Morph{
 	 * @param string $type
 	 * @param string $modelClass
 	 */
-	public static function bindType($type, $modelClass){
-		if(static::hasType($type)){
+	public static function bindType($type, $modelClass) {
+		if (static::hasType($type)) {
 			throw new \LogicException("morph type {$type} duplicate defined.");
 		}
 
@@ -44,7 +45,7 @@ class Morph{
 	 * @param string $type
 	 * @return bool
 	 */
-	public static function hasType($type){
+	public static function hasType($type) {
 		return isset(self::$morphList[$type]);
 	}
 
@@ -54,8 +55,8 @@ class Morph{
 	 * @param string $type
 	 * @return string
 	 */
-	public static function getType($type){
-		if(!static::hasType($type)){
+	public static function getType($type) {
+		if (!static::hasType($type)) {
 			throw new \LogicException("morph type {$type} not defined.");
 		}
 
@@ -69,17 +70,17 @@ class Morph{
 	 * @param int    $id
 	 * @return bool
 	 */
-	public static function checkExist($type, $id){
+	public static function checkExist($type, $id) {
 		$class = static::getType($type);
 
 		$result = false;
-		if(method_exists($class, 'checkMorphExist')){
+		if (method_exists($class, 'checkMorphExist')) {
 			$result = call_user_func([$class, 'checkMorphExist'], $id);
-		}elseif(is_subclass_of($class, \think\Model::class)){
+		} elseif (is_subclass_of($class, \think\Model::class)) {
 			$result = $class::where('id', $id)->failException()->value('id');
 		}
 
-		if(!$result){
+		if (!$result) {
 			throw new \LogicException("morph resource not found!");
 		}
 
@@ -94,10 +95,10 @@ class Morph{
 	 * @param array  $args
 	 * @return false|mixed
 	 */
-	public static function callMethod($type, $method, $args = []){
+	public static function callMethod($type, $method, $args = []) {
 		$class = static::getType($type);
 
-		if(!method_exists($class, $method)){
+		if (!method_exists($class, $method)) {
 			return null;
 		}
 

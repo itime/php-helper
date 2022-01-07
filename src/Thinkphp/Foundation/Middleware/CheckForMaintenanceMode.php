@@ -4,6 +4,7 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Thinkphp\Foundation\Middleware;
 
 use think\App;
@@ -11,7 +12,7 @@ use think\exception\HttpResponseException;
 use think\Request;
 use think\Response;
 
-class CheckForMaintenanceMode{
+class CheckForMaintenanceMode {
 
 	use InteractsExcept;
 
@@ -42,7 +43,7 @@ class CheckForMaintenanceMode{
 	 *
 	 * @param \think\App $app
 	 */
-	public function __construct(App $app){
+	public function __construct(App $app) {
 		$this->config = $app['config'];
 		$this->view = $app['view'];
 	}
@@ -55,15 +56,15 @@ class CheckForMaintenanceMode{
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	public function handle(Request $request, \Closure $next){
-		if($this->isDownForMaintenance()){
+	public function handle(Request $request, \Closure $next) {
+		if ($this->isDownForMaintenance()) {
 			// 允许正常访问的IP
-			if(in_array($request->ip(), $this->getAllowIPs())){
+			if (in_array($request->ip(), $this->getAllowIPs())) {
 				return $next($request);
 			}
 
 			// 允许正常访问的URL
-			if($this->isExcept($request)){
+			if ($this->isExcept($request)) {
 				return $next($request);
 			}
 
@@ -80,7 +81,7 @@ class CheckForMaintenanceMode{
 	 *
 	 * @return bool
 	 */
-	protected function isDownForMaintenance(){
+	protected function isDownForMaintenance() {
 		return $this->config->get('web.site_close');
 	}
 
@@ -89,7 +90,7 @@ class CheckForMaintenanceMode{
 	 *
 	 * @return array
 	 */
-	protected function getAllowIPs(){
+	protected function getAllowIPs() {
 		return [];
 	}
 
@@ -100,7 +101,7 @@ class CheckForMaintenanceMode{
 	 * @return \think\Response
 	 * @throws \Exception
 	 */
-	protected function createMaintenanceModeResponse(Request $request){
+	protected function createMaintenanceModeResponse(Request $request) {
 		$closeMsg = $this->config->get('web.site_close_msg');
 		$closeMsg = $closeMsg ? $closeMsg : '站点已关闭...';
 		$response = $this->view->fetch($this->config->get('app.site_close_template'), [
@@ -109,4 +110,5 @@ class CheckForMaintenanceMode{
 
 		return Response::create($response);
 	}
+
 }

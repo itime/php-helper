@@ -16,7 +16,7 @@ use think\View;
  * @property-read \think\Config  $config
  * @property-read \think\View    $view
  */
-abstract class Weight{
+abstract class Weight {
 
 	/**
 	 * @var \think\App
@@ -43,7 +43,7 @@ abstract class Weight{
 	 *
 	 * @param \think\App $app
 	 */
-	public function __construct(App $app){
+	public function __construct(App $app) {
 		$this->app = $app;
 		$this->request = $app['request'];
 		$this->config = $app['config'];
@@ -53,7 +53,7 @@ abstract class Weight{
 		$classPath = str_replace("\\", "/", get_class($this));
 		$this->view->engine()->config([
 			"view_dir_name" => "view",
-			"view_path"     => root_path(dirname($classPath)),
+			"view_path" => root_path(dirname($classPath)),
 		]);
 	}
 
@@ -62,7 +62,7 @@ abstract class Weight{
 	 *
 	 * @param mixed ...$args
 	 */
-	public function handle(...$args){
+	public function handle(...$args) {
 		echo call_user_func_array([$this, 'render'], $args);
 	}
 
@@ -82,7 +82,7 @@ abstract class Weight{
 	 * @noinspection PhpUnhandledExceptionInspection
 	 * @noinspection PhpDocMissingThrowsInspection
 	 */
-	protected function fetch($template = '', $vars = []){
+	protected function fetch($template = '', $vars = []) {
 		return $this->view->fetch($template, $vars);
 	}
 
@@ -93,7 +93,7 @@ abstract class Weight{
 	 * @param array  $vars
 	 * @return string
 	 */
-	protected function display($content, $vars = []){
+	protected function display($content, $vars = []) {
 		return $this->view->display($content, $vars);
 	}
 
@@ -105,8 +105,10 @@ abstract class Weight{
 	 * @param mixed        $value 变量值
 	 * @return $this
 	 */
-	protected function assign($name, $value = null){
+	protected function assign($name, $value = null) {
 		$this->view->assign($name, $value);
+
 		return $this;
 	}
+
 }

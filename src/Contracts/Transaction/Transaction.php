@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Transaction;
 
-interface Transaction{
+interface Transaction {
 
 	/**
 	 * 是否等待中
@@ -85,4 +85,5 @@ interface Transaction{
 	 * @return bool
 	 */
 	public function getId();
+
 }

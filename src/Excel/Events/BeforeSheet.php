@@ -5,49 +5,46 @@ namespace Xin\Excel\Events;
 
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class BeforeSheet extends Event
-{
-    /**
-     * @var Worksheet
-     */
-    public $sheet;
+class BeforeSheet extends Event {
 
-    /**
-     * @var object
-     */
-    private $exportable;
+	/**
+	 * @var Worksheet
+	 */
+	public $sheet;
 
-    /**
-     * @param Worksheet  $sheet
-     * @param object $exportable
-     */
-    public function __construct(Worksheet $sheet, $exportable)
-    {
-        $this->sheet       = $sheet;
-        $this->exportable  = $exportable;
-    }
+	/**
+	 * @var object
+	 */
+	private $exportable;
 
-    /**
-     * @return Worksheet
-     */
-    public function getSheet()
-    {
-        return $this->sheet;
-    }
+	/**
+	 * @param Worksheet $sheet
+	 * @param object    $exportable
+	 */
+	public function __construct(Worksheet $sheet, $exportable) {
+		$this->sheet = $sheet;
+		$this->exportable = $exportable;
+	}
 
-    /**
-     * @return object
-     */
-    public function getConcernable()
-    {
-        return $this->exportable;
-    }
+	/**
+	 * @return Worksheet
+	 */
+	public function getSheet() {
+		return $this->sheet;
+	}
 
-    /**
-     * @return mixed
-     */
-    public function getDelegate()
-    {
-        return $this->sheet;
-    }
+	/**
+	 * @return object
+	 */
+	public function getConcernable() {
+		return $this->exportable;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getDelegate() {
+		return $this->sheet;
+	}
+
 }

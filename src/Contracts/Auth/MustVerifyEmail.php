@@ -4,9 +4,10 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Contracts\Auth;
 
-interface MustVerifyEmail{
+interface MustVerifyEmail {
 
 	/**
 	 * Determine if the user has verified their email address.
@@ -28,4 +29,5 @@ interface MustVerifyEmail{
 	 * @return void
 	 */
 	public function sendEmailVerificationNotification();
+
 }

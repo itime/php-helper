@@ -15,7 +15,7 @@ use Xin\Auth\LoginException;
 use Xin\Thinkphp\Facade\Auth;
 use Xin\Thinkphp\Facade\Hint;
 
-trait AuthenticatesUsers{
+trait AuthenticatesUsers {
 
 	use RedirectsUsers, AuthenticatesFields;
 
@@ -25,8 +25,8 @@ trait AuthenticatesUsers{
 	 * @param Request $request
 	 * @return mixed|\think\Response|\think\response\Redirect
 	 */
-	public function login(Request $request){
-		if($request->isGet()){
+	public function login(Request $request) {
+		if ($request->isGet()) {
 			return $this->showLoginForm($request);
 		}
 
@@ -35,14 +35,15 @@ trait AuthenticatesUsers{
 		$notExistCallback = method_exists($this, 'notExistUser')
 			? \Closure::fromCallable([$this, 'notExistUser']) : null;
 
-		try{
+		try {
 			$user = $this->guard()->loginUsingCredential(
 				$this->credentials($request),
 				$notExistCallback,
 				\Closure::fromCallable([$this, 'loginPreCheck'])
 			);
+
 			return $this->sendLoginResponse($request, $user);
-		}catch(LoginException $e){
+		} catch (LoginException $e) {
 			return $this->sendFailedLoginResponse($request, $e);
 		}
 	}
@@ -52,7 +53,7 @@ trait AuthenticatesUsers{
 	 *
 	 * @param mixed $user
 	 */
-	protected function loginPreCheck($user){
+	protected function loginPreCheck($user) {
 	}
 
 	/**
@@ -61,7 +62,7 @@ trait AuthenticatesUsers{
 	 * @param \think\Request $request
 	 * @return \think\response\View
 	 */
-	protected function showLoginForm($request){
+	protected function showLoginForm($request) {
 		return view('auth/login');
 	}
 
@@ -71,7 +72,7 @@ trait AuthenticatesUsers{
 	 * @param Request $request
 	 * @return void
 	 */
-	protected function validateLogin(Request $request){
+	protected function validateLogin(Request $request) {
 		$validate = new Validate();
 		$validate->failException(true);
 
@@ -92,7 +93,7 @@ trait AuthenticatesUsers{
 	 * @param Request $request
 	 * @return array
 	 */
-	protected function credentials(Request $request){
+	protected function credentials(Request $request) {
 		return $request->only([
 			$this->username(),
 			$this->password(),
@@ -106,10 +107,10 @@ trait AuthenticatesUsers{
 	 * @param mixed   $user
 	 * @return mixed|\think\response\Redirect
 	 */
-	protected function sendLoginResponse(Request $request, $user){
+	protected function sendLoginResponse(Request $request, $user) {
 		Session::regenerate();
 
-		if($result = $this->authenticated($request, $user)){
+		if ($result = $this->authenticated($request, $user)) {
 			return $result;
 		}
 
@@ -125,7 +126,7 @@ trait AuthenticatesUsers{
 	 * @param \Xin\Auth\LoginException $e
 	 * @return \think\Response
 	 */
-	protected function sendFailedLoginResponse(Request $request, LoginException $e){
+	protected function sendFailedLoginResponse(Request $request, LoginException $e) {
 		return Hint::error($e->getMessage());
 	}
 
@@ -136,7 +137,7 @@ trait AuthenticatesUsers{
 	 * @param mixed   $user
 	 * @return mixed|void
 	 */
-	protected function authenticated(Request $request, $user){
+	protected function authenticated(Request $request, $user) {
 	}
 
 	/**
@@ -145,15 +146,15 @@ trait AuthenticatesUsers{
 	 * @param Request $request
 	 * @return mixed|\think\response\Redirect
 	 */
-	public function logout(Request $request){
-		if(!$request->isPost()){
-			throw new HttpException(500, ' not support '.$request->method());
+	public function logout(Request $request) {
+		if (!$request->isPost()) {
+			throw new HttpException(500, ' not support ' . $request->method());
 		}
 
 		$this->guard()->logout();
 		Session::destroy();
 
-		if($result = $this->loggedOut($request)){
+		if ($result = $this->loggedOut($request)) {
 			return $result;
 		}
 
@@ -168,7 +169,7 @@ trait AuthenticatesUsers{
 	 * @param Request $request
 	 * @return mixed|void
 	 */
-	protected function loggedOut(Request $request){
+	protected function loggedOut(Request $request) {
 	}
 
 	/**
@@ -176,7 +177,8 @@ trait AuthenticatesUsers{
 	 *
 	 * @return \Xin\Contracts\Auth\StatefulGuard
 	 */
-	protected function guard(){
+	protected function guard() {
 		return Auth::guard();
 	}
+
 }

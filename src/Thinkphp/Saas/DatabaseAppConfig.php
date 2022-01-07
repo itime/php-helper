@@ -4,6 +4,7 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Thinkphp\Saas;
 
 use think\Model;
@@ -13,7 +14,7 @@ use think\Model;
  * @property-read string name
  * @property array       config
  */
-class DatabaseAppConfig extends Model{
+class DatabaseAppConfig extends Model {
 
 	/**
 	 * @var string[]
@@ -38,4 +39,5 @@ class DatabaseAppConfig extends Model{
 	protected $type = [
 		'config' => 'array',
 	];
+
 }

@@ -11,7 +11,7 @@ use think\Container;
 use Xin\Auth\AbstractStatefulGuard;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 
-class SessionTokenGuard extends AbstractStatefulGuard{
+class SessionTokenGuard extends AbstractStatefulGuard {
 
 	use EventHelpers, TokenGuardHelpers;
 
@@ -42,7 +42,7 @@ class SessionTokenGuard extends AbstractStatefulGuard{
 	 * @param array                     $config
 	 * @param UserProviderContract|null $provider
 	 */
-	public function __construct($name, array $config, UserProviderContract $provider = null){
+	public function __construct($name, array $config, UserProviderContract $provider = null) {
 		parent::__construct($name, $config, $provider);
 
 		$this->app = Container::getInstance();
@@ -56,21 +56,21 @@ class SessionTokenGuard extends AbstractStatefulGuard{
 	/**
 	 * @inheritDoc
 	 */
-	protected function updateSession($user){
+	protected function updateSession($user) {
 		$this->session()->set('user', $user);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	protected function resolveUser(){
+	protected function resolveUser() {
 		return $this->session()->get('user');
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function logout(){
+	public function logout() {
 		parent::logout();
 
 		$this->session()->destroy();
@@ -81,8 +81,8 @@ class SessionTokenGuard extends AbstractStatefulGuard{
 	 *
 	 * @return \think\Session
 	 */
-	protected function session(){
-		if(!$this->sessionInit){
+	protected function session() {
+		if (!$this->sessionInit) {
 			$this->session = $this->app['session'];
 			$this->session->setId($this->getAuthToken());
 			//$this->session->init([
@@ -96,7 +96,8 @@ class SessionTokenGuard extends AbstractStatefulGuard{
 	/**
 	 * @return string
 	 */
-	public function getSessionId(){
+	public function getSessionId() {
 		return $this->session()->getId();
 	}
+
 }

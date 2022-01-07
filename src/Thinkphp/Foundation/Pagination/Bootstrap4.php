@@ -9,7 +9,7 @@ namespace Xin\Thinkphp\Foundation\Pagination;
 
 use think\paginator\driver\Bootstrap;
 
-class Bootstrap4 extends Bootstrap{
+class Bootstrap4 extends Bootstrap {
 
 	/**
 	 * @var int
@@ -26,7 +26,7 @@ class Bootstrap4 extends Bootstrap{
 	 * @param bool     $simple
 	 * @param array    $options
 	 */
-	public function __construct($items, int $listRows, int $currentPage = 1, int $total = null, bool $simple = false, array $options = []){
+	public function __construct($items, int $listRows, int $currentPage = 1, int $total = null, bool $simple = false, array $options = []) {
 		parent::__construct($items, $listRows, $currentPage, $total, $simple, $options);
 		$this->currentPage = $currentPage;
 		$this->originalCurrentPage = $currentPage;
@@ -38,7 +38,7 @@ class Bootstrap4 extends Bootstrap{
 	 * @param string $text
 	 * @return string
 	 */
-	protected function getPreviousButton(string $text = "上一页"):string{
+	protected function getPreviousButton(string $text = "上一页"): string {
 		return parent::getPreviousButton($text);
 	}
 
@@ -48,7 +48,7 @@ class Bootstrap4 extends Bootstrap{
 	 * @param string $text
 	 * @return string
 	 */
-	protected function getNextButton(string $text = '下一页'):string{
+	protected function getNextButton(string $text = '下一页'): string {
 		return parent::getNextButton($text);
 	}
 
@@ -59,8 +59,8 @@ class Bootstrap4 extends Bootstrap{
 	 * @param string $page
 	 * @return string
 	 */
-	protected function getAvailablePageWrapper(string $url, string $page):string{
-		return '<li class="page-item"><a class="page-link" href="'.htmlentities($url).'">'.$page.'</a></li>';
+	protected function getAvailablePageWrapper(string $url, string $page): string {
+		return '<li class="page-item"><a class="page-link" href="' . htmlentities($url) . '">' . $page . '</a></li>';
 	}
 
 	/**
@@ -69,8 +69,8 @@ class Bootstrap4 extends Bootstrap{
 	 * @param string $text
 	 * @return string
 	 */
-	protected function getDisabledTextWrapper(string $text):string{
-		return '<li class="page-item disabled"><a  class="page-link" href="javascript:void(0);">'.$text.'</a></li>';
+	protected function getDisabledTextWrapper(string $text): string {
+		return '<li class="page-item disabled"><a  class="page-link" href="javascript:void(0);">' . $text . '</a></li>';
 	}
 
 	/**
@@ -79,7 +79,8 @@ class Bootstrap4 extends Bootstrap{
 	 * @param string $text
 	 * @return string
 	 */
-	protected function getActivePageWrapper(string $text):string{
-		return '<li class="page-item active"><a class="page-link" href="javascript:void(0);">'.$text.'</a></li>';
+	protected function getActivePageWrapper(string $text): string {
+		return '<li class="page-item active"><a class="page-link" href="javascript:void(0);">' . $text . '</a></li>';
 	}
+
 }

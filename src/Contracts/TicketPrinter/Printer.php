@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\TicketPrinter;
 
-interface Printer{
+interface Printer {
 
 	/**
 	 * 打印
@@ -16,4 +16,5 @@ interface Printer{
 	 * @return mixed
 	 */
 	public function send($data);
+
 }

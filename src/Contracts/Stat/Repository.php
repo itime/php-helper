@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Stat;
 
-interface Repository{
+interface Repository {
 
 	/**
 	 * 自定义统计
@@ -43,4 +43,5 @@ interface Repository{
 	 * @return int
 	 */
 	public function total($name, array $options = []);
+
 }

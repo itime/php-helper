@@ -22,7 +22,7 @@ use Xin\Thinkphp\Facade\Hint;
  * Class ExceptionHandle
  * @method void reportTo(\Throwable $e, string $log)
  */
-class ExceptionHandle extends Handle{
+class ExceptionHandle extends Handle {
 
 	/**
 	 * 不需要记录信息（日志）的异常类列表
@@ -45,38 +45,38 @@ class ExceptionHandle extends Handle{
 	 * @param \Throwable $exception
 	 * @return void
 	 */
-	public function report(\Throwable $exception):void{
-		if($this->isIgnoreReport($exception)){
+	public function report(\Throwable $exception): void {
+		if ($this->isIgnoreReport($exception)) {
 			return;
 		}
 
 		// 收集异常数据
 		$data = [
-			'file'    => $exception->getFile(),
-			'line'    => $exception->getLine(),
+			'file' => $exception->getFile(),
+			'line' => $exception->getLine(),
 			'message' => $this->getMessage($exception),
-			'code'    => $this->getCode($exception),
+			'code' => $this->getCode($exception),
 		];
 
 		$traceString = $exception->getTraceAsString();
-		if($find = strpos($traceString, "\n#11 ")){
+		if ($find = strpos($traceString, "\n#11 ")) {
 			$traceString = substr($traceString, 0, $find);
 		}
 		$log = "[{$data['message']}]: code({$data['code']}): {$data['file']}({$data['line']})\n{$traceString}";
 
-		if($this->app->config->get('log.record_trace')){
-			$log .= PHP_EOL.$exception->getTraceAsString();
+		if ($this->app->config->get('log.record_trace')) {
+			$log .= PHP_EOL . $exception->getTraceAsString();
 		}
 
-		try{
+		try {
 			$this->app->log->record($log, 'error');
-		}catch(\Throwable $e){
+		} catch (\Throwable $e) {
 		}
 
-		if(method_exists($this, 'reportTo')){
-			try{
+		if (method_exists($this, 'reportTo')) {
+			try {
 				$this->reportTo($exception, $log);
-			}catch(\Throwable $e){
+			} catch (\Throwable $e) {
 			}
 		}
 	}
@@ -89,18 +89,18 @@ class ExceptionHandle extends Handle{
 	 * @param \Throwable     $e
 	 * @return Response
 	 */
-	public function render($request, \Throwable $e):Response{
+	public function render($request, \Throwable $e): Response {
 		// 参数验证错误
-		if($e instanceof ValidateException){
+		if ($e instanceof ValidateException) {
 			return Hint::error($e->getMessage(), 400);
-		}elseif($e instanceof AuthenticationException){
+		} elseif ($e instanceof AuthenticationException) {
 			return $this->authenticationHandle($e);
-		}elseif($e instanceof ModelNotFoundException){
+		} elseif ($e instanceof ModelNotFoundException) {
 			$title = get_const_value($e->getModel(), 'TITLE');
-			$e = new HttpException(404, ($title ?: '数据')."不存在！");
-		}elseif($e instanceof DataNotFoundException){
+			$e = new HttpException(404, ($title ?: '数据') . "不存在！");
+		} elseif ($e instanceof DataNotFoundException) {
 			$e = new HttpException(404, "数据不存在！");
-		}elseif($e instanceof WechatException){
+		} elseif ($e instanceof WechatException) {
 			return Hint::error($e->getMessage(), $e->getCode());
 		}
 
@@ -114,10 +114,10 @@ class ExceptionHandle extends Handle{
 	 * @param \Xin\Auth\AuthenticationException $e
 	 * @return \Symfony\Component\HttpFoundation\Response|\think\Response
 	 */
-	protected function authenticationHandle(AuthenticationException $e){
-		if($this->isJson()){
+	protected function authenticationHandle(AuthenticationException $e) {
+		if ($this->isJson()) {
 			return Hint::error("登录已失效", -1, $e->redirectTo());
-		}else{
+		} else {
 			return redirect($e->redirectTo());
 		}
 	}
@@ -127,12 +127,12 @@ class ExceptionHandle extends Handle{
 	 * @param HttpException $e
 	 * @return Response
 	 */
-	protected function renderHttpException(HttpException $e):Response{
+	protected function renderHttpException(HttpException $e): Response {
 		$statusCode = $e->getStatusCode();
 
-		if($this->isJson() && in_array($statusCode, [403, 404])){
+		if ($this->isJson() && in_array($statusCode, [403, 404])) {
 			$msg = $e->getMessage();
-			if(empty($msg)){
+			if (empty($msg)) {
 				$msg = strval($statusCode);
 			}
 
@@ -147,8 +147,8 @@ class ExceptionHandle extends Handle{
 	 * @param \Throwable $exception
 	 * @return Response
 	 */
-	protected function convertExceptionToResponse(\Throwable $exception):Response{
-		if(!$this->isJson()){
+	protected function convertExceptionToResponse(\Throwable $exception): Response {
+		if (!$this->isJson()) {
 			return parent::convertExceptionToResponse($exception);
 		}
 
@@ -157,27 +157,27 @@ class ExceptionHandle extends Handle{
 		$msg = $this->getMessage($exception);
 
 		// 不显示详细错误信息
-		if(!$this->app->isDebug() && !$this->app->config->get('app.show_error_msg')
-			&& !$exception instanceof \LogicException){
+		if (!$this->app->isDebug() && !$this->app->config->get('app.show_error_msg')
+			&& !$exception instanceof \LogicException) {
 			$msg = $this->app->config->get('app.error_message');
 		}
 
 		// 调试模式，获取详细的错误信息
 		$extend = $this->app->isDebug() ? [
-			'name'    => get_class($exception),
+			'name' => get_class($exception),
 			'message' => $this->getMessage($exception),
-			'file'    => $exception->getFile(),
-			'line'    => $exception->getLine(),
-			'trace'   => $exception->getTrace(),
-			'source'  => $this->getSourceCode($exception),
-			'datas'   => $this->getExtendData($exception),
-			'tables'  => [
-				'GET Data'              => $_GET,
-				'POST Data'             => $_POST,
-				'Files'                 => $_FILES,
-				'Cookies'               => $_COOKIE,
-				'Session'               => isset($_SESSION) ? $_SESSION : [],
-				'Server/Request Data'   => $_SERVER,
+			'file' => $exception->getFile(),
+			'line' => $exception->getLine(),
+			'trace' => $exception->getTrace(),
+			'source' => $this->getSourceCode($exception),
+			'datas' => $this->getExtendData($exception),
+			'tables' => [
+				'GET Data' => $_GET,
+				'POST Data' => $_POST,
+				'Files' => $_FILES,
+				'Cookies' => $_COOKIE,
+				'Session' => isset($_SESSION) ? $_SESSION : [],
+				'Server/Request Data' => $_SERVER,
 				'Environment Variables' => $_ENV,
 			],
 		] : [];
@@ -190,7 +190,7 @@ class ExceptionHandle extends Handle{
 	 *
 	 * @return bool
 	 */
-	protected function isJson(){
+	protected function isJson() {
 		return $this->app->http->getName() === 'api'
 			|| $this->app->request->isAjax()
 			|| $this->app->request->isJson();

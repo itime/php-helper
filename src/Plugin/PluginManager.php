@@ -7,12 +7,11 @@
 
 namespace Xin\Plugin;
 
-use think\helper\Str;
 use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Support\Arr;
 use Xin\Support\Collection;
 
-class PluginManager implements PluginFactory{
+class PluginManager implements PluginFactory {
 
 	/**
 	 * @var array
@@ -34,7 +33,7 @@ class PluginManager implements PluginFactory{
 	 *
 	 * @param array $config
 	 */
-	public function __construct(array $config){
+	public function __construct(array $config) {
 		$this->config = $config;
 
 		$this->plugins();
@@ -43,21 +42,21 @@ class PluginManager implements PluginFactory{
 	/**
 	 * @inheritDoc
 	 */
-	public function rootPath($path = ''){
-		return $this->config['path'].($path ? $path.DIRECTORY_SEPARATOR : $path);
+	public function rootPath($path = '') {
+		return $this->config['path'] . ($path ? $path . DIRECTORY_SEPARATOR : $path);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function has($plugin){
+	public function has($plugin) {
 		return class_exists($this->pluginClass($plugin, "Plugin"));
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function installPlugin($plugin){
+	public function installPlugin($plugin) {
 		$pluginInfo = $this->plugin($plugin);
 
 		$this->plugin($plugin)->plugin()->install($pluginInfo, $this);
@@ -68,7 +67,7 @@ class PluginManager implements PluginFactory{
 	/**
 	 * @inheritDoc
 	 */
-	public function uninstallPlugin($plugin){
+	public function uninstallPlugin($plugin) {
 		$pluginInfo = $this->plugin($plugin);
 
 		$this->plugin($plugin)->plugin()->uninstall($pluginInfo, $this);
@@ -79,13 +78,13 @@ class PluginManager implements PluginFactory{
 	/**
 	 * @inheritDoc
 	 */
-	public function plugin($plugin){
-		if($this->plugins->has($plugin)){
+	public function plugin($plugin) {
+		if ($this->plugins->has($plugin)) {
 			return $this->plugins->get($plugin);
 		}
 
 		$class = $this->pluginClass($plugin, "Plugin");
-		if(!class_exists($class)){
+		if (!class_exists($class)) {
 			throw new PluginNotFoundException($plugin);
 		}
 
@@ -98,21 +97,21 @@ class PluginManager implements PluginFactory{
 	/**
 	 * @inheritDoc
 	 */
-	public function plugins(){
-		if($this->plugins){
+	public function plugins() {
+		if ($this->plugins) {
 			return $this->plugins;
 		}
 
 		$plugins = [];
 		$fileIterator = new \FilesystemIterator($this->rootPath());
-		foreach($fileIterator as $file){
-			if(!$file->isDir()){
+		foreach ($fileIterator as $file) {
+			if (!$file->isDir()) {
 				continue;
 			}
 
 			$name = $file->getFilename();
 			$class = $this->pluginClass($name, "Plugin");
-			if(!class_exists($class)){
+			if (!class_exists($class)) {
 				continue;
 			}
 
@@ -128,14 +127,14 @@ class PluginManager implements PluginFactory{
 	 * @inheritDoc
 	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
-	public function pluginBoot(array $plugins = []){
-		if($this->isPluginBoot){
+	public function pluginBoot(array $plugins = []) {
+		if ($this->isPluginBoot) {
 			return;
 		}
 
 		$this->isPluginBoot = true;
 
-		foreach($this->plugins as $plugin => $pluginInfo){
+		foreach ($this->plugins as $plugin => $pluginInfo) {
 			$this->plugin($plugin)->plugin()->boot($pluginInfo, $this);
 		}
 	}
@@ -143,21 +142,21 @@ class PluginManager implements PluginFactory{
 	/**
 	 * @inheritDoc
 	 */
-	public function pluginClass($plugin, $class){
-		return "\\".$this->rootNamespace()."\\{$plugin}\\{$class}";
+	public function pluginClass($plugin, $class) {
+		return "\\" . $this->rootNamespace() . "\\{$plugin}\\{$class}";
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function controllerClass($plugin, $controller, $layer = 'controller'){
+	public function controllerClass($plugin, $controller, $layer = 'controller') {
 		return $this->pluginClass($plugin, "{$layer}\\{$controller}Controller");
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function pluginPath($plugin){
+	public function pluginPath($plugin) {
 		return $this->rootPath($plugin);
 	}
 
@@ -166,14 +165,14 @@ class PluginManager implements PluginFactory{
 	 *
 	 * @return string
 	 */
-	public function rootNamespace(){
+	public function rootNamespace() {
 		return Arr::get($this->config, 'namespace', 'plugin');
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function config($name, $default = null){
+	public function config($name, $default = null) {
 		return Arr::get($this->config, $name, $default);
 	}
 

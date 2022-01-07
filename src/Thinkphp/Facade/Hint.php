@@ -22,7 +22,7 @@ use think\Facade;
  * @see \Xin\Contracts\Hint\Factory
  * @see \Xin\Contracts\Hint\Hint
  */
-class Hint extends Facade{
+class Hint extends Facade {
 
 	/**
 	 * 获取当前Facade对应类名（或者已经绑定的容器对象标识）
@@ -30,7 +30,8 @@ class Hint extends Facade{
 	 * @access protected
 	 * @return string
 	 */
-	protected static function getFacadeClass(){
+	protected static function getFacadeClass() {
 		return 'hint';
 	}
+
 }

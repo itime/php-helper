@@ -15,14 +15,14 @@ use Xin\Thinkphp\Plugin\DatabasePlugin;
  * @property \think\model\Collection plugins
  * @property \think\model\Collection available_plugins
  */
-trait AppPluginable{
+trait AppPluginable {
 
 	/**
 	 * 关联插件模型
 	 *
 	 * @return \think\model\relation\BelongsToMany
 	 */
-	public function plugins(){
+	public function plugins() {
 		return $this->belongsToMany(DatabasePlugin::class, DatabaseAppPlugin::class, 'plugin_id');
 	}
 
@@ -33,7 +33,7 @@ trait AppPluginable{
 	 * @param bool   $isAvailable
 	 * @return bool
 	 */
-	public function hasPlugin($name, $isAvailable = true){
+	public function hasPlugin($name, $isAvailable = true) {
 		return $this->hasPlugins([$name], $isAvailable);
 	}
 
@@ -45,23 +45,23 @@ trait AppPluginable{
 	 * @param bool  $any
 	 * @return bool
 	 */
-	public function hasPlugins($names, $isAvailable = true, $any = true){
-		if(empty($names)){
+	public function hasPlugins($names, $isAvailable = true, $any = true) {
+		if (empty($names)) {
 			return false;
 		}
 
 		$plugins = $isAvailable ? $this->getAttr('available_plugins') : $this->getPlugins();
-		if($plugins->isEmpty()){
+		if ($plugins->isEmpty()) {
 			return false;
 		}
 
 		$pluginNameList = $plugins->column('name');
-		foreach($names as $name){
+		foreach ($names as $name) {
 			$flag = in_array($name, $pluginNameList);
 
-			if($any && $flag){
+			if ($any && $flag) {
 				return true;
-			}elseif(!$any && !$flag){
+			} elseif (!$any && !$flag) {
 				return false;
 			}
 		}
@@ -80,7 +80,7 @@ trait AppPluginable{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public function attachPlugin($name, $expireTime = 0, $options = []){
+	public function attachPlugin($name, $expireTime = 0, $options = []) {
 		return $this->attachPlugins([$name => $expireTime], $options);
 	}
 
@@ -94,11 +94,11 @@ trait AppPluginable{
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public function attachPlugins($nameAndExpireTimes, $options = []){
+	public function attachPlugins($nameAndExpireTimes, $options = []) {
 		$names = array_keys($nameAndExpireTimes);
 
 		// 检查关联的插件是否合法
-		if(count(array_filter($names)) != count($names)){
+		if (count(array_filter($names)) != count($names)) {
 			throw new ValidateException("关联的插件不合法！");
 		}
 
@@ -107,27 +107,27 @@ trait AppPluginable{
 			// ['status', '=', 1],
 			['name', 'in', $names],
 		])->select()->column(null, 'name');
-		foreach($names as $name){
-			if(!isset($attachPlugins[$name])){
+		foreach ($names as $name) {
+			if (!isset($attachPlugins[$name])) {
 				throw new ValidateException("关联的插件[{$name}]不存在！");
 			}
 		}
 
 		$ownPlugins = $this->plugins()->where('app_id', $this->getOrigin('id'))->select();
-		Db::transaction(function() use (&$nameAndExpireTimes, &$attachPlugins, &$ownPlugins){
-			foreach($attachPlugins as $name => $plugin){
+		Db::transaction(function () use (&$nameAndExpireTimes, &$attachPlugins, &$ownPlugins) {
+			foreach ($attachPlugins as $name => $plugin) {
 				$expireTime = $nameAndExpireTimes[$name];
-				$tempPlugin = $ownPlugins->first(function($item) use ($name){
+				$tempPlugin = $ownPlugins->first(function ($item) use ($name) {
 					return $item['name'] == $name;
 				});
-				if($tempPlugin){
+				if ($tempPlugin) {
 					/** @var \think\model\Pivot $pivot */
 					$pivot = $tempPlugin['pivot'];
 					$pivot->exists(true)->save(['expire_time' => $expireTime]);
-				}else{
+				} else {
 					$pivot = new DatabaseAppPlugin([
-						'plugin_id'   => $plugin->id,
-						'app_id'      => $this->getOrigin('id'),
+						'plugin_id' => $plugin->id,
+						'app_id' => $this->getOrigin('id'),
 						'expire_time' => $expireTime,
 					]);
 					$pivot->save();
@@ -147,10 +147,11 @@ trait AppPluginable{
 	 *
 	 * @return \think\model\Collection
 	 */
-	protected function getAvailablePluginsAttr(){
+	protected function getAvailablePluginsAttr() {
 		/** @var \think\model\Collection $ownPlugins */
-		$ownPlugins = $this->plugins()->where('app_id', $this->getOrigin('id'))->select()->filter(function($item){
+		$ownPlugins = $this->plugins()->where('app_id', $this->getOrigin('id'))->select()->filter(function ($item) {
 			$expireTime = $item['pivot']['expire_time'];
+
 			return $expireTime !== null && ($expireTime === 0 || time() < $expireTime);
 		});
 
@@ -162,7 +163,8 @@ trait AppPluginable{
 	 *
 	 * @return \think\model\Collection
 	 */
-	private function getPlugins(){
+	private function getPlugins() {
 		return $this->getAttr('plugins');
 	}
+
 }

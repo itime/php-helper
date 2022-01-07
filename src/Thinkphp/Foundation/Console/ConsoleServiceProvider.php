@@ -9,13 +9,13 @@ namespace Xin\Thinkphp\Foundation\Console;
 
 use think\Service;
 
-class ConsoleServiceProvider extends Service{
+class ConsoleServiceProvider extends Service {
 
 	/**
 	 * 启动器
 	 */
-	public function boot(){
-		if(!$this->app->runningInConsole()){
+	public function boot() {
+		if (!$this->app->runningInConsole()) {
 			return;
 		}
 
@@ -23,4 +23,5 @@ class ConsoleServiceProvider extends Service{
 			KeyGenerate::class,
 		]);
 	}
+
 }

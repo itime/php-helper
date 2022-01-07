@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Transaction;
 
-interface Repository{
+interface Repository {
 
 	/**
 	 * 创建一个事务
@@ -48,4 +48,5 @@ interface Repository{
 	 * @return bool
 	 */
 	public function fromNumber($number);
+
 }

@@ -20,7 +20,7 @@ use function Qiniu\base64_urlSafeDecode;
  *
  * @property string callbackAction
  */
-trait UploadToken{
+trait UploadToken {
 
 	/**
 	 * 获取上传token
@@ -28,10 +28,10 @@ trait UploadToken{
 	 * @param \think\Request $request
 	 * @return \think\Response
 	 */
-	public function token(Request $request){
+	public function token(Request $request) {
 		Hint::shouldUseApi();
 
-		if(!$request->isPost()){
+		if (!$request->isPost()) {
 			throw new HttpException(404);
 		}
 
@@ -39,13 +39,13 @@ trait UploadToken{
 		$type = $this->uploadType($request);
 
 		$file = $request->post('file/a');
-		if(empty($file) || !is_array($file)){
+		if (empty($file) || !is_array($file)) {
 			return Hint::error("没有上传文件");
 		}
 
 		$ext = $this->resolveExt($type, $file);
-		$filename = date('YmdHis').Str::random(6);
-		$key = $this->savePath($type)."/{$filename}.{$ext}";
+		$filename = date('YmdHis') . Str::random(6);
+		$key = $this->savePath($type) . "/{$filename}.{$ext}";
 
 		$policy = $this->policy($request, $type);
 		$token = Filesystem::disk($this->disk())->getUploadToken(
@@ -53,8 +53,8 @@ trait UploadToken{
 		);
 
 		return Hint::result([
-			'key'    => $key,
-			'token'  => $token,
+			'key' => $key,
+			'token' => $token,
 			'policy' => $policy,
 		]);
 	}
@@ -66,25 +66,25 @@ trait UploadToken{
 	 * @param string         $type
 	 * @return array
 	 */
-	protected function policy(Request $request, $type){
+	protected function policy(Request $request, $type) {
 		// $returnBody = '{"url":"'.$domain.'/$(key)","key":"$(key)","hash":"$(etag)","fsize":$(fsize)}';
 		// '{"app_id":'.$appId.',"url":"'.$domain.'/$(key)","key":"$(key)","hash":"$(etag)","fsize":$(fsize)}';
 
-		$uploadType = config('filesystem.disks.'.$this->disk().'.type', 'qiniu');
-		if($uploadType === 'qiniu'){
+		$uploadType = config('filesystem.disks.' . $this->disk() . '.type', 'qiniu');
+		if ($uploadType === 'qiniu') {
 			$policy = [
-				'callbackUrl'      => $this->callbackUrl($request),
-				'callbackBody'     => $this->callbackBody($type),
+				'callbackUrl' => $this->callbackUrl($request),
+				'callbackBody' => $this->callbackBody($type),
 				'callbackBodyType' => 'application/json',
 			];
 
-			if($type == 'image'){
+			if ($type == 'image') {
 				$policy['fsizeLimit'] = 1024 * 1024 * 2;
 				$policy['mimeLimit'] = 'image/*';
-			}elseif($type == 'video'){
+			} elseif ($type == 'video') {
 				$policy['fsizeLimit'] = 1024 * 1024 * 10;
 				$policy['mimeLimit'] = 'video/*';
-			}elseif($type == 'audio'){
+			} elseif ($type == 'audio') {
 				$policy['fsizeLimit'] = 1024 * 1024 * 4;
 				$policy['mimeLimit'] = 'audio/*';
 			}
@@ -100,14 +100,14 @@ trait UploadToken{
 	 * @param array  $file
 	 * @return string
 	 */
-	protected function resolveExt($type, array $file){
-		if(!isset($file['type'])){
+	protected function resolveExt($type, array $file) {
+		if (!isset($file['type'])) {
 			throw new ValidateException("文件类型不支持上传。");
 		}
 
 		$fileType = $file['type'];
 		$maps = $this->extMaps();
-		if(!isset($maps[$type]) || !isset($maps[$type][$fileType])){
+		if (!isset($maps[$type]) || !isset($maps[$type][$fileType])) {
 			throw new ValidateException("文件类型不支持上传。");
 		}
 
@@ -117,13 +117,13 @@ trait UploadToken{
 	/**
 	 * @return \string[][]
 	 */
-	protected function extMaps(){
+	protected function extMaps() {
 		return [
 			'image' => [
-				'image/png'  => 'png',
+				'image/png' => 'png',
 				'image/jpeg' => 'jpeg',
-				'image/gif'  => 'gif',
-				'image/bmp'  => 'bmp',
+				'image/gif' => 'gif',
+				'image/bmp' => 'bmp',
 			],
 			'audio' => [
 				'audio/mp3' => 'mp3',
@@ -140,20 +140,21 @@ trait UploadToken{
 	 * @param \think\Request $request
 	 * @return string
 	 */
-	protected function callbackUrl(Request $request){
-		return $request->domain().url($this->callbackAction());
+	protected function callbackUrl(Request $request) {
+		return $request->domain() . url($this->callbackAction());
 	}
 
 	/**
 	 * @param string $type
 	 * @return string
 	 */
-	protected function callbackBody($type){
-		$url = config('filesystem.disks.'.$this->disk().'.url');
+	protected function callbackBody($type) {
+		$url = config('filesystem.disks.' . $this->disk() . '.url');
+
 		return json_encode([
 			"type" => $type,
-			"url"  => "{$url}/$(key)",
-			"key"  => "$(key)",
+			"url" => "{$url}/$(key)",
+			"key" => "$(key)",
 			"hash" => "$(etag)",
 			"size" => "$(fsize)",
 			"sha1" => "$(bodySha1)",
@@ -167,7 +168,7 @@ trait UploadToken{
 	 * @param \think\Request $request
 	 * @return \think\Response
 	 */
-	protected function saveByToken(Request $request){
+	protected function saveByToken(Request $request) {
 		Hint::shouldUseApi();
 
 		$data = $request->post();
@@ -179,16 +180,16 @@ trait UploadToken{
 		$sha1 = $this->string2Hex($str);
 
 		$info = $this->findBySHA1($type, $sha1);
-		if(!empty($info)){
+		if (!empty($info)) {
 			return Hint::result([
-				'id'   => $info['id'],
+				'id' => $info['id'],
 				'path' => $info['path'],
 			]);
 		}
 
 		$data = $this->saveDb($type, [
 			'path' => $data['url'],
-			'md5'  => '',
+			'md5' => '',
 			'sha1' => $sha1,
 			'size' => $data['size'],
 			'type' => $data['mime'],
@@ -203,19 +204,20 @@ trait UploadToken{
 	 * @param string $string
 	 * @return string
 	 */
-	private function string2Hex($string){
+	private function string2Hex($string) {
 		$hex = '';
-		for($i = 0; $i < strlen($string); $i++){
+		for ($i = 0; $i < strlen($string); $i++) {
 			$hex .= dechex(ord($string[$i]));
 		}
+
 		return $hex;
 	}
 
 	/**
 	 * @return string
 	 */
-	protected function callbackAction(){
-		if(property_exists($this, 'callbackAction')){
+	protected function callbackAction() {
+		if (property_exists($this, 'callbackAction')) {
 			return $this->callbackAction;
 		}
 
@@ -227,11 +229,12 @@ trait UploadToken{
 	 * @param array  $args
 	 * @return \think\Response
 	 */
-	public function __call($method, $args){
-		if($method === $this->callbackAction()){
+	public function __call($method, $args) {
+		if ($method === $this->callbackAction()) {
 			return $this->saveByToken(app()->request);
 		}
 
 		return Hint::result();
 	}
+
 }

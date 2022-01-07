@@ -10,7 +10,7 @@ namespace Xin\Thinkphp\Plugin;
 use Exception;
 use think\exception\HttpException;
 
-class PluginNotFoundHttpException extends HttpException{
+class PluginNotFoundHttpException extends HttpException {
 
 	/**
 	 * @var string
@@ -25,7 +25,7 @@ class PluginNotFoundHttpException extends HttpException{
 	 * @param array           $headers
 	 * @param int             $code
 	 */
-	public function __construct($plugin, Exception $previous = null, array $headers = [], $code = 0){
+	public function __construct($plugin, Exception $previous = null, array $headers = [], $code = 0) {
 		parent::__construct(404, "plugin {$plugin} not exist.", $previous, $headers, $code);
 		$this->plugin = $plugin;
 	}
@@ -33,7 +33,7 @@ class PluginNotFoundHttpException extends HttpException{
 	/**
 	 * @return string
 	 */
-	public function getPlugin(){
+	public function getPlugin() {
 		return $this->plugin;
 	}
 

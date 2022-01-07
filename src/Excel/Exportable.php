@@ -2,7 +2,7 @@
 
 namespace Xin\Excel;
 
-interface Exportable{
+interface Exportable {
 
 	/**
 	 * @return Column[]

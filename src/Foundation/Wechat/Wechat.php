@@ -4,13 +4,14 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Foundation\Wechat;
 
 use EasyWeChat\Factory;
 use EasyWeChat\Kernel\ServiceContainer;
 use Xin\Contracts\Foundation\Wechat as WechatContract;
 
-class Wechat implements WechatContract{
+class Wechat implements WechatContract {
 
 	/**
 	 * @var array
@@ -22,15 +23,15 @@ class Wechat implements WechatContract{
 	 *
 	 * @param array $config
 	 */
-	public function __construct(array $config){
+	public function __construct(array $config) {
 		$this->config = $config;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function openPlatform(array $options = []){
-		if(!isset($this->config['open_platform']) || empty($this->config['open_platform'])){
+	public function openPlatform(array $options = []) {
+		if (!isset($this->config['open_platform']) || empty($this->config['open_platform'])) {
 			throw new WechatNotConfigureException("wechat config 'open_platform' not defined.");
 		}
 
@@ -47,15 +48,15 @@ class Wechat implements WechatContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function hasOpenPlatform(){
+	public function hasOpenPlatform() {
 		return $this->hasConfig('open_platform');
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function official(array $options = []){
-		if(!isset($this->config['official']) || empty($this->config['official'])){
+	public function official(array $options = []) {
+		if (!isset($this->config['official']) || empty($this->config['official'])) {
 			throw new WechatNotConfigureException("wechat config 'official' not defined.");
 		}
 
@@ -72,15 +73,15 @@ class Wechat implements WechatContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function hasOfficial(){
+	public function hasOfficial() {
 		return $this->hasConfig('official');
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function miniProgram(array $options = []){
-		if(!isset($this->config['miniprogram']) || empty($this->config['miniprogram'])){
+	public function miniProgram(array $options = []) {
+		if (!isset($this->config['miniprogram']) || empty($this->config['miniprogram'])) {
 			throw new WechatNotConfigureException("wechat config 'miniprogram' not defined.");
 		}
 
@@ -97,7 +98,7 @@ class Wechat implements WechatContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function hasMiniProgram(){
+	public function hasMiniProgram() {
 		return $this->hasConfig('miniprogram');
 	}
 
@@ -106,7 +107,7 @@ class Wechat implements WechatContract{
 	 * @param array                               $options
 	 * @return mixed
 	 */
-	protected function initApplication(ServiceContainer $sc, array $options){
+	protected function initApplication(ServiceContainer $sc, array $options) {
 		//// 监听微信响应数据
 		//$sc->events->addListener(HttpResponseCreated::class, function(HttpResponseCreated $event){
 		//	$response = $event->response;
@@ -127,21 +128,21 @@ class Wechat implements WechatContract{
 	 * @param array $config
 	 * @return array
 	 */
-	protected function checkConfig(array $config){
-		if(empty($config)){
+	protected function checkConfig(array $config) {
+		if (empty($config)) {
 			throw new WechatInvalidConfigException("wechat config is invalid.");
 		}
 
-		if(!isset($config['app_id']) || empty($config['app_id'])){
+		if (!isset($config['app_id']) || empty($config['app_id'])) {
 			throw new WechatInvalidConfigException("wechat config 'app_id' not defined.");
 		}
 
-		if(!isset($config['mode']) || $config['mode'] == 0){
-			if(!isset($config['secret']) || empty($config['secret'])){
+		if (!isset($config['mode']) || $config['mode'] == 0) {
+			if (!isset($config['secret']) || empty($config['secret'])) {
 				throw new WechatInvalidConfigException("wechat config 'secret' not defined.");
 			}
-		}else{
-			if(!isset($config['authorizer_refresh_token']) || empty($config['authorizer_refresh_token'])){
+		} else {
+			if (!isset($config['authorizer_refresh_token']) || empty($config['authorizer_refresh_token'])) {
 				throw new WechatInvalidConfigException("wechat config 'authorizer_refresh_token' not defined.");
 			}
 		}
@@ -155,8 +156,8 @@ class Wechat implements WechatContract{
 	 * @param string|null $type
 	 * @return mixed
 	 */
-	public function getConfig($type = null, $default = null){
-		if(null === $type){
+	public function getConfig($type = null, $default = null) {
+		if (null === $type) {
 			return $this->config;
 		}
 
@@ -169,7 +170,8 @@ class Wechat implements WechatContract{
 	 * @param string $type
 	 * @return bool
 	 */
-	public function hasConfig($type = null){
+	public function hasConfig($type = null) {
 		return !isset($this->config[$type]) || empty($this->config[$type]);
 	}
+
 }

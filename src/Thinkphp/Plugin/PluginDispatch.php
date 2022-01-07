@@ -21,7 +21,7 @@ use Xin\Support\Str;
  *
  * @property-read \think\Request|\Xin\Thinkphp\Http\Requestable $request
  */
-class PluginDispatch extends Controller{
+class PluginDispatch extends Controller {
 
 	/**
 	 * @var callable
@@ -41,7 +41,7 @@ class PluginDispatch extends Controller{
 	/**
 	 * @param \think\App $app
 	 */
-	public function init(App $app){
+	public function init(App $app) {
 		$this->app = $app;
 
 		$this->pluginManager = $this->app->get(PluginFactory::class);
@@ -54,10 +54,10 @@ class PluginDispatch extends Controller{
 
 		// 获取控制器名
 		$controller = strip_tags($this->param['controller']);
-		if(strpos($controller, '.')){
+		if (strpos($controller, '.')) {
 			$pos = strrpos($controller, '.');
-			$this->controller = substr($controller, 0, $pos).'.'.Str::studly(substr($controller, $pos + 1));
-		}else{
+			$this->controller = substr($controller, 0, $pos) . '.' . Str::studly(substr($controller, $pos + 1));
+		} else {
 			$this->controller = Str::studly($controller);
 		}
 
@@ -74,20 +74,20 @@ class PluginDispatch extends Controller{
 	/**
 	 * @return mixed
 	 */
-	public function exec(){
-		if(!$this->pluginManager->has($this->plugin)){
+	public function exec() {
+		if (!$this->pluginManager->has($this->plugin)) {
 			throw new PluginNotFoundHttpException($this->plugin);
 		}
 
 		// 启动插件事件
-		if(static::$pluginBootCallback){
+		if (static::$pluginBootCallback) {
 			$this->app->invoke(static::$pluginBootCallback);
 		}
 
-		try{
+		try {
 			// 实例化控制器
 			$instance = $this->controller($this->controller);
-		}catch(ClassNotFoundException $e){
+		} catch (ClassNotFoundException $e) {
 			throw new PluginControllerNotFoundHttpException($this->plugin, $e->getClass());
 		}
 
@@ -99,30 +99,30 @@ class PluginDispatch extends Controller{
 
 		return $this->app->middleware->pipeline('controller')
 			->send($this->request)
-			->then(function() use ($instance){
+			->then(function () use ($instance) {
 				// 获取当前操作名
 				$suffix = $this->rule->config('action_suffix');
-				$action = $this->actionName.$suffix;
+				$action = $this->actionName . $suffix;
 
-				if(is_callable([$instance, $action])){
+				if (is_callable([$instance, $action])) {
 					$vars = $this->request->param();
-					try{
+					try {
 						$reflect = new ReflectionMethod($instance, $action);
 						// 严格获取当前操作方法名
 						$actionName = $reflect->getName();
-						if($suffix){
+						if ($suffix) {
 							$actionName = substr($actionName, 0, -strlen($suffix));
 						}
 
 						$this->request->setAction($actionName);
-					}catch(ReflectionException $e){
+					} catch (ReflectionException $e) {
 						$reflect = new ReflectionMethod($instance, '__call');
 						$vars = [$action, $vars];
 						$this->request->setAction($action);
 					}
-				}else{
+				} else {
 					// 操作不存在
-					throw new HttpException(404, 'method not exists:'.get_class($instance).'->'.$action.'()');
+					throw new HttpException(404, 'method not exists:' . get_class($instance) . '->' . $action . '()');
 				}
 
 				$data = $this->app->invokeReflectMethod($instance, $reflect, $vars);
@@ -139,7 +139,7 @@ class PluginDispatch extends Controller{
 	 * @return object
 	 * @throws ClassNotFoundException
 	 */
-	public function controller(string $name){
+	public function controller(string $name) {
 		$appName = $this->app->http->getName();
 
 		$suffix = $this->rule->config('controller_suffix') ? 'Controller' : '';
@@ -153,33 +153,33 @@ class PluginDispatch extends Controller{
 			$pluginControllerLayer
 		);
 
-		if(class_exists($class)){
+		if (class_exists($class)) {
 			return $this->app->make($class, [], true);
-		}elseif($emptyController && class_exists(
+		} elseif ($emptyController && class_exists(
 				$emptyClass = $this->pluginManager->controllerClass(
 					$this->plugin,
 					$emptyController,
 					$pluginControllerLayer
 				)
-			)){
+			)) {
 			return $this->app->make($emptyClass, [], true);
-		}elseif($emptyController && class_exists(
+		} elseif ($emptyController && class_exists(
 				$emptyClass = $this->app->parseClass(
-					$controllerLayer, $emptyController.$suffix
+					$controllerLayer, $emptyController . $suffix
 				)
-			)){
+			)) {
 			return $this->app->make($emptyClass, [], true);
 		}
 
-		throw new ClassNotFoundException('class not exists:'.$class, $class);
+		throw new ClassNotFoundException('class not exists:' . $class, $class);
 	}
 
 	/**
 	 * 初始化视图
 	 */
-	protected function initView(){
+	protected function initView() {
 		$appName = $this->app->http->getName();
-		if($appName == "api"){
+		if ($appName == "api") {
 			return;
 		}
 
@@ -187,13 +187,13 @@ class PluginDispatch extends Controller{
 		$view = $this->app->make('view');
 
 		$viewDirName = $view->engine()->getConfig('view_dir_name');
-		$defaultViewPath = $this->app->getBasePath().$appName.DIRECTORY_SEPARATOR.$viewDirName.DIRECTORY_SEPARATOR;
-		if(!is_dir($defaultViewPath)){
-			$defaultViewPath = $this->app->getRootPath().$viewDirName.DIRECTORY_SEPARATOR.$appName.DIRECTORY_SEPARATOR;
+		$defaultViewPath = $this->app->getBasePath() . $appName . DIRECTORY_SEPARATOR . $viewDirName . DIRECTORY_SEPARATOR;
+		if (!is_dir($defaultViewPath)) {
+			$defaultViewPath = $this->app->getRootPath() . $viewDirName . DIRECTORY_SEPARATOR . $appName . DIRECTORY_SEPARATOR;
 		}
 
-		$viewLayer = $appName.DIRECTORY_SEPARATOR."view";
-		$viewPath = $this->pluginManager->pluginPath($this->plugin).$viewLayer.DIRECTORY_SEPARATOR;
+		$viewLayer = $appName . DIRECTORY_SEPARATOR . "view";
+		$viewPath = $this->pluginManager->pluginPath($this->plugin) . $viewLayer . DIRECTORY_SEPARATOR;
 		$view->engine()->config([
 			"view_path" => $viewPath,
 			'locations' => [
@@ -201,4 +201,5 @@ class PluginDispatch extends Controller{
 			],
 		]);
 	}
+
 }

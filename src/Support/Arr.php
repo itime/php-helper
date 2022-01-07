@@ -5,12 +5,13 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0
  * @author 晋<657306123@qq.com>
  */
+
 namespace Xin\Support;
 
 /**
  * 数组工具类
  */
-final class Arr{
+final class Arr {
 
 	/**
 	 * 给定值是否可由数组访问
@@ -18,7 +19,7 @@ final class Arr{
 	 * @param mixed $value
 	 * @return bool
 	 */
-	public static function accessible($value){
+	public static function accessible($value) {
 		return is_array($value) || $value instanceof \ArrayAccess;
 	}
 
@@ -28,7 +29,7 @@ final class Arr{
 	 * @param array $arr 数组
 	 * @return bool
 	 */
-	public static function isAssoc($arr){
+	public static function isAssoc($arr) {
 		return array_keys($arr) !== range(0, count($arr) - 1);
 	}
 
@@ -39,8 +40,8 @@ final class Arr{
 	 * @param string|int         $key
 	 * @return bool
 	 */
-	public static function exists($array, $key){
-		if($array instanceof \ArrayAccess){
+	public static function exists($array, $key) {
+		if ($array instanceof \ArrayAccess) {
 			return $array->offsetExists($key);
 		}
 
@@ -55,8 +56,8 @@ final class Arr{
 	 * @param mixed  $value
 	 * @return array
 	 */
-	public static function add($array, $key, $value){
-		if(is_null(static::get($array, $key))){
+	public static function add($array, $key, $value) {
+		if (is_null(static::get($array, $key))) {
 			static::set($array, $key, $value);
 		}
 
@@ -71,27 +72,27 @@ final class Arr{
 	 * @param mixed              $default
 	 * @return mixed
 	 */
-	public static function get($array, $key, $default = null){
-		if(!self::accessible($array)){
+	public static function get($array, $key, $default = null) {
+		if (!self::accessible($array)) {
 			return value($default);
 		}
 
-		if(is_null($key)){
+		if (is_null($key)) {
 			return $array;
 		}
 
-		if(self::exists($array, $key)){
+		if (self::exists($array, $key)) {
 			return $array[$key];
 		}
 
-		if(strpos($key, '.') === false){
+		if (strpos($key, '.') === false) {
 			return isset($array[$key]) ? $array[$key] : value($default);
 		}
 
-		foreach(explode('.', $key) as $segment){
-			if(self::accessible($array) && self::exists($array, $segment)){
+		foreach (explode('.', $key) as $segment) {
+			if (self::accessible($array) && self::exists($array, $segment)) {
 				$array = $array[$segment];
-			}else{
+			} else {
 				return value($default);
 			}
 		}
@@ -106,24 +107,24 @@ final class Arr{
 	 * @param string|array       $keys
 	 * @return bool
 	 */
-	public static function has($array, $keys){
+	public static function has($array, $keys) {
 		$keys = (array)$keys;
 
-		if(!$array || $keys === []){
+		if (!$array || $keys === []) {
 			return false;
 		}
 
-		foreach($keys as $key){
+		foreach ($keys as $key) {
 			$subKeyArray = $array;
 
-			if(self::exists($array, $key)){
+			if (self::exists($array, $key)) {
 				continue;
 			}
 
-			foreach(explode('.', $key) as $segment){
-				if(self::accessible($subKeyArray) && self::exists($subKeyArray, $segment)){
+			foreach (explode('.', $key) as $segment) {
+				if (self::accessible($subKeyArray) && self::exists($subKeyArray, $segment)) {
 					$subKeyArray = $subKeyArray[$segment];
-				}else{
+				} else {
 					return false;
 				}
 			}
@@ -141,20 +142,20 @@ final class Arr{
 	 * @param mixed  $value
 	 * @return array
 	 */
-	public static function set(&$array, $key, $value){
-		if(is_null($key)){
+	public static function set(&$array, $key, $value) {
+		if (is_null($key)) {
 			return $array = $value;
 		}
 
 		$keys = explode('.', $key);
 
-		while(count($keys) > 1){
+		while (count($keys) > 1) {
 			$key = array_shift($keys);
 
 			// If the key doesn't exist at this depth, we will just create an empty array
 			// to hold the next value, allowing us to create the arrays to hold final
 			// values at the correct depth. Then we'll keep digging into the array.
-			if(!isset($array[$key]) || !is_array($array[$key])){
+			if (!isset($array[$key]) || !is_array($array[$key])) {
 				$array[$key] = [];
 			}
 
@@ -162,9 +163,9 @@ final class Arr{
 		}
 
 		$key = array_shift($keys);
-		if(isset($array[$key]) && is_array($array[$key]) && is_array($value)){
+		if (isset($array[$key]) && is_array($array[$key]) && is_array($value)) {
 			$array[$key] = array_merge($array[$key], $value);
-		}else{
+		} else {
 			$array[$key] = $value;
 		}
 
@@ -178,18 +179,18 @@ final class Arr{
 	 * @param array|string $keys
 	 * @return void
 	 */
-	public static function forget(&$array, $keys){
+	public static function forget(&$array, $keys) {
 		$original = &$array;
 
 		$keys = (array)$keys;
 
-		if(count($keys) === 0){
+		if (count($keys) === 0) {
 			return;
 		}
 
-		foreach($keys as $key){
+		foreach ($keys as $key) {
 			// if the exact key exists in the top-level, remove it
-			if(static::exists($array, $key)){
+			if (static::exists($array, $key)) {
 				unset($array[$key]);
 
 				continue;
@@ -200,12 +201,12 @@ final class Arr{
 			// clean up before each pass
 			$array = &$original;
 
-			while(count($parts) > 1){
+			while (count($parts) > 1) {
 				$part = array_shift($parts);
 
-				if(isset($array[$part]) && is_array($array[$part])){
+				if (isset($array[$part]) && is_array($array[$part])) {
 					$array = &$array[$part];
-				}else{
+				} else {
 					continue 2;
 				}
 			}
@@ -221,7 +222,7 @@ final class Arr{
 	 * @param array|string $keys
 	 * @return array
 	 */
-	public static function except($array, $keys){
+	public static function except($array, $keys) {
 		static::forget($array, $keys);
 
 		return $array;
@@ -233,8 +234,8 @@ final class Arr{
 	 * @param mixed $value
 	 * @return array
 	 */
-	public static function wrap($value){
-		if(is_null($value)){
+	public static function wrap($value) {
+		if (is_null($value)) {
 			return [];
 		}
 
@@ -248,14 +249,14 @@ final class Arr{
 	 * @param string $prepend
 	 * @return array
 	 */
-	public static function dot($array, $prepend = ''){
+	public static function dot($array, $prepend = '') {
 		$results = [];
 
-		foreach($array as $key => $value){
-			if(is_array($value) && !empty($value)){
-				$results = array_merge($results, self::dot($value, $prepend.$key.'.'));
-			}else{
-				$results[$prepend.$key] = $value;
+		foreach ($array as $key => $value) {
+			if (is_array($value) && !empty($value)) {
+				$results = array_merge($results, self::dot($value, $prepend . $key . '.'));
+			} else {
+				$results[$prepend . $key] = $value;
 			}
 		}
 
@@ -269,14 +270,14 @@ final class Arr{
 	 * @param array ...$arrays
 	 * @return array
 	 */
-	public static function crossJoin(...$arrays){
+	public static function crossJoin(...$arrays) {
 		$results = [[]];
 
-		foreach($arrays as $index => $array){
+		foreach ($arrays as $index => $array) {
 			$append = [];
 
-			foreach($results as $product){
-				foreach($array as $item){
+			foreach ($results as $product) {
+				foreach ($array as $item) {
 					$product[$index] = $item;
 
 					$append[] = $product;
@@ -295,7 +296,7 @@ final class Arr{
 	 * @param array $array
 	 * @return array
 	 */
-	public static function divide(array $array){
+	public static function divide(array $array) {
 		return [array_keys($array), array_values($array)];
 	}
 
@@ -306,7 +307,7 @@ final class Arr{
 	 * @param array $keys
 	 * @return array
 	 */
-	public static function only($data, array $keys){
+	public static function only($data, array $keys) {
 		return array_intersect_key($data, array_flip((array)$keys));
 		//		$result = [];
 		//		foreach($keys as $key){
@@ -326,19 +327,19 @@ final class Arr{
 	 * @param mixed          $default
 	 * @return mixed
 	 */
-	public static function first($array, callable $callback = null, $default = null){
-		if(is_null($callback)){
-			if(empty($array)){
+	public static function first($array, callable $callback = null, $default = null) {
+		if (is_null($callback)) {
+			if (empty($array)) {
 				return value($default);
 			}
 
-			foreach($array as $item){
+			foreach ($array as $item) {
 				return $item;
 			}
 		}
 
-		foreach($array as $key => $value){
-			if(call_user_func($callback, $value, $key)){
+		foreach ($array as $key => $value) {
+			if (call_user_func($callback, $value, $key)) {
 				return $value;
 			}
 		}
@@ -354,8 +355,8 @@ final class Arr{
 	 * @param mixed         $default
 	 * @return mixed
 	 */
-	public static function last($array, callable $callback = null, $default = null){
-		if(is_null($callback)){
+	public static function last($array, callable $callback = null, $default = null) {
+		if (is_null($callback)) {
 			return empty($array) ? value($default) : end($array);
 		}
 
@@ -369,16 +370,16 @@ final class Arr{
 	 * @param int   $depth
 	 * @return array
 	 */
-	public static function flatten($array, $depth = INF){
+	public static function flatten($array, $depth = INF) {
 		$result = [];
 
-		foreach($array as $item){
-			if(!is_array($item)){
+		foreach ($array as $item) {
+			if (!is_array($item)) {
 				$result[] = $item;
-			}else{
+			} else {
 				$values = $depth === 1 ? array_values($item) : self::flatten($item, $depth - 1);
 
-				foreach($values as $value){
+				foreach ($values as $value) {
 					$result[] = $value;
 				}
 			}
@@ -394,9 +395,9 @@ final class Arr{
 	 * @param string|callable $callback
 	 * @return bool
 	 */
-	public static function every($array, $callback){
-		foreach($array as $k => $v){
-			if(!$callback($v, $k)){
+	public static function every($array, $callback) {
+		foreach ($array as $k => $v) {
+			if (!$callback($v, $k)) {
 				return false;
 			}
 		}
@@ -412,10 +413,10 @@ final class Arr{
 	 * @param mixed $key
 	 * @return array
 	 */
-	public static function prepend($array, $value, $key = null){
-		if(is_null($key)){
+	public static function prepend($array, $value, $key = null) {
+		if (is_null($key)) {
 			array_unshift($array, $value);
-		}else{
+		} else {
 			$array = [$key => $value] + $array;
 		}
 
@@ -430,7 +431,7 @@ final class Arr{
 	 * @param mixed  $default
 	 * @return mixed
 	 */
-	public static function pull(&$array, $key, $default = null){
+	public static function pull(&$array, $key, $default = null) {
 		$value = static::get($array, $key, $default);
 
 		static::forget($array, $key);
@@ -446,22 +447,22 @@ final class Arr{
 	 * @return mixed
 	 * @throws \InvalidArgumentException
 	 */
-	public static function random($array, $number = null){
+	public static function random($array, $number = null) {
 		$requested = is_null($number) ? 1 : $number;
 
 		$count = count($array);
 
-		if($requested > $count){
+		if ($requested > $count) {
 			throw new \InvalidArgumentException(
 				"You requested {$requested} items, but there are only {$count} items available."
 			);
 		}
 
-		if(is_null($number)){
+		if (is_null($number)) {
 			return $array[array_rand($array)];
 		}
 
-		if((int)$number === 0){
+		if ((int)$number === 0) {
 			return [];
 		}
 
@@ -469,7 +470,7 @@ final class Arr{
 
 		$results = [];
 
-		foreach((array)$keys as $key){
+		foreach ((array)$keys as $key) {
 			$results[] = $array[$key];
 		}
 
@@ -483,10 +484,10 @@ final class Arr{
 	 * @param int|null $seed
 	 * @return array
 	 */
-	public static function shuffle($array, $seed = null){
-		if(is_null($seed)){
+	public static function shuffle($array, $seed = null) {
+		if (is_null($seed)) {
 			shuffle($array);
-		}else{
+		} else {
 			mt_srand($seed);
 			shuffle($array);
 			mt_srand();
@@ -503,25 +504,25 @@ final class Arr{
 	 * @param bool  $any
 	 * @return bool
 	 */
-	public static function where($array, $condition, $any = false){
-		if(self::isAssoc($condition)){
+	public static function where($array, $condition, $any = false) {
+		if (self::isAssoc($condition)) {
 			$temp = [];
-			foreach($condition as $key => $value){
+			foreach ($condition as $key => $value) {
 				$temp[] = [$key, '=', $value];
 			}
 			$condition = $temp;
 		}
 
-		foreach($condition as $item){
+		foreach ($condition as $item) {
 			[$field, $operator, $value] = $item;
 
-			if(strpos($field, '.')){
+			if (strpos($field, '.')) {
 				$result = self::get($array, $field);
-			}else{
+			} else {
 				$result = $array[$field] ?? null;
 			}
 
-			switch(strtolower($operator)){
+			switch (strtolower($operator)) {
 				case '===':
 					$flag = $result === $value;
 					break;
@@ -570,9 +571,9 @@ final class Arr{
 					$flag = $result == $value;
 			}
 
-			if($any && $flag){
+			if ($any && $flag) {
 				return true;
-			}elseif(!$any && !$flag){
+			} elseif (!$any && !$flag) {
 				return false;
 			}
 		}
@@ -587,14 +588,14 @@ final class Arr{
 	 * @param array $filter 要额外过滤的数据
 	 * @return array
 	 */
-	public static function filter(&$params, $filter = ["sign", "sign_type"]){
-		foreach($params as $key => $val){
-			if($val == "" || (is_array($val) && count($val) == 0)){
+	public static function filter(&$params, $filter = ["sign", "sign_type"]) {
+		foreach ($params as $key => $val) {
+			if ($val == "" || (is_array($val) && count($val) == 0)) {
 				unset ($params [$key]);
-			}else{
+			} else {
 				$len = count($filter);
-				for($i = 0; $i < $len; $i++){
-					if($key == $filter [$i]){
+				for ($i = 0; $i < $len; $i++) {
+					if ($key == $filter [$i]) {
 						unset ($params [$key]);
 						array_splice($filter, $i, 1);
 						break;
@@ -602,6 +603,7 @@ final class Arr{
 				}
 			}
 		}
+
 		return $params;
 	}
 
@@ -612,7 +614,7 @@ final class Arr{
 	 * @param $array
 	 * @return bool
 	 */
-	public static function in($value, $array){
+	public static function in($value, $array) {
 		return in_array(strtolower($value), array_map('strtolower', $array));
 	}
 
@@ -622,10 +624,10 @@ final class Arr{
 	 * @param array $array
 	 * @return array
 	 */
-	public static function sort(&$array){
-		if(static::isAssoc($array)){
+	public static function sort(&$array) {
+		if (static::isAssoc($array)) {
 			ksort($array);
-		}else{
+		} else {
 			sort($array);
 		}
 		reset($array);
@@ -639,16 +641,16 @@ final class Arr{
 	 * @param array $array
 	 * @return array
 	 */
-	public static function sortRecursive($array){
-		foreach($array as &$value){
-			if(is_array($value)){
+	public static function sortRecursive($array) {
+		foreach ($array as &$value) {
+			if (is_array($value)) {
 				$value = static::sortRecursive($value);
 			}
 		}
 
-		if(static::isAssoc($array)){
+		if (static::isAssoc($array)) {
 			ksort($array);
-		}else{
+		} else {
 			sort($array);
 		}
 
@@ -661,7 +663,7 @@ final class Arr{
 	 * @param array $array
 	 * @return string
 	 */
-	public static function query($array){
+	public static function query($array) {
 		return http_build_query($array, null, '&', PHP_QUERY_RFC3986);
 	}
 
@@ -673,27 +675,27 @@ final class Arr{
 	 * @param string $index_key
 	 * @return array
 	 */
-	public static function column(array $array, $column, $index_key = null){
+	public static function column(array $array, $column, $index_key = null) {
 		$result = [];
 
-		foreach($array as $row){
+		foreach ($array as $row) {
 			$key = $value = null;
 			$keySet = $valueSet = false;
-			if($index_key !== null && array_key_exists($index_key, $row)){
+			if ($index_key !== null && array_key_exists($index_key, $row)) {
 				$keySet = true;
 				$key = (string)$row[$index_key];
 			}
-			if($column === null){
+			if ($column === null) {
 				$valueSet = true;
 				$value = $row;
-			}elseif(is_array($row) && array_key_exists($column, $row)){
+			} elseif (is_array($row) && array_key_exists($column, $row)) {
 				$valueSet = true;
 				$value = $row[$column];
 			}
-			if($valueSet){
-				if($keySet){
+			if ($valueSet) {
+				if ($keySet) {
 					$result[$key] = $value;
-				}else{
+				} else {
 					$result[] = $value;
 				}
 			}
@@ -709,21 +711,21 @@ final class Arr{
 	 * @param string|array $keys
 	 * @return array
 	 */
-	public static function uncombine(array $array, $keys = null){
+	public static function uncombine(array $array, $keys = null) {
 		$result = [];
 
-		if($keys){
+		if ($keys) {
 			$keys = is_array($keys) ? $keys : explode(',', $keys);
-		}else{
+		} else {
 			$keys = array_keys(current($array));
 		}
 
-		foreach($keys as $index => $key){
+		foreach ($keys as $index => $key) {
 			$result[$index] = [];
 		}
 
-		foreach($array as $item){
-			foreach($keys as $index => $key){
+		foreach ($array as $item) {
+			foreach ($keys as $index => $key) {
 				$result[$index][] = isset($item[$key]) ? $item[$key] : null;
 			}
 		}
@@ -739,13 +741,13 @@ final class Arr{
 	 * @return array
 	 * @link https://www.php.net/manual/zh/function.array-unique.php#116302
 	 */
-	public static function uniqueMulti($array, $key){
+	public static function uniqueMulti($array, $key) {
 		$i = 0;
 		$temp_array = [];
 		$key_array = [];
 
-		foreach($array as $val){
-			if(!in_array($val[$key], $key_array)){
+		foreach ($array as $val) {
+			if (!in_array($val[$key], $key_array)) {
 				$key_array[$i] = $val[$key];
 				$temp_array[$i] = $val;
 			}
@@ -764,34 +766,35 @@ final class Arr{
 	 * @param array         $options
 	 * @return array
 	 */
-	public static function tree(array $list, callable $itemHandler = null, $pid = 0, array $options = []){
+	public static function tree(array $list, callable $itemHandler = null, $pid = 0, array $options = []) {
 		$options = array_merge([
-			'id'           => 'id', // 要检索的ID键名
-			'parent'       => 'pid', // 要检索的parent键名
-			'child'        => 'child', // 要存放的子结果集
+			'id' => 'id', // 要检索的ID键名
+			'parent' => 'pid', // 要检索的parent键名
+			'child' => 'child', // 要存放的子结果集
 			'with_unknown' => false, // 是否把未知的上级当成1级返回
 		], $options);
 
-		if(is_null($itemHandler)){
-			$itemHandler = function($level, &$value){ };
+		if (is_null($itemHandler)) {
+			$itemHandler = function ($level, &$value) {
+			};
 		}
 
 		$level = 0;
-		$handler = function(array &$list, $pid) use (&$handler, &$level, &$itemHandler, &$options){
+		$handler = function (array &$list, $pid) use (&$handler, &$level, &$itemHandler, &$options) {
 			$level++;
 			$idKey = $options['id'];
 			$parentKey = $options['parent'];
 			$childKey = $options['child'];
 
 			$result = [];
-			foreach($list as $key => $value){
-				if($value[$parentKey] == $pid){
+			foreach ($list as $key => $value) {
+				if ($value[$parentKey] == $pid) {
 					unset ($list[$key]);
 
 					$itemHandler($level, $value);
 
 					$childList = $handler($list, $value[$idKey]);
-					if(!empty($childList)){
+					if (!empty($childList)) {
 						$value[$childKey] = $childList;
 					}
 
@@ -807,9 +810,9 @@ final class Arr{
 		$result = $handler($list, $pid);
 
 		// 是否把未知的上级当成1级返回
-		if(!empty($list) && $options['with_unknown']){
+		if (!empty($list) && $options['with_unknown']) {
 			$level = 1;
-			foreach($list as &$value){
+			foreach ($list as &$value) {
 				$itemHandler($level, $value);
 			}
 			unset($value);
@@ -827,20 +830,22 @@ final class Arr{
 	 * @param string $child
 	 * @return array
 	 */
-	public static function treeToList($list, $child = 'child'){
-		$handler = function($list, $child) use (&$handler){
+	public static function treeToList($list, $child = 'child') {
+		$handler = function ($list, $child) use (&$handler) {
 			$result = [];
-			foreach($list as $key => &$val){
+			foreach ($list as $key => &$val) {
 				$result[] = &$val;
 				unset($list[$key]);
-				if(isset($val[$child])){
+				if (isset($val[$child])) {
 					$result = array_merge($result, $handler($val[$child], $child));
 					unset($val[$child]);
 				}
 			}
 			unset($val);
+
 			return $result;
 		};
+
 		return $handler($list, $child);
 	}
 
@@ -851,18 +856,19 @@ final class Arr{
 	 * @param array $keyMaps
 	 * @return array
 	 */
-	public static function transformKeys(array $arr, array $keyMaps){
-		foreach($keyMaps as $oldKey => $newKey){
-			if(!array_key_exists($oldKey, $arr)) continue;
+	public static function transformKeys(array $arr, array $keyMaps) {
+		foreach ($keyMaps as $oldKey => $newKey) {
+			if (!array_key_exists($oldKey, $arr)) continue;
 
-			if(is_callable($newKey)){
+			if (is_callable($newKey)) {
 				[$newKey, $value] = call_user_func($newKey, $arr[$oldKey], $oldKey, $arr);
 				$arr[$newKey] = $value;
-			}else{
+			} else {
 				$arr[$newKey] = $arr[$oldKey];
 			}
 			unset($arr[$oldKey]);
 		}
+
 		return $arr;
 	}
 
@@ -874,9 +880,10 @@ final class Arr{
 	 * @return array
 	 * @link https://www.php.net/manual/zh/function.array-intersect-key.php#80227
 	 */
-	public static function mergeDefault($default, $data){
+	public static function mergeDefault($default, $data) {
 		$intersect = array_intersect_key($data, $default); //Get data for which a default exists
 		$diff = array_diff_key($default, $data); //Get defaults which are not present in data
+
 		return $diff + $intersect; //Arrays have different keys, return the union of the two
 	}
 
@@ -886,20 +893,20 @@ final class Arr{
 	 * @param string $string
 	 * @return array
 	 */
-	public static function parse($string){
+	public static function parse($string) {
 		$array = preg_split('/[,;\r\n]+/', trim($string, ",;\r\n"));
 
-		if(strpos($string, ':')){
+		if (strpos($string, ':')) {
 			$value = [];
-			foreach($array as $val){
+			foreach ($array as $val) {
 				$val = explode(':', $val);
-				if(isset($val[1]) && $val[0] !== ''){
+				if (isset($val[1]) && $val[0] !== '') {
 					$value[$val[0]] = $val[1];
-				}else{
+				} else {
 					$value[] = $val[0];
 				}
 			}
-		}else{
+		} else {
 			$value = $array;
 		}
 
@@ -912,17 +919,18 @@ final class Arr{
 	 * @param array $array
 	 * @return string
 	 */
-	public static function toString($array){
+	public static function toString($array) {
 		$result = '';
 
-		if(self::isAssoc($array)){
-			foreach($array as $key => $val){
+		if (self::isAssoc($array)) {
+			foreach ($array as $key => $val) {
 				$result .= "{$key}:$val\n";
 			}
-		}else{
+		} else {
 			$result = implode("\n", $array);
 		}
 
 		return $result;
 	}
+
 }

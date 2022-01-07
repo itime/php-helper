@@ -10,7 +10,7 @@ namespace Xin\Hashing;
 use RuntimeException;
 use Xin\Contracts\Hashing\Hasher as HasherContract;
 
-class BcryptHasher extends AbstractHasher implements HasherContract{
+class BcryptHasher extends AbstractHasher implements HasherContract {
 
 	/**
 	 * The default cost factor.
@@ -32,7 +32,7 @@ class BcryptHasher extends AbstractHasher implements HasherContract{
 	 * @param array $options
 	 * @return void
 	 */
-	public function __construct(array $options = []){
+	public function __construct(array $options = []) {
 		$this->rounds = $options['rounds'] ?? $this->rounds;
 		$this->verifyAlgorithm = $options['verify'] ?? $this->verifyAlgorithm;
 	}
@@ -45,12 +45,12 @@ class BcryptHasher extends AbstractHasher implements HasherContract{
 	 * @return string
 	 * @throws \RuntimeException
 	 */
-	public function make($value, array $options = []){
+	public function make($value, array $options = []) {
 		$hash = password_hash($value, PASSWORD_BCRYPT, [
 			'cost' => $this->cost($options),
 		]);
 
-		if($hash === false){
+		if ($hash === false) {
 			throw new RuntimeException('Bcrypt hashing not supported.');
 		}
 
@@ -66,8 +66,8 @@ class BcryptHasher extends AbstractHasher implements HasherContract{
 	 * @return bool
 	 * @throws \RuntimeException
 	 */
-	public function check($value, $hashedValue, array $options = []){
-		if($this->verifyAlgorithm && $this->info($hashedValue)['algoName'] !== 'bcrypt'){
+	public function check($value, $hashedValue, array $options = []) {
+		if ($this->verifyAlgorithm && $this->info($hashedValue)['algoName'] !== 'bcrypt') {
 			throw new RuntimeException('This password does not use the Bcrypt algorithm.');
 		}
 
@@ -81,7 +81,7 @@ class BcryptHasher extends AbstractHasher implements HasherContract{
 	 * @param array  $options
 	 * @return bool
 	 */
-	public function needsRehash($hashedValue, array $options = []){
+	public function needsRehash($hashedValue, array $options = []) {
 		return password_needs_rehash($hashedValue, PASSWORD_BCRYPT, [
 			'cost' => $this->cost($options),
 		]);
@@ -93,7 +93,7 @@ class BcryptHasher extends AbstractHasher implements HasherContract{
 	 * @param int $rounds
 	 * @return $this
 	 */
-	public function setRounds($rounds){
+	public function setRounds($rounds) {
 		$this->rounds = (int)$rounds;
 
 		return $this;
@@ -105,7 +105,8 @@ class BcryptHasher extends AbstractHasher implements HasherContract{
 	 * @param array $options
 	 * @return int
 	 */
-	protected function cost(array $options = []){
+	protected function cost(array $options = []) {
 		return $options['rounds'] ?? $this->rounds;
 	}
+
 }

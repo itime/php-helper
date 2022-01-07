@@ -14,7 +14,7 @@ use think\File;
  *
  * @mixin \Xin\Filesystem\Filesystem
  */
-class FilesystemProxy{
+class FilesystemProxy {
 
 	/**
 	 * @var object
@@ -26,7 +26,7 @@ class FilesystemProxy{
 	 *
 	 * @param mixed $target
 	 */
-	public function __construct($target){
+	public function __construct($target) {
 		$this->target = $target;
 	}
 
@@ -39,7 +39,7 @@ class FilesystemProxy{
 	 * @param array                $options 参数
 	 * @return bool|string
 	 */
-	public function putFile(string $path, File $file, $rule = null, array $options = []){
+	public function putFile(string $path, File $file, $rule = null, array $options = []) {
 		return $this->putFileAs($path, $file, $file->hashName($rule), $options);
 	}
 
@@ -52,13 +52,13 @@ class FilesystemProxy{
 	 * @param array  $options 参数
 	 * @return bool|string
 	 */
-	public function putFileAs(string $path, File $file, string $name, array $options = []){
+	public function putFileAs(string $path, File $file, string $name, array $options = []) {
 		$stream = fopen($file->getRealPath(), 'r');
-		$path = trim($path.'/'.$name, '/');
+		$path = trim($path . '/' . $name, '/');
 
 		$result = $this->putStream($path, $stream, $options);
 
-		if(is_resource($stream)){
+		if (is_resource($stream)) {
 			fclose($stream);
 		}
 
@@ -70,7 +70,8 @@ class FilesystemProxy{
 	 * @param $arguments
 	 * @return mixed
 	 */
-	public function __call($name, $arguments){
+	public function __call($name, $arguments) {
 		return call_user_func_array([$this->target, $name], $arguments);
 	}
+
 }

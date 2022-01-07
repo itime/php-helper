@@ -4,9 +4,10 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Auth;
 
-class AuthenticationException extends \Exception{
+class AuthenticationException extends \Exception {
 
 	/**
 	 * @var string
@@ -30,13 +31,13 @@ class AuthenticationException extends \Exception{
 	 * @param string $redirectTo
 	 * @param array  $config
 	 */
-	public function __construct($guard, $redirectTo = '', array $config = []){
+	public function __construct($guard, $redirectTo = '', array $config = []) {
 		parent::__construct('Unauthenticated.', -1);
 
 		$this->guard = $guard;
 
 		$this->redirectTo = is_null($redirectTo) ? '' : $redirectTo;
-		if(empty($this->redirectTo) && isset($config['auth_url'])){
+		if (empty($this->redirectTo) && isset($config['auth_url'])) {
 			$this->redirectTo = $config['auth_url'];
 		}
 
@@ -46,21 +47,21 @@ class AuthenticationException extends \Exception{
 	/**
 	 * @return array
 	 */
-	public function getConfig(){
+	public function getConfig() {
 		return $this->config;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getGuard(){
+	public function getGuard() {
 		return $this->guard;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function redirectTo(){
+	public function redirectTo() {
 		return $this->redirectTo;
 	}
 

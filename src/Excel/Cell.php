@@ -8,72 +8,69 @@ use PhpOffice\PhpSpreadsheet\RichText\RichText;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class Cell
-{
-    /**
-     * @var SpreadsheetCell
-     */
-    private $cell;
+class Cell {
 
-    /**
-     * @param SpreadsheetCell $cell
-     */
-    public function __construct(SpreadsheetCell $cell)
-    {
-        $this->cell = $cell;
-    }
+	/**
+	 * @var SpreadsheetCell
+	 */
+	private $cell;
 
-    /**
-     * @param Worksheet $worksheet
-     * @param string $coordinate
-     *
-     * @return Cell
-     */
-    public static function make(Worksheet $worksheet, string $coordinate)
-    {
-        return new static($worksheet->getCell($coordinate));
-    }
+	/**
+	 * @param SpreadsheetCell $cell
+	 */
+	public function __construct(SpreadsheetCell $cell) {
+		$this->cell = $cell;
+	}
 
-    /**
-     * @return SpreadsheetCell
-     */
-    public function getDelegate(): SpreadsheetCell
-    {
-        return $this->cell;
-    }
+	/**
+	 * @param Worksheet $worksheet
+	 * @param string    $coordinate
+	 *
+	 * @return Cell
+	 */
+	public static function make(Worksheet $worksheet, string $coordinate) {
+		return new static($worksheet->getCell($coordinate));
+	}
 
-    /**
-     * @param null $nullValue
-     * @param bool $calculateFormulas
-     * @param bool $formatData
-     *
-     * @return mixed
-     */
-    public function getValue($nullValue = null, $calculateFormulas = false, $formatData = true)
-    {
-        $value = $nullValue;
-        if ($this->cell->getValue() !== null) {
-            if ($this->cell->getValue() instanceof RichText) {
-                $value = $this->cell->getValue()->getPlainText();
-            } elseif ($calculateFormulas) {
-                try {
-                    $value = $this->cell->getCalculatedValue();
-                } catch (Exception $e) {
-                    $value = $this->cell->getOldCalculatedValue();
-                }
-            } else {
-                $value = $this->cell->getValue();
-            }
+	/**
+	 * @return SpreadsheetCell
+	 */
+	public function getDelegate(): SpreadsheetCell {
+		return $this->cell;
+	}
 
-            if ($formatData) {
-                $style = $this->cell->getWorksheet()->getParent()->getCellXfByIndex($this->cell->getXfIndex());
-                $value = NumberFormat::toFormattedString(
-                    $value,
-                    ($style && $style->getNumberFormat()) ? $style->getNumberFormat()->getFormatCode() : NumberFormat::FORMAT_GENERAL
-                );
-            }
-        }
+	/**
+	 * @param null $nullValue
+	 * @param bool $calculateFormulas
+	 * @param bool $formatData
+	 *
+	 * @return mixed
+	 */
+	public function getValue($nullValue = null, $calculateFormulas = false, $formatData = true) {
+		$value = $nullValue;
+		if ($this->cell->getValue() !== null) {
+			if ($this->cell->getValue() instanceof RichText) {
+				$value = $this->cell->getValue()->getPlainText();
+			} elseif ($calculateFormulas) {
+				try {
+					$value = $this->cell->getCalculatedValue();
+				} catch (Exception $e) {
+					$value = $this->cell->getOldCalculatedValue();
+				}
+			} else {
+				$value = $this->cell->getValue();
+			}
 
-        return $value;
-    }
+			if ($formatData) {
+				$style = $this->cell->getWorksheet()->getParent()->getCellXfByIndex($this->cell->getXfIndex());
+				$value = NumberFormat::toFormattedString(
+					$value,
+					($style && $style->getNumberFormat()) ? $style->getNumberFormat()->getFormatCode() : NumberFormat::FORMAT_GENERAL
+				);
+			}
+		}
+
+		return $value;
+	}
+
 }

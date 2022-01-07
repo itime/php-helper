@@ -4,11 +4,12 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Finder;
 
 use Xin\Contracts\Finder\Finder as FinderContract;
 
-class FileFinder implements FinderContract{
+class FileFinder implements FinderContract {
 
 	/**
 	 * The array of active file paths.
@@ -44,10 +45,10 @@ class FileFinder implements FinderContract{
 	 * @param array      $paths
 	 * @param array|null $extensions
 	 */
-	public function __construct(array $paths, array $extensions = null){
+	public function __construct(array $paths, array $extensions = null) {
 		$this->paths = array_map([$this, 'resolvePath'], $paths);
 
-		if(isset($extensions)){
+		if (isset($extensions)) {
 			$this->extensions = $extensions;
 		}
 	}
@@ -58,12 +59,12 @@ class FileFinder implements FinderContract{
 	 * @param string $name
 	 * @return string
 	 */
-	public function find($name){
-		if(isset($this->files[$name])){
+	public function find($name) {
+		if (isset($this->files[$name])) {
 			return $this->files[$name];
 		}
 
-		if($this->hasHintInformation($name = trim($name))){
+		if ($this->hasHintInformation($name = trim($name))) {
 			return $this->files[$name] = $this->findNamespacedFile($name);
 		}
 
@@ -76,7 +77,7 @@ class FileFinder implements FinderContract{
 	 * @param string $name
 	 * @return string
 	 */
-	protected function findNamespacedFile($name){
+	protected function findNamespacedFile($name) {
 		[$namespace, $file] = $this->parseNamespaceSegments($name);
 
 		return $this->findInPaths($file, $this->hints[$namespace]);
@@ -89,14 +90,14 @@ class FileFinder implements FinderContract{
 	 * @return array
 	 * @throws \InvalidArgumentException
 	 */
-	protected function parseNamespaceSegments($name){
+	protected function parseNamespaceSegments($name) {
 		$segments = explode(static::HINT_PATH_DELIMITER, $name);
 
-		if(count($segments) !== 2){
+		if (count($segments) !== 2) {
 			throw new \InvalidArgumentException("File [{$name}] has an invalid name.");
 		}
 
-		if(!isset($this->hints[$segments[0]])){
+		if (!isset($this->hints[$segments[0]])) {
 			throw new \InvalidArgumentException("No hint path defined for [{$segments[0]}].");
 		}
 
@@ -111,10 +112,10 @@ class FileFinder implements FinderContract{
 	 * @return string
 	 * @throws \InvalidArgumentException
 	 */
-	protected function findInPaths($name, $paths){
-		foreach((array)$paths as $path){
-			foreach($this->getPossibleFiles($name) as $file){
-				if(file_exists($filePath = $path.'/'.$file)){
+	protected function findInPaths($name, $paths) {
+		foreach ((array)$paths as $path) {
+			foreach ($this->getPossibleFiles($name) as $file) {
+				if (file_exists($filePath = $path . '/' . $file)) {
 					return $filePath;
 				}
 			}
@@ -129,9 +130,9 @@ class FileFinder implements FinderContract{
 	 * @param string $name
 	 * @return array
 	 */
-	protected function getPossibleFiles($name){
-		return array_map(function($extension) use ($name){
-			return $name.'.'.$extension;
+	protected function getPossibleFiles($name) {
+		return array_map(function ($extension) use ($name) {
+			return $name . '.' . $extension;
 			// return str_replace('.', '/', $name).'.'.$extension;
 		}, $this->extensions);
 	}
@@ -142,7 +143,7 @@ class FileFinder implements FinderContract{
 	 * @param string $location
 	 * @return void
 	 */
-	public function addLocation($location){
+	public function addLocation($location) {
 		$this->paths[] = $this->resolvePath($location);
 	}
 
@@ -152,7 +153,7 @@ class FileFinder implements FinderContract{
 	 * @param string $location
 	 * @return void
 	 */
-	public function prependLocation($location){
+	public function prependLocation($location) {
 		array_unshift($this->paths, $this->resolvePath($location));
 	}
 
@@ -162,7 +163,7 @@ class FileFinder implements FinderContract{
 	 * @param string $path
 	 * @return string
 	 */
-	protected function resolvePath($path){
+	protected function resolvePath($path) {
 		return realpath($path) ?: $path;
 	}
 
@@ -173,11 +174,11 @@ class FileFinder implements FinderContract{
 	 * @param string|array $hints
 	 * @return void
 	 */
-	public function addNamespace($namespace, $hints){
+	public function addNamespace($namespace, $hints) {
 		$hints = (array)$hints;
 		$hints = array_map([$this, 'resolvePath'], $hints);
 
-		if(isset($this->hints[$namespace])){
+		if (isset($this->hints[$namespace])) {
 			$hints = array_merge($this->hints[$namespace], $hints);
 		}
 
@@ -191,10 +192,10 @@ class FileFinder implements FinderContract{
 	 * @param string|array $hints
 	 * @return void
 	 */
-	public function prependNamespace($namespace, $hints){
+	public function prependNamespace($namespace, $hints) {
 		$hints = (array)$hints;
 
-		if(isset($this->hints[$namespace])){
+		if (isset($this->hints[$namespace])) {
 			$hints = array_merge($hints, $this->hints[$namespace]);
 		}
 
@@ -208,7 +209,7 @@ class FileFinder implements FinderContract{
 	 * @param string|array $hints
 	 * @return void
 	 */
-	public function replaceNamespace($namespace, $hints){
+	public function replaceNamespace($namespace, $hints) {
 		$this->hints[$namespace] = (array)$hints;
 	}
 
@@ -218,8 +219,8 @@ class FileFinder implements FinderContract{
 	 * @param string $extension
 	 * @return void
 	 */
-	public function addExtension($extension){
-		if(($index = array_search($extension, $this->extensions)) !== false){
+	public function addExtension($extension) {
+		if (($index = array_search($extension, $this->extensions)) !== false) {
 			unset($this->extensions[$index]);
 		}
 
@@ -232,7 +233,7 @@ class FileFinder implements FinderContract{
 	 * @param string $name
 	 * @return bool
 	 */
-	public function hasHintInformation($name){
+	public function hasHintInformation($name) {
 		return strpos($name, static::HINT_PATH_DELIMITER) > 0;
 	}
 
@@ -241,7 +242,7 @@ class FileFinder implements FinderContract{
 	 *
 	 * @return void
 	 */
-	public function flush(){
+	public function flush() {
 		$this->files = [];
 	}
 
@@ -251,7 +252,7 @@ class FileFinder implements FinderContract{
 	 * @param array $paths
 	 * @return $this
 	 */
-	public function setPaths($paths){
+	public function setPaths($paths) {
 		$this->paths = $paths;
 
 		return $this;
@@ -262,7 +263,7 @@ class FileFinder implements FinderContract{
 	 *
 	 * @return array
 	 */
-	public function getPaths(){
+	public function getPaths() {
 		return $this->paths;
 	}
 
@@ -271,7 +272,7 @@ class FileFinder implements FinderContract{
 	 *
 	 * @return array
 	 */
-	public function getFiles(){
+	public function getFiles() {
 		return $this->files;
 	}
 
@@ -280,7 +281,7 @@ class FileFinder implements FinderContract{
 	 *
 	 * @return array
 	 */
-	public function getHints(){
+	public function getHints() {
 		return $this->hints;
 	}
 
@@ -289,7 +290,8 @@ class FileFinder implements FinderContract{
 	 *
 	 * @return array
 	 */
-	public function getExtensions(){
+	public function getExtensions() {
 		return $this->extensions;
 	}
+
 }

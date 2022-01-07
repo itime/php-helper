@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Stat;
 
-interface Provider{
+interface Provider {
 
 	/**
 	 * 获取缓存 key
@@ -93,4 +93,5 @@ interface Provider{
 	 * @return int
 	 */
 	public function insertIpLog($data, array $options = []);
+
 }

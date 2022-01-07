@@ -4,9 +4,10 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Contracts\Foundation;
 
-interface Application{
+interface Application {
 
 	/**
 	 * 是否是开发环境

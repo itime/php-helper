@@ -4,9 +4,10 @@
  *
  * @author: 晋<657306123@qq.com>
  */
+
 namespace Xin\Auth\Events;
 
-class LoginFailed{
+class LoginFailed {
 
 	/**
 	 * The authentication guard name.
@@ -37,9 +38,10 @@ class LoginFailed{
 	 * @param array                                           $credentials
 	 * @return void
 	 */
-	public function __construct($guard, $user, $credentials){
+	public function __construct($guard, $user, $credentials) {
 		$this->user = $user;
 		$this->guard = $guard;
 		$this->credentials = $credentials;
 	}
+
 }

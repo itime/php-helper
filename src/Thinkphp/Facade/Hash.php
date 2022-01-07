@@ -15,7 +15,7 @@ use think\Facade;
  * @method bool needsRehash($hashedValue, array $options = []) static
  * @see \Xin\Support\Hasher
  */
-class Hash extends Facade{
+class Hash extends Facade {
 
 	/**
 	 * 获取当前Facade对应类名（或者已经绑定的容器对象标识）
@@ -23,7 +23,8 @@ class Hash extends Facade{
 	 * @access protected
 	 * @return string
 	 */
-	protected static function getFacadeClass(){
+	protected static function getFacadeClass() {
 		return 'hash';
 	}
+
 }

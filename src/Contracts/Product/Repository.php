@@ -9,6 +9,6 @@ namespace Xin\Contracts\Product;
 
 use Xin\Contracts\Foundation\Repository as BaseRepository;
 
-interface Repository extends BaseRepository{
+interface Repository extends BaseRepository {
 
 }

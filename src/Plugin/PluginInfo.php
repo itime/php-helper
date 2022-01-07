@@ -12,7 +12,7 @@ use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Contracts\Plugin\PluginInfo as PluginInfoContract;
 use Xin\Support\Version;
 
-class PluginInfo implements PluginInfoContract{
+class PluginInfo implements PluginInfoContract {
 
 	/**
 	 * @var \think\App
@@ -51,7 +51,7 @@ class PluginInfo implements PluginInfoContract{
 	 * @param string                        $pluginClass
 	 * @param \Xin\Contracts\Plugin\Factory $factory
 	 */
-	public function __construct($name, $pluginClass, PluginFactory $factory){
+	public function __construct($name, $pluginClass, PluginFactory $factory) {
 		$this->name = $name;
 		$this->pluginClass = $pluginClass;
 		$this->factory = $factory;
@@ -61,9 +61,9 @@ class PluginInfo implements PluginInfoContract{
 	/**
 	 * @return array
 	 */
-	public function getInfo($name = null){
-		if(is_null($this->info)){
-			$path = $this->path().'manifest.php';
+	public function getInfo($name = null) {
+		if (is_null($this->info)) {
+			$path = $this->path() . 'manifest.php';
 			$this->info = require_once $path;
 		}
 
@@ -73,54 +73,56 @@ class PluginInfo implements PluginInfoContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function getName(){
+	public function getName() {
 		return $this->name;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function getVersion(){
+	public function getVersion() {
 		return $this->getInfo('version');
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function checkVersion($newVersion){
+	public function checkVersion($newVersion) {
 		return Version::check($this->getVersion(), $newVersion);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function path($path = ''){
+	public function path($path = '') {
 		$rootPath = $this->factory->pluginPath($this->getName());
-		return $rootPath.($path ? $path.DIRECTORY_SEPARATOR : $path);
+
+		return $rootPath . ($path ? $path . DIRECTORY_SEPARATOR : $path);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function plugin(){
-		if(!is_object($this->pluginClass)){
+	public function plugin() {
+		if (!is_object($this->pluginClass)) {
 			$this->pluginClass = $this->app->invokeClass($this->pluginClass);
 		}
+
 		return $this->pluginClass;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function getConfigTemplate($config = [], $layer = null){
+	public function getConfigTemplate($config = [], $layer = null) {
 		$template = $this->loadConfigTemplate($layer);
 
-		foreach($template as &$item){
-			foreach($item['config'] as &$value){
+		foreach ($template as &$item) {
+			foreach ($item['config'] as &$value) {
 				$name = $value['name'];
-				if(isset($config[$name])){
+				if (isset($config[$name])) {
 					$value['value'] = $config[$name];
-				}else{
+				} else {
 					$value['value'] = value(isset($value['value']) ? $value['value'] : null);
 				}
 			}
@@ -134,22 +136,22 @@ class PluginInfo implements PluginInfoContract{
 	/**
 	 * @inheritDoc
 	 */
-	public function getConfigTypeList(){
+	public function getConfigTypeList() {
 		$template = $this->loadConfigTemplate();
 
 		$typeMap = [
 			'switch' => 'int',
 			'number' => 'int',
-			'array'  => 'array',
+			'array' => 'array',
 		];
 
 		$result = [];
-		foreach($template as $item){
-			foreach($item['config'] as $value){
-				if(isset($value['typeof'])){
+		foreach ($template as $item) {
+			foreach ($item['config'] as $value) {
+				if (isset($value['typeof'])) {
 					$result[$value['name']] = $value['typeof'];
-				}else{
-					if(isset($typeMap[$value['type']])){
+				} else {
+					if (isset($typeMap[$value['type']])) {
 						$result[$value['name']] = $typeMap[$value['type']];
 					}
 				}
@@ -165,7 +167,7 @@ class PluginInfo implements PluginInfoContract{
 	 * @param mixed $value
 	 * @return mixed
 	 */
-	protected function resolveValue($value){
+	protected function resolveValue($value) {
 		return $value instanceof \Closure ? $value() : $value;
 	}
 
@@ -174,20 +176,21 @@ class PluginInfo implements PluginInfoContract{
 	 *
 	 * @return array
 	 */
-	protected function loadConfigTemplate($layer = null){
-		if(is_null($this->configTemplate)){
-			$configTemplatePath = $this->path()."config.php";
-			if(file_exists($configTemplatePath)){
+	protected function loadConfigTemplate($layer = null) {
+		if (is_null($this->configTemplate)) {
+			$configTemplatePath = $this->path() . "config.php";
+			if (file_exists($configTemplatePath)) {
 				$this->configTemplate = require_once $configTemplatePath;
-			}else{
+			} else {
 				$this->configTemplate = [];
 			}
 		}
 
-		if($layer){
-			$configTemplatePath = $this->path($layer)."config.php";
-			if(file_exists($configTemplatePath)){
+		if ($layer) {
+			$configTemplatePath = $this->path($layer) . "config.php";
+			if (file_exists($configTemplatePath)) {
 				$layerConfigTemplate = require_once $configTemplatePath;
+
 				return array_merge_recursive($this->configTemplate, $layerConfigTemplate);
 			}
 		}

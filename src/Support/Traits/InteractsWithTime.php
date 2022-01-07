@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use DateInterval;
 use DateTimeInterface;
 
-trait InteractsWithTime{
+trait InteractsWithTime {
 
 	/**
 	 * Get the number of seconds until the given DateTime.
@@ -14,7 +14,7 @@ trait InteractsWithTime{
 	 * @param \DateTimeInterface|\DateInterval|int $delay
 	 * @return int
 	 */
-	protected function secondsUntil($delay){
+	protected function secondsUntil($delay) {
 		$delay = $this->parseDateInterval($delay);
 
 		return $delay instanceof DateTimeInterface
@@ -28,7 +28,7 @@ trait InteractsWithTime{
 	 * @param \DateTimeInterface|\DateInterval|int $delay
 	 * @return int
 	 */
-	protected function availableAt($delay = 0){
+	protected function availableAt($delay = 0) {
 		$delay = $this->parseDateInterval($delay);
 
 		return $delay instanceof DateTimeInterface
@@ -42,8 +42,8 @@ trait InteractsWithTime{
 	 * @param \DateTimeInterface|\DateInterval|int $delay
 	 * @return \DateTimeInterface|int
 	 */
-	protected function parseDateInterval($delay){
-		if($delay instanceof DateInterval){
+	protected function parseDateInterval($delay) {
+		if ($delay instanceof DateInterval) {
 			$delay = Carbon::now()->add($delay);
 		}
 
@@ -55,7 +55,8 @@ trait InteractsWithTime{
 	 *
 	 * @return int
 	 */
-	protected function currentTime(){
+	protected function currentTime() {
 		return Carbon::now()->getTimestamp();
 	}
+
 }

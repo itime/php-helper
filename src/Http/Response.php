@@ -12,7 +12,7 @@ namespace Xin\Http;
  *
  * @mixin \GuzzleHttp\Psr7\Response
  */
-class Response{
+class Response {
 
 	/**
 	 * @var \Psr\Http\Message\ResponseInterface
@@ -29,7 +29,7 @@ class Response{
 	 *
 	 * @param \Psr\Http\Message\ResponseInterface $response
 	 */
-	public function __construct($response, $e = null){
+	public function __construct($response, $e = null) {
 		$this->response = $response;
 		$this->e = $e;
 	}
@@ -39,7 +39,7 @@ class Response{
 	 *
 	 * @return string
 	 */
-	public function getContents(){
+	public function getContents() {
 		return $this->response->getBody()->getContents();
 	}
 
@@ -48,7 +48,7 @@ class Response{
 	 *
 	 * @return bool
 	 */
-	public function isOk(){
+	public function isOk() {
 		return $this->getStatusCode() == 200;
 	}
 
@@ -58,7 +58,7 @@ class Response{
 	 * @param bool $associative
 	 * @return array|\stdClass
 	 */
-	public function json($associative = true){
+	public function json($associative = true) {
 		return json_decode($this->getContents(), $associative);
 	}
 
@@ -68,9 +68,10 @@ class Response{
 	 * @param bool $associative
 	 * @return array
 	 */
-	public function xml($associative = true){
+	public function xml($associative = true) {
 		//将XML转为array,禁止引用外部xml实体
 		libxml_disable_entity_loader(true);
+
 		return json_decode(json_encode(simplexml_load_string($this->getContents(), 'SimpleXMLElement', LIBXML_NOCDATA)), $associative);
 	}
 
@@ -79,7 +80,7 @@ class Response{
 	 *
 	 * @return bool
 	 */
-	public function getContentType(){
+	public function getContentType() {
 		return $this->getHeaderLine('Content-Type');
 	}
 
@@ -89,7 +90,7 @@ class Response{
 	 * @param string $contentType
 	 * @return bool
 	 */
-	public function isContentType($contentType){
+	public function isContentType($contentType) {
 		return stripos($this->getContentType(), $contentType) !== false;
 	}
 
@@ -98,7 +99,7 @@ class Response{
 	 *
 	 * @return bool
 	 */
-	public function isJson(){
+	public function isJson() {
 		return $this->isContentType("application/json");
 	}
 
@@ -107,7 +108,7 @@ class Response{
 	 *
 	 * @return bool
 	 */
-	public function isXml(){
+	public function isXml() {
 		return $this->isContentType("application/xml");
 	}
 
@@ -116,8 +117,8 @@ class Response{
 	 *
 	 * @return array
 	 */
-	public function toArray(){
-		if($this->isXml()){
+	public function toArray() {
+		if ($this->isXml()) {
 			return (array)$this->xml();
 		}
 
@@ -129,7 +130,7 @@ class Response{
 	 *
 	 * @return \Psr\Http\Message\ResponseInterface
 	 */
-	public function getRaw(){
+	public function getRaw() {
 		return $this->response;
 	}
 
@@ -139,8 +140,8 @@ class Response{
 	 * @return $this
 	 * @throws \GuzzleHttp\Exception\BadResponseException
 	 */
-	public function throwException(){
-		if($this->e){
+	public function throwException() {
+		if ($this->e) {
 			throw $this->e;
 		}
 
@@ -152,7 +153,7 @@ class Response{
 	 *
 	 * @return bool
 	 */
-	public function isException(){
+	public function isException() {
 		return $this->e != null;
 	}
 
@@ -163,7 +164,7 @@ class Response{
 	 * @param array  $arguments
 	 * @return false|mixed
 	 */
-	public function __call($name, $arguments){
+	public function __call($name, $arguments) {
 		return call_user_func_array([$this->response, $name], $arguments);
 	}
 
