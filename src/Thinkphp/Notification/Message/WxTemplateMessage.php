@@ -7,7 +7,7 @@
 
 namespace Xin\Thinkphp\Notification\Message;
 
-use Xin\Support\Contracts\Arrayable;
+use Xin\Contracts\Support\Arrayable;
 
 class WxTemplateMessage implements Arrayable {
 

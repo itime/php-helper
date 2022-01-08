@@ -7,45 +7,59 @@
 
 namespace Xin\Thinkphp\Hint;
 
-use think\Service;
 use Xin\Contracts\Hint\Factory as HintFactory;
+use Xin\Hint\Hint;
 use Xin\Hint\HintManager;
+use Xin\Support\Str;
+use Xin\Thinkphp\Foundation\ServiceProvider;
 
 /**
  * Class HintServiceProvider
  */
-class HintServiceProvider extends Service {
+class HintServiceProvider extends ServiceProvider {
 
 	/**
-	 * 启动器
+	 * @inheritDoc
 	 */
 	public function register() {
+		$this->registerManager();
+		$this->registerScenes();
+	}
+
+	/**
+	 * 注册提示管理器
+	 * @return void
+	 */
+	protected function registerManager() {
 		$this->app->bind([
 			'hint' => HintFactory::class,
-			HintFactory::class => function () {
-				$hint = new HintManager;
+			HintFactory::class => HintManager::class,
+			HintManager::class => function () {
+				$manager = new HintManager(
+					$this->app->config->get('hint')
+				);
+				$manager->setContainer($this->app);
 
-				$this->registerHintScenes($hint);
-
-				return $hint;
+				return $manager;
 			},
 		]);
 	}
 
 	/**
 	 * 注册提示器场景
-	 *
-	 * @param \Xin\Hint\HintManager $manager
 	 */
-	protected function registerHintScenes(HintManager $manager) {
+	protected function registerScenes() {
+		/** @var HintManager $manager */
+		$manager = $this->app['hint'];
+
 		// extend api hint
-		$manager->extend('api', function () {
-			return $this->app->make(ApiHint::class);
+		$manager->extend('api', function ($name, $config) {
+			return new Hint($config, new ApiHandler());
 		});
 
 		// extend web hint
-		$manager->extend('web', function () {
-			return $this->app->make(WebHint::class);
+		$manager->extend('web', function ($name, $config) {
+			return new Hint($config, new WebHandler());
 		});
 
 		// set auto bind hint
@@ -67,7 +81,7 @@ class HintServiceProvider extends Service {
 	protected function isApiRequest() {
 		return $this->app->request->isAjax() ||
 			$this->app->request->isJson() ||
-			$this->app->http->getName() === 'api';
+			Str::endsWith($this->app->http->getName(), 'api');
 	}
 
 }

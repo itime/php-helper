@@ -11,6 +11,9 @@ use think\Service;
 use Xin\Contracts\Foundation\Payment as PaymentContract;
 use Xin\Foundation\Payment\Payment;
 
+/**
+ * @deprecated
+ */
 class PaymentServiceProvider extends Service {
 
 	/**

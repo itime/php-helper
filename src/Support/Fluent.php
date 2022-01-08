@@ -2,7 +2,7 @@
 
 namespace Xin\Support;
 
-use Xin\Support\Contracts\Arrayable;
+use Xin\Contracts\Support\Arrayable;
 
 class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayable {
 

@@ -44,8 +44,8 @@ interface Factory{
 	/**
 	 * 获取配置数据
 	 *
-	 * @param string $type
+	 * @param string $key
 	 * @return array
 	 */
-	public function getConfig($type = null, $default = null);
+	public function getConfig($key = null, $default = null);
 }

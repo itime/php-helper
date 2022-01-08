@@ -11,6 +11,10 @@ use EasyWeChat\Factory;
 use EasyWeChat\Kernel\ServiceContainer;
 use Xin\Contracts\Foundation\Wechat as WechatContract;
 
+/**
+ * Class Wechat
+ * @deprecated
+ */
 class Wechat implements WechatContract {
 
 	/**

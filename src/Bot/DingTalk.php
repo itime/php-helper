@@ -2,8 +2,9 @@
 
 namespace Xin\Bot;
 
-use App\Contracts\Bot\Bot;
-use App\Services\Service;
+use Xin\Capsule\Service;
+use Xin\Contracts\Bot\Bot;
+use Xin\Support\Arr;
 
 class DingTalk extends Service implements Bot {
 
@@ -49,6 +50,35 @@ class DingTalk extends Service implements Bot {
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function sendMarkdownMessage($content, array $mentionedList = null) {
+		return $this->sendMessage([
+			'msgtype' => 'markdown',
+			'markdown' => [
+				'text' => $content,
+			],
+		], $mentionedList);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function sendFeedCardMessage($articles, array $mentionedList = null) {
+		return $this->sendMessage([
+			'msgtype' => 'feedCard',
+			'feedCard' => [
+				'links' => array_map(function ($item) {
+					return Arr::transformKeys($item, [
+						'url' => 'messageURL',
+						'picurl' => 'picURL',
+					]);
+				}, $articles),
+			],
+		], $mentionedList);
+	}
+
+	/**
 	 * 解析URL
 	 * @return string
 	 */
@@ -56,22 +86,6 @@ class DingTalk extends Service implements Bot {
 		$key = $this->config['key'];
 
 		return self::BASE_URL . $key;
-	}
-
-	public function sendMarkdownMessage($content, array $mentionedList = null) {
-		// TODO: Implement sendMarkdownMessage() method.
-	}
-
-	public function sendImageMessage($content, $fileMD5, array $mentionedList = null) {
-		// TODO: Implement sendImageMessage() method.
-	}
-
-	public function sendNewMessage($articles, array $mentionedList = null) {
-		// TODO: Implement sendNewMessage() method.
-	}
-
-	public function sendFileMessage($mediaId, array $mentionedList = null) {
-		// TODO: Implement sendFileMessage() method.
 	}
 
 }

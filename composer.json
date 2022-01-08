@@ -17,6 +17,7 @@
 		"doctrine/inflector":"^2.0",
 		"ramsey/uuid":"^3.5",
 		"opis/closure":"^3.6",
+		"league/pipeline":"^1.0",
 		"ext-json":"*",
 		"ext-openssl":"*",
 		"ext-mbstring":"*",

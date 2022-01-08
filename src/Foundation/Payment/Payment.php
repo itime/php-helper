@@ -11,6 +11,10 @@ use Xin\Contracts\Foundation\Payment as PaymentContract;
 use Xin\Support\File;
 use Yansongda\Pay\Pay;
 
+/**
+ * Class Payment
+ * @deprecated
+ */
 class Payment implements PaymentContract {
 
 	/**

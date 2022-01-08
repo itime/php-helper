@@ -7,33 +7,11 @@
 
 namespace Xin\Hint;
 
+use Xin\Capsule\Manager;
 use Xin\Contracts\Hint\Factory as HintFactory;
+use Xin\Support\Arr;
 
-class HintManager implements HintFactory {
-
-	/**
-	 * @var \Psr\Container\ContainerInterface
-	 */
-	protected $container;
-
-	/**
-	 * @var string
-	 */
-	protected $default;
-
-	/**
-	 * 提示器
-	 *
-	 * @var array
-	 */
-	protected $hints = [];
-
-	/**
-	 * 创建器列表
-	 *
-	 * @var array
-	 */
-	private $customCreators = [];
+class HintManager extends Manager implements HintFactory {
 
 	/**
 	 * @var \Closure
@@ -47,9 +25,7 @@ class HintManager implements HintFactory {
 	 * @return \Xin\Contracts\Hint\Hint
 	 */
 	public function hint($name = null) {
-		$name = $name ?: $this->getDefaultDriver();
-
-		return $this->hints[$name] ?? $this->hints[$name] = $this->resolve($name);
+		return $this->driver($name);
 	}
 
 	/**
@@ -82,37 +58,6 @@ class HintManager implements HintFactory {
 	}
 
 	/**
-	 * 解决给定的提示器
-	 *
-	 * @param string $name
-	 * @return \Xin\Contracts\Hint\Hint
-	 */
-	protected function resolve($name) {
-		if (isset($this->customCreators[$name])) {
-			return $this->callCustomCreator($name);
-		}
-
-		$driverMethod = 'create' . ucfirst($name) . 'Driver';
-		if (method_exists($this, $driverMethod)) {
-			return $this->{$driverMethod}();
-		}
-
-		throw new \InvalidArgumentException(
-			"Hint driver [{$name}] is not defined."
-		);
-	}
-
-	/**
-	 * 调用自定义创建器
-	 *
-	 * @param string $name
-	 * @return \Xin\Contracts\Hint\Hint
-	 */
-	protected function callCustomCreator($name) {
-		return $this->customCreators[$name]($name);
-	}
-
-	/**
 	 * 设置自动完成提示器
 	 *
 	 * @param \Closure $resolverCallback
@@ -122,53 +67,28 @@ class HintManager implements HintFactory {
 	}
 
 	/**
-	 * 自定义一个创建器
-	 *
-	 * @param string   $driver
-	 * @param \Closure $callback
-	 * @return $this
+	 * @inerhitDoc
 	 */
-	public function extend($driver, \Closure $callback) {
-		$this->customCreators[$driver] = $callback;
-
-		return $this;
+	protected function getDefaultDriver() {
+		return $this->getConfig('defaults.hint', 'api');
 	}
 
 	/**
-	 * 获取默认驱动
-	 *
+	 * @inerhitDoc
+	 */
+	protected function setDefaultDriver($name) {
+		$this->setConfig('defaults.hint', $name);
+	}
+
+	public function getDriverConfig($name) {
+		return $this->getConfig($name ? "hints.{$name}" : 'hints');
+	}
+
+	/**
 	 * @return string
 	 */
-	public function getDefaultDriver() {
-		if ($this->default) {
-			return $this->default;
-		}
-
-		if ($this->autoResolverCallback) {
-			return call_user_func($this->autoResolverCallback);
-		}
-
-		throw new \RuntimeException("hint default driver not defined.");
-	}
-
-	/**
-	 * 设置默认驱动
-	 *
-	 * @param string $name
-	 */
-	public function setDefaultDriver($name) {
-		$this->default = $name;
-	}
-
-	/**
-	 * Dynamically call the default driver instance.
-	 *
-	 * @param string $name
-	 * @param array  $arguments
-	 * @return mixed
-	 */
-	public function __call($name, $arguments) {
-		return call_user_func_array([$this->hint(), $name], $arguments);
+	protected function getDefault($type) {
+		return Arr::get($this->config, "defaults.{$type}", 'default');
 	}
 
 }

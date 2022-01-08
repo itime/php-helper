@@ -10,7 +10,7 @@ abstract class Manager {
 	use WithConfig,
 		WithContainer,
 		Macroable {
-		__call as macroCall;
+		Macroable::__call as macroCall;
 	}
 
 	/**
@@ -47,7 +47,7 @@ abstract class Manager {
 	public function driver(string $name = null) {
 		$name = $name ?: $this->getDefaultDriver();
 
-		return $this->drivers[$name] ?? $this->drivers[$name] = $this->resolve($name);
+		return $this->drivers[$name] ?? $this->drivers[$name] = $this->createDriver($name);
 	}
 
 	/**
@@ -57,22 +57,38 @@ abstract class Manager {
 	 *
 	 * @return mixed
 	 */
-	protected function resolve(string $name) {
+	protected function createDriver($name) {
+		// 获取驱动相关配置
 		$config = $this->getDriverConfig($name);
 
+		// 检查驱动配置是否存在，如果不存在则需要抛出异常，由上层调用者进行接管异常并处理
 		if (is_null($config)) {
-			throw new InvalidArgumentException(class_basename(get_class()) . " config [{$name}] is not defined.");
+			throw new InvalidArgumentException(class_basename(get_class()) . "driver config [{$name}] is not defined.");
 		}
 
-		if (isset($this->customCreators[$config['driver']])) {
-			return $this->callCustomCreator($name, $config);
+		$instance = null;
+
+		// 获取驱动名称，如果配置中不存在 driver 元素，则默认使用传递的 name
+		$driver = $config['driver'] ?? $name;
+
+		// 检查自定义驱动实例创建者是否存在，如果存在则使用驱动实例创建者创建实例
+		// 否则则检查管理器是否存在创建驱动实例方法，如果存在则使用管理器提供的创建方法进行创建驱动实例
+		if (isset($this->customCreators[$driver])) {
+			$instance = $this->callCustomCreator($name, $config);
+		} else {
+			$driverMethod = 'create' . ucfirst($driver) . 'Driver';
+			if (method_exists($this, $driverMethod)) {
+				$instance = $this->{$driverMethod}($name, $config);
+			}
 		}
 
-		$driverMethod = 'create' . ucfirst($config['driver']) . 'Driver';
+		// 如果容器存在则返回，并且尝试给驱动实例设置容器实例
+		if ($instance) {
+			$this->setDriverContainer($instance);
 
-		if (method_exists($this, $driverMethod)) {
-			return $this->{$driverMethod}($name, $config);
+			return $instance;
 		}
+
 
 		throw new InvalidArgumentException(
 			class_basename(get_class()) . " driver [{$config['driver']}] for [{$name}] is not defined."
@@ -88,6 +104,30 @@ abstract class Manager {
 	 */
 	protected function callCustomCreator($name, array $config) {
 		return $this->customCreators[$config['driver']]($name, $config);
+	}
+
+	/**
+	 * 给驱动设置容器实例
+	 * @param string $driver
+	 * @return void
+	 */
+	protected function setDriverContainer($driver) {
+		if (method_exists($driver, 'setContainer')) {
+			$driver->setContainer($this->getContainer());
+		}
+	}
+
+	/**
+	 * 自定义一个创建器
+	 *
+	 * @param string   $driver
+	 * @param \Closure $callback
+	 * @return $this
+	 */
+	public function extend($driver, \Closure $callback) {
+		$this->customCreators[$driver] = $callback;
+
+		return $this;
 	}
 
 	/**
@@ -109,6 +149,25 @@ abstract class Manager {
 	 * @return array|\ArrayAccess|mixed
 	 */
 	abstract public function getDriverConfig($name);
+
+	/**
+	 * 获取所有已创建的驱动实例
+	 * @return array
+	 */
+	public function getDrivers() {
+		return $this->drivers;
+	}
+
+	/**
+	 * 清除所有已解析的驱动实例
+	 *
+	 * @return $this
+	 */
+	public function forgetDrivers() {
+		$this->drivers = [];
+
+		return $this;
+	}
 
 	/**
 	 * Pass dynamic methods call onto Flysystem.

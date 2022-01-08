@@ -33,7 +33,7 @@ interface Factory {
 	 * @param array  $options
 	 * @return \EasyWeChat\OfficialAccount\Application
 	 */
-	public function official($name = null, array $options = []);
+	public function officialAccount($name = null, array $options = []);
 
 	/**
 	 * 微信公众号配置是否存在
@@ -41,7 +41,7 @@ interface Factory {
 	 * @param string $name
 	 * @return bool
 	 */
-	public function hasOfficial($name = null);
+	public function hasOfficialAccount($name = null);
 
 	/**
 	 * 获取默认小程序实例

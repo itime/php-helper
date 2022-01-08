@@ -39,11 +39,7 @@ class ExceptionHandle extends Handle {
 	];
 
 	/**
-	 * 记录异常信息（包括日志或者其它方式记录）
-	 *
-	 * @access public
-	 * @param \Throwable $exception
-	 * @return void
+	 * @inheritDoc
 	 */
 	public function report(\Throwable $exception): void {
 		if ($this->isIgnoreReport($exception)) {
@@ -82,12 +78,7 @@ class ExceptionHandle extends Handle {
 	}
 
 	/**
-	 * Render an exception into an HTTP response.
-	 *
-	 * @access public
-	 * @param \think\Request $request
-	 * @param \Throwable     $e
-	 * @return Response
+	 * @inheritDoc
 	 */
 	public function render($request, \Throwable $e): Response {
 		// 参数验证错误
@@ -112,9 +103,9 @@ class ExceptionHandle extends Handle {
 	 * 未授权处理
 	 *
 	 * @param \Xin\Auth\AuthenticationException $e
-	 * @return \Symfony\Component\HttpFoundation\Response|\think\Response
+	 * @return \think\Response
 	 */
-	protected function authenticationHandle(AuthenticationException $e) {
+	protected function authenticationHandle(AuthenticationException $e): Response {
 		if ($this->isJson()) {
 			return Hint::error("登录已失效", -1, $e->redirectTo());
 		} else {
@@ -123,9 +114,7 @@ class ExceptionHandle extends Handle {
 	}
 
 	/**
-	 * @access protected
-	 * @param HttpException $e
-	 * @return Response
+	 * @inheritDoc
 	 */
 	protected function renderHttpException(HttpException $e): Response {
 		$statusCode = $e->getStatusCode();
@@ -143,9 +132,7 @@ class ExceptionHandle extends Handle {
 	}
 
 	/**
-	 * @access protected
-	 * @param \Throwable $exception
-	 * @return Response
+	 * @inheritDoc
 	 */
 	protected function convertExceptionToResponse(\Throwable $exception): Response {
 		if (!$this->isJson()) {

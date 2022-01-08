@@ -69,7 +69,7 @@ class QyWork extends Service implements Bot {
 	/**
 	 * @inheritDoc
 	 */
-	public function sendNewMessage($articles, array $mentionedList = null) {
+	public function sendFeedCardMessage($articles, array $mentionedList = null) {
 		return $this->sendMessage([
 			'msgtype' => 'news',
 			'news' => [

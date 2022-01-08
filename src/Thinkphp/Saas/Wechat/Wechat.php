@@ -8,7 +8,7 @@
 namespace Xin\Thinkphp\Saas\Wechat;
 
 use EasyWeChat\Factory;
-use Xin\Contracts\Saas\WechatRepository;
+use Xin\Contracts\Saas\Wechat\WechatRepository;
 use Xin\Foundation\Wechat\Wechat as WechatBase;
 use Xin\Foundation\Wechat\WechatNotConfigureException;
 

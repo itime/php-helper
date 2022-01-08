@@ -11,6 +11,9 @@ use think\Service;
 use Xin\Contracts\Foundation\Wechat as WechatContract;
 use Xin\Foundation\Wechat\Wechat;
 
+/**
+ * @deprecated
+ */
 class WechatServiceProvider extends Service {
 
 	/**
