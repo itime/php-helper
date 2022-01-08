@@ -63,7 +63,7 @@ abstract class Manager {
 
 		// 检查驱动配置是否存在，如果不存在则需要抛出异常，由上层调用者进行接管异常并处理
 		if (is_null($config)) {
-			throw new InvalidArgumentException(class_basename(get_class()) . "driver config [{$name}] is not defined.");
+			throw new InvalidArgumentException(class_basename(get_class()) . " driver config [{$name}] is not defined.");
 		}
 
 		$instance = null;
@@ -74,7 +74,7 @@ abstract class Manager {
 		// 检查自定义驱动实例创建者是否存在，如果存在则使用驱动实例创建者创建实例
 		// 否则则检查管理器是否存在创建驱动实例方法，如果存在则使用管理器提供的创建方法进行创建驱动实例
 		if (isset($this->customCreators[$driver])) {
-			$instance = $this->callCustomCreator($name, $config);
+			$instance = $this->callCustomCreator($name, $driver, $config);
 		} else {
 			$driverMethod = 'create' . ucfirst($driver) . 'Driver';
 			if (method_exists($this, $driverMethod)) {
@@ -99,11 +99,12 @@ abstract class Manager {
 	 * 调用一个自定义的创建器
 	 *
 	 * @param string $name
+	 * @param string $driver
 	 * @param array  $config
 	 * @return mixed
 	 */
-	protected function callCustomCreator($name, array $config) {
-		return $this->customCreators[$config['driver']]($name, $config);
+	protected function callCustomCreator($name, $driver, array $config) {
+		return $this->customCreators[$driver]($name, $config);
 	}
 
 	/**

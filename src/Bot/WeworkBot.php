@@ -7,6 +7,9 @@
 
 namespace Xin\Bot;
 
+/**
+ * @deprecated
+ */
 class WeworkBot {
 
 	/**

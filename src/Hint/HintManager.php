@@ -11,6 +11,10 @@ use Xin\Capsule\Manager;
 use Xin\Contracts\Hint\Factory as HintFactory;
 use Xin\Support\Arr;
 
+/**
+ * Class HintManager
+ * @mixin Hint
+ */
 class HintManager extends Manager implements HintFactory {
 
 	/**
@@ -70,6 +74,10 @@ class HintManager extends Manager implements HintFactory {
 	 * @inerhitDoc
 	 */
 	protected function getDefaultDriver() {
+		if (is_callable($this->autoResolverCallback)) {
+			return call_user_func($this->autoResolverCallback);
+		}
+
 		return $this->getConfig('defaults.hint', 'api');
 	}
 

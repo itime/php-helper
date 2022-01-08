@@ -5,6 +5,7 @@ namespace Xin\Bot;
 use Xin\Capsule\Service;
 use Xin\Contracts\Bot\Bot;
 use Xin\Support\Arr;
+use Xin\Support\Traits\HasHttpRequests;
 
 class DingTalk extends Service implements Bot {
 

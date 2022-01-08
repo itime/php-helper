@@ -5,9 +5,9 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Saas;
+namespace Xin\Contracts\Saas\App;
 
-interface Factory {
+interface Guard {
 
 	/**
 	 * 获取应用信息
@@ -38,6 +38,6 @@ interface Factory {
 	 *
 	 * @return \Xin\Contracts\Config\Repository
 	 */
-	public function getConfig();
+	public function getAppConfig();
 
 }

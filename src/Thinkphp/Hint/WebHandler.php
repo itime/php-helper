@@ -17,8 +17,10 @@ class WebHandler extends AbstractHandler {
 	public function render($data) {
 		if ($this->isSuccess($data)) {
 			$template = $this->service->getConfig('dispatch_success_tmpl');
+			$data['wait'] = 1;
 		} else {
 			$template = $this->service->getConfig('dispatch_error_tmpl');
+			$data['wait'] = 3;
 		}
 
 		/** @var \think\response\View $response */
@@ -32,7 +34,7 @@ class WebHandler extends AbstractHandler {
 	 * @inheritDoc
 	 */
 	public function isAjax() {
-		return true;
+		return false;
 	}
 
 }

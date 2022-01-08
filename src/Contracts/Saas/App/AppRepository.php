@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Saas;
+namespace Xin\Contracts\Saas\App;
 
 interface AppRepository {
 
@@ -15,6 +15,6 @@ interface AppRepository {
 	 * @param string $accessId
 	 * @return mixed
 	 */
-	public function getByAccessId($accessId);
+	public function retrieveByAccessId($accessId);
 
 }

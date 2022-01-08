@@ -43,7 +43,7 @@ class Hint extends Service implements HintContract {
 	 * @inheritDoc
 	 */
 	public function success($msg, $url = null, $data = null, array $extend = []) {
-		if ($url) {
+		if (!$this->handler->isAjax() || $url) {
 			$url = $this->successUrl($url);
 			$extend['url'] = $url;
 		}

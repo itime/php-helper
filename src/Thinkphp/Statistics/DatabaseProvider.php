@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Stat;
+namespace Xin\Thinkphp\Statistics;
 
 use think\App;
 use Xin\Contracts\Stat\Provider as StatProviderContract;

@@ -7,7 +7,7 @@
 
 namespace Xin\Thinkphp\Saas\Payment;
 
-use Xin\Contracts\Saas\PaymentRepository;
+use Xin\Contracts\Saas\Payment\PaymentRepository;
 use Xin\Foundation\Payment\Payment as BasePayment;
 use Xin\Foundation\Payment\PaymentNotConfigureException;
 use Yansongda\Pay\Pay;

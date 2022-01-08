@@ -12,7 +12,8 @@ use think\console\Input;
 use think\console\input\Argument;
 use think\console\input\Option;
 use think\contract\LogHandlerInterface;
-use Xin\Bot\WeworkBot;
+use Xin\Bot\BotManager;
+use Xin\Support\Arr;
 use Xin\Support\LimitThrottle;
 
 class Bot implements LogHandlerInterface {
@@ -45,15 +46,14 @@ class Bot implements LogHandlerInterface {
 	 * @return bool
 	 */
 	public function save(array $log): bool {
-		if (!isset($log['error']) || !($botKey = $this->key())
-			|| ($env = env('app_env')) !== 'production'
-			|| !$this->isAllowSendBotMessage($errCount)) {
+		if (!isset($log['error']) || !$this->isAllowSendBotMessage($errCount)) {
 			return true;
 		}
 
 		$log = substr($log['error'][0], 0, 512);
 		$ip = $this->app->request->server('SERVER_ADDR');
 		$clientId = $this->app->request->ip();
+
 		if ($this->app->runningInConsole()) {
 			$input = new Input();
 			$arguments = array_map(function (Argument $argument) {
@@ -72,18 +72,15 @@ class Bot implements LogHandlerInterface {
 			$info = $this->app->request->method() . " " . $this->app->request->url(true);
 		}
 
+		$env = env('app_env');
 		$contents = <<<MARKDOWN
 <font color="warning">**ERROR ({$env}:[{$clientId}->{$ip}]:10 min:{$errCount})**</font>
 <font color="info">{$info}</font>
 <font color="comment">{$log}</font>
 MARKDOWN;
 
-		try {
-			$bot = new WeworkBot($botKey);
-			$bot->sendMarkdownMessage($contents);
-		} catch (\Throwable $e) {
-			return false;
-		}
+		// 机器人发送告警消息
+		$this->sendBotMessage($contents);
 
 		return true;
 	}
@@ -93,12 +90,26 @@ MARKDOWN;
 	 *
 	 * @return string
 	 */
-	protected function key() {
-		if (isset($this->config['key']) && $this->config['key']) {
-			return $this->config['key'];
+	protected function bot() {
+		if (isset($this->config['bot']) && $this->config['bot']) {
+			return $this->config['bot'];
 		}
 
 		return null;
+	}
+
+	/**
+	 * 机器人发送告警消息
+	 * @param string $contents
+	 * @return void
+	 */
+	protected function sendBotMessage($contents) {
+		try {
+			/** @var BotManager $bot */
+			$bot = $this->app->bot;
+			$bot->bot($this->bot())->sendMarkdownMessage($contents);
+		} catch (\Throwable $e) {
+		}
 	}
 
 	/**
@@ -108,8 +119,14 @@ MARKDOWN;
 	 * @return bool
 	 */
 	protected function isAllowSendBotMessage(&$count = 0) {
+		if (!$this->app->has('bot') || !$this->bot() ||
+			!in_array(env('app_env'), $this->getAllowEnvs())
+		) {
+			return false;
+		}
+
 		try {
-			$count = $this->resolveErrorCount();
+			$count = $this->getErrorCount();
 		} catch (\Exception $e) {
 			return false;
 		}
@@ -122,12 +139,20 @@ MARKDOWN;
 	}
 
 	/**
+	 * 获取运行的环境列表
+	 * @return array
+	 */
+	protected function getAllowEnvs() {
+		return Arr::wrap($this->config['allow_envs'] ?? ['production']);
+	}
+
+	/**
 	 * 解析当前错误地址错误数量
 	 *
 	 * @return int
 	 */
-	private function resolveErrorCount() {
-		$key = $this->resolveErrorCacheKey();
+	protected function getErrorCount() {
+		$key = $this->getErrorCacheKey();
 		$count = $this->app->cache->get($key);
 
 		if ($count === null) {
@@ -145,7 +170,7 @@ MARKDOWN;
 	 *
 	 * @return string
 	 */
-	private function resolveErrorCacheKey() {
+	protected function getErrorCacheKey() {
 		$url = $this->app->request->url();
 		$url = preg_replace('/\&timestamp=\d{0,10}/', '', $url);
 

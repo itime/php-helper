@@ -29,7 +29,7 @@ class BotServiceProvider extends ServiceProvider {
 	 */
 	protected function registerManager() {
 		$this->app->bind([
-			'hint' => BotFactory::class,
+			'bot' => BotFactory::class,
 			BotFactory::class => BotManager::class,
 			BotManager::class => function () {
 				$manager = new BotManager(

@@ -1,10 +1,9 @@
 <?php
-
 namespace Xin\Bot;
-
 
 use Xin\Capsule\Service;
 use Xin\Contracts\Bot\Bot;
+use Xin\Support\Traits\HasHttpRequests;
 
 class QyWork extends Service implements Bot {
 

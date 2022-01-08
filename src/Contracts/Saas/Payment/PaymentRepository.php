@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Saas;
+namespace Xin\Contracts\Saas\Payment;
 
 use Xin\Contracts\Foundation\Payment;
 
