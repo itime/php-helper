@@ -4,14 +4,14 @@ namespace Xin\Bot;
 
 use Xin\Capsule\Service;
 use Xin\Contracts\Bot\Bot;
+use Xin\Http\HasHttpRequests;
 use Xin\Support\Arr;
-use Xin\Support\Traits\HasHttpRequests;
 
 class DingTalk extends Service implements Bot {
 
 	use HasHttpRequests;
 
-	const BASE_URL = 'https://oapi.dingtalk.com/robot/send?access_token=';
+	const BASE_URL = 'https://oapi.dingtalk.com/robot/send';
 
 	/**
 	 * @inheritDoc
@@ -29,7 +29,7 @@ class DingTalk extends Service implements Bot {
 			$message['at'] = $mentionedOpts;
 		}
 
-		$response = $this->httpPostJson($this->resolveUrl(), $message);
+		$response = $this->httpPostJson(self::BASE_URL, $message, $this->newQueryData());
 
 		if (!$response->ok() || $response->json('errcode') !== 0) {
 			return false;
@@ -57,6 +57,7 @@ class DingTalk extends Service implements Bot {
 		return $this->sendMessage([
 			'msgtype' => 'markdown',
 			'markdown' => [
+				'title' => '>>>',
 				'text' => $content,
 			],
 		], $mentionedList);
@@ -80,13 +81,32 @@ class DingTalk extends Service implements Bot {
 	}
 
 	/**
-	 * 解析URL
+	 * 生成query请求参数
+	 * @return array
+	 */
+	protected function newQueryData() {
+		$query = [
+			'access_token' => $this->config['key'],
+		];
+
+		if (isset($this->config['secret']) && !empty($this->config['secret'])) {
+			$timestamp = now()->getTimestamp();
+			$query['timestamp'] = $timestamp * 1000;
+			$query['sign'] = $this->sign($timestamp);
+		}
+
+		return $query;
+	}
+
+	/**
+	 * @param int $timestamp
 	 * @return string
 	 */
-	protected function resolveUrl(): string {
-		$key = $this->config['key'];
+	protected function sign($timestamp) {
+		$stringToSign = ($timestamp * 1000) . "\n" . $this->config['secret'];
+		$signData = hash_hmac('sha256', $stringToSign, $this->config['secret'], true);
 
-		return self::BASE_URL . $key;
+		return urlencode(base64_encode($signData));
 	}
 
 }

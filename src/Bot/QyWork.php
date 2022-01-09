@@ -1,15 +1,16 @@
 <?php
+
 namespace Xin\Bot;
 
 use Xin\Capsule\Service;
 use Xin\Contracts\Bot\Bot;
-use Xin\Support\Traits\HasHttpRequests;
+use Xin\Http\HasHttpRequests;
 
 class QyWork extends Service implements Bot {
 
 	use HasHttpRequests;
 
-	const BASE_URL = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=';
+	const BASE_URL = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send';
 
 	/**
 	 * @inheritDoc
@@ -19,7 +20,9 @@ class QyWork extends Service implements Bot {
 			$message['mentioned_list'] = $mentionedList;
 		}
 
-		$response = $this->httpPostJson($this->resolveUrl(), $message);
+		$response = $this->httpPostJson(self::BASE_URL, $message, [
+			'key' => $this->config['key'],
+		]);
 
 		if (!$response->ok() || $response->json('errcode') !== 0) {
 			return false;
@@ -87,16 +90,6 @@ class QyWork extends Service implements Bot {
 				'media_id' => $mediaId,
 			],
 		], $mentionedList);
-	}
-
-	/**
-	 * 解析URL
-	 * @return string
-	 */
-	protected function resolveUrl(): string {
-		$key = $this->config['key'];
-
-		return self::BASE_URL . $key;
 	}
 
 }

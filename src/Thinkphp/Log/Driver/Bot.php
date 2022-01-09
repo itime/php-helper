@@ -109,6 +109,7 @@ MARKDOWN;
 			$bot = $this->app->bot;
 			$bot->bot($this->bot())->sendMarkdownMessage($contents);
 		} catch (\Throwable $e) {
+			dd($e);
 		}
 	}
 
