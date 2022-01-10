@@ -7,7 +7,7 @@
 
 namespace Xin\Contracts\Payment;
 
-interface Factory{
+interface Factory {
 
 	/**
 	 * 微信支付
@@ -48,4 +48,5 @@ interface Factory{
 	 * @return array
 	 */
 	public function getConfig($key = null, $default = null);
+
 }

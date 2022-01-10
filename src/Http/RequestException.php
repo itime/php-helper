@@ -1,4 +1,5 @@
 <?php
+
 namespace Xin\Http;
 
 class RequestException extends HttpClientException {
@@ -13,7 +14,7 @@ class RequestException extends HttpClientException {
 	/**
 	 * Create a new exception instance.
 	 *
-	 * @param Response$response
+	 * @param Response $response
 	 * @return void
 	 */
 	public function __construct(Response $response) {

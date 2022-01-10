@@ -23,12 +23,24 @@ class PaymentServiceProvider extends Service {
 			PaymentManager::class => SaasPaymentManager::class,
 			PaymentRepository::class => SaasPaymentManager::class,
 			SaasPaymentManager::class => function () {
-				return new SaasPaymentManager(
+				return tap(new SaasPaymentManager(
 					$this->app->config->get('payment'),
 					new ConfigProvider()
-				);
+				), function (SaasPaymentManager $manager) {
+					if (static::$appId) {
+						$manager->shouldUseOfAppId(static::$appId);
+					}
+				});
 			},
 		]);
+	}
+
+	/**
+	 * @param int $appId
+	 * @return void
+	 */
+	public static function bindAppId($appId) {
+		static::$appId = $appId;
 	}
 
 }

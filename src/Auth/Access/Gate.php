@@ -83,8 +83,8 @@ class Gate implements GateContract {
 	 * @return void
 	 */
 	public function __construct(ContainerInterface $container, callable $userResolver, array $abilities = [],
-	                            array              $policies = [], array $beforeCallbacks = [], array $afterCallbacks = [],
-	                            callable           $guessPolicyNamesUsingCallback = null) {
+								array              $policies = [], array $beforeCallbacks = [], array $afterCallbacks = [],
+								callable           $guessPolicyNamesUsingCallback = null) {
 		$this->container = $container;
 		$this->userResolver = $userResolver;
 		$this->abilities = $abilities;

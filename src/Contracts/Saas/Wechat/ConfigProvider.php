@@ -11,7 +11,7 @@ interface ConfigProvider {
 
 	/**
 	 * 根据 id 取出配置
-	 * @param int $id
+	 * @param int    $id
 	 * @param string $type
 	 * @return array
 	 */

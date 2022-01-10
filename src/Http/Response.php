@@ -149,6 +149,7 @@ class Response implements ArrayAccess {
 		if ($this->isXml()) {
 			//将XML转为array,禁止引用外部xml实体
 			libxml_disable_entity_loader(true);
+
 			return json_decode(json_encode(simplexml_load_string($this->body(), 'SimpleXMLElement', LIBXML_NOCDATA)), false);
 		} else {
 			return json_decode($this->body(), false);
