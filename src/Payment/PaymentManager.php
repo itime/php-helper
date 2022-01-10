@@ -33,6 +33,8 @@ class PaymentManager implements PaymentFactory {
 	 * @inheritDoc
 	 */
 	public function wechat($name = null, array $options = []) {
+		$name = $name ?: $this->getDefault('wechat');
+
 		$config = $this->getConfig("wechat.{$name}");
 		if (empty($config)) {
 			throw new PaymentNotConfigureException("payment config 'wechat.{$name}' not defined.");
@@ -49,6 +51,8 @@ class PaymentManager implements PaymentFactory {
 	 */
 	protected function factoryWechat($config, $options) {
 		$config = $this->initWechatConfig($config, $options);
+
+		$config = array_merge($this->getConfig('defaults'), $config);
 
 		return $this->initApplication(
 			Pay::wechat($config),
@@ -101,6 +105,8 @@ class PaymentManager implements PaymentFactory {
 	 * @inheritDoc
 	 */
 	public function alipay($name = null, array $options = []) {
+		$name = $name ?: $this->getDefault('alipay');
+
 		$config = $this->getConfig("alipay.{$name}");
 		if (empty($config)) {
 			throw new PaymentNotConfigureException("payment config 'alipay.{$name}' not defined.");
@@ -118,6 +124,8 @@ class PaymentManager implements PaymentFactory {
 	protected function factoryAlipay(array $config, array $options) {
 		$config = $this->initAlipayConfig($config, $options);
 
+		$config = array_merge($this->getConfig('defaults'), $config);
+
 		return $this->initApplication(
 			Pay::alipay($config),
 			$options
@@ -127,9 +135,10 @@ class PaymentManager implements PaymentFactory {
 	/**
 	 * 初始化支付宝配置信息
 	 * @param array $config
+	 * @param array $options
 	 * @return array
 	 */
-	protected function initAlipayConfig($config) {
+	protected function initAlipayConfig(array $config, array $options) {
 		return $config;
 	}
 
