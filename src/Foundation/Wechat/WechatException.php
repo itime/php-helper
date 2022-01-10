@@ -6,7 +6,9 @@
  */
 
 namespace Xin\Foundation\Wechat;
-
+/**
+ * @deprecated
+ */
 class WechatException extends \LogicException {
 
 }

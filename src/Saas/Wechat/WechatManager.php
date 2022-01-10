@@ -88,7 +88,7 @@ class WechatManager extends BaseWechatManager implements Repository {
 			throw new WechatNotConfigureException("wechat open_platform config of id {$id} not defined.");
 		}
 
-		return $this->factoryOfficialAccount($config, $options);
+		return $this->factoryOpenPlatform($config, $options);
 	}
 
 	/**
@@ -101,7 +101,7 @@ class WechatManager extends BaseWechatManager implements Repository {
 			throw new WechatNotConfigureException("wechat open_platform config of app_id {$appId} with name '{$name}' not defined.");
 		}
 
-		return $this->factoryOfficialAccount($config, $options);
+		return $this->factoryOpenPlatform($config, $options);
 	}
 
 	/**

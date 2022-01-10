@@ -38,6 +38,16 @@ class PaymentManager implements PaymentFactory {
 			throw new PaymentNotConfigureException("payment config 'wechat.{$name}' not defined.");
 		}
 
+		return $this->factoryWechat($config, $options);
+	}
+
+	/**
+	 * 构建微信支付实例
+	 * @param array $config
+	 * @param array $options
+	 * @return \Yansongda\Pay\Gateways\Wechat
+	 */
+	protected function factoryWechat($config, $options) {
 		$config = $this->initWechatConfig($config, $options);
 
 		return $this->initApplication(
@@ -96,6 +106,16 @@ class PaymentManager implements PaymentFactory {
 			throw new PaymentNotConfigureException("payment config 'alipay.{$name}' not defined.");
 		}
 
+		return $this->factoryAlipay($config, $options);
+	}
+
+	/**
+	 * 构建支付宝实例
+	 * @param array $config
+	 * @param array $options
+	 * @return \Yansongda\Pay\Gateways\Alipay
+	 */
+	protected function factoryAlipay(array $config, array $options) {
 		$config = $this->initAlipayConfig($config, $options);
 
 		return $this->initApplication(

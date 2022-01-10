@@ -9,6 +9,9 @@ namespace Xin\Foundation\Wechat;
 
 use Throwable;
 
+/**
+ * @deprecated
+ */
 class WechatInvalidConfigException extends WechatException {
 
 	/**

@@ -8,7 +8,10 @@
 namespace Xin\Thinkphp\Saas\Payment;
 
 use think\Service;
-use Xin\Contracts\Foundation\Payment as PaymentContract;
+use Xin\Contracts\Saas\Payment\Repository as PaymentRepository;
+use Xin\Payment\PaymentManager;
+use Xin\Saas\Payment\PaymentManager as SaasPaymentManager;
+use Xin\Thinkphp\Saas\Wechat\ConfigProvider;
 
 class PaymentServiceProvider extends Service {
 
@@ -16,13 +19,16 @@ class PaymentServiceProvider extends Service {
 	 * 启动器
 	 */
 	public function register() {
-		$this->app->bind('payment', PaymentContract::class);
-		$this->app->bind(PaymentContract::class, Payment::class);
-		$this->app->bind(Payment::class, function () {
-			return new Payment(
-				$this->app->config->get('payment')
-			);
-		});
+		$this->app->bind([
+			PaymentManager::class => SaasPaymentManager::class,
+			PaymentRepository::class => SaasPaymentManager::class,
+			SaasPaymentManager::class => function () {
+				return new SaasPaymentManager(
+					$this->app->config->get('payment'),
+					new ConfigProvider()
+				);
+			},
+		]);
 	}
 
 }

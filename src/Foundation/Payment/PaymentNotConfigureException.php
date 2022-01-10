@@ -6,7 +6,9 @@
  */
 
 namespace Xin\Foundation\Payment;
-
+/**
+ * @deprecated
+ */
 class PaymentNotConfigureException extends \LogicException {
 
 }

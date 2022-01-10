@@ -7,7 +7,12 @@
 
 namespace Xin\Contracts\Saas\Payment;
 
-interface PaymentConfigProvider {
+class PaymentType {
 
+	// 微信支付
+	const WECHAT = 'wechat';
+
+	// 支付宝支付
+	const ALIPAY = 'alipay';
 
 }

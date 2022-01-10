@@ -9,6 +9,9 @@ namespace Xin\Foundation\Payment;
 
 use Throwable;
 
+/**
+ * @deprecated
+ */
 class PaymentInvalidConfigException extends \LogicException {
 
 	/**

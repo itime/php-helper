@@ -7,12 +7,12 @@
 
 namespace Xin\Thinkphp\Saas\Payment;
 
-use Xin\Contracts\Saas\Payment\PaymentRepository;
+use Xin\Contracts\Saas\Payment\Repository;
 use Xin\Foundation\Payment\Payment as BasePayment;
 use Xin\Foundation\Payment\PaymentNotConfigureException;
 use Yansongda\Pay\Pay;
 
-class Payment extends BasePayment implements PaymentRepository {
+class Payment extends BasePayment implements Repository {
 
 	/**
 	 * @inheritDoc
@@ -104,13 +104,12 @@ class Payment extends BasePayment implements PaymentRepository {
 	 */
 	protected function resolveConfig($query, $type) {
 		$payment = DatabasePayment::where($query)->find();
+
 		if (empty($payment)) {
 			throw new PaymentNotConfigureException("未配置支付信息！");
 		}
 
-		$config = $type === 'wechat' ? $this->initWechatConfig($payment->toArray()) : $payment->toArray();
-
-		return $config;
+		return $payment->toArray();
 	}
 
 }
