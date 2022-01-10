@@ -42,7 +42,7 @@ trait HasApp {
 	 *
 	 * @param string $field
 	 * @param mixed  $default
-	 * @return \Xin\Thinkphp\Saas\DatabaseApp|mixed
+	 * @return \Xin\Thinkphp\Saas\App\DatabaseApp|mixed
 	 */
 	public function app($field = null, $default = null) {
 		if (is_null($this->appResolverCallback)) {

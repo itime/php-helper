@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Saas\Wechat;
+namespace Xin\Wechat;
 
 class AuthEnum {
 

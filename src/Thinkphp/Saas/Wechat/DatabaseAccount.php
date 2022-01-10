@@ -9,6 +9,7 @@ namespace Xin\Thinkphp\Saas\Wechat;
 
 use think\Model;
 use Xin\Thinkphp\Foundation\Model\Appable;
+use Xin\Wechat\AuthEnum;
 
 /**
  * 微信账号模型

@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Saas;
+namespace Xin\Thinkphp\Saas\App;
 
 use think\exception\ValidateException;
 use think\facade\Db;
@@ -15,7 +15,7 @@ use Xin\Thinkphp\Plugin\DatabasePlugin;
  * @property \think\model\Collection plugins
  * @property \think\model\Collection available_plugins
  */
-trait AppPluginable {
+trait HasPlugins {
 
 	/**
 	 * 关联插件模型

@@ -8,7 +8,7 @@
 namespace Xin\Thinkphp\Saas\Middleware;
 
 use app\Request;
-use Xin\Thinkphp\Saas\DatabaseApp;
+use Xin\Thinkphp\Saas\App\DatabaseApp;
 use Xin\Thinkphp\Saas\Exceptions\AppNotFoundException;
 
 class SetApiApp {
@@ -37,7 +37,7 @@ class SetApiApp {
 	 * 解析应用信息
 	 *
 	 * @param string $accessId
-	 * @return array|\think\Model|\Xin\Thinkphp\Saas\DatabaseApp
+	 * @return array|\think\Model|\Xin\Thinkphp\Saas\App\DatabaseApp
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException

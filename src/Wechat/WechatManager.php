@@ -2,10 +2,10 @@
 
 namespace Xin\Wechat;
 
-use EasyWeChat\Factory;
 use EasyWeChat\Kernel\ServiceContainer;
 use Xin\Contracts\Wechat\Factory as WechatFactory;
 use Xin\Support\Arr;
+use Xin\Wechat\EasyWechat\Factory;
 use Xin\Wechat\EasyWechat\Work\ExternalContact\ContactWayClient;
 use Xin\Wechat\Exceptions\WechatInvalidConfigException;
 use Xin\Wechat\Exceptions\WechatNotConfigureException;
@@ -30,11 +30,25 @@ class WechatManager implements WechatFactory {
 	 * @inheritDoc
 	 */
 	public function openPlatform($name = null, array $options = []) {
+		$name = $name ?: $this->getDefault('open_platform');
+
 		$config = $this->getConfig("open_platform.{$name}");
 		if (empty($config)) {
 			throw new WechatNotConfigureException("wechat config 'open_platform.{$name}' not defined.");
 		}
 
+		$config = $this->checkApplicationConfig($config);
+
+		return $this->factoryOpenPlatform($config, $options);
+	}
+
+	/**
+	 * 构造开放平台实例
+	 * @param array $config
+	 * @param array $options
+	 * @return \EasyWeChat\OpenPlatform\Application
+	 */
+	protected function factoryOpenPlatform($config, $options) {
 		$config = $this->checkApplicationConfig($config);
 
 		return $this->initApplication(
@@ -54,11 +68,23 @@ class WechatManager implements WechatFactory {
 	 * @inheritDoc
 	 */
 	public function officialAccount($name = null, array $options = []) {
+		$name = $name ?: $this->getDefault('open_platform');
+
 		$config = $this->getConfig("official_account.{$name}");
 		if (empty($config)) {
 			throw new WechatNotConfigureException("wechat config 'official_account.{$name}' not defined.");
 		}
 
+		return $this->factoryOfficialAccount($config, $options);
+	}
+
+	/**
+	 * 构造公众号实例
+	 * @param array $config
+	 * @param array $options
+	 * @return \EasyWeChat\OpenPlatform\Application
+	 */
+	protected function factoryOfficialAccount($config, $options) {
 		$config = $this->checkApplicationConfig($config);
 
 		return $this->initApplication(
@@ -85,10 +111,20 @@ class WechatManager implements WechatFactory {
 			throw new WechatNotConfigureException("wechat config 'mini_program.{$name}' not defined.");
 		}
 
+		return $this->factoryMiniProgram($config, $options);
+	}
+
+	/**
+	 * 构造小程序实例
+	 * @param array $config
+	 * @param array $options
+	 * @return \EasyWeChat\OpenPlatform\Application
+	 */
+	protected function factoryMiniProgram($config, $options) {
 		$config = $this->checkApplicationConfig($config);
 
 		return $this->initApplication(
-			Factory::miniProgram($config),
+			$app = Factory::miniProgram($config),
 			$options
 		);
 	}
@@ -135,6 +171,16 @@ class WechatManager implements WechatFactory {
 			throw new WechatNotConfigureException("wechat config 'work.{$name}' not defined.");
 		}
 
+		return $this->factoryWork($config, $options);
+	}
+
+	/**
+	 * 构造 企业微信 实例
+	 * @param array $config
+	 * @param array $options
+	 * @return mixed
+	 */
+	protected function factoryWork($config, array $options = []) {
 		$config = array_merge($this->getConfig('defaults', []), $config);
 
 		$app = Factory::work($config);
@@ -156,13 +202,23 @@ class WechatManager implements WechatFactory {
 	 * @inheritDoc
 	 */
 	public function openWork($name = null, array $options = []) {
-		$name = $name ?: $this->getDefault('openwork');
+		$name = $name ?: $this->getDefault('open_work');
 
-		$config = $this->getConfig("openworks.{$name}");
+		$config = $this->getConfig("open_work.{$name}");
 		if (empty($config)) {
-			throw new WechatInvalidConfigException("wechat config is invalid.");
+			throw new WechatNotConfigureException("wechat config 'open_work.{$name}' not defined.");
 		}
 
+		return $this->factoryOpenWork($config, $options);
+	}
+
+	/**
+	 * 构造 开放平台企业微信 实例
+	 * @param array $config
+	 * @param array $options
+	 * @return mixed
+	 */
+	protected function factoryOpenWork($config, array $options = []) {
 		$config = array_merge($this->getConfig('defaults', []), $config);
 		$app = Factory::openWork($config);
 

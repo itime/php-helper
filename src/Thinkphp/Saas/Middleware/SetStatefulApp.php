@@ -11,7 +11,7 @@ use think\exception\HttpResponseException;
 use think\facade\Session;
 use think\Response;
 use Xin\Thinkphp\Facade\Auth;
-use Xin\Thinkphp\Saas\DatabaseApp;
+use Xin\Thinkphp\Saas\App\DatabaseApp;
 
 class SetStatefulApp {
 

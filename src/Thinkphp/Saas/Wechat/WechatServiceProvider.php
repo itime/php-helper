@@ -8,9 +8,9 @@
 namespace Xin\Thinkphp\Saas\Wechat;
 
 use think\Service;
-use Xin\Contracts\Saas\Wechat\WechatRepository;
-use Xin\Contracts\Wechat\Factory as BaseWechatContract;
-use Xin\Foundation\Wechat\Wechat as BaseWechat;
+use Xin\Contracts\Saas\Wechat\Repository as WechatRepository;
+use Xin\Saas\Wechat\WechatManager as SaasWechatManager;
+use Xin\Wechat\WechatManager;
 
 class WechatServiceProvider extends Service {
 
@@ -18,13 +18,16 @@ class WechatServiceProvider extends Service {
 	 * 启动器
 	 */
 	public function register() {
-		$this->app->bind(BaseWechat::class, WechatRepository::class);
-		$this->app->bind(BaseWechatContract::class, WechatRepository::class);
-		$this->app->bind(WechatRepository::class, function () {
-			return new Wechat(
-				$this->app->config->get('wechat')
-			);
-		});
+		$this->app->bind([
+			WechatManager::class => SaasWechatManager::class,
+			WechatRepository::class => SaasWechatManager::class,
+			SaasWechatManager::class => function () {
+				return new SaasWechatManager(
+					$this->app->config->get('wechat'),
+					new ConfigProvider()
+				);
+			},
+		]);
 	}
 
 }

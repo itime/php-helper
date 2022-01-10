@@ -23,7 +23,6 @@ class Factory extends \EasyWeChat\Factory {
 	 */
 	public static function make($name, array $config) {
 		$namespace = Str::studly($name);
-		dd(__NAMESPACE__);
 		$application = "\\App\\Services\\WeChat\\{$namespace}\\Application";
 
 		return new $application($config);

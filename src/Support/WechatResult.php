@@ -10,6 +10,10 @@ namespace Xin\Support;
 use EasyWeChat\Kernel\Exceptions\HttpException;
 use EasyWeChat\Kernel\Http\StreamResponse;
 
+/**
+ * Class WechatResult
+ * @deprecated
+ */
 class WechatResult implements \ArrayAccess {
 
 	// 全部错误类型
