@@ -9,6 +9,7 @@ namespace Xin\Support;
 
 /**
  * Class Manager
+ * @deprecated
  */
 abstract class Manager {
 

@@ -30,7 +30,7 @@ interface Repository {
 	/**
 	 * 获取数据列表
 	 *
-	 * @param array|callable $where
+	 * @param array|callable $search
 	 * @param array          $with
 	 * @param array          $options
 	 * @return mixed
@@ -40,32 +40,33 @@ interface Repository {
 	/**
 	 * 获取数据分页
 	 *
-	 * @param array|callable $where
+	 * @param array|callable $search
 	 * @param array          $with
+	 * @param int            $paginate
 	 * @param array          $options
 	 * @return mixed
 	 */
-	public function paginate($search = [], array $with = [], array $options = []);
+	public function paginate($search = [], array $with = [], $paginate = 1, array $options = []);
 
 	/**
 	 * 数据过滤
 	 *
-	 * @param array|callable $where
+	 * @param array|callable $filter
 	 * @param array          $with
 	 * @param array          $options
 	 * @return mixed
 	 */
-	public function filter($where = [], array $with = [], array $options = []);
+	public function filter($filter = [], array $with = [], array $options = []);
 
 	/**
 	 * 获取一条数据
 	 *
-	 * @param array|callable $where
+	 * @param array|callable $filter
 	 * @param array          $with
 	 * @param array          $options
 	 * @return mixed
 	 */
-	public function show($filter = [], $with = [], array $options = []);
+	public function show($filter, array $with = [], array $options = []);
 
 	/**
 	 * 获取一条数据
@@ -75,17 +76,17 @@ interface Repository {
 	 * @param array $options
 	 * @return mixed
 	 */
-	public function showById($id, $with = [], array $options = []);
+	public function showById($id, array $with = [], array $options = []);
 
 	/**
 	 * 获取数据详情
 	 *
-	 * @param array|callable $where
+	 * @param array|callable $filter
 	 * @param array          $with
 	 * @param array          $options
 	 * @return mixed
 	 */
-	public function detail($where = [], $with = [], array $options = []);
+	public function detail($filter, array $with = [], array $options = []);
 
 	/**
 	 * 获取数据详情
@@ -108,12 +109,12 @@ interface Repository {
 	/**
 	 * 更新数据
 	 *
-	 * @param array|callable $where
+	 * @param array|callable $filter
 	 * @param array          $data
 	 * @param array          $options
 	 * @return mixed
 	 */
-	public function update($where, array $data, array $options = []);
+	public function update($filter, array $data, array $options = []);
 
 	/**
 	 * 根据id更新数据
@@ -149,11 +150,10 @@ interface Repository {
 	/**
 	 * 删除数据
 	 *
-	 * @param array|string|int $where
-	 * @param bool             $force
+	 * @param array|string|int $filter
 	 * @param array            $options
 	 */
-	public function delete($where, $force = false, array $options = []);
+	public function delete($filter, array $options = []);
 
 	/**
 	 * 根据ID列表删除数据
@@ -162,16 +162,34 @@ interface Repository {
 	 * @param bool             $force
 	 * @param array            $options
 	 */
-	public function deleteByIdList(array $ids, $force = false, array $options = []);
+	public function deleteByIdList(array $ids, array $options = []);
+
+
+	/**
+	 * 软删除数据
+	 *
+	 * @param array|string|int $filter
+	 * @param array            $options
+	 */
+	public function recovery($filter, array $options = []);
+
+	/**
+	 * 根据id软删除数据
+	 *
+	 * @param array $ids
+	 * @param array $options
+	 * @return int
+	 */
+	public function recoveryByIdList(array $ids, array $options = []);
 
 	/**
 	 * 恢复数据
 	 *
-	 * @param array $where
+	 * @param array $filter
 	 * @param array $options
 	 * @return int
 	 */
-	public function restore($where, array $options = []);
+	public function restore($filter, array $options = []);
 
 	/**
 	 * 根据id恢复数据
