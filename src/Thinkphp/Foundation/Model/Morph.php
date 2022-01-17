@@ -7,6 +7,11 @@
 
 namespace Xin\Thinkphp\Foundation\Model;
 
+/**
+ * Class Morph
+ * @deprecated
+ * @see \Xin\Foundation\ClassMapManager
+ */
 class Morph {
 
 	/**

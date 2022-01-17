@@ -171,7 +171,7 @@ trait Requestable {
 	 * @return array
 	 */
 	public function keywordsSql(string $field = 'keywords'): array {
-		return build_keyword_sql($this->keywords($field));
+		return keywords_build_sql($this->keywords($field));
 	}
 
 	/**

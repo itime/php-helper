@@ -273,27 +273,3 @@ if (!function_exists('optimize_asset')) {
 	}
 }
 
-if (!function_exists('analysis_words')) {
-	/**
-	 * 关键字分词
-	 *
-	 * @param string $keyword
-	 * @param int    $num 最大返回条数
-	 * @param int    $holdLength 保留字数
-	 * @return array
-	 */
-	function analysis_words($keyword, $num = 5, $holdLength = 48) {
-		if ($keyword === null || $keyword === "") return [];
-		if (mb_strlen($keyword) > $holdLength) $keyword = mb_substr($keyword, 0, 48);
-
-		//执行分词
-		$pa = new \Xin\Analysis\Analysis('utf-8', 'utf-8');
-		$pa->setSource($keyword);
-		$pa->startAnalysis();
-		$result = $pa->getFinallyResult($num);
-		if (empty($result)) return [$keyword];
-
-		return array_unique($result);
-	}
-}
-
