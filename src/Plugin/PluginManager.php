@@ -154,7 +154,7 @@ class PluginManager implements PluginFactory {
 
 		$this->isPluginBoot = true;
 
-		foreach ($this->plugins as $plugin => $pluginInfo) {
+		foreach ($this->plugins() as $plugin => $pluginInfo) {
 			$this->plugin($plugin)->plugin()->boot($pluginInfo, $this);
 		}
 	}
