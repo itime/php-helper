@@ -88,12 +88,12 @@ class DatabaseSetting extends Model {
 				]);
 			}
 
-			static::updateCache();
+			static::refreshCache();
 		}
 
 		$config = Cache::get(static::CACHE_KEY);
 		if (empty($config)) {
-			$config = static::resolveCache(static::CACHE_KEY);
+			$config = static::fetchAndPutIntoCache(static::CACHE_KEY);
 		}
 
 		return $config;
@@ -110,7 +110,7 @@ class DatabaseSetting extends Model {
 	public static function loadPublic() {
 		$config = Cache::get(static::CACHE_PUBLIC_KEY);
 		if (empty($config)) {
-			$config = static::resolveCache(static::CACHE_PUBLIC_KEY, [
+			$config = static::fetchAndPutIntoCache(static::CACHE_PUBLIC_KEY, [
 				'public' => 1,
 			]);
 		}
@@ -147,20 +147,20 @@ class DatabaseSetting extends Model {
 	}
 
 	/**
-	 * 更新缓存
+	 * 刷新缓存
 	 *
 	 * @noinspection PhpUnhandledExceptionInspection
 	 */
-	public static function updateCache() {
-		static::resolveCache(static::CACHE_KEY);
+	public static function refreshCache() {
+		static::fetchAndPutIntoCache(static::CACHE_KEY);
 
-		static::resolveCache(static::CACHE_PUBLIC_KEY, [
+		static::fetchAndPutIntoCache(static::CACHE_PUBLIC_KEY, [
 			'public' => 1,
 		]);
 	}
 
 	/**
-	 * 解析缓存
+	 * 获取数据并放入缓存
 	 *
 	 * @param string $cacheKey
 	 * @param array  $where
@@ -169,7 +169,7 @@ class DatabaseSetting extends Model {
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	protected static function resolveCache($cacheKey, $where = []) {
+	protected static function fetchAndPutIntoCache($cacheKey, $where = []) {
 		$data = self::loadData($where);
 
 		$settings = [];
@@ -187,6 +187,14 @@ class DatabaseSetting extends Model {
 		Cache::set($cacheKey, $settings);
 
 		return $settings;
+	}
+
+	/**
+	 * 清除缓存
+	 * @return void
+	 */
+	public static function clearCache() {
+		Cache::delete(static::CACHE_KEY);
 	}
 
 	/**
@@ -353,14 +361,14 @@ class DatabaseSetting extends Model {
 	 * 数据写入后
 	 */
 	public static function onAfterWrite() {
-		static::updateCache();
+		static::refreshCache();
 	}
 
 	/**
 	 * 数据删除后
 	 */
 	public static function onAfterDelete() {
-		static::updateCache();
+		static::refreshCache();
 	}
 
 	/**

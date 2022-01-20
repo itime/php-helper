@@ -5,22 +5,21 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Foundation\Setting\Command;
+namespace Xin\Thinkphp\Plugin\Command;
 
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
-use think\facade\Cache;
-use Xin\Thinkphp\Foundation\Setting\DatabaseSetting;
+use Xin\Thinkphp\Plugin\DatabaseEvent;
 
-class Clear extends Command {
+class UpdateEventCache extends Command {
 
 	/**
 	 * @inheritDoc
 	 */
 	protected function configure() {
-		$this->setName('setting:clear')
-			->setDescription('清除站点配置');
+		$this->setName('event:refresh')
+			->setDescription('刷新事件缓存配置');
 	}
 
 	/**
@@ -28,10 +27,9 @@ class Clear extends Command {
 	 * @param \think\console\Output $output
 	 */
 	protected function execute(Input $input, Output $output) {
-		DatabaseSetting::clearCache();
+		DatabaseEvent::refreshCache();
 
-		$output->highlight("已更新配置！");
-		$output->newLine();
+		$output->highlight("已更新缓存配置！");
 	}
 
 }

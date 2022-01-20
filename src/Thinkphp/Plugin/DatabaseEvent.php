@@ -161,7 +161,7 @@ class DatabaseEvent extends Model {
 	/**
 	 * 自动更新事件缓存
 	 */
-	public static function autoUpdateCache() {
+	public static function autoRefreshCache() {
 		if (Cache::get(self::CACHE_PREFIX)) {
 			return;
 		}
@@ -178,12 +178,12 @@ class DatabaseEvent extends Model {
 	 * @noinspection PhpUnhandledExceptionInspection
 	 * @noinspection PhpDocMissingThrowsInspection
 	 */
-	public static function updateCache() {
+	public static function refreshCache() {
 		$eventCollection = static::where('status', 1)->select();
 
 		/** @var static $event */
 		foreach ($eventCollection as $event) {
-			self::setCache($event);
+			self::putIntoCache($event);
 		}
 
 		return $eventCollection;
@@ -194,7 +194,7 @@ class DatabaseEvent extends Model {
 	 *
 	 * @param static $event
 	 */
-	public static function setCache(self $event) {
+	public static function putIntoCache(self $event) {
 		$addons = $event->status ? $event->addons : [];
 		$cacheKey = self::CACHE_PREFIX . $event->getData('name');
 
@@ -210,7 +210,7 @@ class DatabaseEvent extends Model {
 	 * @param string $name
 	 * @return array
 	 */
-	public static function getCache($name) {
+	public static function fetchFromCache($name) {
 		return Cache::get(self::CACHE_PREFIX . $name);
 	}
 

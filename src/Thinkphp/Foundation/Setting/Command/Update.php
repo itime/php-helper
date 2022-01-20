@@ -27,7 +27,7 @@ class Update extends Command {
 	 * @param \think\console\Output $output
 	 */
 	protected function execute(Input $input, Output $output) {
-		DatabaseSetting::updateCache();
+		DatabaseSetting::refreshCache();
 
 		$output->highlight("已更新配置！");
 	}

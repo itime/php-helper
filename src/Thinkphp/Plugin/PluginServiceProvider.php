@@ -10,6 +10,7 @@ namespace Xin\Thinkphp\Plugin;
 use think\Service;
 use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Plugin\PluginManager;
+use Xin\Thinkphp\Plugin\Command\UpdateEventCache;
 
 class PluginServiceProvider extends Service {
 
@@ -25,6 +26,8 @@ class PluginServiceProvider extends Service {
 	 * @return void
 	 */
 	public function boot() {
+		$this->registerDefaultConsole();
+
 		$this->registerConsole();
 
 		$this->registerUrl();
@@ -47,6 +50,16 @@ class PluginServiceProvider extends Service {
 				'path' => root_path('plugins'),
 			], config('plugin')));
 		});
+	}
+
+	/**
+	 * 注册默认命令行
+	 * @return void
+	 */
+	protected function registerDefaultConsole() {
+		$this->commands([
+			UpdateEventCache::class,
+		]);
 	}
 
 	/**
