@@ -66,6 +66,19 @@ if (!function_exists('blank')) {
 	}
 }
 
+if (! function_exists('filled')) {
+	/**
+	 * Determine if a value is "filled".
+	 *
+	 * @param  mixed  $value
+	 * @return bool
+	 */
+	function filled($value)
+	{
+		return ! blank($value);
+	}
+}
+
 if (!function_exists('windows_os')) {
 	/**
 	 * Determine whether the current environment is Windows based.

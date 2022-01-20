@@ -509,19 +509,6 @@ final class Str {
 			$value = is_string($value) ? explode($delimiter, $value) : [$value];
 		}
 
-		//		foreach($value as $k => &$v){
-		//			if('intval' == $format){
-		//				$v = intval($v);
-		//			}elseif('floatval' == $format){
-		//				$v = floatval($v);
-		//			}elseif('boolval' == $format){
-		//				$v = boolval($v);
-		//			}elseif('long2ip' == $format){
-		//				$v = long2ip($v);
-		//			}
-		//		}
-		//		unset($v);
-
 		$value = array_map($format, $value);
 
 		if ($filter !== false) {

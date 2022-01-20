@@ -3,6 +3,7 @@
 namespace Xin\Wechat\EasyWechat;
 
 
+use EasyWeChat\Factory as BaseFactory;
 use Xin\Support\Str;
 
 /**
@@ -16,14 +17,14 @@ use Xin\Support\Str;
  * @method static \Xin\Wechat\EasyWeChat\OpenWork\Application           openWork(array $config)
  * @method static \Xin\Wechat\EasyWeChat\MicroMerchant\Application      microMerchant(array $config)
  */
-class Factory extends \EasyWeChat\Factory {
+class Factory extends BaseFactory {
 
 	/**
 	 * @inheritDoc
 	 */
 	public static function make($name, array $config) {
 		$namespace = Str::studly($name);
-		$application = "\\App\\Services\\WeChat\\{$namespace}\\Application";
+		$application = "\\" . __NAMESPACE__ . "\\{$namespace}\\Application";
 
 		return new $application($config);
 	}

@@ -63,27 +63,29 @@ class Middleware {
 			MenuManager::class => function () {
 				return new MenuManager($this->app, $this->app->config->get('menu'));
 			},
-			'menu.driver' => function () {
-				return $this->app['menu']->menu();
-			},
-			'menu.show' => function () use ($request) {
-				/** @var \Xin\Menu\MenuManager $manager */
-				$manager = $this->app['menu'];
-
-				$this->shouldUse($manager);
-
-				[$menus, $breads] = $manager->generate(
-					$this->getFilterResolver(),
-					$this->getGenerateOptions()
-				);
-
-				$std = new \stdClass();
-				$std->menus = $menus;
-				$std->breads = $breads;
-
-				return $std;
-			},
 		]);
+
+		$this->app->bind('menu.driver', function () {
+			return $this->app['menu']->menu();
+		});
+
+		$this->app->bind('menu.show', function () use ($request) {
+			/** @var \Xin\Menu\MenuManager $manager */
+			$manager = $this->app['menu'];
+
+			$this->shouldUse($manager);
+
+			[$menus, $breads] = $manager->generate(
+				$this->getFilterResolver(),
+				$this->getGenerateOptions()
+			);
+
+			$std = new \stdClass();
+			$std->menus = $menus;
+			$std->breads = $breads;
+
+			return $std;
+		});
 	}
 
 	/**
