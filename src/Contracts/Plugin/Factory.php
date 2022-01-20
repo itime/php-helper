@@ -20,9 +20,15 @@ interface Factory {
 	/**
 	 * 插件列表
 	 *
-	 * @return \Xin\Contracts\Plugin\PluginCollection
+	 * @return \Xin\Support\Collection
 	 */
 	public function plugins();
+
+	/**
+	 * 设置过滤器
+	 * @param callable $filterCallback
+	 */
+	public function filter(callable $filterCallback);
 
 	/**
 	 * 获取插件目录

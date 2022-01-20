@@ -11,6 +11,26 @@ namespace Xin\Support;
 class Collection extends Fluent implements \Countable, \IteratorAggregate {
 
 	/**
+	 * 过滤器
+	 * @param callable $callback
+	 * @param int      $mode
+	 * @return $this
+	 */
+	public function filter($callback = null, $mode = 0) {
+		return new static(array_filter($this->items, $callback, $mode));
+	}
+
+	/**
+	 * 获取一列数据
+	 * @param string $key
+	 * @param string $index
+	 * @return $this
+	 */
+	public function column($key = null, $index = null) {
+		return new static(array_column($this->items, $key, $index));
+	}
+
+	/**
 	 * (PHP 5 &gt;= 5.0.0)<br/>
 	 * Retrieve an external iterator.
 	 *

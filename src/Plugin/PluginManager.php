@@ -26,6 +26,11 @@ class PluginManager implements PluginFactory {
 	/**
 	 * @var array
 	 */
+	protected $filters = [];
+
+	/**
+	 * @var array
+	 */
 	protected $isPluginBoot = false;
 
 	/**
@@ -35,8 +40,6 @@ class PluginManager implements PluginFactory {
 	 */
 	public function __construct(array $config) {
 		$this->config = $config;
-
-		$this->plugins();
 	}
 
 	/**
@@ -99,7 +102,7 @@ class PluginManager implements PluginFactory {
 	 */
 	public function plugins() {
 		if ($this->plugins) {
-			return $this->plugins;
+			return $this->useFilter();
 		}
 
 		$plugins = [];
@@ -120,7 +123,26 @@ class PluginManager implements PluginFactory {
 
 		$this->plugins = new Collection($plugins);
 
-		return $this->plugins;
+		return $this->useFilter();
+	}
+
+	/**
+	 * 使用过滤器返回插件列表
+	 * @return Collection
+	 */
+	protected function useFilter() {
+		return array_reduce($this->filters, function (Collection $plugins, $filter) {
+			dump($plugins->column('name'), 'ssssssssssss');
+
+			return $plugins->filter($filter);
+		}, $this->plugins);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function filter(callable $filterCallback) {
+		$this->filters[] = $filterCallback;
 	}
 
 	/**
