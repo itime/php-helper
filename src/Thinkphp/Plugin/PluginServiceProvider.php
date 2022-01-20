@@ -9,7 +9,6 @@ namespace Xin\Thinkphp\Plugin;
 
 use think\Service;
 use Xin\Contracts\Plugin\Factory as PluginFactory;
-use Xin\Contracts\Plugin\PluginInfo;
 use Xin\Plugin\PluginManager;
 
 class PluginServiceProvider extends Service {
