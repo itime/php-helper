@@ -5,12 +5,12 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Foundation\Validate;
+namespace Xin\Thinkphp\Validate;
 
-use think\Service;
 use think\Validate;
+use Xin\Thinkphp\Foundation\ServiceProvider;
 
-class ValidateServiceProvider extends Service {
+class ValidateServiceProvider extends ServiceProvider {
 
 	/**
 	 * @inheritDoc
