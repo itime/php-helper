@@ -1,6 +1,6 @@
 <?php
 
-namespace Xin\Contracts\Bot;
+namespace Xin\Contracts\Robot;
 
 interface Message {
 

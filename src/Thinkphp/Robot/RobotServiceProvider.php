@@ -5,16 +5,16 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Bot;
+namespace Xin\Thinkphp\Robot;
 
-use Xin\Bot\BotManager;
-use Xin\Contracts\Bot\Factory as BotFactory;
+use Xin\Contracts\Robot\Factory as RobotFactory;
+use Xin\Robot\RobotManager;
 use Xin\Thinkphp\Foundation\ServiceProvider;
 
 /**
  * Class HintServiceProvider
  */
-class BotServiceProvider extends ServiceProvider {
+class RobotServiceProvider extends ServiceProvider {
 
 	/**
 	 * @inheritDoc
@@ -29,11 +29,11 @@ class BotServiceProvider extends ServiceProvider {
 	 */
 	protected function registerManager() {
 		$this->app->bind([
-			'bot' => BotFactory::class,
-			BotFactory::class => BotManager::class,
-			BotManager::class => function () {
-				$manager = new BotManager(
-					$this->app->config->get('bot')
+			'robot' => RobotFactory::class,
+			RobotFactory::class => RobotManager::class,
+			RobotManager::class => function () {
+				$manager = new RobotManager(
+					$this->app->config->get('robot')
 				);
 				$manager->setContainer($this->app);
 

@@ -1,17 +1,32 @@
 <?php
 
-namespace Xin\Bot;
+namespace Xin\Robot;
 
 use Xin\Capsule\Service;
-use Xin\Contracts\Bot\Bot;
+use Xin\Contracts\Robot\Robot;
 use Xin\Http\HasHttpRequests;
 use Xin\Support\Arr;
 
-class DingTalk extends Service implements Bot {
+class DingTalk extends Service implements Robot {
 
 	use HasHttpRequests;
 
 	const BASE_URL = 'https://oapi.dingtalk.com/robot/send';
+
+	/**
+	 * @var string
+	 */
+	protected $name;
+
+	/**
+	 * DingTalk Constructor
+	 * @param array  $config
+	 * @param string $name
+	 */
+	public function __construct(array $config, $name = 'default') {
+		parent::__construct($config);
+		$this->name = $name;
+	}
 
 	/**
 	 * @inheritDoc
@@ -23,7 +38,6 @@ class DingTalk extends Service implements Bot {
 				$mentionedOpts['isAtAll'] = true;
 				array_splice($mentionedList, $isAllIndex, 1);
 			}
-
 			$mentionedOpts['atUserIds'] = $mentionedList;
 
 			$message['at'] = $mentionedOpts;
@@ -41,33 +55,33 @@ class DingTalk extends Service implements Bot {
 	/**
 	 * @inheritDoc
 	 */
-	public function sendTextMessage(string $content, array $mentionedList = null): bool {
-		return $this->sendMessage([
+	public function sendTextMessage(string $content, array $mentionedList = null, array $attributes = []) {
+		return $this->sendMessage(array_merge($attributes, [
 			'msgtype' => 'text',
 			'text' => [
 				'content' => $content,
 			],
-		], $mentionedList);
+		]), $mentionedList);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function sendMarkdownMessage($content, array $mentionedList = null) {
-		return $this->sendMessage([
+	public function sendMarkdownMessage($content, array $mentionedList = null, array $attributes = []) {
+		return $this->sendMessage(array_merge($attributes, [
 			'msgtype' => 'markdown',
 			'markdown' => [
-				'title' => '>>>',
+				'title' => $this->getConfig('title', $this->name) ?: $this->name,
 				'text' => $content,
 			],
-		], $mentionedList);
+		]), $mentionedList);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function sendFeedCardMessage($articles, array $mentionedList = null) {
-		return $this->sendMessage([
+	public function sendFeedCardMessage($articles, array $mentionedList = null, array $attributes = []) {
+		return $this->sendMessage(array_merge($attributes, [
 			'msgtype' => 'feedCard',
 			'feedCard' => [
 				'links' => array_map(function ($item) {
@@ -77,7 +91,7 @@ class DingTalk extends Service implements Bot {
 					]);
 				}, $articles),
 			],
-		], $mentionedList);
+		]), $mentionedList);
 	}
 
 	/**

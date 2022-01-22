@@ -12,11 +12,11 @@ use think\console\Input;
 use think\console\input\Argument;
 use think\console\input\Option;
 use think\contract\LogHandlerInterface;
-use Xin\Bot\BotManager;
+use Xin\Robot\RobotManager;
 use Xin\Support\Arr;
 use Xin\Support\LimitThrottle;
 
-class Bot implements LogHandlerInterface {
+class Robot implements LogHandlerInterface {
 
 	/**
 	 * @var \think\App
@@ -47,7 +47,7 @@ class Bot implements LogHandlerInterface {
 	 */
 	public function save(array $log): bool {
 		if (!isset($log['error']) || !$this->isAllowSendBotMessage($errCount)) {
-			return true;
+			// return true;
 		}
 
 		$log = substr($log['error'][0], 0, 512);
@@ -80,7 +80,7 @@ class Bot implements LogHandlerInterface {
 MARKDOWN;
 
 		// 机器人发送告警消息
-		$this->sendBotMessage($contents);
+		$this->sendRobotMessage($contents);
 
 		return true;
 	}
@@ -90,9 +90,9 @@ MARKDOWN;
 	 *
 	 * @return string
 	 */
-	protected function bot() {
-		if (isset($this->config['bot']) && $this->config['bot']) {
-			return $this->config['bot'];
+	protected function robot() {
+		if (isset($this->config['robot']) && $this->config['robot']) {
+			return $this->config['robot'];
 		}
 
 		return null;
@@ -103,13 +103,12 @@ MARKDOWN;
 	 * @param string $contents
 	 * @return void
 	 */
-	protected function sendBotMessage($contents) {
+	protected function sendRobotMessage($contents) {
 		try {
-			/** @var BotManager $bot */
-			$bot = $this->app->bot;
-			$bot->bot($this->bot())->sendMarkdownMessage($contents);
+			/** @var RobotManager $factory */
+			$factory = $this->app->robot;
+			$factory->robot($this->robot())->sendMarkdownMessage($contents);
 		} catch (\Throwable $e) {
-			dd($e);
 		}
 	}
 
@@ -120,7 +119,7 @@ MARKDOWN;
 	 * @return bool
 	 */
 	protected function isAllowSendBotMessage(&$count = 0) {
-		if (!$this->app->has('bot') || !$this->bot() ||
+		if (!$this->app->has('robot') || !$this->robot() ||
 			!in_array(env('app_env'), $this->getAllowEnvs())
 		) {
 			return false;

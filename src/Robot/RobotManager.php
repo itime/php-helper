@@ -1,20 +1,20 @@
 <?php
 
-namespace Xin\Bot;
+namespace Xin\Robot;
 
 
 use Xin\Capsule\Manager;
-use Xin\Contracts\Bot\Factory;
+use Xin\Contracts\Robot\Factory;
 
 /**
- * @mixin \Xin\Contracts\Bot\Bot
+ * @mixin \Xin\Contracts\Robot\Robot
  */
-class BotManager extends Manager implements Factory {
+class RobotManager extends Manager implements Factory {
 
 	/**
 	 * @inheritDoc
 	 */
-	public function bot($name) {
+	public function robot($name) {
 		return $this->driver($name);
 	}
 
@@ -35,28 +35,28 @@ class BotManager extends Manager implements Factory {
 	 * @return DingTalk
 	 */
 	public function createDingTalkDriver($name, array $config): DingTalk {
-		return new DingTalk($config);
+		return new DingTalk($config, $name);
 	}
 
 	/**
 	 * @inerhitDoc
 	 */
 	protected function getDefaultDriver() {
-		return $this->getConfig('defaults.bot', 'default');
+		return $this->getConfig('defaults.robot', 'default');
 	}
 
 	/**
 	 * @inerhitDoc
 	 */
 	protected function setDefaultDriver($name) {
-		$this->setConfig('defaults.bot', $name);
+		$this->setConfig('defaults.robot', $name);
 	}
 
 	/**
 	 * @inerhitDoc
 	 */
 	public function getDriverConfig($name) {
-		$key = 'bots';
+		$key = 'robots';
 
 		return $this->getConfig($name ? "{$key}.{$name}" : $key);
 	}
