@@ -90,11 +90,11 @@ class DatabaseEvent extends Model {
 	 */
 	public static function onAfterWrite(self $event) {
 		if (isset($event->id)) {
-			self::setCache($event);
+			static::putIntoCache($event);
 		} else {
 			$events = $event->where($event->getWhere())->select();
 			foreach ($events as $event) {
-				self::setCache($event);
+				static::putIntoCache($event);
 			}
 		}
 	}
@@ -105,7 +105,7 @@ class DatabaseEvent extends Model {
 	 * @param static $event
 	 */
 	public static function onAfterDelete(self $event) {
-		Cache::delete(self::CACHE_PREFIX . $event->name);
+		Cache::delete(static::CACHE_PREFIX . $event->name);
 	}
 
 	/**
@@ -162,13 +162,13 @@ class DatabaseEvent extends Model {
 	 * 自动更新事件缓存
 	 */
 	public static function autoRefreshCache() {
-		if (Cache::get(self::CACHE_PREFIX)) {
+		if (Cache::get(static::CACHE_PREFIX)) {
 			return;
 		}
 
-		self::updateCache();
+		static::refreshCache();
 
-		Cache::set(self::CACHE_PREFIX, 1);
+		Cache::set(static::CACHE_PREFIX, 1);
 	}
 
 	/**
@@ -183,7 +183,7 @@ class DatabaseEvent extends Model {
 
 		/** @var static $event */
 		foreach ($eventCollection as $event) {
-			self::putIntoCache($event);
+			static::putIntoCache($event);
 		}
 
 		return $eventCollection;
@@ -196,7 +196,7 @@ class DatabaseEvent extends Model {
 	 */
 	public static function putIntoCache(self $event) {
 		$addons = $event->status ? $event->addons : [];
-		$cacheKey = self::CACHE_PREFIX . $event->getData('name');
+		$cacheKey = static::CACHE_PREFIX . $event->getData('name');
 
 		Cache::set($cacheKey, [
 			'type' => $event->getData('type'),
@@ -211,7 +211,7 @@ class DatabaseEvent extends Model {
 	 * @return array
 	 */
 	public static function fetchFromCache($name) {
-		return Cache::get(self::CACHE_PREFIX . $name);
+		return Cache::get(static::CACHE_PREFIX . $name);
 	}
 
 	/**
