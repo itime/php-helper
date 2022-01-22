@@ -24,10 +24,10 @@ interface Message {
 	public function getData();
 
 	/**
-	 * 获取模板
+	 * 获取模板ID
 	 *
 	 * @return string
 	 */
-	public function template();
+	public function getTemplateId();
 
 }

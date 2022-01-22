@@ -13,6 +13,6 @@ interface Factory {
 	 * @param string $name
 	 * @return Channel
 	 */
-	public function channel($name);
+	public function channel($name = null);
 
 }
