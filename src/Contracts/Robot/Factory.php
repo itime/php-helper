@@ -9,6 +9,6 @@ interface Factory {
 	 * @param string $name
 	 * @return Robot
 	 */
-	public function robot($name);
+	public function robot($name = null);
 
 }

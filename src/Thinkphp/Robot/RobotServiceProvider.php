@@ -12,7 +12,7 @@ use Xin\Robot\RobotManager;
 use Xin\Thinkphp\Foundation\ServiceProvider;
 
 /**
- * Class HintServiceProvider
+ * Class RobotServiceProvider
  */
 class RobotServiceProvider extends ServiceProvider {
 

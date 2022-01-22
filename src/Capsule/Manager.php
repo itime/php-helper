@@ -44,7 +44,7 @@ abstract class Manager {
 	 * @param string|null $name
 	 * @return mixed
 	 */
-	public function driver(string $name = null) {
+	public function driver($name = null) {
 		$name = $name ?: $this->getDefaultDriver();
 
 		return $this->drivers[$name] ?? $this->drivers[$name] = $this->createDriver($name);
@@ -76,9 +76,14 @@ abstract class Manager {
 		if (isset($this->customCreators[$driver])) {
 			$instance = $this->callCustomCreator($name, $driver, $config);
 		} else {
-			$driverMethod = 'create' . ucfirst($driver) . 'Driver';
-			if (method_exists($this, $driverMethod)) {
-				$instance = $this->{$driverMethod}($name, $config);
+			$createDriverMethod = 'create' . ucfirst($driver) . 'Driver';
+			if (method_exists($this, $createDriverMethod)) {
+				$instance = $this->{$createDriverMethod}($name, $config);
+			} else {
+				$createDefaultDriverMethod = 'createDefaultDriver';
+				if (method_exists($this, $createDefaultDriverMethod)) {
+					$instance = $this->{$createDefaultDriverMethod}($name, $config);
+				}
 			}
 		}
 

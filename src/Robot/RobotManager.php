@@ -14,7 +14,7 @@ class RobotManager extends Manager implements Factory {
 	/**
 	 * @inheritDoc
 	 */
-	public function robot($name) {
+	public function robot($name = null) {
 		return $this->driver($name);
 	}
 
