@@ -9,8 +9,6 @@ namespace Xin\Thinkphp\Saas\App;
 
 use think\exception\ValidateException;
 use think\facade\Db;
-use think\Model;
-use Xin\Thinkphp\Database\ModelUtil;
 use Xin\Thinkphp\Plugin\DatabasePlugin;
 
 /**
@@ -117,12 +115,11 @@ trait HasPlugins {
 
 		/** @var \think\Collection $ownPlugins */
 		$ownPlugins = $this->plugins()->select();
-		$ownPlugins = ModelUtil::carryPivots($ownPlugins, function ($pivotData, Model $parent) {
-			$pivot = new DatabaseAppPlugin($pivotData, $parent);
-			$pivot->exists(true);
-			$parent->setRelation('pivot', $pivot);
-		});
-
+		// $ownPlugins = ModelUtil::carryPivots($ownPlugins, function ($pivotData, Model $parent) {
+		// 	$pivot = new DatabaseAppPlugin($pivotData, $parent);
+		// 	$pivot->exists(true);
+		// 	$parent->setRelation('pivot', $pivot);
+		// });
 		Db::transaction(function () use (&$nameAndExpireTimes, &$attachPlugins, &$ownPlugins) {
 			foreach ($attachPlugins as $name => $plugin) {
 				$expireTime = $nameAndExpireTimes[$name];
