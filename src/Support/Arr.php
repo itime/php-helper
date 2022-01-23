@@ -791,15 +791,17 @@ final class Arr {
 				if ($value[$parentKey] == $pid) {
 					unset ($list[$key]);
 
-					$itemHandler($level, $value);
+					$flag = $itemHandler($level, $value);
 
 					$childList = $handler($list, $value[$idKey]);
 					if (!empty($childList)) {
 						$value[$childKey] = $childList;
 					}
 
-					$result[] = $value;
-					reset($list);
+					if ($flag !== false) {
+						$result[] = $value;
+						reset($list);
+					}
 				}
 			}
 			$level--;
@@ -824,7 +826,7 @@ final class Arr {
 	}
 
 	/**
-	 * 树转tree
+	 * 解除Tree结构数据
 	 *
 	 * @param array  $list
 	 * @param string $child
