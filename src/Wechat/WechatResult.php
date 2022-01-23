@@ -61,7 +61,7 @@ class WechatResult implements \ArrayAccess {
 			return null;
 		}
 
-		return (int)($this->result['errcode'] ?? 0);
+		return $this->isStream ? 0 : (int)($this->result['errcode'] ?? 0);
 	}
 
 	/**
@@ -139,6 +139,23 @@ class WechatResult implements \ArrayAccess {
 	}
 
 	/**
+	 * 监听业务错误事件
+	 *
+	 * @param int|array $errCode
+	 * @param callable  $callback
+	 * @return $this
+	 */
+	public function error($checkCodes, callable $callback) {
+		$checkCodes = is_array($checkCodes) ? $checkCodes : [$checkCodes];
+
+		if (in_array($this->errCode(), $checkCodes)) {
+			$callback($this);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * 业务成功
 	 * @param callable $callback
 	 * @return $this
@@ -162,7 +179,7 @@ class WechatResult implements \ArrayAccess {
 			return $this;
 		}
 
-		$result = $callback();
+		$result = $callback($this);
 		if ($result !== null) {
 			return $this;
 		}
