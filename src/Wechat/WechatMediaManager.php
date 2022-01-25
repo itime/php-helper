@@ -8,15 +8,13 @@
 namespace Xin\Wechat;
 
 use Psr\SimpleCache\CacheInterface;
+use Xin\Capsule\WithCache;
 use Xin\Contracts\Wechat\Factory as WechatFactory;
 use Xin\Support\File;
 
-class WechatMedia {
+class WechatMediaManager {
 
-	/**
-	 * @var callable
-	 */
-	protected static $defaultCacheResolver;
+	use WithCache;
 
 	/**
 	 * @var \Xin\Contracts\Wechat\Factory
@@ -24,9 +22,9 @@ class WechatMedia {
 	protected $factory;
 
 	/**
-	 * @var CacheInterface
+	 * @var string
 	 */
-	protected $cache;
+	protected $prefix = 'wechat:media:';
 
 	/**
 	 * @param \Xin\Contracts\Wechat\Factory $factory
@@ -92,8 +90,8 @@ class WechatMedia {
 	 * @noinspection PhpUnhandledExceptionInspection
 	 */
 	protected function getMediaInfo($appId, $type, $fileUrl, callable $make) {
-		$fileUrlMd5 = md5($fileUrl);
-		$cacheKey = "{$appId}:{$type}:{$fileUrlMd5}";
+		$cacheKey = $this->getCacheKey("{$appId}:{$type}:" . md5($fileUrl));
+
 		$mediaIdInfo = $this->cache()->get($cacheKey);
 		$mediaIdInfo = $mediaIdInfo ?: [
 			'media_id' => '',
@@ -126,43 +124,11 @@ class WechatMedia {
 	}
 
 	/**
-	 * 获取缓存器
-	 * @return CacheInterface
+	 * @param string $name
+	 * @return string
 	 */
-	public function cache() {
-		if (!$this->cache) {
-			$this->cache = static::getDefaultCache();
-		}
-
-		return $this->cache;
-	}
-
-	/**
-	 * 设置缓存器
-	 * @param CacheInterface $cache
-	 */
-	public function setCache(CacheInterface $cache) {
-		$this->cache = $cache;
-	}
-
-	/**
-	 * 获取默认缓存
-	 * @return CacheInterface
-	 */
-	public static function getDefaultCache() {
-		if (is_callable(static::$defaultCacheResolver)) {
-			return call_user_func(static::$defaultCacheResolver);
-		}
-
-		throw new \RuntimeException("cache resolver not implements!");
-	}
-
-	/**
-	 * 设置缓存默认缓存解析器
-	 * @param callable $cacheResolver
-	 */
-	public static function setDefaultCacheResolver(callable $cacheResolver) {
-		static::$defaultCacheResolver = $cacheResolver;
+	protected function getCacheKey($name) {
+		return $this->prefix . $name;
 	}
 
 	/**

@@ -15,8 +15,8 @@ use think\exception\HttpResponseException;
 use think\exception\ValidateException;
 use think\Response;
 use Xin\Auth\AuthenticationException;
-use Xin\Foundation\Wechat\WechatException;
 use Xin\Thinkphp\Facade\Hint;
+use Xin\Wechat\Exceptions\WechatException;
 
 /**
  * Class ExceptionHandle
