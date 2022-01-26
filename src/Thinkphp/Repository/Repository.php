@@ -6,8 +6,8 @@ use app\common\model\Model;
 use think\db\Query;
 use think\facade\Db;
 use think\model\Collection;
-use think\Paginator;
 use Xin\Contracts\Foundation\Repository as RepositoryContract;
+use Xin\Middleware\MiddlewareManager;
 
 class Repository implements RepositoryContract {
 
@@ -32,7 +32,13 @@ class Repository implements RepositoryContract {
 
 	/**
 	 * @inerhitDoc
-	 * @return \Illuminate\Database\Eloquent\Collection
+	 * @param array $search
+	 * @param array $with
+	 * @param array $options
+	 * @return \think\model\Collection
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	public function lists($search = [], array $with = [], array $options = []) {
 		$options['paginate'] = false;
@@ -42,7 +48,14 @@ class Repository implements RepositoryContract {
 
 	/**
 	 * @inerhitDoc
-	 * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+	 * @param array $search
+	 * @param array $with
+	 * @param int   $paginate
+	 * @param array $options
+	 * @return \think\Paginator
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	public function paginate($search = [], array $with = [], $paginate = 1, array $options = []) {
 		$options['paginate'] = $paginate;
@@ -50,8 +63,25 @@ class Repository implements RepositoryContract {
 		return $this->search($search, $with, $options);
 	}
 
+	/**
+	 * 搜索内容
+	 * @param array $search
+	 * @param array $with
+	 * @param array $options
+	 * @return \think\Collection|\think\model\Collection|\think\Paginator
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
+	 */
 	protected function search($search = [], array $with = [], array $options = []) {
-		$query = $this->query($with, $options)->withSearch($search);
+		$query = $this->query($with, $options)
+			->withSearch(array_keys($search), $search);
+
+		if (isset($options['paginate'])) {
+			return $query->paginate($options['paginate']);
+		} else {
+			return tap($query->select());
+		}
 	}
 
 	/**

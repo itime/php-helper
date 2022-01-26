@@ -158,12 +158,20 @@ trait Modelable {
 	}
 
 	/**
-	 * 获取要查找的简单数据字段列表
+	 * 获取列表要查询的字段列表，一般用于接口列表查询
 	 *
 	 * @return array
 	 */
 	public static function getPlainFields() {
 		return [];
+	}
+
+	/**
+	 * 获取要公开的字段列表，一般用于管理查询数据
+	 * @return string[]
+	 */
+	public static function getPublicFields() {
+		return static::getPlainFields();
 	}
 
 	/**
