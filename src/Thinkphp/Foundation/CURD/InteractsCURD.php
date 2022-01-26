@@ -89,7 +89,7 @@ trait InteractsCURD {
 	 *
 	 * @return string
 	 */
-	protected function showCreateView() {
+	protected function showCreateView($model = null) {
 		return $this->fetch($this->property('createTpl', 'edit'));
 	}
 
@@ -116,11 +116,20 @@ trait InteractsCURD {
 	/**
 	 * 添加行为
 	 *
-	 * @return mixed
+	 * @return string|\think\Response
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
 	 */
 	public function create() {
 		if ($this->request->isGet()) {
-			return $this->showCreateView();
+			$model = null;
+
+			if ($this->request->param('copy', 0)) {
+				$model = $this->findIsEmptyAssert();
+				$this->assign('info', $model);
+			}
+
+			return $this->showCreateView($model);
 		}
 
 		$data = $this->request->post();
@@ -158,7 +167,9 @@ trait InteractsCURD {
 	/**
 	 * 查看详情
 	 *
-	 * @return mixed
+	 * @return string
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	public function show() {
 		$model = $this->findIsEmptyAssert();
@@ -201,7 +212,10 @@ trait InteractsCURD {
 	/**
 	 * 更新行为
 	 *
-	 * @return mixed
+	 * @return string|\think\Response
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	public function update() {
 		$model = $this->findIsEmptyAssert();
