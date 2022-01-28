@@ -73,7 +73,8 @@ use think\facade\Config;
  * @method static string image($dir = null, $width = 640, $height = 480, $category = null, $fullPath = true, $randomize = true, $word = null)
  * @method static string randomHtml($maxDepth = 4, $maxWidth = 4)
  */
-class Faker extends Facade {
+class Faker extends Facade
+{
 
 	/**
 	 * @var FakerGenerator
@@ -86,11 +87,12 @@ class Faker extends Facade {
 	 * @static
 	 * @access protected
 	 * @param string $class 类名或标识
-	 * @param array  $args 变量
-	 * @param bool   $newInstance 是否每次创建新的实例
+	 * @param array $args 变量
+	 * @param bool $newInstance 是否每次创建新的实例
 	 * @return object
 	 */
-	protected static function createFacade(string $class = '', array $args = [], bool $newInstance = false) {
+	protected static function createFacade(string $class = '', array $args = [], bool $newInstance = false)
+	{
 		if (self::$instance === null) {
 			self::$instance = FakerFactory::create(
 				Config::get('app.faker_locale')
@@ -107,7 +109,8 @@ class Faker extends Facade {
 	 * @param array $args
 	 * @return FakerGenerator
 	 */
-	public static function instance(...$args) {
+	public static function instance(...$args)
+	{
 		return static::createFacade('', $args);
 	}
 

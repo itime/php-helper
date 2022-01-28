@@ -2,7 +2,8 @@
 
 namespace Xin\Http;
 
-class RequestException extends HttpClientException {
+class RequestException extends HttpClientException
+{
 
 	/**
 	 * The response instance.
@@ -17,7 +18,8 @@ class RequestException extends HttpClientException {
 	 * @param Response $response
 	 * @return void
 	 */
-	public function __construct(Response $response) {
+	public function __construct(Response $response)
+	{
 		parent::__construct($this->prepareMessage($response), $response->status());
 
 		$this->response = $response;
@@ -29,7 +31,8 @@ class RequestException extends HttpClientException {
 	 * @param Response $response
 	 * @return string
 	 */
-	protected function prepareMessage(Response $response) {
+	protected function prepareMessage(Response $response)
+	{
 		$message = "HTTP request returned status code {$response->status()}";
 
 		$summary = class_exists(\GuzzleHttp\Psr7\Message::class)

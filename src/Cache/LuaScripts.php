@@ -7,7 +7,8 @@
 
 namespace Xin\Cache;
 
-class LuaScripts {
+class LuaScripts
+{
 
 	/**
 	 * Get the Lua script to atomically release a lock.
@@ -16,7 +17,8 @@ class LuaScripts {
 	 *
 	 * @return string
 	 */
-	public static function releaseLock() {
+	public static function releaseLock()
+	{
 		return <<<'LUA'
 if redis.call("get",KEYS[1]) == ARGV[1] then
     return redis.call("del",KEYS[1])

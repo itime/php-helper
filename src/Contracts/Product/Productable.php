@@ -7,6 +7,7 @@
 
 namespace Xin\Contracts\Product;
 
-interface Productable {
+interface Productable
+{
 
 }

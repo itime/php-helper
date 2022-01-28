@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Saas\App;
 
-interface AppRepository {
+interface AppRepository
+{
 
 	/**
 	 * 根据AccessId获取应用信息

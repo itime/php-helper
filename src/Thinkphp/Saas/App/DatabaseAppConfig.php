@@ -10,11 +10,12 @@ namespace Xin\Thinkphp\Saas\App;
 use think\Model;
 
 /**
- * @property-read int    app_id
+ * @property-read int app_id
  * @property-read string name
- * @property array       config
+ * @property array config
  */
-class DatabaseAppConfig extends Model {
+class DatabaseAppConfig extends Model
+{
 
 	/**
 	 * @var string[]

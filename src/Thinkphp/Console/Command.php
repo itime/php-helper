@@ -9,6 +9,7 @@ namespace Xin\Thinkphp\Console;
 
 use think\console\Command as BaseCommand;
 
-class Command extends BaseCommand {
+class Command extends BaseCommand
+{
 
 }

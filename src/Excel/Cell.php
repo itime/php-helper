@@ -8,7 +8,8 @@ use PhpOffice\PhpSpreadsheet\RichText\RichText;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class Cell {
+class Cell
+{
 
 	/**
 	 * @var SpreadsheetCell
@@ -18,24 +19,27 @@ class Cell {
 	/**
 	 * @param SpreadsheetCell $cell
 	 */
-	public function __construct(SpreadsheetCell $cell) {
+	public function __construct(SpreadsheetCell $cell)
+	{
 		$this->cell = $cell;
 	}
 
 	/**
 	 * @param Worksheet $worksheet
-	 * @param string    $coordinate
+	 * @param string $coordinate
 	 *
 	 * @return Cell
 	 */
-	public static function make(Worksheet $worksheet, string $coordinate) {
+	public static function make(Worksheet $worksheet, string $coordinate)
+	{
 		return new static($worksheet->getCell($coordinate));
 	}
 
 	/**
 	 * @return SpreadsheetCell
 	 */
-	public function getDelegate(): SpreadsheetCell {
+	public function getDelegate(): SpreadsheetCell
+	{
 		return $this->cell;
 	}
 
@@ -46,7 +50,8 @@ class Cell {
 	 *
 	 * @return mixed
 	 */
-	public function getValue($nullValue = null, $calculateFormulas = false, $formatData = true) {
+	public function getValue($nullValue = null, $calculateFormulas = false, $formatData = true)
+	{
 		$value = $nullValue;
 		if ($this->cell->getValue() !== null) {
 			if ($this->cell->getValue() instanceof RichText) {

@@ -5,34 +5,43 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Foundation;
+namespace Xin\Contracts\Repository;
 
-interface Repository {
+interface Repository
+{
+	// 过滤数据
+	public const SCENE_FILTER = 'filter';
 
-	const SCENE_FILTER = 'filter';
+	// 详情数据
+	public const SCENE_DETAIL = 'detail';
 
-	const SCENE_DETAIL = 'detail';
+	// 创建或编辑数据
+	public const SCENE_SHOW = 'show';
 
-	const SCENE_SHOW = 'show';
+	// 创建数据
+	public const SCENE_STORE = 'store';
 
-	const SCENE_STORE = 'store';
+	// 更新数据
+	public const SCENE_UPDATE = 'update';
 
-	const SCENE_UPDATE = 'update';
+	// 删除数据
+	public const SCENE_DELETE = 'delete';
 
-	const SCENE_DELETE = 'delete';
+	// 回收数据
+	public const SCENE_RECOVERY = 'recovery';
 
-	const SCENE_RECOVERY = 'recovery';
+	// 恢复数据
+	public const SCENE_RESTORE = 'restore';
 
-	const SCENE_RESTORE = 'restore';
-
-	const SCENE_VALIDATE = 'validate';
+	// 验证数据
+	public const SCENE_VALIDATE = 'validate';
 
 	/**
 	 * 获取数据列表
 	 *
 	 * @param array|callable $search
-	 * @param array          $with
-	 * @param array          $options
+	 * @param array $with
+	 * @param array $options
 	 * @return mixed
 	 */
 	public function lists($search = [], array $with = [], array $options = []);
@@ -41,9 +50,9 @@ interface Repository {
 	 * 获取数据分页
 	 *
 	 * @param array|callable $search
-	 * @param array          $with
-	 * @param int            $paginate
-	 * @param array          $options
+	 * @param array $with
+	 * @param mixed $paginate
+	 * @param array $options
 	 * @return mixed
 	 */
 	public function paginate($search = [], array $with = [], $paginate = 1, array $options = []);
@@ -52,8 +61,8 @@ interface Repository {
 	 * 数据过滤
 	 *
 	 * @param array|callable $filter
-	 * @param array          $with
-	 * @param array          $options
+	 * @param array $with
+	 * @param array $options
 	 * @return mixed
 	 */
 	public function filter($filter = [], array $with = [], array $options = []);
@@ -62,8 +71,8 @@ interface Repository {
 	 * 获取一条数据
 	 *
 	 * @param array|callable $filter
-	 * @param array          $with
-	 * @param array          $options
+	 * @param array $with
+	 * @param array $options
 	 * @return mixed
 	 */
 	public function show($filter, array $with = [], array $options = []);
@@ -71,7 +80,7 @@ interface Repository {
 	/**
 	 * 获取一条数据
 	 *
-	 * @param int   $id
+	 * @param int $id
 	 * @param array $with
 	 * @param array $options
 	 * @return mixed
@@ -82,8 +91,8 @@ interface Repository {
 	 * 获取数据详情
 	 *
 	 * @param array|callable $filter
-	 * @param array          $with
-	 * @param array          $options
+	 * @param array $with
+	 * @param array $options
 	 * @return mixed
 	 */
 	public function detail($filter, array $with = [], array $options = []);
@@ -91,7 +100,7 @@ interface Repository {
 	/**
 	 * 获取数据详情
 	 *
-	 * @param int   $id
+	 * @param int $id
 	 * @param array $options
 	 * @return mixed
 	 */
@@ -110,8 +119,8 @@ interface Repository {
 	 * 更新数据
 	 *
 	 * @param array|callable $filter
-	 * @param array          $data
-	 * @param array          $options
+	 * @param array $data
+	 * @param array $options
 	 * @return mixed
 	 */
 	public function update($filter, array $data, array $options = []);
@@ -119,7 +128,7 @@ interface Repository {
 	/**
 	 * 根据id更新数据
 	 *
-	 * @param int   $id
+	 * @param int $id
 	 * @param array $data
 	 * @param array $options
 	 * @return mixed
@@ -129,9 +138,9 @@ interface Repository {
 	/**
 	 * 验证数据合法性
 	 *
-	 * @param array  $data
+	 * @param array $data
 	 * @param string $scene
-	 * @param array  $options
+	 * @param array $options
 	 * @return array
 	 */
 	public function validate(array $data, $scene = null, array $options = []);
@@ -139,10 +148,10 @@ interface Repository {
 	/**
 	 * 设置数据字段值
 	 *
-	 * @param array  $ids
+	 * @param array $ids
 	 * @param string $field
-	 * @param mixed  $value
-	 * @param array  $options
+	 * @param mixed $value
+	 * @param array $options
 	 * @return array
 	 */
 	public function setField(array $ids, $field, $value, array $options = []);
@@ -151,7 +160,8 @@ interface Repository {
 	 * 删除数据
 	 *
 	 * @param array|string|int $filter
-	 * @param array            $options
+	 * @param array $options
+	 * @return mixed
 	 */
 	public function delete($filter, array $options = []);
 
@@ -159,8 +169,8 @@ interface Repository {
 	 * 根据ID列表删除数据
 	 *
 	 * @param array|string|int $ids
-	 * @param bool             $force
-	 * @param array            $options
+	 * @param array $options
+	 * @return int
 	 */
 	public function deleteByIdList(array $ids, array $options = []);
 
@@ -169,7 +179,8 @@ interface Repository {
 	 * 软删除数据
 	 *
 	 * @param array|string|int $filter
-	 * @param array            $options
+	 * @param array $options
+	 * @return mixed
 	 */
 	public function recovery($filter, array $options = []);
 

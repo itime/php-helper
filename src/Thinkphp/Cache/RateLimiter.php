@@ -5,7 +5,8 @@ namespace Xin\Thinkphp\Cache;
 use think\Cache;
 use Xin\Support\Traits\InteractsWithTime;
 
-class RateLimiter {
+class RateLimiter
+{
 
 	use InteractsWithTime;
 
@@ -22,7 +23,8 @@ class RateLimiter {
 	 * @param Cache $cache
 	 * @return void
 	 */
-	public function __construct(Cache $cache) {
+	public function __construct(Cache $cache)
+	{
 		$this->cache = $cache;
 	}
 
@@ -30,10 +32,11 @@ class RateLimiter {
 	 * Determine if the given key has been "accessed" too many times.
 	 *
 	 * @param string $key
-	 * @param int    $maxAttempts
+	 * @param int $maxAttempts
 	 * @return bool
 	 */
-	public function tooManyAttempts($key, $maxAttempts) {
+	public function tooManyAttempts($key, $maxAttempts)
+	{
 		if ($this->attempts($key) >= $maxAttempts) {
 			if ($this->cache->has($key . ':timer')) {
 				return true;
@@ -49,10 +52,11 @@ class RateLimiter {
 	 * Increment the counter for a given key for a given decay time.
 	 *
 	 * @param string $key
-	 * @param int    $decaySeconds
+	 * @param int $decaySeconds
 	 * @return int
 	 */
-	public function hit($key, $decaySeconds = 60) {
+	public function hit($key, $decaySeconds = 60)
+	{
 		$this->cache->set(
 			$key . ':timer', $this->availableAt($decaySeconds), $decaySeconds
 		);
@@ -74,7 +78,8 @@ class RateLimiter {
 	 * @param string $key
 	 * @return mixed
 	 */
-	public function attempts($key) {
+	public function attempts($key)
+	{
 		return $this->cache->get($key, 0);
 	}
 
@@ -84,7 +89,8 @@ class RateLimiter {
 	 * @param string $key
 	 * @return mixed
 	 */
-	public function resetAttempts($key) {
+	public function resetAttempts($key)
+	{
 		return $this->cache->delete($key);
 	}
 
@@ -92,10 +98,11 @@ class RateLimiter {
 	 * Get the number of retries left for the given key.
 	 *
 	 * @param string $key
-	 * @param int    $maxAttempts
+	 * @param int $maxAttempts
 	 * @return int
 	 */
-	public function retriesLeft($key, $maxAttempts) {
+	public function retriesLeft($key, $maxAttempts)
+	{
 		$attempts = $this->attempts($key);
 
 		return $maxAttempts - $attempts;
@@ -107,7 +114,8 @@ class RateLimiter {
 	 * @param string $key
 	 * @return void
 	 */
-	public function clear($key) {
+	public function clear($key)
+	{
 		$this->resetAttempts($key);
 
 		$this->cache->delete($key . ':timer');
@@ -119,7 +127,8 @@ class RateLimiter {
 	 * @param string $key
 	 * @return int
 	 */
-	public function availableIn($key) {
+	public function availableIn($key)
+	{
 		return $this->cache->get($key . ':timer') - $this->currentTime();
 	}
 

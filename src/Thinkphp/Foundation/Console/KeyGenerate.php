@@ -11,14 +11,16 @@ use think\console\input\Option;
 use Xin\Thinkphp\Console\Command;
 use Xin\Thinkphp\Console\ConfirmableTrait;
 
-class KeyGenerate extends Command {
+class KeyGenerate extends Command
+{
 
 	use ConfirmableTrait;
 
 	/**
 	 * 配置命令
 	 */
-	protected function configure() {
+	protected function configure()
+	{
 		$this->setName('key:generate')
 			->addOption('show', null, Option::VALUE_NONE, "Display the key instead of modifying files")
 			->addOption('force', null, Option::VALUE_NONE, 'Force the operation to run when in production')
@@ -30,7 +32,8 @@ class KeyGenerate extends Command {
 	 *
 	 * @throws \Exception
 	 */
-	public function handle() {
+	public function handle()
+	{
 		$key = $this->generateRandomKey();
 
 		if ($this->input->hasOption('show')) {
@@ -60,7 +63,8 @@ class KeyGenerate extends Command {
 	 * @return string
 	 * @throws \Exception
 	 */
-	protected function generateRandomKey() {
+	protected function generateRandomKey()
+	{
 		return 'base64:' . base64_encode(random_bytes(32));
 	}
 
@@ -70,7 +74,8 @@ class KeyGenerate extends Command {
 	 * @param string $key
 	 * @return bool
 	 */
-	protected function setKeyInEnvironmentFile($key) {
+	protected function setKeyInEnvironmentFile($key)
+	{
 		$currentKey = $this->getApp()->config->get('app.key');
 
 		if (strlen($currentKey) !== 0 && (!$this->confirmToProceed())) {
@@ -88,7 +93,8 @@ class KeyGenerate extends Command {
 	 * @param string $key
 	 * @return void
 	 */
-	protected function writeNewEnvironmentFileWith($key) {
+	protected function writeNewEnvironmentFileWith($key)
+	{
 		$environmentFilePath = $this->getApp()->getRootPath() . ".env";
 		file_put_contents($environmentFilePath, preg_replace(
 			$this->keyReplacementPattern(),
@@ -102,7 +108,8 @@ class KeyGenerate extends Command {
 	 *
 	 * @return string
 	 */
-	protected function keyReplacementPattern() {
+	protected function keyReplacementPattern()
+	{
 		$escaped = preg_quote(' = "' . $this->getApp()->config->get('app.key') . '"', '/');
 
 		return "/^APP_KEY{$escaped}/m";

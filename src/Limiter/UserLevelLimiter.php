@@ -2,12 +2,14 @@
 
 namespace Xin\Limiter;
 
-class UserLevelLimiter extends AbstractLimiter {
+class UserLevelLimiter extends AbstractLimiter
+{
 
 	/**
 	 * @inheritDoc
 	 */
-	protected function check($data) {
+	protected function check($data)
+	{
 	}
 
 }

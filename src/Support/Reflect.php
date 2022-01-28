@@ -7,7 +7,8 @@
 
 namespace Xin\Support;
 
-class Reflect {
+class Reflect
+{
 
 	const VISIBLE_PUBLIC = 0;
 
@@ -18,12 +19,13 @@ class Reflect {
 	/**
 	 * 获取类方法可见范围
 	 *
-	 * @param mixed  $class
+	 * @param mixed $class
 	 * @param string $method
 	 * @return int
 	 * @throws \ReflectionException
 	 */
-	public static function getMethodVisible($class, $method) {
+	public static function getMethodVisible($class, $method)
+	{
 		$ref = new \ReflectionMethod($class, $method);
 		if ($ref->isPublic()) {
 			return self::VISIBLE_PUBLIC;
@@ -37,11 +39,12 @@ class Reflect {
 	/**
 	 * 方法可见范围
 	 *
-	 * @param mixed  $class
+	 * @param mixed $class
 	 * @param string $method
 	 * @return int
 	 */
-	public static function methodVisible($class, $method) {
+	public static function methodVisible($class, $method)
+	{
 		try {
 			return self::getMethodVisible($class, $method);
 		} catch (\ReflectionException $e) {
@@ -59,7 +62,8 @@ class Reflect {
 	 * @return mixed
 	 * @throws \ReflectionException
 	 */
-	public static function fallbackCalls($class, $methods, $args = []) {
+	public static function fallbackCalls($class, $methods, $args = [])
+	{
 		foreach ($methods as $method) {
 			if (self::VISIBLE_PUBLIC == self::getMethodVisible($class, $method)) {
 				return call_user_func_array([$class, $method], $args);

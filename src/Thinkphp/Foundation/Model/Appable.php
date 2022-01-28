@@ -11,14 +11,16 @@ namespace Xin\Thinkphp\Foundation\Model;
  * @method $this app(int $appId)
  * @mixin \think\Model
  */
-trait Appable {
+trait Appable
+{
 
 	/**
 	 * 开启 app_id 全局约束
 	 *
 	 * @return $this
 	 */
-	public function withGlobalAppScope() {
+	public function withGlobalAppScope()
+	{
 		if (!in_array('app', $this->globalScope)) {
 			$this->globalScope[] = 'app';
 		}
@@ -31,7 +33,8 @@ trait Appable {
 	 *
 	 * @return $this
 	 */
-	public function withoutGlobalAppScope() {
+	public function withoutGlobalAppScope()
+	{
 		$index = array_search('app_id', $this->globalScope);
 
 		if ($index !== false) {
@@ -45,10 +48,11 @@ trait Appable {
 	 * App 作用域
 	 *
 	 * @param \think\db\Query $query
-	 * @param int             $appId
+	 * @param int $appId
 	 * @hidden
 	 */
-	public function scopeApp($query, $appId = 0) {
+	public function scopeApp($query, $appId = 0)
+	{
 		if (!$appId) {
 			$appId = AppContext::getInstance()->getGlobalAppId();
 		}
@@ -59,7 +63,8 @@ trait Appable {
 	/**
 	 * @param \think\Model $model
 	 */
-	protected static function onBeforeWrite($model) {
+	protected static function onBeforeWrite($model)
+	{
 		$appId = AppContext::getInstance()->getGlobalAppId();
 		if ($appId !== null) {
 			$model['app_id'] = $appId;

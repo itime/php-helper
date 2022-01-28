@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Order;
 
-interface Orderable {
+interface Orderable
+{
 
 	/**
 	 * 订单是否已取消

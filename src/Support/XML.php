@@ -7,7 +7,8 @@
 
 namespace Xin\Support;
 
-class XML {
+class XML
+{
 
 	/**
 	 * 将XML转换成数组
@@ -15,7 +16,8 @@ class XML {
 	 * @param string $xml
 	 * @return mixed
 	 */
-	public static function parse($xml) {
+	public static function parse($xml)
+	{
 		//将XML转为array,禁止引用外部xml实体
 		libxml_disable_entity_loader(true);
 
@@ -25,12 +27,13 @@ class XML {
 	/**
 	 * 数组转XML(微信)
 	 *
-	 * @param array  $param 要转换的数组
+	 * @param array $param 要转换的数组
 	 * @param string $root 根元素
 	 * @param string $tag 指定元素标签名称，主要用于索引数组
 	 * @return string
 	 */
-	public static function encode($param, $root = 'xml', $tag = '') {
+	public static function encode($param, $root = 'xml', $tag = '')
+	{
 		if (!is_array($param) || count($param) <= 0) return '';
 
 		$xml = '';

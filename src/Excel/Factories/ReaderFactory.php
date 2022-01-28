@@ -13,7 +13,8 @@ use Xin\Excel\Concerns\WithReadFilter;
 use Xin\Excel\Concerns\WithStartRow;
 use Xin\Excel\Filters\LimitFilter;
 
-class ReaderFactory {
+class ReaderFactory
+{
 
 	use MapsCsvSettings;
 
@@ -24,7 +25,8 @@ class ReaderFactory {
 	 * @return IReader
 	 * @throws Exception
 	 */
-	public static function make($import, string $readerType): IReader {
+	public static function make($import, string $readerType): IReader
+	{
 		$reader = IOFactory::createReader($readerType);
 
 		if (method_exists($reader, 'setReadDataOnly')) {

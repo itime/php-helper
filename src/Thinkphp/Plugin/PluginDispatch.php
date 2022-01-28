@@ -21,7 +21,8 @@ use Xin\Support\Str;
  *
  * @property-read \think\Request|\Xin\Thinkphp\Http\Requestable $request
  */
-class PluginDispatch extends Controller {
+class PluginDispatch extends Controller
+{
 
 	/**
 	 * @var callable
@@ -41,7 +42,8 @@ class PluginDispatch extends Controller {
 	/**
 	 * @param \think\App $app
 	 */
-	public function init(App $app) {
+	public function init(App $app)
+	{
 		$this->app = $app;
 
 		$this->pluginManager = $this->app->get(PluginFactory::class);
@@ -74,7 +76,8 @@ class PluginDispatch extends Controller {
 	/**
 	 * @return mixed
 	 */
-	public function exec() {
+	public function exec()
+	{
 		if (!$this->pluginManager->has($this->plugin)) {
 			throw new PluginNotFoundHttpException($this->plugin);
 		}
@@ -139,7 +142,8 @@ class PluginDispatch extends Controller {
 	 * @return object
 	 * @throws ClassNotFoundException
 	 */
-	public function controller(string $name) {
+	public function controller(string $name)
+	{
 		$appName = $this->app->http->getName();
 
 		$suffix = $this->rule->config('controller_suffix') ? 'Controller' : '';
@@ -177,7 +181,8 @@ class PluginDispatch extends Controller {
 	/**
 	 * 初始化视图
 	 */
-	protected function initView() {
+	protected function initView()
+	{
 		$appName = $this->app->http->getName();
 		if ($appName == "api") {
 			return;

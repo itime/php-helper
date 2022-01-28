@@ -2,7 +2,8 @@
 
 namespace Xin\Excel\Concerns;
 
-interface WithCustomCsvSettings {
+interface WithCustomCsvSettings
+{
 
 	/**
 	 * @return array

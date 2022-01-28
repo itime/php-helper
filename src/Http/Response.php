@@ -18,7 +18,8 @@ use Xin\Support\Traits\Macroable;
  * @mixin \GuzzleHttp\Psr7\Response
  * @todo
  */
-class Response implements ArrayAccess {
+class Response implements ArrayAccess
+{
 
 	use Macroable {
 		Macroable::__call as macroCall;
@@ -49,7 +50,8 @@ class Response implements ArrayAccess {
 	 * @param \Psr\Http\Message\MessageInterface $response
 	 * @return void
 	 */
-	public function __construct($response, $exception = null) {
+	public function __construct($response, $exception = null)
+	{
 		$this->response = $response;
 		$this->exception = $exception;
 	}
@@ -59,7 +61,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return string
 	 */
-	public function body() {
+	public function body()
+	{
 		return (string)$this->response->getBody();
 	}
 
@@ -67,10 +70,11 @@ class Response implements ArrayAccess {
 	 * Get the JSON decoded body of the response as an array or scalar value.
 	 *
 	 * @param string|null $key
-	 * @param mixed       $default
+	 * @param mixed $default
 	 * @return mixed
 	 */
-	public function json($key = null, $default = null) {
+	public function json($key = null, $default = null)
+	{
 		if (!$this->decoded) {
 			$this->decoded = json_decode($this->body(), true);
 		}
@@ -82,10 +86,11 @@ class Response implements ArrayAccess {
 	 * Get the XML decoded body of the response as an array or scalar value.
 	 *
 	 * @param string $key
-	 * @param mixed  $default
+	 * @param mixed $default
 	 * @return array
 	 */
-	public function xml($key = null, $default = null) {
+	public function xml($key = null, $default = null)
+	{
 		if (!$this->decoded) {
 			//将XML转为array,禁止引用外部xml实体
 			libxml_disable_entity_loader(true);
@@ -98,10 +103,11 @@ class Response implements ArrayAccess {
 	/**
 	 * 获取数据
 	 * @param string $key
-	 * @param mixed  $default
+	 * @param mixed $default
 	 * @return array|ArrayAccess|mixed
 	 */
-	protected function getData($key = null, $default = null) {
+	protected function getData($key = null, $default = null)
+	{
 		if (is_null($key)) {
 			return $this->decoded;
 		}
@@ -114,7 +120,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return bool
 	 */
-	public function isJson() {
+	public function isJson()
+	{
 		return $this->isContentType("application/json");
 	}
 
@@ -123,7 +130,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return bool
 	 */
-	public function isXml() {
+	public function isXml()
+	{
 		return $this->isContentType("application/xml");
 	}
 
@@ -132,7 +140,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return array
 	 */
-	public function toArray() {
+	public function toArray()
+	{
 		if ($this->isXml()) {
 			return (array)$this->xml();
 		}
@@ -145,7 +154,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return object
 	 */
-	public function object() {
+	public function object()
+	{
 		if ($this->isXml()) {
 			//将XML转为array,禁止引用外部xml实体
 			libxml_disable_entity_loader(true);
@@ -161,7 +171,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return bool
 	 */
-	public function contentType() {
+	public function contentType()
+	{
 		return $this->getHeaderLine('Content-Type');
 	}
 
@@ -171,7 +182,8 @@ class Response implements ArrayAccess {
 	 * @param string $contentType
 	 * @return bool
 	 */
-	public function isContentType($contentType) {
+	public function isContentType($contentType)
+	{
 		return stripos($this->contentType(), $contentType) !== false;
 	}
 
@@ -181,7 +193,8 @@ class Response implements ArrayAccess {
 	 * @param string $header
 	 * @return string
 	 */
-	public function header(string $header) {
+	public function header(string $header)
+	{
 		return $this->response->getHeaderLine($header);
 	}
 
@@ -190,7 +203,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return array
 	 */
-	public function headers() {
+	public function headers()
+	{
 		return $this->response->getHeaders();
 	}
 
@@ -199,7 +213,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return int
 	 */
-	public function status() {
+	public function status()
+	{
 		return (int)$this->response->getStatusCode();
 	}
 
@@ -208,7 +223,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return \Psr\Http\Message\UriInterface|null
 	 */
-	public function effectiveUri() {
+	public function effectiveUri()
+	{
 		if ($this->transferStats) {
 			return $this->transferStats->getEffectiveUri();
 		}
@@ -221,7 +237,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return bool
 	 */
-	public function successful() {
+	public function successful()
+	{
 		return $this->status() >= 200 && $this->status() < 300;
 	}
 
@@ -230,7 +247,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return bool
 	 */
-	public function ok() {
+	public function ok()
+	{
 		return $this->status() === 200;
 	}
 
@@ -239,7 +257,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return bool
 	 */
-	public function redirect() {
+	public function redirect()
+	{
 		return $this->status() >= 300 && $this->status() < 400;
 	}
 
@@ -248,7 +267,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return bool
 	 */
-	public function failed() {
+	public function failed()
+	{
 		return $this->serverError() || $this->clientError();
 	}
 
@@ -257,7 +277,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return bool
 	 */
-	public function clientError() {
+	public function clientError()
+	{
 		return $this->status() >= 400 && $this->status() < 500;
 	}
 
@@ -266,7 +287,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return bool
 	 */
-	public function serverError() {
+	public function serverError()
+	{
 		return $this->status() >= 500;
 	}
 
@@ -276,7 +298,8 @@ class Response implements ArrayAccess {
 	 * @param callable $callback
 	 * @return $this
 	 */
-	public function onError(callable $callback) {
+	public function onError(callable $callback)
+	{
 		if ($this->failed()) {
 			$callback($this);
 		}
@@ -289,7 +312,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return \GuzzleHttp\Cookie\CookieJar
 	 */
-	public function cookies() {
+	public function cookies()
+	{
 		return $this->cookies;
 	}
 
@@ -298,7 +322,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return array
 	 */
-	public function handlerStats() {
+	public function handlerStats()
+	{
 		if ($this->transferStats) {
 			return $this->transferStats->getHandlerStats() ?? [];
 		}
@@ -311,7 +336,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return $this
 	 */
-	public function close() {
+	public function close()
+	{
 		$this->response->getBody()->close();
 
 		return $this;
@@ -322,7 +348,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return \Psr\Http\Message\ResponseInterface
 	 */
-	public function toPsrResponse() {
+	public function toPsrResponse()
+	{
 		return $this->response;
 	}
 
@@ -331,7 +358,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return RequestException|void
 	 */
-	public function toException() {
+	public function toException()
+	{
 		if ($this->exception) {
 			return $this->exception;
 		}
@@ -349,7 +377,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @throws RequestException
 	 */
-	public function throw() {
+	public function throw()
+	{
 		$callback = func_get_args()[0] ?? null;
 
 		if ($this->failed()) {
@@ -371,7 +400,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @throws RequestException
 	 */
-	public function throwIf($condition) {
+	public function throwIf($condition)
+	{
 		return $condition ? $this->throw() : $this;
 	}
 
@@ -382,7 +412,8 @@ class Response implements ArrayAccess {
 	 * @return bool
 	 */
 	#[\ReturnTypeWillChange]
-	public function offsetExists($offset) {
+	public function offsetExists($offset)
+	{
 		return isset($this->json()[$offset]);
 	}
 
@@ -393,7 +424,8 @@ class Response implements ArrayAccess {
 	 * @return mixed
 	 */
 	#[\ReturnTypeWillChange]
-	public function offsetGet($offset) {
+	public function offsetGet($offset)
+	{
 		return $this->json()[$offset];
 	}
 
@@ -401,13 +433,14 @@ class Response implements ArrayAccess {
 	 * Set the value at the given offset.
 	 *
 	 * @param string $offset
-	 * @param mixed  $value
+	 * @param mixed $value
 	 * @return void
 	 *
 	 * @throws \LogicException
 	 */
 	#[\ReturnTypeWillChange]
-	public function offsetSet($offset, $value) {
+	public function offsetSet($offset, $value)
+	{
 		throw new LogicException('Response data may not be mutated using array access.');
 	}
 
@@ -420,7 +453,8 @@ class Response implements ArrayAccess {
 	 * @throws \LogicException
 	 */
 	#[\ReturnTypeWillChange]
-	public function offsetUnset($offset) {
+	public function offsetUnset($offset)
+	{
 		throw new LogicException('Response data may not be mutated using array access.');
 	}
 
@@ -429,7 +463,8 @@ class Response implements ArrayAccess {
 	 *
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString()
+	{
 		return $this->body();
 	}
 
@@ -437,10 +472,11 @@ class Response implements ArrayAccess {
 	 * Dynamically proxy other methods to the underlying response.
 	 *
 	 * @param string $method
-	 * @param array  $parameters
+	 * @param array $parameters
 	 * @return mixed
 	 */
-	public function __call($method, $parameters) {
+	public function __call($method, $parameters)
+	{
 		return static::hasMacro($method)
 			? $this->macroCall($method, $parameters)
 			: $this->response->{$method}(...$parameters);

@@ -8,7 +8,8 @@ use Xin\Support\Arr;
 use Xin\Wechat\Exceptions\WechatBusinessException;
 use Xin\Wechat\Exceptions\WechatException;
 
-class WechatResult implements \ArrayAccess {
+class WechatResult implements \ArrayAccess
+{
 
 	/**
 	 * @var mixed
@@ -36,10 +37,11 @@ class WechatResult implements \ArrayAccess {
 	protected static $errorResolver = [WechatErrorHandle::class, 'handle'];
 
 	/**
-	 * @param mixed          $result
+	 * @param mixed $result
 	 * @param Throwable|null $exception
 	 */
-	protected function __construct($result, Throwable $exception = null) {
+	protected function __construct($result, Throwable $exception = null)
+	{
 		$this->result = $result;
 		$this->exception = $exception;
 	}
@@ -48,7 +50,8 @@ class WechatResult implements \ArrayAccess {
 	 * 获取异常信息
 	 * @return Throwable
 	 */
-	public function exception() {
+	public function exception()
+	{
 		return $this->exception;
 	}
 
@@ -56,7 +59,8 @@ class WechatResult implements \ArrayAccess {
 	 * 获取错误码
 	 * @return int
 	 */
-	public function errCode() {
+	public function errCode()
+	{
 		if (!$this->result) {
 			return null;
 		}
@@ -68,7 +72,8 @@ class WechatResult implements \ArrayAccess {
 	 * 获取错误信息
 	 * @return string
 	 */
-	public function errMessage() {
+	public function errMessage()
+	{
 		if (!$this->result) {
 			return null;
 		}
@@ -80,14 +85,16 @@ class WechatResult implements \ArrayAccess {
 	 * 业务是否成功
 	 * @return bool
 	 */
-	public function isSucceeded() {
+	public function isSucceeded()
+	{
 		return $this->errCode() === 0;
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isAccessError() {
+	public function isAccessError()
+	{
 		return $this->errCode() !== 60011;
 	}
 
@@ -98,7 +105,8 @@ class WechatResult implements \ArrayAccess {
 	 * @noinspection PhpDocMissingThrowsInspection
 	 * @noinspection PhpUnhandledExceptionInspection
 	 */
-	public function throw() {
+	public function throw()
+	{
 		if ($this->exception) {
 			throw $this->resolveException($this->exception);
 		}
@@ -118,7 +126,8 @@ class WechatResult implements \ArrayAccess {
 	 * @param Throwable $exception
 	 * @return Throwable|WechatException
 	 */
-	protected function resolveException(Throwable $exception) {
+	protected function resolveException(Throwable $exception)
+	{
 		if (self::$exceptionResolver) {
 			return call_user_func(self::$exceptionResolver, $exception);
 		}
@@ -130,7 +139,8 @@ class WechatResult implements \ArrayAccess {
 	 * 解析逻辑异常
 	 * @return false|mixed|WechatBusinessException
 	 */
-	protected function resolveBusinessException() {
+	protected function resolveBusinessException()
+	{
 		if (self::$errorResolver) {
 			return call_user_func(self::$errorResolver, $this->errCode(), $this->errMessage(), $this->result);
 		}
@@ -142,10 +152,11 @@ class WechatResult implements \ArrayAccess {
 	 * 监听业务错误事件
 	 *
 	 * @param int|array $errCode
-	 * @param callable  $callback
+	 * @param callable $callback
 	 * @return $this
 	 */
-	public function error($checkCodes, callable $callback) {
+	public function error($checkCodes, callable $callback)
+	{
 		$checkCodes = is_array($checkCodes) ? $checkCodes : [$checkCodes];
 
 		if (in_array($this->errCode(), $checkCodes)) {
@@ -160,7 +171,8 @@ class WechatResult implements \ArrayAccess {
 	 * @param callable $callback
 	 * @return $this
 	 */
-	public function then(callable $callback) {
+	public function then(callable $callback)
+	{
 		if ($this->isSucceeded()) {
 			$callback($this->result);
 		}
@@ -174,7 +186,8 @@ class WechatResult implements \ArrayAccess {
 	 * @return $this
 	 * @throws WechatException
 	 */
-	public function catch(callable $callback) {
+	public function catch(callable $callback)
+	{
 		if ($this->isSucceeded()) {
 			return $this;
 		}
@@ -192,7 +205,8 @@ class WechatResult implements \ArrayAccess {
 	/**
 	 * @return array
 	 */
-	public function toArray() {
+	public function toArray()
+	{
 		return Arr::except($this->result, [
 			'errcode', 'errmsg',
 		]);
@@ -209,7 +223,8 @@ class WechatResult implements \ArrayAccess {
 	 * <p>
 	 * The return value will be casted to boolean if non-boolean was returned.
 	 */
-	public function offsetExists($offset) {
+	public function offsetExists($offset)
+	{
 		return isset($this->result[$offset]);
 	}
 
@@ -221,7 +236,8 @@ class WechatResult implements \ArrayAccess {
 	 * </p>
 	 * @return mixed Can return all value types.
 	 */
-	public function offsetGet($offset) {
+	public function offsetGet($offset)
+	{
 		return $this->result[$offset];
 	}
 
@@ -236,7 +252,8 @@ class WechatResult implements \ArrayAccess {
 	 * </p>
 	 * @return void
 	 */
-	public function offsetSet($offset, $value) {
+	public function offsetSet($offset, $value)
+	{
 	}
 
 	/**
@@ -247,14 +264,16 @@ class WechatResult implements \ArrayAccess {
 	 * </p>
 	 * @return void
 	 */
-	public function offsetUnset($offset) {
+	public function offsetUnset($offset)
+	{
 	}
 
 	/**
 	 * 设置异常处理器
 	 * @param callable $exceptionResolver
 	 */
-	public static function setExceptionResolver(callable $exceptionResolver) {
+	public static function setExceptionResolver(callable $exceptionResolver)
+	{
 		self::$exceptionResolver = $exceptionResolver;
 	}
 
@@ -262,7 +281,8 @@ class WechatResult implements \ArrayAccess {
 	 * 设置业务错误处理器
 	 * @param callable $errorResolver
 	 */
-	public static function setErrorResolver(callable $errorResolver): void {
+	public static function setErrorResolver(callable $errorResolver): void
+	{
 		self::$errorResolver = $errorResolver;
 	}
 
@@ -270,7 +290,8 @@ class WechatResult implements \ArrayAccess {
 	 * @param callable $callback
 	 * @return static
 	 */
-	public static function capture(callable $callback) {
+	public static function capture(callable $callback)
+	{
 		$exception = null;
 		$result = null;
 
@@ -284,11 +305,12 @@ class WechatResult implements \ArrayAccess {
 	}
 
 	/**
-	 * @param mixed          $result
+	 * @param mixed $result
 	 * @param Throwable|null $exception
 	 * @return static
 	 */
-	public static function make($result, Throwable $exception = null) {
+	public static function make($result, Throwable $exception = null)
+	{
 		return new static($result, $exception);
 	}
 

@@ -11,7 +11,8 @@ namespace Xin\Support;
 /**
  * 数组工具类
  */
-final class Arr {
+final class Arr
+{
 
 	/**
 	 * 给定值是否可由数组访问
@@ -19,7 +20,8 @@ final class Arr {
 	 * @param mixed $value
 	 * @return bool
 	 */
-	public static function accessible($value) {
+	public static function accessible($value)
+	{
 		return is_array($value) || $value instanceof \ArrayAccess;
 	}
 
@@ -29,7 +31,8 @@ final class Arr {
 	 * @param array $arr 数组
 	 * @return bool
 	 */
-	public static function isAssoc($arr) {
+	public static function isAssoc($arr)
+	{
 		return array_keys($arr) !== range(0, count($arr) - 1);
 	}
 
@@ -37,10 +40,11 @@ final class Arr {
 	 * 确定给定的键是否存在于提供的数组中
 	 *
 	 * @param \ArrayAccess|array $array
-	 * @param string|int         $key
+	 * @param string|int $key
 	 * @return bool
 	 */
-	public static function exists($array, $key) {
+	public static function exists($array, $key)
+	{
 		if ($array instanceof \ArrayAccess) {
 			return $array->offsetExists($key);
 		}
@@ -51,12 +55,13 @@ final class Arr {
 	/**
 	 * 如果元素不存在，则使用“点”表示法将其添加到数组中
 	 *
-	 * @param array  $array
+	 * @param array $array
 	 * @param string $key
-	 * @param mixed  $value
+	 * @param mixed $value
 	 * @return array
 	 */
-	public static function add($array, $key, $value) {
+	public static function add($array, $key, $value)
+	{
 		if (is_null(static::get($array, $key))) {
 			static::set($array, $key, $value);
 		}
@@ -68,11 +73,12 @@ final class Arr {
 	 * 支持使用“点”表示法从数组中获取项
 	 *
 	 * @param \ArrayAccess|array $array
-	 * @param string|int         $key
-	 * @param mixed              $default
+	 * @param string|int $key
+	 * @param mixed $default
 	 * @return mixed
 	 */
-	public static function get($array, $key, $default = null) {
+	public static function get($array, $key, $default = null)
+	{
 		if (!self::accessible($array)) {
 			return value($default);
 		}
@@ -104,10 +110,11 @@ final class Arr {
 	 * 支持使用“点”表示法检查数组中是否存在一个或多个项
 	 *
 	 * @param \ArrayAccess|array $array
-	 * @param string|array       $keys
+	 * @param string|array $keys
 	 * @return bool
 	 */
-	public static function has($array, $keys) {
+	public static function has($array, $keys)
+	{
 		$keys = (array)$keys;
 
 		if (!$array || $keys === []) {
@@ -137,12 +144,13 @@ final class Arr {
 	 * 支持使用“点”表示法将数组项设置为给定值
 	 * 如果没有给方法指定键，整个数组将被替换
 	 *
-	 * @param array  $array
+	 * @param array $array
 	 * @param string $key
-	 * @param mixed  $value
+	 * @param mixed $value
 	 * @return array
 	 */
-	public static function set(&$array, $key, $value) {
+	public static function set(&$array, $key, $value)
+	{
 		if (is_null($key)) {
 			return $array = $value;
 		}
@@ -175,11 +183,12 @@ final class Arr {
 	/**
 	 * 使用“点”表示法从给定数组中删除一个或多个数组项
 	 *
-	 * @param array        $array
+	 * @param array $array
 	 * @param array|string $keys
 	 * @return void
 	 */
-	public static function forget(&$array, $keys) {
+	public static function forget(&$array, $keys)
+	{
 		$original = &$array;
 
 		$keys = (array)$keys;
@@ -218,11 +227,12 @@ final class Arr {
 	/**
 	 * 获取除指定的键数组以外的所有给定数组
 	 *
-	 * @param array        $array
+	 * @param array $array
 	 * @param array|string $keys
 	 * @return array
 	 */
-	public static function except($array, $keys) {
+	public static function except($array, $keys)
+	{
 		static::forget($array, $keys);
 
 		return $array;
@@ -234,7 +244,8 @@ final class Arr {
 	 * @param mixed $value
 	 * @return array
 	 */
-	public static function wrap($value) {
+	public static function wrap($value)
+	{
 		if (is_null($value)) {
 			return [];
 		}
@@ -245,11 +256,12 @@ final class Arr {
 	/**
 	 * 将数组使用点展平多维关联数组
 	 *
-	 * @param array  $array
+	 * @param array $array
 	 * @param string $prepend
 	 * @return array
 	 */
-	public static function dot($array, $prepend = '') {
+	public static function dot($array, $prepend = '')
+	{
 		$results = [];
 
 		foreach ($array as $key => $value) {
@@ -270,7 +282,8 @@ final class Arr {
 	 * @param array ...$arrays
 	 * @return array
 	 */
-	public static function crossJoin(...$arrays) {
+	public static function crossJoin(...$arrays)
+	{
 		$results = [[]];
 
 		foreach ($arrays as $index => $array) {
@@ -296,7 +309,8 @@ final class Arr {
 	 * @param array $array
 	 * @return array
 	 */
-	public static function divide(array $array) {
+	public static function divide(array $array)
+	{
 		return [array_keys($array), array_values($array)];
 	}
 
@@ -307,7 +321,8 @@ final class Arr {
 	 * @param array $keys
 	 * @return array
 	 */
-	public static function only($data, array $keys) {
+	public static function only($data, array $keys)
+	{
 		return array_intersect_key($data, array_flip((array)$keys));
 		//		$result = [];
 		//		foreach($keys as $key){
@@ -323,11 +338,12 @@ final class Arr {
 	 * 返回数组中通过给定真值测试的第一个元素
 	 *
 	 * @param array|iterable $array
-	 * @param callable|null  $callback
-	 * @param mixed          $default
+	 * @param callable|null $callback
+	 * @param mixed $default
 	 * @return mixed
 	 */
-	public static function first($array, callable $callback = null, $default = null) {
+	public static function first($array, callable $callback = null, $default = null)
+	{
 		if (is_null($callback)) {
 			if (empty($array)) {
 				return value($default);
@@ -350,12 +366,13 @@ final class Arr {
 	/**
 	 * 返回数组中通过给定真值测试的最后一个元素
 	 *
-	 * @param array         $array
+	 * @param array $array
 	 * @param callable|null $callback
-	 * @param mixed         $default
+	 * @param mixed $default
 	 * @return mixed
 	 */
-	public static function last($array, callable $callback = null, $default = null) {
+	public static function last($array, callable $callback = null, $default = null)
+	{
 		if (is_null($callback)) {
 			return empty($array) ? value($default) : end($array);
 		}
@@ -367,10 +384,11 @@ final class Arr {
 	 * 将多维数组展平为单个级别
 	 *
 	 * @param array $array
-	 * @param int   $depth
+	 * @param int $depth
 	 * @return array
 	 */
-	public static function flatten($array, $depth = INF) {
+	public static function flatten($array, $depth = INF)
+	{
 		$result = [];
 
 		foreach ($array as $item) {
@@ -391,11 +409,12 @@ final class Arr {
 	/**
 	 * 检测数组所有元素是否都符合指定条件
 	 *
-	 * @param array|iterable  $array
+	 * @param array|iterable $array
 	 * @param string|callable $callback
 	 * @return bool
 	 */
-	public static function every($array, $callback) {
+	public static function every($array, $callback)
+	{
 		foreach ($array as $k => $v) {
 			if (!$callback($v, $k)) {
 				return false;
@@ -413,7 +432,8 @@ final class Arr {
 	 * @param mixed $key
 	 * @return array
 	 */
-	public static function prepend($array, $value, $key = null) {
+	public static function prepend($array, $value, $key = null)
+	{
 		if (is_null($key)) {
 			array_unshift($array, $value);
 		} else {
@@ -426,12 +446,13 @@ final class Arr {
 	/**
 	 * 从数组中获取一个值，并将其移除
 	 *
-	 * @param array  $array
+	 * @param array $array
 	 * @param string $key
-	 * @param mixed  $default
+	 * @param mixed $default
 	 * @return mixed
 	 */
-	public static function pull(&$array, $key, $default = null) {
+	public static function pull(&$array, $key, $default = null)
+	{
 		$value = static::get($array, $key, $default);
 
 		static::forget($array, $key);
@@ -442,12 +463,13 @@ final class Arr {
 	/**
 	 * 从数组中获取一个或指定数量的随机值
 	 *
-	 * @param array    $array
+	 * @param array $array
 	 * @param int|null $number
 	 * @return mixed
 	 * @throws \InvalidArgumentException
 	 */
-	public static function random($array, $number = null) {
+	public static function random($array, $number = null)
+	{
 		$requested = is_null($number) ? 1 : $number;
 
 		$count = count($array);
@@ -480,11 +502,12 @@ final class Arr {
 	/**
 	 * 打乱给定数组并返回结果
 	 *
-	 * @param array    $array
+	 * @param array $array
 	 * @param int|null $seed
 	 * @return array
 	 */
-	public static function shuffle($array, $seed = null) {
+	public static function shuffle($array, $seed = null)
+	{
 		if (is_null($seed)) {
 			shuffle($array);
 		} else {
@@ -501,10 +524,11 @@ final class Arr {
 	 *
 	 * @param mixed $array
 	 * @param array $condition
-	 * @param bool  $any
+	 * @param bool $any
 	 * @return bool
 	 */
-	public static function where($array, $condition, $any = false) {
+	public static function where($array, $condition, $any = false)
+	{
 		if (self::isAssoc($condition)) {
 			$temp = [];
 			foreach ($condition as $key => $value) {
@@ -588,7 +612,8 @@ final class Arr {
 	 * @param array $filter 要额外过滤的数据
 	 * @return array
 	 */
-	public static function filter(&$params, $filter = ["sign", "sign_type"]) {
+	public static function filter(&$params, $filter = ["sign", "sign_type"])
+	{
 		foreach ($params as $key => $val) {
 			if ($val == "" || (is_array($val) && count($val) == 0)) {
 				unset ($params [$key]);
@@ -614,7 +639,8 @@ final class Arr {
 	 * @param $array
 	 * @return bool
 	 */
-	public static function in($value, $array) {
+	public static function in($value, $array)
+	{
 		return in_array(strtolower($value), array_map('strtolower', $array));
 	}
 
@@ -624,7 +650,8 @@ final class Arr {
 	 * @param array $array
 	 * @return array
 	 */
-	public static function sort(&$array) {
+	public static function sort(&$array)
+	{
 		if (static::isAssoc($array)) {
 			ksort($array);
 		} else {
@@ -641,7 +668,8 @@ final class Arr {
 	 * @param array $array
 	 * @return array
 	 */
-	public static function sortRecursive($array) {
+	public static function sortRecursive($array)
+	{
 		foreach ($array as &$value) {
 			if (is_array($value)) {
 				$value = static::sortRecursive($value);
@@ -663,19 +691,21 @@ final class Arr {
 	 * @param array $array
 	 * @return string
 	 */
-	public static function query($array) {
+	public static function query($array)
+	{
 		return http_build_query($array, null, '&', PHP_QUERY_RFC3986);
 	}
 
 	/**
 	 * 从数组中提取指定的值数组
 	 *
-	 * @param array  $array
+	 * @param array $array
 	 * @param string $column
 	 * @param string $index_key
 	 * @return array
 	 */
-	public static function column(array $array, $column, $index_key = null) {
+	public static function column(array $array, $column, $index_key = null)
+	{
 		$result = [];
 
 		foreach ($array as $row) {
@@ -707,11 +737,12 @@ final class Arr {
 	/**
 	 * 解包数组
 	 *
-	 * @param array        $array
+	 * @param array $array
 	 * @param string|array $keys
 	 * @return array
 	 */
-	public static function uncombine(array $array, $keys = null) {
+	public static function uncombine(array $array, $keys = null)
+	{
 		$result = [];
 
 		if ($keys) {
@@ -736,12 +767,13 @@ final class Arr {
 	/**
 	 * 数组去重 - 二维数组
 	 *
-	 * @param array  $array
+	 * @param array $array
 	 * @param string $key
 	 * @return array
 	 * @link https://www.php.net/manual/zh/function.array-unique.php#116302
 	 */
-	public static function uniqueMulti($array, $key) {
+	public static function uniqueMulti($array, $key)
+	{
 		$i = 0;
 		$temp_array = [];
 		$key_array = [];
@@ -760,13 +792,14 @@ final class Arr {
 	/**
 	 * 无极限分类
 	 *
-	 * @param array         $list 数据源
+	 * @param array $list 数据源
 	 * @param callable|null $itemHandler 额外处理回调函数
-	 * @param int           $pid 父id
-	 * @param array         $options
+	 * @param int $pid 父id
+	 * @param array $options
 	 * @return array
 	 */
-	public static function tree(array $list, callable $itemHandler = null, $pid = 0, array $options = []) {
+	public static function tree(array $list, callable $itemHandler = null, $pid = 0, array $options = [])
+	{
 		$options = array_merge([
 			'id' => 'id', // 要检索的ID键名
 			'parent' => 'pid', // 要检索的parent键名
@@ -828,11 +861,12 @@ final class Arr {
 	/**
 	 * 解除Tree结构数据
 	 *
-	 * @param array  $list
+	 * @param array $list
 	 * @param string $child
 	 * @return array
 	 */
-	public static function treeToList($list, $child = 'child') {
+	public static function treeToList($list, $child = 'child')
+	{
 		$handler = function ($list, $child) use (&$handler) {
 			$result = [];
 			foreach ($list as $key => &$val) {
@@ -858,7 +892,8 @@ final class Arr {
 	 * @param array $keyMaps
 	 * @return array
 	 */
-	public static function transformKeys(array $arr, array $keyMaps) {
+	public static function transformKeys(array $arr, array $keyMaps)
+	{
 		foreach ($keyMaps as $oldKey => $newKey) {
 			if (!array_key_exists($oldKey, $arr)) continue;
 
@@ -882,7 +917,8 @@ final class Arr {
 	 * @return array
 	 * @link https://www.php.net/manual/zh/function.array-intersect-key.php#80227
 	 */
-	public static function mergeDefault($default, $data) {
+	public static function mergeDefault($default, $data)
+	{
 		$intersect = array_intersect_key($data, $default); //Get data for which a default exists
 		$diff = array_diff_key($default, $data); //Get defaults which are not present in data
 
@@ -895,7 +931,8 @@ final class Arr {
 	 * @param string $string
 	 * @return array
 	 */
-	public static function parse($string) {
+	public static function parse($string)
+	{
 		$array = preg_split('/[,;\r\n]+/', trim($string, ",;\r\n"));
 
 		if (strpos($string, ':')) {
@@ -921,7 +958,8 @@ final class Arr {
 	 * @param array $array
 	 * @return string
 	 */
-	public static function toString($array) {
+	public static function toString($array)
+	{
 		$result = '';
 
 		if (self::isAssoc($array)) {

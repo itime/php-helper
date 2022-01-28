@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\RedPacket;
 
-interface Generator {
+interface Generator
+{
 
 	/**
 	 * 红包金额生成

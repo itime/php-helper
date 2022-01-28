@@ -9,7 +9,8 @@ namespace Xin\Auth\Access\Rule;
 
 use Xin\Contracts\Auth\Access\AuthenticRule as AuthenticRuleContract;
 
-class AuthenticRule implements AuthenticRuleContract {
+class AuthenticRule implements AuthenticRuleContract
+{
 
 	/**
 	 * 规则方案
@@ -37,9 +38,10 @@ class AuthenticRule implements AuthenticRuleContract {
 	 *
 	 * @param string $scheme
 	 * @param string $rule
-	 * @param array  $options
+	 * @param array $options
 	 */
-	public function __construct($scheme, $rule, array $options = []) {
+	public function __construct($scheme, $rule, array $options = [])
+	{
 		$this->scheme = $scheme;
 		$this->rule = $rule;
 		$this->options = $options;
@@ -50,7 +52,8 @@ class AuthenticRule implements AuthenticRuleContract {
 	 *
 	 * @return string
 	 */
-	public function getScheme() {
+	public function getScheme()
+	{
 		return $this->scheme;
 	}
 
@@ -59,7 +62,8 @@ class AuthenticRule implements AuthenticRuleContract {
 	 *
 	 * @return string
 	 */
-	public function getEntity() {
+	public function getEntity()
+	{
 		return $this->rule;
 	}
 
@@ -68,14 +72,16 @@ class AuthenticRule implements AuthenticRuleContract {
 	 *
 	 * @return array
 	 */
-	public function getOptions() {
+	public function getOptions()
+	{
 		return $this->options;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString()
+	{
 		return $this->scheme . ':' . $this->rule;
 	}
 
@@ -86,7 +92,8 @@ class AuthenticRule implements AuthenticRuleContract {
 	 * @return static
 	 * @throws \Xin\Auth\Rule\AuthenticRuleException
 	 */
-	public static function parse($fullRule) {
+	public static function parse($fullRule)
+	{
 		if (empty($fullRule)) {
 			throw new AuthenticRuleException("authentic rule invalid.");
 		}

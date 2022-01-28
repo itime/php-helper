@@ -11,16 +11,18 @@ namespace Xin\Support;
 /**
  * 数字工具类
  */
-final class Number {
+final class Number
+{
 
 	/**
 	 * 保留小数点两位
 	 *
 	 * @param float $n 要格式化的浮点数
-	 * @param int   $y 要保留的小说点位数
+	 * @param int $y 要保留的小说点位数
 	 * @return float
 	 */
-	public static function formatFloat($n, $y = 2) { // 保留小数点两位
+	public static function formatFloat($n, $y = 2)
+	{ // 保留小数点两位
 		$str = "%." . ($y * 2) . "f";
 
 		return floatval(substr(sprintf($str, $n), 0, -2));
@@ -30,22 +32,24 @@ final class Number {
 	 * 保留小数点两位
 	 *
 	 * @param float $n 要格式化的浮点数
-	 * @param int   $y 要保留的小说点位数
+	 * @param int $y 要保留的小说点位数
 	 * @return float
 	 */
-	public static function formatFloat2($n, $y = 2) {
+	public static function formatFloat2($n, $y = 2)
+	{
 		return round($n, $y, PHP_ROUND_HALF_DOWN);
 	}
 
 	/**
 	 * 格式化字节大小
 	 *
-	 * @param int    $size 字节数
+	 * @param int $size 字节数
 	 * @param string $delimiter 数字和单位分隔符
 	 * @return string            格式化后的带单位的大小
 	 * @author 麦当苗儿 <zuojiazi@vip.qq.com>
 	 */
-	public static function formatBytes($size, $delimiter = '') {
+	public static function formatBytes($size, $delimiter = '')
+	{
 		$units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
 		for ($i = 0; $size >= 1024 && $i < 5; $i++) $size /= 1024;
 
@@ -58,7 +62,8 @@ final class Number {
 	 * @param int $num
 	 * @return string
 	 */
-	public static function formatSimple($num) {
+	public static function formatSimple($num)
+	{
 		if ($num < 1000) {
 			return $num;
 		}
@@ -81,11 +86,12 @@ final class Number {
 	 * @param float $latitude1 起点纬度
 	 * @param float $longitude2 终点经度
 	 * @param float $latitude2 终点纬度
-	 * @param int   $unit 单位 1:米 2:公里
-	 * @param int   $decimal 精度 保留小数位数
+	 * @param int $unit 单位 1:米 2:公里
+	 * @param int $decimal 精度 保留小数位数
 	 * @return float
 	 */
-	public static function calcDistance($longitude1, $latitude1, $longitude2, $latitude2, $unit = 2, $decimal = 2) {
+	public static function calcDistance($longitude1, $latitude1, $longitude2, $latitude2, $unit = 2, $decimal = 2)
+	{
 		$EARTH_RADIUS = 6370.996; // 地球半径系数
 		$PI = 3.1415926;
 

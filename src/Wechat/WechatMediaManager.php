@@ -12,7 +12,8 @@ use Xin\Capsule\WithCache;
 use Xin\Contracts\Wechat\Factory as WechatFactory;
 use Xin\Support\File;
 
-class WechatMediaManager {
+class WechatMediaManager
+{
 
 	use WithCache;
 
@@ -28,9 +29,10 @@ class WechatMediaManager {
 
 	/**
 	 * @param \Xin\Contracts\Wechat\Factory $factory
-	 * @param CacheInterface|null           $cache
+	 * @param CacheInterface|null $cache
 	 */
-	public function __construct(WechatFactory $factory, CacheInterface $cache = null) {
+	public function __construct(WechatFactory $factory, CacheInterface $cache = null)
+	{
 		$this->factory = $factory;
 		$this->cache = $cache;
 	}
@@ -42,7 +44,8 @@ class WechatMediaManager {
 	 * @param string $fileUrl
 	 * @return string
 	 */
-	public function miniProgram($type, $fileUrl) {
+	public function miniProgram($type, $fileUrl)
+	{
 		$config = $this->factory->getConfig('mini_program');
 
 		return $this->getMediaInfo($config['app_id'], $type, $fileUrl, function () use ($type, $fileUrl) {
@@ -74,22 +77,24 @@ class WechatMediaManager {
 	 * @param string $imgUrl
 	 * @return string
 	 */
-	public function miniProgramImage($imgUrl) {
+	public function miniProgramImage($imgUrl)
+	{
 		return $this->miniProgram('image', $imgUrl);
 	}
 
 	/**
 	 * 获取素材信息
 	 *
-	 * @param string   $appId
-	 * @param string   $type
-	 * @param string   $fileUrl
+	 * @param string $appId
+	 * @param string $type
+	 * @param string $fileUrl
 	 * @param callable $make
 	 * @return string
 	 * @noinspection PhpDocMissingThrowsInspection
 	 * @noinspection PhpUnhandledExceptionInspection
 	 */
-	protected function getMediaInfo($appId, $type, $fileUrl, callable $make) {
+	protected function getMediaInfo($appId, $type, $fileUrl, callable $make)
+	{
 		$cacheKey = $this->getCacheKey("{$appId}:{$type}:" . md5($fileUrl));
 
 		$mediaIdInfo = $this->cache()->get($cacheKey);
@@ -127,7 +132,8 @@ class WechatMediaManager {
 	 * @param string $name
 	 * @return string
 	 */
-	protected function getCacheKey($name) {
+	protected function getCacheKey($name)
+	{
 		return $this->prefix . $name;
 	}
 
@@ -135,10 +141,11 @@ class WechatMediaManager {
 	 * 创建实例
 	 *
 	 * @param \Xin\Contracts\Wechat\Factory $factory
-	 * @param CacheInterface|null           $cache
+	 * @param CacheInterface|null $cache
 	 * @return static
 	 */
-	public static function of(WechatFactory $factory, CacheInterface $cache = null) {
+	public static function of(WechatFactory $factory, CacheInterface $cache = null)
+	{
 		return new static($factory, $cache);
 	}
 

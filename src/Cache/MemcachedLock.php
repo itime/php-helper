@@ -7,7 +7,8 @@
 
 namespace Xin\Cache;
 
-class MemcachedLock extends AbstractLock {
+class MemcachedLock extends AbstractLock
+{
 
 	/**
 	 * The Memcached instance.
@@ -19,13 +20,14 @@ class MemcachedLock extends AbstractLock {
 	/**
 	 * Create a new lock instance.
 	 *
-	 * @param \Memcached  $memcached
-	 * @param string      $name
-	 * @param int         $seconds
+	 * @param \Memcached $memcached
+	 * @param string $name
+	 * @param int $seconds
 	 * @param string|null $owner
 	 * @return void
 	 */
-	public function __construct($memcached, $name, $seconds, $owner = null) {
+	public function __construct($memcached, $name, $seconds, $owner = null)
+	{
 		parent::__construct($name, $seconds, $owner);
 
 		$this->memcached = $memcached;
@@ -36,7 +38,8 @@ class MemcachedLock extends AbstractLock {
 	 *
 	 * @return bool
 	 */
-	public function acquire() {
+	public function acquire()
+	{
 		return $this->memcached->add(
 			$this->name, $this->owner, $this->seconds
 		);
@@ -47,7 +50,8 @@ class MemcachedLock extends AbstractLock {
 	 *
 	 * @return void
 	 */
-	public function release() {
+	public function release()
+	{
 		if ($this->isOwnedByCurrentProcess()) {
 			$this->memcached->delete($this->name);
 		}
@@ -58,7 +62,8 @@ class MemcachedLock extends AbstractLock {
 	 *
 	 * @return void
 	 */
-	public function forceRelease() {
+	public function forceRelease()
+	{
 		$this->memcached->delete($this->name);
 	}
 
@@ -67,7 +72,8 @@ class MemcachedLock extends AbstractLock {
 	 *
 	 * @return mixed
 	 */
-	protected function getCurrentOwner() {
+	protected function getCurrentOwner()
+	{
 		return $this->memcached->get($this->name);
 	}
 

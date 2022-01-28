@@ -14,21 +14,24 @@ use Xin\Thinkphp\Notification\Message\WxTemplateMessage;
 use yunwuxin\Notification;
 use yunwuxin\notification\Channel;
 
-class Official extends Channel {
+class Official extends Channel
+{
 
 	/**
 	 * @var \think\App
 	 */
 	protected $app;
 
-	public function __construct(App $app) {
+	public function __construct(App $app)
+	{
 		$this->app = $app;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function send($notifiable, Notification $notification) {
+	public function send($notifiable, Notification $notification)
+	{
 		$message = $this->getMessage($notifiable, $notification);
 
 		if (!$message instanceof WxTemplateMessage) {
@@ -46,7 +49,8 @@ class Official extends Channel {
 	 *
 	 * @return \EasyWeChat\OfficialAccount\Application
 	 */
-	protected function official(Notification $notification) {
+	protected function official(Notification $notification)
+	{
 		/** @var \Xin\Contracts\Foundation\Wechat $ws */
 		$ws = $this->app['wechat'];
 

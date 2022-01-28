@@ -13,7 +13,8 @@ use Ramsey\Uuid\Uuid;
 /**
  * 字符串工具类
  */
-final class Str {
+final class Str
+{
 
 	/**
 	 * 驼峰转下划线缓存
@@ -39,11 +40,12 @@ final class Str {
 	/**
 	 * 检查字符串中是否包含某些字符串
 	 *
-	 * @param string       $haystack
+	 * @param string $haystack
 	 * @param string|array $needles
 	 * @return bool
 	 */
-	public static function contains($haystack, $needles) {
+	public static function contains($haystack, $needles)
+	{
 		foreach ((array)$needles as $needle) {
 			if ($needle != '' && mb_strpos($haystack, $needle) !== false) {
 				return true;
@@ -56,11 +58,12 @@ final class Str {
 	/**
 	 * 检查字符串是否以某些字符串结尾
 	 *
-	 * @param string       $haystack
+	 * @param string $haystack
 	 * @param string|array $needles
 	 * @return bool
 	 */
-	public static function endsWith($haystack, $needles) {
+	public static function endsWith($haystack, $needles)
+	{
 		foreach ((array)$needles as $needle) {
 			if ((string)$needle === static::substr($haystack, -static::length($needle))) {
 				return true;
@@ -73,11 +76,12 @@ final class Str {
 	/**
 	 * 检查字符串是否以某些字符串开头
 	 *
-	 * @param string       $haystack
+	 * @param string $haystack
 	 * @param string|array $needles
 	 * @return bool
 	 */
-	public static function startsWith($haystack, $needles) {
+	public static function startsWith($haystack, $needles)
+	{
 		foreach ((array)$needles as $needle) {
 			if ('' != $needle && mb_strpos($haystack, $needle) === 0) {
 				return true;
@@ -91,13 +95,14 @@ final class Str {
 	 * 字符串截取，支持中文和其他编码
 	 *
 	 * @param string $value 验证的值
-	 * @param int    $start 开始位置
-	 * @param int    $length 截取长度
+	 * @param int $start 开始位置
+	 * @param int $length 截取长度
 	 * @param string $charset 字符编码
 	 * @return string
 	 * @deprecated
 	 */
-	public static function subString($value, $start = 0, $length = null, $charset = null) {
+	public static function subString($value, $start = 0, $length = null, $charset = null)
+	{
 		if (function_exists("mb_substr")) {
 			$slice = mb_substr($value, $start, $length, $charset);
 		} elseif (function_exists('iconv_substr')) {
@@ -125,7 +130,8 @@ final class Str {
 	 * @param string $value
 	 * @return string
 	 */
-	public static function lower($value) {
+	public static function lower($value)
+	{
 		return mb_strtolower($value, 'UTF-8');
 	}
 
@@ -135,7 +141,8 @@ final class Str {
 	 * @param string $value
 	 * @return string
 	 */
-	public static function upper($value) {
+	public static function upper($value)
+	{
 		return mb_strtoupper($value, 'UTF-8');
 	}
 
@@ -145,7 +152,8 @@ final class Str {
 	 * @param string $value
 	 * @return int
 	 */
-	public static function length($value) {
+	public static function length($value)
+	{
 		return mb_strlen($value);
 	}
 
@@ -154,10 +162,11 @@ final class Str {
 	 *
 	 * @param string $value
 	 * @param string $delimiter
-	 * @param bool   $isCache
+	 * @param bool $isCache
 	 * @return string
 	 */
-	public static function snake($value, $delimiter = '_', $isCache = true) {
+	public static function snake($value, $delimiter = '_', $isCache = true)
+	{
 		$key = $value;
 
 		if (isset(self::$snakeCache[$key][$delimiter])) {
@@ -176,7 +185,8 @@ final class Str {
 	/**
 	 * 清除驼峰转下划线缓存
 	 */
-	public static function clearSnakeCache() {
+	public static function clearSnakeCache()
+	{
 		self::$snakeCache = [];
 	}
 
@@ -184,10 +194,11 @@ final class Str {
 	 * 下划线转驼峰(首字母小写)
 	 *
 	 * @param string $value
-	 * @param bool   $isCache
+	 * @param bool $isCache
 	 * @return string
 	 */
-	public static function camel($value, $isCache = true) {
+	public static function camel($value, $isCache = true)
+	{
 		if (isset(self::$camelCache[$value])) {
 			return self::$camelCache[$value];
 		}
@@ -200,7 +211,8 @@ final class Str {
 	/**
 	 * 清除下划线转驼峰(首字母小写)缓存
 	 */
-	public static function clearCamelCache() {
+	public static function clearCamelCache()
+	{
 		self::$snakeCache = [];
 	}
 
@@ -208,10 +220,11 @@ final class Str {
 	 * 下划线转驼峰(首字母大写)
 	 *
 	 * @param string $value
-	 * @param bool   $isCache
+	 * @param bool $isCache
 	 * @return string
 	 */
-	public static function studly($value, $isCache = true) {
+	public static function studly($value, $isCache = true)
+	{
 		$key = $value;
 
 		if (isset(self::$studlyCache[$key])) {
@@ -227,7 +240,8 @@ final class Str {
 	/**
 	 * 清除下划线转驼峰(首字母大写)缓存
 	 */
-	public static function clearStudlyCache() {
+	public static function clearStudlyCache()
+	{
 		self::$snakeCache = [];
 	}
 
@@ -237,7 +251,8 @@ final class Str {
 	 * @param string $value
 	 * @return string
 	 */
-	public static function title($value) {
+	public static function title($value)
+	{
 		return mb_convert_case($value, MB_CASE_TITLE, 'UTF-8');
 	}
 
@@ -245,10 +260,11 @@ final class Str {
 	 * Get the plural form of an English word.
 	 *
 	 * @param string $value
-	 * @param int    $count
+	 * @param int $count
 	 * @return string
 	 */
-	public static function plural($value, $count = 2) {
+	public static function plural($value, $count = 2)
+	{
 		return Pluralizer::plural($value, $count);
 	}
 
@@ -256,10 +272,11 @@ final class Str {
 	 * Pluralize the last word of an English, studly caps case string.
 	 *
 	 * @param string $value
-	 * @param int    $count
+	 * @param int $count
 	 * @return string
 	 */
-	public static function pluralStudly($value, $count = 2) {
+	public static function pluralStudly($value, $count = 2)
+	{
 		$parts = preg_split('/(.)(?=[A-Z])/u', $value, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 		$lastWord = array_pop($parts);
@@ -275,7 +292,8 @@ final class Str {
 	 * @param string $_input_charset 输入的字符编码
 	 * @return string
 	 */
-	public static function charsetEncode($input, $_output_charset, $_input_charset) {
+	public static function charsetEncode($input, $_output_charset, $_input_charset)
+	{
 		if (!isset ($_output_charset))
 			$_output_charset = $_input_charset;
 		if ($_input_charset == $_output_charset || $input == null) {
@@ -299,7 +317,8 @@ final class Str {
 	 * @param string $_output_charset 输出的字符编码
 	 * @return string
 	 */
-	public static function charsetDecode($input, $_input_charset, $_output_charset) {
+	public static function charsetDecode($input, $_input_charset, $_output_charset)
+	{
 		if ($_input_charset == $_output_charset || $input == null) {
 			$output = $input;
 		} elseif (function_exists("mb_convert_encoding")) {
@@ -320,7 +339,8 @@ final class Str {
 	 * @param int $type
 	 * @return string
 	 */
-	public static function random($length = 16, $type = 5) {
+	public static function random($length = 16, $type = 5)
+	{
 		$pool = [
 			0 => '0123456789',
 			1 => 'abcdefghijklmnopqrstuvwxyz',
@@ -341,12 +361,13 @@ final class Str {
 	/**
 	 * 截取字符串
 	 *
-	 * @param string   $string
-	 * @param int      $start
+	 * @param string $string
+	 * @param int $start
 	 * @param int|null $length
 	 * @return string
 	 */
-	public static function substr($string, $start, $length = null) {
+	public static function substr($string, $start, $length = null)
+	{
 		return mb_substr($string, $start, $length, 'UTF-8');
 	}
 
@@ -356,7 +377,8 @@ final class Str {
 	 * @return \Ramsey\Uuid\UuidInterface
 	 * @noinspection PhpDocMissingThrowsInspection
 	 */
-	public static function uuid() {
+	public static function uuid()
+	{
 		return Uuid::uuid4();
 	}
 
@@ -366,7 +388,8 @@ final class Str {
 	 * @param string $factor
 	 * @return string
 	 */
-	public static function nonceHash32($factor = '') {
+	public static function nonceHash32($factor = '')
+	{
 		return md5(uniqid(md5(microtime(true) . $factor), true));
 	}
 
@@ -376,7 +399,8 @@ final class Str {
 	 * @param string $prefix
 	 * @return string
 	 */
-	public static function makeOrderSn($prefix = '') { // 取出订单编号
+	public static function makeOrderSn($prefix = '')
+	{ // 取出订单编号
 		$datetime = date('YmdHis');
 		$microtime = explode(' ', microtime());
 		$microtime = intval($microtime[0] ? $microtime[0] * 100000 : 100000);
@@ -395,7 +419,8 @@ final class Str {
 	 * @param string $url url地址或URL query参数
 	 * @return array
 	 */
-	public static function parseUrlQuery($url) {
+	public static function parseUrlQuery($url)
+	{
 		$index = strpos($url, "?");
 		$url = $index === false ? $url : substr($url, $index);
 		parse_str($url, $result);
@@ -436,7 +461,8 @@ final class Str {
 	 * @param string $currentQuery
 	 * @return bool
 	 */
-	public static function matchUrl($checkUrl, $currentPath, $currentQuery = []) {
+	public static function matchUrl($checkUrl, $currentPath, $currentQuery = [])
+	{
 		$checkUrl = explode("?", $checkUrl, 2);
 		$checkPath = $checkUrl[0];
 
@@ -463,11 +489,12 @@ final class Str {
 	/**
 	 * 把数组所有元素按照“参数=参数值”的模式用“&”字符拼接成字符串
 	 *
-	 * @param array    $params 关联数组
+	 * @param array $params 关联数组
 	 * @param callable $valueHandler 值处理函数
 	 * @return string
 	 */
-	public static function buildUrlQuery($params, $valueHandler = null) {
+	public static function buildUrlQuery($params, $valueHandler = null)
+	{
 		if (!is_callable($valueHandler)) {
 			$valueHandler = function ($key, $val) {
 				$type = gettype($val);
@@ -498,13 +525,14 @@ final class Str {
 	/**
 	 * 安全处理-字符串或数组转数组
 	 *
-	 * @param mixed         $value
-	 * @param string        $format
-	 * @param string        $delimiter
+	 * @param mixed $value
+	 * @param string $format
+	 * @param string $delimiter
 	 * @param bool|\Closure $filter
 	 * @return array
 	 */
-	public static function explode($value, $format = 'intval', $delimiter = ',', $filter = true) {
+	public static function explode($value, $format = 'intval', $delimiter = ',', $filter = true)
+	{
 		if (!is_array($value)) {
 			$value = is_string($value) ? explode($delimiter, $value) : [$value];
 		}
@@ -525,12 +553,13 @@ final class Str {
 	/**
 	 * 安全处理-数组转字符串
 	 *
-	 * @param mixed  $value
+	 * @param mixed $value
 	 * @param string $format
 	 * @param string $delimiter
 	 * @return string
 	 */
-	public static function implode($value, $format = 'intval', $delimiter = ',') {
+	public static function implode($value, $format = 'intval', $delimiter = ',')
+	{
 		//先转换为数组，进行安全过滤
 		$value = self::explode($value, $format, $delimiter);
 
@@ -545,10 +574,11 @@ final class Str {
 	 * Determine if a given string matches a given pattern.
 	 *
 	 * @param string|array $pattern
-	 * @param string       $value
+	 * @param string $value
 	 * @return bool
 	 */
-	public static function is($pattern, $value) {
+	public static function is($pattern, $value)
+	{
 		$patterns = Arr::wrap($pattern);
 
 		if (empty($patterns)) {
@@ -585,7 +615,8 @@ final class Str {
 	 * @param string $search
 	 * @return string
 	 */
-	public static function after($subject, $search) {
+	public static function after($subject, $search)
+	{
 		return $search === '' ? $subject : array_reverse(explode($search, $subject, 2))[0];
 	}
 
@@ -596,7 +627,8 @@ final class Str {
 	 * @param string $search
 	 * @return string
 	 */
-	public static function afterLast($subject, $search) {
+	public static function afterLast($subject, $search)
+	{
 		if ($search === '') {
 			return $subject;
 		}
@@ -617,7 +649,8 @@ final class Str {
 	 * @param string $search
 	 * @return string
 	 */
-	public static function before($subject, $search) {
+	public static function before($subject, $search)
+	{
 		return $search === '' ? $subject : explode($search, $subject)[0];
 	}
 
@@ -628,7 +661,8 @@ final class Str {
 	 * @param string $search
 	 * @return string
 	 */
-	public static function beforeLast($subject, $search) {
+	public static function beforeLast($subject, $search)
+	{
 		if ($search === '') {
 			return $subject;
 		}
@@ -648,7 +682,8 @@ final class Str {
 	 * @param string $str
 	 * @return string
 	 */
-	public static function rejectEmoji($str) {
+	public static function rejectEmoji($str)
+	{
 		return preg_replace_callback('/./u', function (array $match) {
 			return strlen($match[0]) >= 4 ? '' : $match[0];
 		}, $str);

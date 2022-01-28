@@ -11,7 +11,8 @@ use think\App;
 use think\exception\HttpException;
 use think\Request;
 
-class CheckForSafeVisit {
+class CheckForSafeVisit
+{
 
 	use InteractsExcept;
 
@@ -35,7 +36,8 @@ class CheckForSafeVisit {
 	 *
 	 * @param \think\App $app
 	 */
-	public function __construct(App $app) {
+	public function __construct(App $app)
+	{
 		$this->app = $app;
 		$this->config = $app['config'];
 	}
@@ -44,11 +46,12 @@ class CheckForSafeVisit {
 	 * 检查站点是否允许访问
 	 *
 	 * @param \think\Request $request
-	 * @param \Closure       $next
+	 * @param \Closure $next
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	public function handle(Request $request, \Closure $next) {
+	public function handle(Request $request, \Closure $next)
+	{
 		$safeKey = $this->localSafeKey($request);
 
 		if ($safeKey == $request->pathinfo()) {
@@ -73,7 +76,8 @@ class CheckForSafeVisit {
 	 * @param \think\Request $request
 	 * @return string
 	 */
-	protected function localSafeKey(Request $request) {
+	protected function localSafeKey(Request $request)
+	{
 		return $this->config->get('app.safe_key');
 	}
 
@@ -83,7 +87,8 @@ class CheckForSafeVisit {
 	 * @param \think\Request $request
 	 * @return string
 	 */
-	protected function clientSafeKey(Request $request) {
+	protected function clientSafeKey(Request $request)
+	{
 		return $request->cookie($this->cookieSafeKeyName());
 	}
 
@@ -92,7 +97,8 @@ class CheckForSafeVisit {
 	 *
 	 * @return string
 	 */
-	protected function cookieSafeKeyName() {
+	protected function cookieSafeKeyName()
+	{
 		return '__safe_key__';
 	}
 

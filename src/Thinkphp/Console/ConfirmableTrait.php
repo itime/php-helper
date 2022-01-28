@@ -12,17 +12,19 @@ namespace Xin\Thinkphp\Console;
  *
  * @mixin \think\console\Command
  */
-trait ConfirmableTrait {
+trait ConfirmableTrait
+{
 
 	/**
 	 * Confirm before proceeding with the action.
 	 * This method only asks for confirmation in production.
 	 *
-	 * @param string             $warning
+	 * @param string $warning
 	 * @param \Closure|bool|null $callback
 	 * @return bool
 	 */
-	public function confirmToProceed($warning = 'Application In Production!', $callback = null) {
+	public function confirmToProceed($warning = 'Application In Production!', $callback = null)
+	{
 		$callback = is_null($callback) ? $this->getDefaultConfirmCallback() : $callback;
 
 		$shouldConfirm = value($callback);
@@ -51,7 +53,8 @@ trait ConfirmableTrait {
 	 *
 	 * @return \Closure
 	 */
-	protected function getDefaultConfirmCallback() {
+	protected function getDefaultConfirmCallback()
+	{
 		return function () {
 			return $this->getApp()->config->get('app.env') === 'production';
 		};

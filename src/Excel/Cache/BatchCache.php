@@ -4,7 +4,8 @@ namespace Xin\Excel\Cache;
 
 use Psr\SimpleCache\CacheInterface;
 
-class BatchCache implements CacheInterface {
+class BatchCache implements CacheInterface
+{
 
 	/**
 	 * @var CacheInterface
@@ -18,9 +19,10 @@ class BatchCache implements CacheInterface {
 
 	/**
 	 * @param CacheInterface $cache
-	 * @param MemoryCache    $memory
+	 * @param MemoryCache $memory
 	 */
-	public function __construct(CacheInterface $cache, MemoryCache $memory) {
+	public function __construct(CacheInterface $cache, MemoryCache $memory)
+	{
 		$this->cache = $cache;
 		$this->memory = $memory;
 	}
@@ -28,7 +30,8 @@ class BatchCache implements CacheInterface {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function get($key, $default = null) {
+	public function get($key, $default = null)
+	{
 		if ($this->memory->has($key)) {
 			return $this->memory->get($key);
 		}
@@ -39,7 +42,8 @@ class BatchCache implements CacheInterface {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function set($key, $value, $ttl = null) {
+	public function set($key, $value, $ttl = null)
+	{
 		$this->memory->set($key, $value, $ttl);
 
 		if ($this->memory->reachedMemoryLimit()) {
@@ -52,7 +56,8 @@ class BatchCache implements CacheInterface {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function delete($key) {
+	public function delete($key)
+	{
 		if ($this->memory->has($key)) {
 			return $this->memory->delete($key);
 		}
@@ -63,7 +68,8 @@ class BatchCache implements CacheInterface {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function clear() {
+	public function clear()
+	{
 		$this->memory->clear();
 
 		return $this->cache->clear();
@@ -72,7 +78,8 @@ class BatchCache implements CacheInterface {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getMultiple($keys, $default = null) {
+	public function getMultiple($keys, $default = null)
+	{
 		// Check if all keys are still in memory
 		$memory = $this->memory->getMultiple($keys, $default);
 		$actualItemsInMemory = count(array_filter($memory));
@@ -99,7 +106,8 @@ class BatchCache implements CacheInterface {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function setMultiple($values, $ttl = null) {
+	public function setMultiple($values, $ttl = null)
+	{
 		$this->memory->setMultiple($values, $ttl);
 
 		if ($this->memory->reachedMemoryLimit()) {
@@ -112,7 +120,8 @@ class BatchCache implements CacheInterface {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function deleteMultiple($keys) {
+	public function deleteMultiple($keys)
+	{
 		$keys = is_array($keys) ? $keys : iterator_to_array($keys);
 
 		$this->memory->deleteMultiple($keys);
@@ -123,7 +132,8 @@ class BatchCache implements CacheInterface {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function has($key) {
+	public function has($key)
+	{
 		if ($this->memory->has($key)) {
 			return true;
 		}

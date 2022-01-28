@@ -14,12 +14,14 @@ use Xin\Thinkphp\Foundation\ServiceProvider;
 /**
  * Class RobotServiceProvider
  */
-class RobotServiceProvider extends ServiceProvider {
+class RobotServiceProvider extends ServiceProvider
+{
 
 	/**
 	 * @inheritDoc
 	 */
-	public function register() {
+	public function register()
+	{
 		$this->registerManager();
 	}
 
@@ -27,7 +29,8 @@ class RobotServiceProvider extends ServiceProvider {
 	 * 注册提示管理器
 	 * @return void
 	 */
-	protected function registerManager() {
+	protected function registerManager()
+	{
 		$this->app->bind([
 			'robot' => RobotFactory::class,
 			RobotFactory::class => RobotManager::class,

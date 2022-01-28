@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Hint;
 
-interface Factory {
+interface Factory
+{
 
 	/**
 	 * 使用 Api 提示器

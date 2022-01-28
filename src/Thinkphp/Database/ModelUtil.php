@@ -10,15 +10,17 @@ namespace Xin\Thinkphp\Database;
 use think\Collection;
 use think\Model;
 
-class ModelUtil {
+class ModelUtil
+{
 
 	/**
 	 * 取出Pivot数据
 	 * @param Collection $result
-	 * @param callable   $eachCallback
+	 * @param callable $eachCallback
 	 * @return Collection
 	 */
-	public static function carryPivots(Collection $result, callable $eachCallback) {
+	public static function carryPivots(Collection $result, callable $eachCallback)
+	{
 		return $result->each(function (Model $model) use ($eachCallback) {
 			call_user_func($eachCallback, static::carryPivot($model), $model);
 		});
@@ -29,7 +31,8 @@ class ModelUtil {
 	 * @param Model $model
 	 * @return array
 	 */
-	public static function carryPivot(Model $model) {
+	public static function carryPivot(Model $model)
+	{
 		$pivot = [];
 
 		foreach ($model->getData() as $key => $val) {

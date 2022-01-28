@@ -4,12 +4,14 @@ namespace Xin\Limiter;
 
 use App\Support\GeoUtil;
 
-class LocationLimiter extends AbstractLimiter {
+class LocationLimiter extends AbstractLimiter
+{
 
 	/**
 	 * @inheritDoc
 	 */
-	protected function check($data) {
+	protected function check($data)
+	{
 		if (!isset($data['lng']) || !isset($data['lat'])) {
 			throw new \LogicException('location fail');
 		}

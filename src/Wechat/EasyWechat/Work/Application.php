@@ -10,11 +10,13 @@ use Xin\Wechat\EasyWechat\Work\User\ServiceProvider as UserServiceProvider;
 /**
  * Application.
  * @property  \Xin\Wechat\EasyWechat\Work\User\Client $user
- * @property \Xin\Wechat\EasyWechat\Work\Corp\Client  $corp
+ * @property \Xin\Wechat\EasyWechat\Work\Corp\Client $corp
  */
-class Application extends BaseApplication {
+class Application extends BaseApplication
+{
 
-	public function __construct(array $config = [], array $prepends = [], string $id = null) {
+	public function __construct(array $config = [], array $prepends = [], string $id = null)
+	{
 		$this->providers[] = CorpServiceProvider::class;
 		$this->providers[] = ExternalContactServiceProvider::class;
 		$this->providers[] = UserServiceProvider::class;

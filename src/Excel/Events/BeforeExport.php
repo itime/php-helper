@@ -4,7 +4,8 @@ namespace Xin\Excel\Events;
 
 use Xin\Excel\Writer;
 
-class BeforeExport extends Event {
+class BeforeExport extends Event
+{
 
 	/**
 	 * @var Writer
@@ -20,7 +21,8 @@ class BeforeExport extends Event {
 	 * @param Writer $writer
 	 * @param object $exportable
 	 */
-	public function __construct(Writer $writer, $exportable) {
+	public function __construct(Writer $writer, $exportable)
+	{
 		$this->writer = $writer;
 		$this->exportable = $exportable;
 	}
@@ -28,21 +30,24 @@ class BeforeExport extends Event {
 	/**
 	 * @return Writer
 	 */
-	public function getWriter(): Writer {
+	public function getWriter(): Writer
+	{
 		return $this->writer;
 	}
 
 	/**
 	 * @return object
 	 */
-	public function getConcernable() {
+	public function getConcernable()
+	{
 		return $this->exportable;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getDelegate() {
+	public function getDelegate()
+	{
 		return $this->writer;
 	}
 

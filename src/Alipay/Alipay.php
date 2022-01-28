@@ -10,7 +10,8 @@ namespace Xin\Alipay;
 /**
  * 支付宝服务
  */
-class Alipay {
+class Alipay
+{
 
 	//正式模式
 	const GATEWAY_URL = "https://openapi.alipay.com/gateway.do";
@@ -38,7 +39,8 @@ class Alipay {
 	 *
 	 * @param array $options
 	 */
-	public function __construct(array $options = []) {
+	public function __construct(array $options = [])
+	{
 		$this->isDebug = isset($options['debug']) ? $options['debug'] : false;
 		$this->aseKey = isset($options['aes_key']) ? $options['aes_key'] : '';
 
@@ -53,11 +55,12 @@ class Alipay {
 	 *
 	 * @param string $sdkPath
 	 * @param string $storeDir
-	 * @param bool   $debug
+	 * @param bool $debug
 	 * @noinspection PhpIncludeInspection
 	 * @noinspection PhpUndefinedClassInspection
 	 */
-	public static function initFramework($sdkPath, $storeDir = null, $debug = false) {
+	public static function initFramework($sdkPath, $storeDir = null, $debug = false)
+	{
 		//		$sdkPath = $this->app->getRootPath().'alipay-sdk'.DIRECTORY_SEPARATOR;
 		//		$defaultStoreDir = $this->app->getRuntimePath()."alipay".DIRECTORY_SEPARATOR;
 		$lotusPath = $sdkPath . 'lotusphp_runtime' . DIRECTORY_SEPARATOR;
@@ -78,7 +81,8 @@ class Alipay {
 	 * @param array $options
 	 * @noinspection PhpUndefinedClassInspection
 	 */
-	private function initAopClient(array $options) {
+	private function initAopClient(array $options)
+	{
 		if (!class_exists('\AopClient')) {
 			throw new \RuntimeException('Class AopClient not found!');
 		}
@@ -106,13 +110,14 @@ class Alipay {
 	/**
 	 * 执行请求
 	 *
-	 * @param mixed  $request
+	 * @param mixed $request
 	 * @param string $authToken
 	 * @param string $appInfoToken
 	 * @return array
 	 * @throws AlipayException
 	 */
-	public function execute($request, $authToken = null, $appInfoToken = null) {
+	public function execute($request, $authToken = null, $appInfoToken = null)
+	{
 		try {
 			$response = $this->aop->execute($request, $authToken, $appInfoToken);
 		} catch (\Exception $e) {
@@ -153,7 +158,8 @@ class Alipay {
 	 * @return string
 	 * @throws AlipayException
 	 */
-	public function decrypt($data) {
+	public function decrypt($data)
+	{
 		//AES, 128 模式加密数据 CBC
 		$data = base64_decode($data);
 		$screct_key = base64_decode($this->aseKey);
@@ -176,7 +182,8 @@ class Alipay {
 	 * @return string
 	 * @throws AlipayException
 	 */
-	public function rsaEncrypt($data) {
+	public function rsaEncrypt($data)
+	{
 		//AES, 128 模式加密数据 CBC
 		$screct_key = base64_decode($this->aseKey);
 		$data = trim($data);
@@ -200,7 +207,8 @@ class Alipay {
 	 * @param string $source
 	 * @return string
 	 */
-	private static function addPKCS7Padding($source) {
+	private static function addPKCS7Padding($source)
+	{
 		$source = trim($source);
 		$block = openssl_cipher_iv_length('AES-128-CBC');
 

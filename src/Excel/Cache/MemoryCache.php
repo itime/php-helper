@@ -4,7 +4,8 @@ namespace Xin\Excel\Cache;
 
 use Psr\SimpleCache\CacheInterface;
 
-class MemoryCache implements CacheInterface {
+class MemoryCache implements CacheInterface
+{
 
 	/**
 	 * @var int|null
@@ -19,14 +20,16 @@ class MemoryCache implements CacheInterface {
 	/**
 	 * @param int|null $memoryLimit
 	 */
-	public function __construct(int $memoryLimit = null) {
+	public function __construct(int $memoryLimit = null)
+	{
 		$this->memoryLimit = $memoryLimit;
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function clear() {
+	public function clear()
+	{
 		$this->cache = [];
 
 		return true;
@@ -35,7 +38,8 @@ class MemoryCache implements CacheInterface {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function delete($key) {
+	public function delete($key)
+	{
 		unset($this->cache[$key]);
 
 		return true;
@@ -44,7 +48,8 @@ class MemoryCache implements CacheInterface {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function deleteMultiple($keys) {
+	public function deleteMultiple($keys)
+	{
 		foreach ($keys as $key) {
 			$this->delete($key);
 		}
@@ -55,7 +60,8 @@ class MemoryCache implements CacheInterface {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function get($key, $default = null) {
+	public function get($key, $default = null)
+	{
 		if ($this->has($key)) {
 			return $this->cache[$key];
 		}
@@ -66,7 +72,8 @@ class MemoryCache implements CacheInterface {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getMultiple($keys, $default = null) {
+	public function getMultiple($keys, $default = null)
+	{
 		$results = [];
 		foreach ($keys as $key) {
 			$results[$key] = $this->get($key, $default);
@@ -78,14 +85,16 @@ class MemoryCache implements CacheInterface {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function has($key) {
+	public function has($key)
+	{
 		return isset($this->cache[$key]);
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function set($key, $value, $ttl = null) {
+	public function set($key, $value, $ttl = null)
+	{
 		$this->cache[$key] = $value;
 
 		return true;
@@ -94,7 +103,8 @@ class MemoryCache implements CacheInterface {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function setMultiple($values, $ttl = null) {
+	public function setMultiple($values, $ttl = null)
+	{
 		foreach ($values as $key => $value) {
 			$this->set($key, $value);
 		}
@@ -105,7 +115,8 @@ class MemoryCache implements CacheInterface {
 	/**
 	 * @return bool
 	 */
-	public function reachedMemoryLimit(): bool {
+	public function reachedMemoryLimit(): bool
+	{
 		// When no limit is given, we'll never reach any limit.
 		if (null === $this->memoryLimit) {
 			return false;
@@ -117,7 +128,8 @@ class MemoryCache implements CacheInterface {
 	/**
 	 * @return array
 	 */
-	public function flush(): array {
+	public function flush(): array
+	{
 		$memory = $this->cache;
 
 		$this->clear();

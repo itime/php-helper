@@ -10,7 +10,8 @@ namespace Xin\Contracts\Auth;
 /**
  * Interface UserProvider
  */
-interface UserProvider {
+interface UserProvider
+{
 
 	/**
 	 * 根据唯一ID取用户
@@ -31,7 +32,7 @@ interface UserProvider {
 	/**
 	 * 验证密码是否正确
 	 *
-	 * @param mixed  $user
+	 * @param mixed $user
 	 * @param string $password
 	 * @return boolean
 	 */

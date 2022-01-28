@@ -12,7 +12,8 @@ namespace Xin\Thinkphp\Foundation\Model;
  * @deprecated
  * @see \Xin\Foundation\ClassMapManager
  */
-class Morph {
+class Morph
+{
 
 	/**
 	 * 多态关联类型
@@ -26,7 +27,8 @@ class Morph {
 	 *
 	 * @return array
 	 */
-	public static function getTypeList() {
+	public static function getTypeList()
+	{
 		return self::$morphList;
 	}
 
@@ -36,7 +38,8 @@ class Morph {
 	 * @param string $type
 	 * @param string $modelClass
 	 */
-	public static function bindType($type, $modelClass) {
+	public static function bindType($type, $modelClass)
+	{
 		if (static::hasType($type)) {
 			throw new \LogicException("morph type {$type} duplicate defined.");
 		}
@@ -50,7 +53,8 @@ class Morph {
 	 * @param string $type
 	 * @return bool
 	 */
-	public static function hasType($type) {
+	public static function hasType($type)
+	{
 		return isset(self::$morphList[$type]);
 	}
 
@@ -60,7 +64,8 @@ class Morph {
 	 * @param string $type
 	 * @return string
 	 */
-	public static function getType($type) {
+	public static function getType($type)
+	{
 		if (!static::hasType($type)) {
 			throw new \LogicException("morph type {$type} not defined.");
 		}
@@ -72,10 +77,11 @@ class Morph {
 	 * 检查对应关联的资源是否存在
 	 *
 	 * @param string $type
-	 * @param int    $id
+	 * @param int $id
 	 * @return bool
 	 */
-	public static function checkExist($type, $id) {
+	public static function checkExist($type, $id)
+	{
 		$class = static::getType($type);
 
 		$result = false;
@@ -97,10 +103,11 @@ class Morph {
 	 *
 	 * @param string $type
 	 * @param string $method
-	 * @param array  $args
+	 * @param array $args
 	 * @return false|mixed
 	 */
-	public static function callMethod($type, $method, $args = []) {
+	public static function callMethod($type, $method, $args = [])
+	{
 		$class = static::getType($type);
 
 		if (!method_exists($class, $method)) {

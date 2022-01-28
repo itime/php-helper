@@ -8,7 +8,8 @@
 
 namespace Xin\Contracts\Support;
 
-interface Jsonable {
+interface Jsonable
+{
 
 	/**
 	 * Convert the object to its JSON representation.

@@ -23,7 +23,8 @@ use Xin\Thinkphp\Plugin\Url;
  * @method string rootPath($path = '') static
  * @method string path($path = '') static
  */
-class Plugin extends Facade {
+class Plugin extends Facade
+{
 
 	/**
 	 * 获取当前Facade对应类名（或者已经绑定的容器对象标识）
@@ -31,7 +32,8 @@ class Plugin extends Facade {
 	 * @access protected
 	 * @return string
 	 */
-	protected static function getFacadeClass() {
+	protected static function getFacadeClass()
+	{
 		return 'pluginManager';
 	}
 
@@ -40,7 +42,8 @@ class Plugin extends Facade {
 	 *
 	 * @param callable $pluginBootCallback
 	 */
-	public static function routes($prefix = 'app', $pluginBootCallback = null) {
+	public static function routes($prefix = 'app', $pluginBootCallback = null)
+	{
 		Route::any($prefix . '/:plugin/:controller/[:action]', PluginDispatch::class);
 		Url::$pluginPrefix = $prefix;
 		PluginDispatch::$pluginBootCallback = $pluginBootCallback;
@@ -51,7 +54,8 @@ class Plugin extends Facade {
 	 *
 	 * @return string
 	 */
-	public static function getPrefix() {
+	public static function getPrefix()
+	{
 		return Url::$pluginPrefix;
 	}
 

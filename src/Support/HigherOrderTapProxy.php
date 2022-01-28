@@ -7,7 +7,8 @@
 
 namespace Xin\Support;
 
-class HigherOrderTapProxy {
+class HigherOrderTapProxy
+{
 
 	/**
 	 * The target being tapped.
@@ -22,7 +23,8 @@ class HigherOrderTapProxy {
 	 * @param mixed $target
 	 * @return void
 	 */
-	public function __construct($target) {
+	public function __construct($target)
+	{
 		$this->target = $target;
 	}
 
@@ -30,10 +32,11 @@ class HigherOrderTapProxy {
 	 * Dynamically pass method calls to the target.
 	 *
 	 * @param string $method
-	 * @param array  $parameters
+	 * @param array $parameters
 	 * @return mixed
 	 */
-	public function __call($method, $parameters) {
+	public function __call($method, $parameters)
+	{
 		$this->target->{$method}(...$parameters);
 
 		return $this->target;

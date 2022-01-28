@@ -11,7 +11,8 @@ use Xin\Finder\FileFinder;
 use Xin\Support\Str;
 use Xin\Thinkphp\View\Exceptions\TemplateNotFoundException;
 
-trait FindTemplate {
+trait FindTemplate
+{
 
 	/**
 	 * @var \Xin\Contracts\Finder\Finder
@@ -28,7 +29,8 @@ trait FindTemplate {
 	 *
 	 * @return \Xin\Contracts\Finder\Finder
 	 */
-	public function finder() {
+	public function finder()
+	{
 		if (!$this->finder) {
 			$this->initViewPath();
 
@@ -47,7 +49,8 @@ trait FindTemplate {
 	/**
 	 * 初始化视图路径
 	 */
-	protected function initViewPath() {
+	protected function initViewPath()
+	{
 		if (!empty($this->config['view_path'])) {
 			return;
 		}
@@ -69,7 +72,8 @@ trait FindTemplate {
 	 *
 	 * @param string $appName
 	 */
-	public function setFinderAppPath($appName) {
+	public function setFinderAppPath($appName)
+	{
 		$finder = $this->finder();
 
 		if (!isset($this->appPathInits[$appName])) {
@@ -95,10 +99,11 @@ trait FindTemplate {
 	 * 自动定位模板文件
 	 *
 	 * @param string $template
-	 * @param bool   $failException
+	 * @param bool $failException
 	 * @return string
 	 */
-	protected function parseTemplate(string $template, $failException = true): string {
+	protected function parseTemplate(string $template, $failException = true): string
+	{
 		// 分析模板文件规则
 		$request = $this->app['request'];
 
@@ -173,7 +178,8 @@ trait FindTemplate {
 	 * @return string
 	 * @throws \Exception
 	 */
-	protected function parseTemplateName(string $templateName): string {
+	protected function parseTemplateName(string $templateName): string
+	{
 		$array = explode(',', $templateName);
 		$parseStr = '';
 
@@ -206,7 +212,8 @@ trait FindTemplate {
 	 * @return string
 	 * @throws TemplateNotFoundException
 	 */
-	protected function parseTemplateFile(string $template): string {
+	protected function parseTemplateFile(string $template): string
+	{
 		if ('' == pathinfo($template, PATHINFO_EXTENSION)) {
 			if (0 !== strpos($template, '/')) {
 				$template = str_replace(['/', ':'], $this->config['view_depr'], $template);
@@ -242,7 +249,8 @@ trait FindTemplate {
 	 * @param string $template 模板文件或者模板规则
 	 * @return bool
 	 */
-	public function exists(string $template): bool {
+	public function exists(string $template): bool
+	{
 		if ('' == pathinfo($template, PATHINFO_EXTENSION)) {
 			// 获取模板文件名
 			$template = $this->parseTemplate($template, false);

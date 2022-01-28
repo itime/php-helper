@@ -10,7 +10,8 @@ namespace Xin\Thinkphp\Saas\App;
 use think\model\concern\SoftDelete;
 use think\model\Pivot;
 
-class DatabaseAppPlugin extends Pivot {
+class DatabaseAppPlugin extends Pivot
+{
 
 	use SoftDelete;
 

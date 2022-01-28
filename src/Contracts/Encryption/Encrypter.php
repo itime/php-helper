@@ -7,13 +7,14 @@
 
 namespace Xin\Contracts\Encryption;
 
-interface Encrypter {
+interface Encrypter
+{
 
 	/**
 	 * Encrypt the given value.
 	 *
 	 * @param mixed $value
-	 * @param bool  $serialize
+	 * @param bool $serialize
 	 * @return string
 	 * @throws \Xin\Contracts\Encryption\EncryptException
 	 */
@@ -23,7 +24,7 @@ interface Encrypter {
 	 * Decrypt the given value.
 	 *
 	 * @param string $payload
-	 * @param bool   $unserialize
+	 * @param bool $unserialize
 	 * @return mixed
 	 * @throws \Xin\Contracts\Encryption\DecryptException
 	 */

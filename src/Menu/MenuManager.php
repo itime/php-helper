@@ -19,7 +19,8 @@ use Xin\Support\Manager;
  * @method bool puts($menus, $app = null, $append = [])
  * @method bool forget($condition)
  */
-class MenuManager extends Manager implements Factory {
+class MenuManager extends Manager implements Factory
+{
 
 	/**
 	 * @var array
@@ -37,7 +38,8 @@ class MenuManager extends Manager implements Factory {
 	 * @param mixed $app
 	 * @param array $config
 	 */
-	public function __construct($app, array $config) {
+	public function __construct($app, array $config)
+	{
 		parent::__construct($app);
 
 		$this->config = $config;
@@ -51,14 +53,16 @@ class MenuManager extends Manager implements Factory {
 	 * @param string $name
 	 * @return \Xin\Contracts\Menu\Repository
 	 */
-	public function menu($name = null) {
+	public function menu($name = null)
+	{
 		return $this->driver($name);
 	}
 
 	/**
 	 * @param string $name
 	 */
-	public function shouldUse($name) {
+	public function shouldUse($name)
+	{
 		$name = $name ?: $this->getDefaultDriver();
 
 		$this->setDefaultDriver($name);
@@ -69,28 +73,32 @@ class MenuManager extends Manager implements Factory {
 	 *
 	 * @param string $name
 	 */
-	public function setDefaultDriver($name) {
+	public function setDefaultDriver($name)
+	{
 		Arr::set($this->config, 'defaults.menu', $name);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function getDefaultDriver() {
+	public function getDefaultDriver()
+	{
 		return $this->getConfig('defaults.menu', 'admin');
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	protected function resolveType($name) {
+	protected function resolveType($name)
+	{
 		return $this->getMenuConfig($name, 'type', 'phpfile');
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	protected function resolveConfig($name) {
+	protected function resolveConfig($name)
+	{
 		return $this->getMenuConfig($name);
 	}
 
@@ -98,11 +106,12 @@ class MenuManager extends Manager implements Factory {
 	 * 获取菜单配置
 	 *
 	 * @param string $menu
-	 * @param null   $name
-	 * @param null   $default
+	 * @param null $name
+	 * @param null $default
 	 * @return mixed
 	 */
-	public function getMenuConfig($menu, $name = null, $default = null) {
+	public function getMenuConfig($menu, $name = null, $default = null)
+	{
 		if ($config = $this->getConfig("menus.{$menu}")) {
 			return Arr::get($config, $name, $default);
 		}
@@ -116,7 +125,8 @@ class MenuManager extends Manager implements Factory {
 	 * @param string $name
 	 * @return bool
 	 */
-	public function hasMenuConfig($name) {
+	public function hasMenuConfig($name)
+	{
 		return Arr::has($this->config, 'menus.' . $name);
 	}
 
@@ -125,10 +135,11 @@ class MenuManager extends Manager implements Factory {
 	 *
 	 * @access public
 	 * @param null|string $name 名称
-	 * @param mixed       $default 默认值
+	 * @param mixed $default 默认值
 	 * @return mixed
 	 */
-	public function getConfig($name = null, $default = null) {
+	public function getConfig($name = null, $default = null)
+	{
 		if (is_null($name)) {
 			return $this->config;
 		}
@@ -142,7 +153,8 @@ class MenuManager extends Manager implements Factory {
 	 * @param array $config
 	 * @return \Xin\Menu\PhpFile
 	 */
-	public function createPhpFileDriver(array $config) {
+	public function createPhpFileDriver(array $config)
+	{
 		return new PhpFile($config);
 	}
 
@@ -150,10 +162,11 @@ class MenuManager extends Manager implements Factory {
 	 * 生成菜单
 	 *
 	 * @param callable $filter
-	 * @param array    $options
+	 * @param array $options
 	 * @return array
 	 */
-	public function generate($filter, array $options = []) {
+	public function generate($filter, array $options = [])
+	{
 		$generator = $this->resolveGenerator();
 
 		$menus = $this->driver()->get($filter);
@@ -168,9 +181,10 @@ class MenuManager extends Manager implements Factory {
 	 * 扩展生成器
 	 *
 	 * @param string $name
-	 * @param mixed  $callback
+	 * @param mixed $callback
 	 */
-	public function generator($name, $callback) {
+	public function generator($name, $callback)
+	{
 		$this->customGenerator[$name] = $callback;
 	}
 
@@ -180,7 +194,8 @@ class MenuManager extends Manager implements Factory {
 	 * @param string $name
 	 * @return \Xin\Contracts\Menu\Generator
 	 */
-	protected function resolveGenerator($name = null) {
+	protected function resolveGenerator($name = null)
+	{
 		$name = $name ?: $this->getDefaultDriver();
 		$generatorType = $this->getMenuConfig($name, 'generator', 'default');
 

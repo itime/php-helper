@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Menu;
 
-interface Factory {
+interface Factory
+{
 
 	/**
 	 * 使用菜单仓库

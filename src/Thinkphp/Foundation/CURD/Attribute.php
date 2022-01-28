@@ -11,7 +11,8 @@ use think\exception\ValidateException;
 use think\facade\Db;
 use Xin\Support\Str;
 
-trait Attribute {
+trait Attribute
+{
 
 	/**
 	 * 获取模型实例
@@ -19,7 +20,8 @@ trait Attribute {
 	 * @param array $data
 	 * @return \think\db\BaseQuery|\think\Model
 	 */
-	protected function model($data = []) {
+	protected function model($data = [])
+	{
 		$model = $this->property('model', $this->getClassName());
 
 		if (is_string($model)) {
@@ -41,7 +43,8 @@ trait Attribute {
 	 * @param string $scene
 	 * @return \think\Validate
 	 */
-	protected function validator($scene) {
+	protected function validator($scene)
+	{
 		$validator = $this->property('validator', $this->getClassName());
 
 		$validator = $this->resolveCommonClass($validator, 'validate');
@@ -59,11 +62,12 @@ trait Attribute {
 	/**
 	 * 验证数据合法性
 	 *
-	 * @param array  $data
+	 * @param array $data
 	 * @param string $scene
 	 * @return array
 	 */
-	protected function validateData($data, $scene) {
+	protected function validateData($data, $scene)
+	{
 		$validator = $this->validator($scene);
 		if (!$validator) {
 			return $data;
@@ -80,10 +84,11 @@ trait Attribute {
 	 * 调用类方法
 	 *
 	 * @param string $method
-	 * @param array  $vars
+	 * @param array $vars
 	 * @return mixed
 	 */
-	protected function invokeMethod($method, $vars = []) {
+	protected function invokeMethod($method, $vars = [])
+	{
 		if (!method_exists($this, $method)) {
 			return null;
 		}
@@ -96,7 +101,8 @@ trait Attribute {
 	 *
 	 * @return string
 	 */
-	protected function getClassName() {
+	protected function getClassName()
+	{
 		$class = explode('\\', get_class($this));
 		$class = end($class);
 		$class = substr($class, 0, strpos($class, "Controller"));
@@ -108,10 +114,11 @@ trait Attribute {
 	 * 获取属性
 	 *
 	 * @param string $property
-	 * @param mixed  $default
+	 * @param mixed $default
 	 * @return mixed
 	 */
-	protected function property($property, $default = null) {
+	protected function property($property, $default = null)
+	{
 		if (property_exists($this, $property)) {
 			return $this->{$property};
 		}
@@ -124,10 +131,11 @@ trait Attribute {
 	 *
 	 * @param string $baseClass
 	 * @param string $layer
-	 * @param bool   $appendSuffix
+	 * @param bool $appendSuffix
 	 * @return string|null
 	 */
-	private function resolveCommonClass($baseClass, $layer, $appendSuffix = true) {
+	private function resolveCommonClass($baseClass, $layer, $appendSuffix = true)
+	{
 		if (strpos($baseClass, "\\") !== false) {
 			return $baseClass;
 		}

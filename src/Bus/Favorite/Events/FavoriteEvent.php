@@ -9,7 +9,8 @@ namespace Xin\Bus\Favorite\Events;
 
 use Xin\Thinkphp\Foundation\Model\Morph;
 
-class FavoriteEvent {
+class FavoriteEvent
+{
 
 	/**
 	 * @var string
@@ -28,9 +29,10 @@ class FavoriteEvent {
 
 	/**
 	 * @param string $topicType
-	 * @param int    $topicId
+	 * @param int $topicId
 	 */
-	public function __construct($topicType, $topicId, $isFavorite) {
+	public function __construct($topicType, $topicId, $isFavorite)
+	{
 		$this->topicType = $topicType;
 		$this->topicId = $topicId;
 		$this->isFavorite = $isFavorite;
@@ -39,28 +41,32 @@ class FavoriteEvent {
 	/**
 	 * @return string
 	 */
-	public function getTopicType() {
+	public function getTopicType()
+	{
 		return $this->topicType;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getTopicId() {
+	public function getTopicId()
+	{
 		return $this->topicId;
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isFavorite() {
+	public function isFavorite()
+	{
 		return $this->isFavorite;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getTopicClass() {
+	public function getTopicClass()
+	{
 		return Morph::getType($this->topicType);
 	}
 

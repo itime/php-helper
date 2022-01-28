@@ -5,15 +5,17 @@ namespace Xin\Wechat;
 use Xin\Wechat\Exceptions\WechatBusinessException;
 use Xin\Wechat\Exceptions\WechatException;
 
-class WechatErrorHandle {
+class WechatErrorHandle
+{
 
 	/**
-	 * @param int    $errCode
+	 * @param int $errCode
 	 * @param string $errMsg
-	 * @param mixed  $result
+	 * @param mixed $result
 	 * @return WechatBusinessException
 	 */
-	public function handle($errCode, $errMsg, $result) {
+	public function handle($errCode, $errMsg, $result)
+	{
 		return new WechatBusinessException($errMsg, $errCode);
 	}
 
@@ -22,7 +24,8 @@ class WechatErrorHandle {
 	 * @param \Exception $exception
 	 * @return WechatException
 	 */
-	public function handleException(\Exception $exception) {
+	public function handleException(\Exception $exception)
+	{
 		return new WechatException($exception->getMessage(), $exception->getCode(), $exception);
 	}
 

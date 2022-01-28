@@ -15,7 +15,8 @@ namespace Xin\Thinkphp\View;
 use Psr\SimpleCache\CacheInterface;
 use think\App;
 
-class Template {
+class Template
+{
 
 	use Concerns\ExtendThink,
 		Concerns\FindTemplate,
@@ -116,9 +117,10 @@ class Template {
 	 * 架构函数
 	 *
 	 * @param \think\App $app
-	 * @param array      $config
+	 * @param array $config
 	 */
-	public function __construct(App $app, $config = []) {
+	public function __construct(App $app, $config = [])
+	{
 		$this->app = $app;
 
 		$this->config = array_merge($this->config, (array)$config);
@@ -157,11 +159,12 @@ class Template {
 	 *
 	 * @access public
 	 * @param string $template 模板文件
-	 * @param array  $vars 模板变量
+	 * @param array $vars 模板变量
 	 * @return void
 	 * @throws \Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function fetch(string $template, array $vars = []): void {
+	public function fetch(string $template, array $vars = []): void
+	{
 		if (empty($this->config['view_path'])) {
 			$view = $this->config['view_dir_name'];
 
@@ -225,10 +228,11 @@ class Template {
 	 *
 	 * @access public
 	 * @param string $content 模板内容
-	 * @param array  $vars 模板变量
+	 * @param array $vars 模板变量
 	 * @noinspection PhpDocMissingThrowsInspection
 	 */
-	public function display(string $content, array $vars = []): void {
+	public function display(string $content, array $vars = []): void
+	{
 		if ($vars) {
 			$this->data = array_merge($this->data, $vars);
 		}
@@ -253,7 +257,8 @@ class Template {
 	 * @return void
 	 * @throws \Exception
 	 */
-	protected function compiler(string &$content, string $cacheFile): void {
+	protected function compiler(string &$content, string $cacheFile): void
+	{
 		// 判断是否启用布局
 		if ($this->config['layout_on']) {
 			if (false !== strpos($content, '{__NOLAYOUT__}')) {
@@ -304,7 +309,8 @@ class Template {
 	 * @param array $vars 模板变量
 	 * @return $this
 	 */
-	public function assign(array $vars = []) {
+	public function assign(array $vars = [])
+	{
 		$this->data = array_merge($this->data, $vars);
 
 		return $this;
@@ -314,11 +320,12 @@ class Template {
 	 * 扩展模板解析规则
 	 *
 	 * @access public
-	 * @param string        $rule 解析规则
+	 * @param string $rule 解析规则
 	 * @param callable|null $callback 解析规则
 	 * @return void
 	 */
-	public function extend(string $rule, callable $callback = null): void {
+	public function extend(string $rule, callable $callback = null): void
+	{
 		$this->extend[$rule] = $callback;
 	}
 
@@ -326,11 +333,12 @@ class Template {
 	 * 扩展模板指令解析规则
 	 *
 	 * @access public
-	 * @param string        $rule 解析规则
+	 * @param string $rule 解析规则
 	 * @param callable|null $callback 解析规则
 	 * @return void
 	 */
-	public function directive(string $rule, callable $callback = null): void {
+	public function directive(string $rule, callable $callback = null): void
+	{
 		$this->directive[$rule] = $callback;
 	}
 
@@ -338,11 +346,12 @@ class Template {
 	 * 设置布局
 	 *
 	 * @access public
-	 * @param mixed  $name 布局模板名称 false 则关闭布局
+	 * @param mixed $name 布局模板名称 false 则关闭布局
 	 * @param string $replace 布局模板内容替换标识
 	 * @return $this
 	 */
-	public function layout($name, string $replace = '') {
+	public function layout($name, string $replace = '')
+	{
 		if (false === $name) {
 			// 关闭布局
 			$this->config['layout_on'] = false;
@@ -371,7 +380,8 @@ class Template {
 	 * @param string $cacheFile 缓存文件名
 	 * @return bool
 	 */
-	protected function checkCache(string $cacheFile): bool {
+	protected function checkCache(string $cacheFile): bool
+	{
 		if (!$this->config['tpl_cache'] || !is_file($cacheFile) || !$handle = @fopen($cacheFile, "r")) {
 			return false;
 		}
@@ -409,7 +419,8 @@ class Template {
 	 * @return boolean
 	 * @throws \Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function isCache(string $cacheId): bool {
+	public function isCache(string $cacheId): bool
+	{
 		if ($cacheId && $this->cache && $this->config['display_cache']) {
 			// 缓存页面输出
 			return $this->cache->has($cacheId);
@@ -425,7 +436,8 @@ class Template {
 	 * @param CacheInterface $cache 缓存对象
 	 * @return void
 	 */
-	public function setCache(CacheInterface $cache): void {
+	public function setCache(CacheInterface $cache): void
+	{
 		$this->cache = $cache;
 	}
 
@@ -436,7 +448,8 @@ class Template {
 	 * @param array $config
 	 * @return $this
 	 */
-	public function config(array $config) {
+	public function config(array $config)
+	{
 		$this->config = array_merge($this->config, $config);
 
 		return $this;
@@ -449,7 +462,8 @@ class Template {
 	 * @param string $name
 	 * @return mixed
 	 */
-	public function getConfig(string $name) {
+	public function getConfig(string $name)
+	{
 		return $this->config[$name] ?? null;
 	}
 
@@ -460,7 +474,8 @@ class Template {
 	 * @param string $name 变量名
 	 * @return mixed
 	 */
-	public function get(string $name = '') {
+	public function get(string $name = '')
+	{
 		if ('' == $name) {
 			return $this->data;
 		}
@@ -485,7 +500,8 @@ class Template {
 	 * @param string $name
 	 * @return string
 	 */
-	public static function getStack($name) {
+	public static function getStack($name)
+	{
 		return isset(self::$stacks[$name]) ? self::$stacks[$name] : '';
 	}
 
@@ -495,7 +511,8 @@ class Template {
 	 * @param string $name
 	 * @param string $content
 	 */
-	public static function pushStack($name, $content) {
+	public static function pushStack($name, $content)
+	{
 		if (!isset(self::$stacks[$name])) {
 			self::$stacks[$name] = '';
 		}
@@ -508,13 +525,15 @@ class Template {
 	 *
 	 * @access public
 	 * @param string $name
-	 * @param mixed  $value
+	 * @param mixed $value
 	 */
-	public function __set($name, $value) {
+	public function __set($name, $value)
+	{
 		$this->config[$name] = $value;
 	}
 
-	public function __debugInfo() {
+	public function __debugInfo()
+	{
 		$data = get_object_vars($this);
 		unset($data['storage']);
 

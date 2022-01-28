@@ -1,95 +1,85 @@
 <?php
+/**
+ * Talents come from diligence, and knowledge is gained by accumulation.
+ *
+ * @author: 晋<657306123@qq.com>
+ */
 
 namespace Xin\Thinkphp\Repository;
 
-use app\common\model\Model;
 use think\db\Query;
 use think\facade\Db;
+use think\Model;
 use think\model\Collection;
-use Xin\Contracts\Foundation\Repository as RepositoryContract;
-use Xin\Middleware\MiddlewareManager;
+use think\Paginator;
+use Xin\Repository\AbstractRepository;
 
-class Repository implements RepositoryContract {
-
-	use HasMiddleware;
-
+class Repository extends AbstractRepository
+{
 	/**
-	 * @var array
+	 * 注册搜索中间件
+	 * @return void
 	 */
-	protected $options;
+	protected function registerSearchMiddleware()
+	{
+		$this->filterable(function ($input, $next) {
+			$search = $input['options']['search'] ?? [];
+			if (empty($search)) {
+				return $next($input);
+			}
 
-	/**
-	 * @param array $options
-	 */
-	public function __construct(array $options) {
-		$this->options = $options;
-		$this->middlewareManager = new MiddlewareManager();
+			/** @var Query $query */
+			$query = $input['query'];
+			$model = $query->getModel();
+			if (method_exists($model, 'scopeSearch')) {
+				/** @noinspection VariableFunctionsUsageInspection */
+				call_user_func([$query, 'search'], $search);
+			} else {
+				$fields = $model && method_exists($model, 'getSearchFields')
+					? $model->getSearchFields()
+					: $this->getSearchFields();
 
-		if (isset($options['handler'])) {
-			$this->setupHandler($options['handler']);
-		}
+				$query->withSearch($fields, $search);
+			}
+
+			return $next($input);
+		});
 	}
 
 	/**
 	 * @inerhitDoc
-	 * @param array $search
-	 * @param array $with
-	 * @param array $options
 	 * @return \think\model\Collection
-	 * @throws \think\db\exception\DataNotFoundException
-	 * @throws \think\db\exception\DbException
-	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public function lists($search = [], array $with = [], array $options = []) {
-		$options['paginate'] = false;
+	public function lists($search = [], array $with = [], array $options = [])
+	{
+		$options['search'] = $search;
+		$options['paginate'] = null;
 
-		return $this->search($search, $with, $options);
+		return $this->filter(null, $with, $options);
 	}
 
 	/**
 	 * @inerhitDoc
-	 * @param array $search
-	 * @param array $with
-	 * @param int   $paginate
-	 * @param array $options
 	 * @return \think\Paginator
-	 * @throws \think\db\exception\DataNotFoundException
-	 * @throws \think\db\exception\DbException
-	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public function paginate($search = [], array $with = [], $paginate = 1, array $options = []) {
-		$options['paginate'] = $paginate;
+	public function paginate($search = [], array $with = [], $paginate = 1, array $options = [])
+	{
+		$options['search'] = $search;
+		$options['paginate'] = is_array($paginate) ? $paginate : [
+			'page' => $paginate,
+		];
 
-		return $this->search($search, $with, $options);
-	}
-
-	/**
-	 * 搜索内容
-	 * @param array $search
-	 * @param array $with
-	 * @param array $options
-	 * @return \think\Collection|\think\model\Collection|\think\Paginator
-	 * @throws \think\db\exception\DataNotFoundException
-	 * @throws \think\db\exception\DbException
-	 * @throws \think\db\exception\ModelNotFoundException
-	 */
-	protected function search($search = [], array $with = [], array $options = []) {
-		$query = $this->query($with, $options)
-			->withSearch(array_keys($search), $search);
-
-		if (isset($options['paginate'])) {
-			return $query->paginate($options['paginate']);
-		} else {
-			return tap($query->select());
-		}
+		return $this->filter(null, $with, $options);
 	}
 
 	/**
 	 * @inerhitDoc
 	 * @return Paginator|Collection
 	 */
-	public function filter($filter = null, array $with = [], array $options = []) {
-		$query = $this->query($with, $options)->where($filter);
+	public function filter($filter = null, array $with = [], array $options = [])
+	{
+		$query = $this->query($filter, $with, $options);
+
 
 		return $this->middleware([
 			'type' => static::SCENE_FILTER,
@@ -100,20 +90,12 @@ class Repository implements RepositoryContract {
 		], function ($input) use ($query) {
 			$options = $input['options'] ?? [];
 
-			$paginate = $options['paginate'] ?? false;
+			$paginate = $options['paginate'] ?? null;
 			if ($paginate) {
-				$paginate = is_array($paginate)
-					? $paginate
-					: (is_numeric($paginate) ? [
-						'per_page' => $paginate,
-					] : []);
+				$paginate = is_array($paginate) ? $paginate
+					: (is_numeric($paginate) ? ['page' => $paginate,] : []);
 
-				$data = $query->paginate(
-					$paginate['per_page'] ?? null,
-					['*'],
-					$paginate['page_name'] ?? 'page',
-					$paginate['page'] ?? null
-				);
+				$data = $query->paginate($paginate);
 			} else {
 				$data = $query->select();
 			}
@@ -126,8 +108,9 @@ class Repository implements RepositoryContract {
 	 * @inerhitDoc
 	 * @return mixed|Model
 	 */
-	public function detail($filter, array $with = [], array $options = []) {
-		$query = $this->query($with, $options)->where($filter);
+	public function detail($filter, array $with = [], array $options = [])
+	{
+		$query = $this->query($filter, $with, $options);
 
 		return $this->middleware([
 			'type' => static::SCENE_DETAIL,
@@ -135,7 +118,7 @@ class Repository implements RepositoryContract {
 			'with' => $with,
 			'query' => $query,
 			'options' => $options,
-		], function ($input) use ($query, $options) {
+		], function () use ($query, $options) {
 			if ($options['fail'] ?? false) {
 				return $query->findOrFail();
 			}
@@ -148,7 +131,8 @@ class Repository implements RepositoryContract {
 	 * @inerhitDoc
 	 * @return mixed|Model
 	 */
-	public function detailById($id, array $with = [], $options = []) {
+	public function detailById($id, array $with = [], $options = [])
+	{
 		return $this->detail(['id' => $id], $with, $options);
 	}
 
@@ -156,8 +140,9 @@ class Repository implements RepositoryContract {
 	 * @inerhitDoc
 	 * @return mixed|Model
 	 */
-	public function show($filter, array $with = [], array $options = []) {
-		$query = $this->query($with, $options)->where($filter);
+	public function show($filter, array $with = [], array $options = [])
+	{
+		$query = $this->query($filter, $with, $options);
 
 		return $this->middleware([
 			'type' => static::SCENE_SHOW,
@@ -165,12 +150,12 @@ class Repository implements RepositoryContract {
 			'with' => $with,
 			'query' => $query,
 			'options' => $options,
-		], function ($input) use ($query, $options) {
+		], function () use ($query, $options) {
 			if ($options['fail'] ?? false) {
-				return $query->firstOrFail();
+				return $query->findOrFail();
 			}
 
-			return $query->first();
+			return $query->find();
 		}, static::SCENE_SHOW);
 	}
 
@@ -178,20 +163,22 @@ class Repository implements RepositoryContract {
 	 * @inerhitDoc
 	 * @return mixed|Model
 	 */
-	public function showById($id, array $with = [], array $options = []) {
+	public function showById($id, array $with = [], array $options = [])
+	{
 		return $this->show(['id' => $id], $with, $options);
 	}
 
 	/**
 	 * @inerhitDoc
 	 */
-	public function validate(array $data, $scene = null, array $options = []) {
+	public function validate(array $data, $scene = null, array $options = [])
+	{
 		return $this->middleware([
 			'type' => static::SCENE_VALIDATE,
 			'scene' => $scene,
 			'data' => $data,
 			'options' => $options,
-		], function ($input) use ($options) {
+		], function ($input) {
 			return $input['data'] ?? [];
 		}, static::SCENE_VALIDATE);
 	}
@@ -199,18 +186,19 @@ class Repository implements RepositoryContract {
 	/**
 	 * @inerhitDoc
 	 */
-	public function store(array $data, array $options = []) {
+	public function store(array $data, array $options = [])
+	{
 		$data = $this->validate($data, static::SCENE_STORE, $options);
 
-		return Db::transaction(function () use ($data, $options) {
-			$query = $this->query([], $options);
+		return $this->transaction(function () use ($data, $options) {
+			$query = $this->query(null, [], $options);
 
 			return $this->middleware([
 				'type' => static::SCENE_STORE,
 				'data' => $data,
 				'query' => $query,
 				'options' => $options,
-			], function ($input) use ($query, $options) {
+			], function ($input) use ($query) {
 				$query->save($input['data'] ?? []);
 
 				return $query;
@@ -221,11 +209,12 @@ class Repository implements RepositoryContract {
 	/**
 	 * @inerhitDoc
 	 */
-	public function update($filter, array $data, array $options = []) {
+	public function update($filter, array $data, array $options = [])
+	{
 		$data = $this->validate($data, static::SCENE_UPDATE);
 
-		return Db::transaction(function () use ($filter, $data, $options) {
-			$query = $this->query([], $options)->where($filter);
+		return $this->transaction(function () use ($filter, $data, $options) {
+			$query = $this->query($filter, [], $options);
 
 			return $this->middleware([
 				'type' => static::SCENE_UPDATE,
@@ -233,12 +222,8 @@ class Repository implements RepositoryContract {
 				'data' => $data,
 				'query' => $query,
 				'options' => $options,
-			], function ($input) use ($query, $options) {
-				if ($options['fail'] ?? true) {
-					$model = $query->findOrFail();
-				} else {
-					$model = $query->first();
-				}
+			], function ($input) use ($query) {
+				$model = $query->findOrFail();
 
 				$model->save($input['data'] ?? []);
 
@@ -250,7 +235,8 @@ class Repository implements RepositoryContract {
 	/**
 	 * @inerhitDoc
 	 */
-	public function updateById($id, array $data, array $options = []) {
+	public function updateById($id, array $data, array $options = [])
+	{
 		return $this->update([
 			'id' => $id,
 		], $data, $options);
@@ -259,18 +245,18 @@ class Repository implements RepositoryContract {
 	/**
 	 * @inerhitDoc
 	 */
-	public function delete($filter, array $options = []) {
-		return Db::transaction(function () use ($filter, $options) {
-			$query = $this->query([], $options)->where($filter);
+	public function delete($filter, array $options = [])
+	{
+		return $this->transaction(function () use ($filter, $options) {
+			$query = $this->query($filter, [], $options);
 
 			return $this->middleware([
 				'type' => static::SCENE_DELETE,
 				'filter' => $filter,
 				'query' => $query,
 				'options' => $options,
-			], function ($input) use ($query) {
-				// todo
-				$query->delete(true);
+			], function () use ($query) {
+				return $query->delete(true);
 			}, static::SCENE_DELETE);
 		});
 	}
@@ -278,7 +264,8 @@ class Repository implements RepositoryContract {
 	/**
 	 * @inerhitDoc
 	 */
-	public function deleteByIdList(array $ids, array $options = []) {
+	public function deleteByIdList(array $ids, array $options = [])
+	{
 		return $this->delete([
 			['id', 'in', $ids],
 		], $options);
@@ -287,9 +274,10 @@ class Repository implements RepositoryContract {
 	/**
 	 * @inerhitDoc
 	 */
-	public function recovery($filter, array $options = []) {
-		return Db::transaction(function () use ($filter, $options) {
-			$query = $this->query([], $options)->where($filter);
+	public function recovery($filter, array $options = [])
+	{
+		return $this->transaction(function () use ($filter, $options) {
+			$query = $this->query($filter, [], $options);
 
 			$input = [
 				'type' => static::SCENE_RECOVERY,
@@ -298,7 +286,7 @@ class Repository implements RepositoryContract {
 				'options' => $options,
 			];
 
-			return $this->middleware($input, function ($input) use ($query, $options) {
+			return $this->middleware($input, function () use ($query) {
 				return $query->delete();
 			}, static::SCENE_RECOVERY);
 		});
@@ -307,7 +295,8 @@ class Repository implements RepositoryContract {
 	/**
 	 * @inerhitDoc
 	 */
-	public function recoveryByIdList(array $ids, array $options = []) {
+	public function recoveryByIdList(array $ids, array $options = [])
+	{
 		return $this->recovery([
 			['id', 'in', $ids],
 		], $options);
@@ -316,16 +305,17 @@ class Repository implements RepositoryContract {
 	/**
 	 * @inerhitDoc
 	 */
-	public function restore($filter, array $options = []) {
-		return Db::transaction(function () use ($filter, $options) {
-			$query = $this->query([], $options)->withTrashed()->where($filter);
+	public function restore($filter, array $options = [])
+	{
+		return $this->transaction(function () use ($filter, $options) {
+			$query = $this->query($filter, [], $options)->withTrashed();
 
 			return $this->middleware([
 				'type' => static::SCENE_RESTORE,
 				'filter' => $filter,
 				'query' => $query,
 				'options' => $options,
-			], function ($input) use ($query, $options) {
+			], function () use ($query) {
 				return $query->restore();
 			}, static::SCENE_RESTORE);
 		});
@@ -334,23 +324,33 @@ class Repository implements RepositoryContract {
 	/**
 	 * @inerhitDoc
 	 */
-	public function restoreByIdList(array $ids, array $options = []) {
+	public function restoreByIdList(array $ids, array $options = [])
+	{
 		return $this->restore([
 			['id', 'in', $ids],
 		], $options);
 	}
 
 	/**
-	 * @param array $with
-	 * @param array $options
-	 * @return Db|Query
+	 * @inerhitDoc
 	 */
-	public function query(array $with = [], $options = []) {
+	protected function transaction(callable $callback)
+	{
+		return Db::transaction($callback);
+	}
+
+	/**
+	 * @inerhitDoc
+	 */
+	public function query($filter, array $with = [], array $options = [])
+	{
 		if (isset($this->options['model'])) {
 			$modelClass = $this->options['model'];
+			/** @var \think\Model $model */
+			$model = new $modelClass();
+
 			/** @var Query $query */
-			$query = call_user_func([$modelClass, 'query']);
-			$query->with($with);
+			$query = $model->db();
 		} elseif (isset($this->options['table'])) {
 			$table = $this->options['table'];
 			$query = Db::table($table);
@@ -358,9 +358,15 @@ class Repository implements RepositoryContract {
 			throw new \RuntimeException('Not support query type.');
 		}
 
+		$query->with($with);
+
+		if ($filter) {
+			$query->where($filter);
+		}
+
 		$allowSetOptions = ['select', 'order'];
 		foreach ($options as $key => $option) {
-			if (!in_array($key, $allowSetOptions)) {
+			if (!in_array($key, $allowSetOptions, true)) {
 				continue;
 			}
 
@@ -370,16 +376,29 @@ class Repository implements RepositoryContract {
 		return $query;
 	}
 
-	public function setField(array $ids, $field, $value, array $options = []) {
+	/**
+	 * @inerhitDoc
+	 */
+	public function setField(array $ids, $field, $value, array $options = [])
+	{
 		// TODO: Implement setField() method.
 	}
 
-	public function import($list, array $options = []) {
+	/**
+	 * @inerhitDoc
+	 */
+	public function import($list, array $options = [])
+	{
 		// TODO: Implement import() method.
 	}
 
-	public function export($path, array $options = []) {
+	/**
+	 * @inerhitDoc
+	 */
+	public function export($path, array $options = [])
+	{
 		// TODO: Implement export() method.
 	}
+
 
 }

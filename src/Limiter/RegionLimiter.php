@@ -2,7 +2,8 @@
 
 namespace Xin\Limiter;
 
-class RegionLimiter extends AbstractLimiter {
+class RegionLimiter extends AbstractLimiter
+{
 
 	// 白名单
 	const TYPE_ONLY = 0;
@@ -13,7 +14,8 @@ class RegionLimiter extends AbstractLimiter {
 	/**
 	 * @inheritDoc
 	 */
-	protected function check($data) {
+	protected function check($data)
+	{
 		$cityCode = $data['city_code'];
 		$limitSource = $this->config['source'];
 		$limitType = $this->config['type'] ?? 0;
@@ -30,7 +32,8 @@ class RegionLimiter extends AbstractLimiter {
 		}
 	}
 
-	protected function readCities($limitSource) {
+	protected function readCities($limitSource)
+	{
 		return [];
 	}
 

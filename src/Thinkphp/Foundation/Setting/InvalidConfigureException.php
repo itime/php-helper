@@ -7,6 +7,7 @@
 
 namespace Xin\Thinkphp\Foundation\Setting;
 
-class InvalidConfigureException extends \Exception {
+class InvalidConfigureException extends \Exception
+{
 
 }

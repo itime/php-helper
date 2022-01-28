@@ -7,7 +7,8 @@
 
 namespace Xin\Wechat;
 
-class AuthEnum {
+class AuthEnum
+{
 
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	// + 公众号权限集														+
@@ -360,7 +361,8 @@ class AuthEnum {
 	 * @param int $type
 	 * @return array|string[]
 	 */
-	public static function getDesc($type) {
+	public static function getDesc($type)
+	{
 		return isset(static::$DESC_LIST[$type]) ? static::$DESC_LIST[$type] : [];
 	}
 
@@ -369,7 +371,8 @@ class AuthEnum {
 	 *
 	 * @return \string[][]
 	 */
-	public static function getDescList() {
+	public static function getDescList()
+	{
 		return static::$DESC_LIST;
 	}
 

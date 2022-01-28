@@ -10,7 +10,8 @@ namespace Xin\Auth;
 /**
  * Class GenericGuard
  */
-class GenericGuard extends AbstractGuard {
+class GenericGuard extends AbstractGuard
+{
 
 	/**
 	 * @var callable|array
@@ -22,7 +23,8 @@ class GenericGuard extends AbstractGuard {
 	 *
 	 * @param callable $userResolver
 	 */
-	public function __construct($userResolver) {
+	public function __construct($userResolver)
+	{
 		parent::__construct('generic', [], null);
 		$this->userResolver = $userResolver;
 	}
@@ -30,7 +32,8 @@ class GenericGuard extends AbstractGuard {
 	/**
 	 * @return mixed
 	 */
-	protected function resolveUser() {
+	protected function resolveUser()
+	{
 		if (!$this->user) {
 			$this->user = call_user_func($this->userResolver);
 		}

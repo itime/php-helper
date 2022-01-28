@@ -13,7 +13,8 @@ use Xin\Support\Arr;
 use Xin\Support\File;
 use Yansongda\Pay\Pay;
 
-class PaymentManager implements PaymentFactory {
+class PaymentManager implements PaymentFactory
+{
 
 	/**
 	 * @var array
@@ -25,14 +26,16 @@ class PaymentManager implements PaymentFactory {
 	 *
 	 * @param array $config
 	 */
-	public function __construct(array $config) {
+	public function __construct(array $config)
+	{
 		$this->config = $config;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function wechat($name = null, array $options = []) {
+	public function wechat($name = null, array $options = [])
+	{
 		$name = $name ?: $this->getDefault('wechat');
 
 		$config = $this->getConfig("wechat.{$name}");
@@ -49,7 +52,8 @@ class PaymentManager implements PaymentFactory {
 	 * @param array $options
 	 * @return \Yansongda\Pay\Gateways\Wechat
 	 */
-	protected function factoryWechat($config, $options) {
+	protected function factoryWechat($config, $options)
+	{
 		$config = $this->initWechatConfig($config, $options);
 
 		$config = array_merge($this->getConfig('defaults'), $config);
@@ -67,7 +71,8 @@ class PaymentManager implements PaymentFactory {
 	 * @param array $config
 	 * @return array
 	 */
-	protected function initWechatConfig($config, $options) {
+	protected function initWechatConfig($config, $options)
+	{
 		if (isset($config['appid'])) {
 			// fix official
 			if (!isset($config['app_id'])) {
@@ -97,14 +102,16 @@ class PaymentManager implements PaymentFactory {
 	/**
 	 * @inheritDoc
 	 */
-	public function hasWechat($name = null) {
+	public function hasWechat($name = null)
+	{
 		return $this->hasConfig('wechat' . ($name ?: $this->getDefault('wechat')));
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function alipay($name = null, array $options = []) {
+	public function alipay($name = null, array $options = [])
+	{
 		$name = $name ?: $this->getDefault('alipay');
 
 		$config = $this->getConfig("alipay.{$name}");
@@ -121,7 +128,8 @@ class PaymentManager implements PaymentFactory {
 	 * @param array $options
 	 * @return \Yansongda\Pay\Gateways\Alipay
 	 */
-	protected function factoryAlipay(array $config, array $options) {
+	protected function factoryAlipay(array $config, array $options)
+	{
 		$config = $this->initAlipayConfig($config, $options);
 
 		$config = array_merge($this->getConfig('defaults'), $config);
@@ -138,21 +146,24 @@ class PaymentManager implements PaymentFactory {
 	 * @param array $options
 	 * @return array
 	 */
-	protected function initAlipayConfig(array $config, array $options) {
+	protected function initAlipayConfig(array $config, array $options)
+	{
 		return $config;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function hasAlipay($name = null) {
+	public function hasAlipay($name = null)
+	{
 		return $this->hasConfig('alipay' . ($name ?: $this->getDefault('alipay')));
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function getConfig($key = null, $default = null) {
+	public function getConfig($key = null, $default = null)
+	{
 		if (null === $key) {
 			return $this->config;
 		}
@@ -167,7 +178,8 @@ class PaymentManager implements PaymentFactory {
 	 * @param string $key
 	 * @return bool
 	 */
-	public function hasConfig($key = null) {
+	public function hasConfig($key = null)
+	{
 		if ($key == null) {
 			return !empty($this->config);
 		}
@@ -182,14 +194,16 @@ class PaymentManager implements PaymentFactory {
 	 * @param array $options
 	 * @return mixed
 	 */
-	protected function initApplication($driver, array $options = []) {
+	protected function initApplication($driver, array $options = [])
+	{
 		return $driver;
 	}
 
 	/**
 	 * @return string
 	 */
-	protected function getDefault($type) {
+	protected function getDefault($type)
+	{
 		return Arr::get($this->config, "defaults.{$type}", 'default');
 	}
 

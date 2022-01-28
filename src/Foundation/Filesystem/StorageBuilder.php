@@ -10,7 +10,8 @@ namespace Xin\Foundation\Filesystem;
 use Xin\Filesystem\FilesystemInterface;
 use Xin\Support\Str;
 
-class StorageBuilder {
+class StorageBuilder
+{
 
 	/**
 	 * @var string
@@ -55,7 +56,8 @@ class StorageBuilder {
 	/**
 	 * @return string
 	 */
-	public function getAppId() {
+	public function getAppId()
+	{
 		return $this->appId;
 	}
 
@@ -63,7 +65,8 @@ class StorageBuilder {
 	 * @param string $appId
 	 * @return $this
 	 */
-	public function setAppId($appId) {
+	public function setAppId($appId)
+	{
 		$this->appId = $appId;
 
 		return $this;
@@ -72,7 +75,8 @@ class StorageBuilder {
 	/**
 	 * @return string
 	 */
-	public function getPath() {
+	public function getPath()
+	{
 		return $this->path;
 	}
 
@@ -80,7 +84,8 @@ class StorageBuilder {
 	 * @param string $path
 	 * @return $this
 	 */
-	public function setPath($path) {
+	public function setPath($path)
+	{
 		$this->path = $path;
 
 		return $this;
@@ -89,7 +94,8 @@ class StorageBuilder {
 	/**
 	 * @return string
 	 */
-	public function getCategory() {
+	public function getCategory()
+	{
 		return $this->category;
 	}
 
@@ -97,7 +103,8 @@ class StorageBuilder {
 	 * @param string $category
 	 * @return $this
 	 */
-	public function setCategory($category) {
+	public function setCategory($category)
+	{
 		$this->category = $category;
 
 		return $this;
@@ -106,7 +113,8 @@ class StorageBuilder {
 	/**
 	 * @return \League\Flysystem\FilesystemInterface
 	 */
-	public function getFilesystem() {
+	public function getFilesystem()
+	{
 		return $this->filesystem;
 	}
 
@@ -114,7 +122,8 @@ class StorageBuilder {
 	 * @param \League\Flysystem\FilesystemInterface $filesystem
 	 * @return $this
 	 */
-	public function setFilesystem(\League\Flysystem\FilesystemInterface $filesystem) {
+	public function setFilesystem(\League\Flysystem\FilesystemInterface $filesystem)
+	{
 		$this->filesystem = $filesystem;
 
 		return $this;
@@ -123,7 +132,8 @@ class StorageBuilder {
 	/**
 	 * @return string
 	 */
-	public function getFilename() {
+	public function getFilename()
+	{
 		return $this->filename;
 	}
 
@@ -131,7 +141,8 @@ class StorageBuilder {
 	 * @param string $filename
 	 * @return $this
 	 */
-	public function setFilename($filename) {
+	public function setFilename($filename)
+	{
 		$this->filename = $filename;
 
 		return $this;
@@ -139,10 +150,11 @@ class StorageBuilder {
 
 	/**
 	 * @param string $suffix
-	 * @param int    $length
+	 * @param int $length
 	 * @return $this
 	 */
-	public function generateFilename($suffix, $length = 16) {
+	public function generateFilename($suffix, $length = 16)
+	{
 		$this->filename = Str::random($length) . ($suffix ? '.' . $suffix : '');
 
 		return $this;
@@ -151,14 +163,16 @@ class StorageBuilder {
 	/**
 	 * @return \Exception|\Throwable
 	 */
-	public function getException() {
+	public function getException()
+	{
 		return $this->exception;
 	}
 
 	/**
 	 * @return \League\Flysystem\FilesystemInterface
 	 */
-	public function filesystem() {
+	public function filesystem()
+	{
 		if (!$this->filesystem) {
 			$this->filesystem = $this->createFilesystem();
 		}
@@ -171,7 +185,8 @@ class StorageBuilder {
 	 *
 	 * @return \Xin\Filesystem\FilesystemInterface
 	 */
-	protected function createFilesystem() {
+	protected function createFilesystem()
+	{
 		if (!self::$defaultFilesystemCreator) {
 			throw new \LogicException("未定义Filesystem实现器！");
 		}
@@ -187,7 +202,8 @@ class StorageBuilder {
 	/**
 	 * @return string
 	 */
-	public function buildTargetPath() {
+	public function buildTargetPath()
+	{
 		if (self::$validateAppId && !$this->appId) {
 			throw new \LogicException('appId invalid.');
 		}
@@ -213,10 +229,11 @@ class StorageBuilder {
 	 * 上传本地文件
 	 *
 	 * @param string $localFilepath
-	 * @param array  $options
+	 * @param array $options
 	 * @return string
 	 */
-	public function upload($localFilepath, $options = []) {
+	public function upload($localFilepath, $options = [])
+	{
 		$stream = fopen($localFilepath, 'r');
 
 		$result = $this->uploadStream($stream, $options);
@@ -232,10 +249,11 @@ class StorageBuilder {
 	 * 上传本地文件
 	 *
 	 * @param \SplFileInfo $fileInfo
-	 * @param array        $options
+	 * @param array $options
 	 * @return string
 	 */
-	public function uploadFile(\SplFileInfo $fileInfo, $options = []) {
+	public function uploadFile(\SplFileInfo $fileInfo, $options = [])
+	{
 		return $this->upload($fileInfo->getRealPath(), $options);
 	}
 
@@ -243,9 +261,10 @@ class StorageBuilder {
 	 * 上传文件字符串
 	 *
 	 * @param string $content
-	 * @param array  $options
+	 * @param array $options
 	 */
-	public function uploadContent($content, $options = []) {
+	public function uploadContent($content, $options = [])
+	{
 		$target = $this->buildTargetPath();
 
 		try {
@@ -263,10 +282,11 @@ class StorageBuilder {
 	 * 上传文件流
 	 *
 	 * @param resource $stream
-	 * @param array    $options
+	 * @param array $options
 	 * @return string
 	 */
-	public function uploadStream($stream, $options = []) {
+	public function uploadStream($stream, $options = [])
+	{
 		$target = $this->buildTargetPath();
 		try {
 			$result = $this->filesystem()->putStream($target, $stream, $options);
@@ -282,28 +302,32 @@ class StorageBuilder {
 	/**
 	 * @return bool
 	 */
-	public static function isValidateAppId() {
+	public static function isValidateAppId()
+	{
 		return self::$validateAppId;
 	}
 
 	/**
 	 * @param bool $validateAppId
 	 */
-	public static function setValidateAppId($validateAppId) {
+	public static function setValidateAppId($validateAppId)
+	{
 		self::$validateAppId = $validateAppId;
 	}
 
 	/**
 	 * @return callable
 	 */
-	public static function getDefaultFilesystemCreator() {
+	public static function getDefaultFilesystemCreator()
+	{
 		return self::$defaultFilesystemCreator;
 	}
 
 	/**
 	 * @param callable $defaultFilesystemCreator
 	 */
-	public static function setDefaultFilesystemCreator($defaultFilesystemCreator) {
+	public static function setDefaultFilesystemCreator($defaultFilesystemCreator)
+	{
 		self::$defaultFilesystemCreator = $defaultFilesystemCreator;
 	}
 
@@ -314,7 +338,8 @@ class StorageBuilder {
 	 * @param string $path
 	 * @param string $filename
 	 */
-	public static function builder($category, $path, $filename = '') {
+	public static function builder($category, $path, $filename = '')
+	{
 		$self = new static();
 		$self->setCategory($category);
 		$self->setPath($path);

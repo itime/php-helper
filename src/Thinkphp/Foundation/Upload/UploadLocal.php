@@ -16,7 +16,8 @@ use Xin\Thinkphp\Facade\Hint;
 /**
  * @method array buildSaveData(array $data, UploadedFile $file)
  */
-trait UploadLocal {
+trait UploadLocal
+{
 
 	/**
 	 * 上传文件
@@ -24,7 +25,8 @@ trait UploadLocal {
 	 * @param \think\Request $request
 	 * @return \think\Response
 	 */
-	public function upload(Request $request) {
+	public function upload(Request $request)
+	{
 		Hint::shouldUseApi();
 
 		// 获取表单上传文件
@@ -51,11 +53,12 @@ trait UploadLocal {
 	/**
 	 * 保存文件
 	 *
-	 * @param string                   $type
+	 * @param string $type
 	 * @param \think\file\UploadedFile $file
 	 * @return array
 	 */
-	protected function putFile($type, UploadedFile $file) {
+	protected function putFile($type, UploadedFile $file)
+	{
 		$savePath = Filesystem::disk($this->disk())->putFile(
 			$this->savePath($type), $file, $this->saveRule()
 		);
@@ -80,12 +83,13 @@ trait UploadLocal {
 	/**
 	 * 验证文件合法性
 	 *
-	 * @param string                   $type
+	 * @param string $type
 	 * @param \think\file\UploadedFile $file
-	 * @param bool                     $failException
+	 * @param bool $failException
 	 * @return bool
 	 */
-	protected function validateFile($type, UploadedFile $file, $failException = true) {
+	protected function validateFile($type, UploadedFile $file, $failException = true)
+	{
 		return validate([
 			$this->uploadName() => $this->validateFileRule($type),
 		], [], false, $failException)->rule([], [
@@ -101,7 +105,8 @@ trait UploadLocal {
 	 * @param string|null $type
 	 * @return string
 	 */
-	protected function validateFileRule($type) {
+	protected function validateFileRule($type)
+	{
 		if ($type == 'image') {
 			$w = \request()->param('w/d');
 			$h = \request()->param('h/d');

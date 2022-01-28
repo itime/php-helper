@@ -2,7 +2,8 @@
 
 namespace Xin\Excel;
 
-interface Importable {
+interface Importable
+{
 
 	/**
 	 * @param Row $row

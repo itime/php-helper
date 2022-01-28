@@ -7,7 +7,8 @@ use Xin\Contracts\Robot\Robot;
 use Xin\Http\HasHttpRequests;
 use Xin\Support\Arr;
 
-class DingTalk extends Service implements Robot {
+class DingTalk extends Service implements Robot
+{
 
 	use HasHttpRequests;
 
@@ -20,10 +21,11 @@ class DingTalk extends Service implements Robot {
 
 	/**
 	 * DingTalk Constructor
-	 * @param array  $config
+	 * @param array $config
 	 * @param string $name
 	 */
-	public function __construct(array $config, $name = 'default') {
+	public function __construct(array $config, $name = 'default')
+	{
 		parent::__construct($config);
 		$this->name = $name;
 	}
@@ -31,7 +33,8 @@ class DingTalk extends Service implements Robot {
 	/**
 	 * @inheritDoc
 	 */
-	public function sendMessage(array $message, array $mentionedList = null) {
+	public function sendMessage(array $message, array $mentionedList = null)
+	{
 		if ($mentionedList) {
 			$mentionedOpts = [];
 			if (($isAllIndex = array_search('@all', $mentionedList)) !== false) {
@@ -55,7 +58,8 @@ class DingTalk extends Service implements Robot {
 	/**
 	 * @inheritDoc
 	 */
-	public function sendTextMessage(string $content, array $mentionedList = null, array $attributes = []) {
+	public function sendTextMessage(string $content, array $mentionedList = null, array $attributes = [])
+	{
 		return $this->sendMessage(array_merge($attributes, [
 			'msgtype' => 'text',
 			'text' => [
@@ -67,7 +71,8 @@ class DingTalk extends Service implements Robot {
 	/**
 	 * @inheritDoc
 	 */
-	public function sendMarkdownMessage($content, array $mentionedList = null, array $attributes = []) {
+	public function sendMarkdownMessage($content, array $mentionedList = null, array $attributes = [])
+	{
 		return $this->sendMessage(array_merge($attributes, [
 			'msgtype' => 'markdown',
 			'markdown' => [
@@ -80,11 +85,12 @@ class DingTalk extends Service implements Robot {
 	/**
 	 * @inheritDoc
 	 */
-	public function sendFeedCardMessage($articles, array $mentionedList = null, array $attributes = []) {
+	public function sendFeedCardMessage($articles, array $mentionedList = null, array $attributes = [])
+	{
 		return $this->sendMessage(array_merge($attributes, [
 			'msgtype' => 'feedCard',
 			'feedCard' => [
-				'links' => array_map(function ($item) {
+				'links' => array_map(static function ($item) {
 					return Arr::transformKeys($item, [
 						'url' => 'messageURL',
 						'picurl' => 'picURL',
@@ -98,7 +104,8 @@ class DingTalk extends Service implements Robot {
 	 * 生成query请求参数
 	 * @return array
 	 */
-	protected function newQueryData() {
+	protected function newQueryData()
+	{
 		$query = [
 			'access_token' => $this->config['key'],
 		];
@@ -116,7 +123,8 @@ class DingTalk extends Service implements Robot {
 	 * @param int $timestamp
 	 * @return string
 	 */
-	protected function sign($timestamp) {
+	protected function sign($timestamp)
+	{
 		$stringToSign = ($timestamp * 1000) . "\n" . $this->config['secret'];
 		$signData = hash_hmac('sha256', $stringToSign, $this->config['secret'], true);
 

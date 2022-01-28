@@ -13,14 +13,16 @@ use Xin\Hashing\HashManager;
 /**
  * Class HintServiceProvider
  */
-class HashServiceProvider extends Service {
+class HashServiceProvider extends Service
+{
 
 	/**
 	 * Register the service provider.
 	 *
 	 * @return void
 	 */
-	public function register() {
+	public function register()
+	{
 		$this->app->bind('hash', function () {
 			return new HashManager($this->app);
 		});

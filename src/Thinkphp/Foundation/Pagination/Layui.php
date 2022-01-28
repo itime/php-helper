@@ -9,14 +9,16 @@ namespace Xin\Thinkphp\Foundation\Pagination;
 
 use think\Paginator;
 
-class Layui extends Paginator {
+class Layui extends Paginator
+{
 
 	/**
 	 * 渲染分页html
 	 *
 	 * @return mixed
 	 */
-	public function render() {
+	public function render()
+	{
 		if ($this->hasPages()) {
 			if ($this->simple) {
 				return sprintf(
@@ -43,7 +45,8 @@ class Layui extends Paginator {
 	 * @param string $text
 	 * @return string
 	 */
-	protected function getPreviousButton($text = "上一页") {
+	protected function getPreviousButton($text = "上一页")
+	{
 		if ($this->currentPage() <= 1) {
 			return $this->getDisabledTextWrapper($text);
 		}
@@ -61,7 +64,8 @@ class Layui extends Paginator {
 	 * @param string $text
 	 * @return string
 	 */
-	protected function getDisabledTextWrapper($text) {
+	protected function getDisabledTextWrapper($text)
+	{
 		return '<span class="layui-disabled">' . $text . '</span>';
 	}
 
@@ -69,10 +73,11 @@ class Layui extends Paginator {
 	 * 生成普通页码按钮
 	 *
 	 * @param string $url
-	 * @param int    $page
+	 * @param int $page
 	 * @return string
 	 */
-	protected function getPageLinkWrapper($url, $page) {
+	protected function getPageLinkWrapper($url, $page)
+	{
 		if ($this->currentPage() == $page) {
 			return $this->getActivePageWrapper($page);
 		}
@@ -86,7 +91,8 @@ class Layui extends Paginator {
 	 * @param string $text
 	 * @return string
 	 */
-	protected function getActivePageWrapper($text) {
+	protected function getActivePageWrapper($text)
+	{
 		return '<span class="layui-laypage-curr"><em class="layui-laypage-em"></em><em>' . $text . '</em></span>';
 	}
 
@@ -94,10 +100,11 @@ class Layui extends Paginator {
 	 * 生成一个可点击的按钮
 	 *
 	 * @param string $url
-	 * @param int    $page
+	 * @param int $page
 	 * @return string
 	 */
-	protected function getAvailablePageWrapper($url, $page) {
+	protected function getAvailablePageWrapper($url, $page)
+	{
 		return '<a href="' . htmlentities($url) . '">' . $page . '</a>';
 	}
 
@@ -107,7 +114,8 @@ class Layui extends Paginator {
 	 * @param string $text
 	 * @return string
 	 */
-	protected function getNextButton($text = '下一页') {
+	protected function getNextButton($text = '下一页')
+	{
 		if (!$this->hasMore) {
 			return $this->getDisabledTextWrapper($text);
 		}
@@ -122,7 +130,8 @@ class Layui extends Paginator {
 	 *
 	 * @return string
 	 */
-	protected function getLinks() {
+	protected function getLinks()
+	{
 		if ($this->simple) {
 			return '';
 		}
@@ -175,7 +184,8 @@ class Layui extends Paginator {
 	 * @param array $urls
 	 * @return string
 	 */
-	protected function getUrlLinks(array $urls) {
+	protected function getUrlLinks(array $urls)
+	{
 		$html = '';
 
 		foreach ($urls as $page => $url) {
@@ -190,7 +200,8 @@ class Layui extends Paginator {
 	 *
 	 * @return string
 	 */
-	protected function getDots() {
+	protected function getDots()
+	{
 		return $this->getDisabledTextWrapper('...');
 	}
 

@@ -7,15 +7,16 @@
 
 namespace Xin\Contracts\Bus\Balance;
 
-interface BalanceRepository {
+interface BalanceRepository
+{
 
 	/**
 	 * 充值
 	 *
-	 * @param int    $userId
-	 * @param float  $amount
+	 * @param int $userId
+	 * @param float $amount
 	 * @param string $remark
-	 * @param array  $attributes
+	 * @param array $attributes
 	 * @return float
 	 */
 	public function recharge($userId, $amount, $remark = '', $attributes = []);
@@ -23,10 +24,10 @@ interface BalanceRepository {
 	/**
 	 * 消费
 	 *
-	 * @param int    $userId
-	 * @param float  $amount
+	 * @param int $userId
+	 * @param float $amount
 	 * @param string $remark
-	 * @param array  $attributes
+	 * @param array $attributes
 	 * @return mixed
 	 */
 	public function consume($userId, $amount, $remark = '', $attributes = []);

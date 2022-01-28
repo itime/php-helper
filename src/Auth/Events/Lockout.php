@@ -7,7 +7,8 @@
 
 namespace Xin\Auth\Events;
 
-class Lockout {
+class Lockout
+{
 
 	/**
 	 * The throttled request.
@@ -20,7 +21,8 @@ class Lockout {
 	 * @param mixed $request
 	 * @return void
 	 */
-	public function __construct($request) {
+	public function __construct($request)
+	{
 		$this->request = $request;
 	}
 

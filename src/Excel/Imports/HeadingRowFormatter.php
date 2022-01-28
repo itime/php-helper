@@ -4,7 +4,8 @@ namespace Xin\Excel\Imports;
 
 use InvalidArgumentException;
 
-class HeadingRowFormatter {
+class HeadingRowFormatter
+{
 
 	/**
 	 * @const string
@@ -39,7 +40,8 @@ class HeadingRowFormatter {
 	 *
 	 * @return array
 	 */
-	public static function format(array $headings): array {
+	public static function format(array $headings): array
+	{
 		return array_map(function ($value, $key) {
 			return static::callFormatter($value, $key);
 		}, $headings, array_keys($headings));
@@ -48,7 +50,8 @@ class HeadingRowFormatter {
 	/**
 	 * @param string|null $name
 	 */
-	public static function default(string $name = null) {
+	public static function default(string $name = null)
+	{
 		if (null !== $name && !isset(static::$customFormatters[$name]) && !in_array($name, static::$defaultFormatters, true)) {
 			throw new InvalidArgumentException(sprintf('Formatter "%s" does not exist', $name));
 		}
@@ -57,17 +60,19 @@ class HeadingRowFormatter {
 	}
 
 	/**
-	 * @param string   $name
+	 * @param string $name
 	 * @param callable $formatter
 	 */
-	public static function extend(string $name, callable $formatter) {
+	public static function extend(string $name, callable $formatter)
+	{
 		static::$customFormatters[$name] = $formatter;
 	}
 
 	/**
 	 * Reset the formatter.
 	 */
-	public static function reset() {
+	public static function reset()
+	{
 		static::default();
 	}
 
@@ -76,7 +81,8 @@ class HeadingRowFormatter {
 	 *
 	 * @return mixed
 	 */
-	protected static function callFormatter($value, $key = null) {
+	protected static function callFormatter($value, $key = null)
+	{
 		static::$formatter = static::$formatter ?? config('excel.imports.heading_row.formatter', self::FORMATTER_SLUG);
 
 		// Call custom formatter
@@ -97,12 +103,13 @@ class HeadingRowFormatter {
 	/**
 	 * Generate a URL friendly "slug" from a given string.
 	 *
-	 * @param string      $title
-	 * @param string      $separator
+	 * @param string $title
+	 * @param string $separator
 	 * @param string|null $language
 	 * @return string
 	 */
-	public static function slug($title, $separator = '-', $language = 'en') {
+	public static function slug($title, $separator = '-', $language = 'en')
+	{
 		// $title = $language ? static::ascii($title, $language) : $title;
 
 		// Convert all dashes/underscores into separator

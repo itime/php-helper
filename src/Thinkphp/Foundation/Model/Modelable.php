@@ -10,7 +10,8 @@ namespace Xin\Thinkphp\Foundation\Model;
 /**
  * @mixin \think\Model
  */
-trait Modelable {
+trait Modelable
+{
 
 	/**
 	 * 获取数据列表
@@ -22,7 +23,8 @@ trait Modelable {
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function getList($query = [], $options = []) {
+	public static function getList($query = [], $options = [])
+	{
 		return static::newPlainQuery($query, $options)->select();
 	}
 
@@ -32,11 +34,12 @@ trait Modelable {
 	 * @param mixed $query
 	 * @param array $options
 	 * @param mixed $listRows
-	 * @param bool  $simple
+	 * @param bool $simple
 	 * @return \think\Paginator
 	 * @throws \think\db\exception\DbException
 	 */
-	public static function getPaginate($query, $options = [], $listRows = 15, $simple = false) {
+	public static function getPaginate($query, $options = [], $listRows = 15, $simple = false)
+	{
 		return static::newPlainQuery($query, $options)->paginate($listRows, $simple);
 	}
 
@@ -50,7 +53,8 @@ trait Modelable {
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function getPlain($query, $options = []) {
+	public static function getPlain($query, $options = [])
+	{
 		$info = static::newPlainQuery($query, $options)->find();
 
 		return static::resolvePlain($info, $options);
@@ -59,14 +63,15 @@ trait Modelable {
 	/**
 	 * 获取简单的信息数据
 	 *
-	 * @param int   $id
+	 * @param int $id
 	 * @param array $options
 	 * @return self
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function getPlainById($id, $options = []) {
+	public static function getPlainById($id, $options = [])
+	{
 		$info = static::newPlainQuery(null, $options)->find($id);
 
 		return static::resolvePlain($info, $options);
@@ -75,11 +80,12 @@ trait Modelable {
 	/**
 	 * 简单数据额外处理
 	 *
-	 * @param self  $info
+	 * @param self $info
 	 * @param array $options
 	 * @return self
 	 */
-	protected static function resolvePlain($info, $options = []) {
+	protected static function resolvePlain($info, $options = [])
+	{
 		return $info;
 	}
 
@@ -94,7 +100,8 @@ trait Modelable {
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function getDetail($query, $with = [], $options = []) {
+	public static function getDetail($query, $with = [], $options = [])
+	{
 		$query = static::with($with)->where($query);
 
 		$info = static::applyOptions($query, $options)->find();
@@ -105,7 +112,7 @@ trait Modelable {
 	/**
 	 * 根据主键ID获取数据详细信息
 	 *
-	 * @param int   $id
+	 * @param int $id
 	 * @param array $with
 	 * @param array $options
 	 * @return self
@@ -113,7 +120,8 @@ trait Modelable {
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function getDetailById($id, $with = [], $options = []) {
+	public static function getDetailById($id, $with = [], $options = [])
+	{
 		$info = static::applyOptions(static::with($with), $options)->find($id);
 
 		return static::resolveDetail($info, $options);
@@ -122,11 +130,12 @@ trait Modelable {
 	/**
 	 * 详细数据额外处理
 	 *
-	 * @param self  $info
+	 * @param self $info
 	 * @param array $options
 	 * @return self
 	 */
-	protected static function resolveDetail($info, $options = []) {
+	protected static function resolveDetail($info, $options = [])
+	{
 		return $info;
 	}
 
@@ -137,7 +146,8 @@ trait Modelable {
 	 * @param array $options
 	 * @return \think\db\Query|\think\Model
 	 */
-	public static function newPlainQuery($query = null, $options = []) {
+	public static function newPlainQuery($query = null, $options = [])
+	{
 		$fields = static::getPlainFields();
 		if (isset($options['field'])) {
 			if (is_callable($options['field'])) {
@@ -162,7 +172,8 @@ trait Modelable {
 	 *
 	 * @return array
 	 */
-	public static function getPlainFields() {
+	public static function getPlainFields()
+	{
 		return [];
 	}
 
@@ -170,7 +181,8 @@ trait Modelable {
 	 * 获取要公开的字段列表，一般用于管理查询数据
 	 * @return string[]
 	 */
-	public static function getPublicFields() {
+	public static function getPublicFields()
+	{
 		return static::getPlainFields();
 	}
 
@@ -181,7 +193,8 @@ trait Modelable {
 	 * @param array $options
 	 * @return \think\Model|\think\db\Query
 	 */
-	public static function applyOptions($baseQuery, $options = null) {
+	public static function applyOptions($baseQuery, $options = null)
+	{
 		if ($options === null) {
 			return $baseQuery;
 		}

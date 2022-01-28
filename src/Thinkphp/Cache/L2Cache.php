@@ -10,7 +10,8 @@ namespace Xin\Thinkphp\Cache;
 use think\App;
 use think\cache\Driver;
 
-class L2Cache extends Driver {
+class L2Cache extends Driver
+{
 
 	/**
 	 * @var string[]
@@ -38,9 +39,10 @@ class L2Cache extends Driver {
 	 * L2Cache constructor.
 	 *
 	 * @param \think\App $app
-	 * @param array      $config
+	 * @param array $config
 	 */
-	public function __construct(App $app, array $config) {
+	public function __construct(App $app, array $config)
+	{
 		$this->config = array_merge($this->config, $config);
 
 		$this->cache = $app['cache'];
@@ -50,7 +52,8 @@ class L2Cache extends Driver {
 	/**
 	 * @inheritDoc
 	 */
-	public function inc(string $name, int $step = 1) {
+	public function inc(string $name, int $step = 1)
+	{
 		$this->cache->inc($name, $step);
 		$this->db()->where(['key' => $name])->inc('value', $step);
 	}
@@ -58,7 +61,8 @@ class L2Cache extends Driver {
 	/**
 	 * @inheritDoc
 	 */
-	public function dec(string $name, int $step = 1) {
+	public function dec(string $name, int $step = 1)
+	{
 		$this->cache->dec($name, $step);
 		$this->db()->where(['key' => $name])->dec('value', $step);
 	}
@@ -67,7 +71,8 @@ class L2Cache extends Driver {
 	 * @inheritDoc
 	 * @throws \think\db\exception\DbException
 	 */
-	public function clearTag(array $keys) {
+	public function clearTag(array $keys)
+	{
 		$this->cache->clearTag($keys);
 		$this->db()->whereIn('tag', $keys)->delete();
 	}
@@ -75,7 +80,8 @@ class L2Cache extends Driver {
 	/**
 	 * @inheritDoc
 	 */
-	public function get($key, $default = null) {
+	public function get($key, $default = null)
+	{
 		$value = $this->cache->get($key, null);
 
 		if ($value !== null) {
@@ -106,7 +112,8 @@ class L2Cache extends Driver {
 	/**
 	 * @inheritDoc
 	 */
-	public function set($key, $value, $ttl = null) {
+	public function set($key, $value, $ttl = null)
+	{
 		if (is_null($key)) return false;
 
 		$this->cache->set($key, $value, $ttl);
@@ -140,7 +147,8 @@ class L2Cache extends Driver {
 	 * @inheritDoc
 	 * @throws \think\db\exception\DbException
 	 */
-	public function delete($key) {
+	public function delete($key)
+	{
 		$this->cache->delete($key);
 		$this->db()->where(['key' => $key])->delete();
 	}
@@ -149,7 +157,8 @@ class L2Cache extends Driver {
 	 * @inheritDoc
 	 * @throws \think\db\exception\DbException
 	 */
-	public function clear() {
+	public function clear()
+	{
 		$this->cache->clear();
 		$this->db()->where('id', '<>', 0)->delete();
 	}
@@ -157,7 +166,8 @@ class L2Cache extends Driver {
 	/**
 	 * @inheritDoc
 	 */
-	public function has($key) {
+	public function has($key)
+	{
 		$flag = $this->cache->has($key);
 
 		if (!$flag) {
@@ -174,7 +184,8 @@ class L2Cache extends Driver {
 	 * @param int $expiration
 	 * @return bool
 	 */
-	protected function isExpired($expiration) {
+	protected function isExpired($expiration)
+	{
 		$expiration = $this->getExpireTime($expiration);
 
 		return $expiration != 0 && $expiration <= time();
@@ -183,7 +194,8 @@ class L2Cache extends Driver {
 	/**
 	 * @return \think\Db|\think\db\Query
 	 */
-	protected function db() {
+	protected function db()
+	{
 		if ($this->tableInstance === null) {
 			$this->tableInstance = $this->db->name(
 				$this->config['table']

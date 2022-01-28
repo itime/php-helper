@@ -9,6 +9,7 @@ namespace Xin\Thinkphp\Foundation;
 
 use think\Service;
 
-class ServiceProvider extends Service {
+class ServiceProvider extends Service
+{
 
 }

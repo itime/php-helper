@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Transaction;
 
-interface Transaction {
+interface Transaction
+{
 
 	/**
 	 * 是否等待中

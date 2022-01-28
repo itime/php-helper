@@ -2,7 +2,8 @@
 
 namespace Xin\Contracts\Task;
 
-interface Taskable {
+interface Taskable
+{
 
 	/**
 	 * 当前任务是否等待中（前端展示应统一展示为进行中）
@@ -71,7 +72,7 @@ interface Taskable {
 	/**
 	 * 设置失败的状态
 	 * @param string $error
-	 * @param array  $attributes
+	 * @param array $attributes
 	 * @return bool
 	 */
 	public function setFailedStatus($error, $attributes = []);
@@ -86,7 +87,7 @@ interface Taskable {
 	/**
 	 * 设置任务为已结束状态
 	 * @param string $error
-	 * @param array  $attributes
+	 * @param array $attributes
 	 * @return bool
 	 */
 	public function setStoppedStatus($error = null, $attributes = []);

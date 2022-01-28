@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Menu;
 
-interface Repository {
+interface Repository
+{
 
 	/**
 	 * 获取所有菜单
@@ -27,9 +28,9 @@ interface Repository {
 	/**
 	 * 写入一组菜单
 	 *
-	 * @param array  $menus
+	 * @param array $menus
 	 * @param string $plugin
-	 * @param array  $append
+	 * @param array $append
 	 * @return bool
 	 */
 	public function puts($menus, $app = null, $append = []);

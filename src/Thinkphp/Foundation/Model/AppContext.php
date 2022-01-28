@@ -7,7 +7,8 @@
 
 namespace Xin\Thinkphp\Foundation\Model;
 
-class AppContext {
+class AppContext
+{
 
 	/**
 	 * @var int
@@ -32,13 +33,15 @@ class AppContext {
 	/**
 	 * MultiAppContext constructor.
 	 */
-	protected function __construct() {
+	protected function __construct()
+	{
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getGlobalAppId() {
+	public function getGlobalAppId()
+	{
 		if ($this->globalAppId === null && $this->globalAppIdResolver) {
 			$this->globalAppId = call_user_func($this->globalAppIdResolver);
 		}
@@ -49,35 +52,40 @@ class AppContext {
 	/**
 	 * @param int $appId
 	 */
-	public function setGlobalAppId($appId) {
+	public function setGlobalAppId($appId)
+	{
 		$this->globalAppId = (int)$appId;
 	}
 
 	/**
 	 * @param bool $enable
 	 */
-	public function enableGlobalAppId($enable = true) {
+	public function enableGlobalAppId($enable = true)
+	{
 		$this->enableGlobalAppId = $enable;
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isEnableGlobalAppId() {
+	public function isEnableGlobalAppId()
+	{
 		return $this->enableGlobalAppId;
 	}
 
 	/**
 	 * @param callable $resolver
 	 */
-	public function setGlobalAppIdResolver(callable $resolver) {
+	public function setGlobalAppIdResolver(callable $resolver)
+	{
 		$this->globalAppIdResolver = $resolver;
 	}
 
 	/**
 	 * @return static
 	 */
-	public static function getInstance() {
+	public static function getInstance()
+	{
 		if (self::$instance == null) {
 			self::$instance = new static();
 		}

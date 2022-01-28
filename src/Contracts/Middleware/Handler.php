@@ -2,12 +2,13 @@
 
 namespace Xin\Contracts\Middleware;
 
-interface Handler {
+interface Handler
+{
 
 	/**
 	 * Process the payload.
 	 *
-	 * @param mixed    $payload
+	 * @param mixed $payload
 	 * @param callable $next
 	 *
 	 * @return mixed

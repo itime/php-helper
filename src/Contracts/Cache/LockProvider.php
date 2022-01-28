@@ -7,13 +7,14 @@
 
 namespace Xin\Contracts\Cache;
 
-interface LockProvider {
+interface LockProvider
+{
 
 	/**
 	 * Get a lock instance.
 	 *
-	 * @param string      $name
-	 * @param int         $seconds
+	 * @param string $name
+	 * @param int $seconds
 	 * @param string|null $owner
 	 * @return \Xin\Contracts\Cache\Lock
 	 */

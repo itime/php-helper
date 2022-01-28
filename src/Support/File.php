@@ -12,7 +12,8 @@ namespace Xin\Support;
 /**
  * 目录操作类
  */
-final class File {
+final class File
+{
 
 	/**
 	 * 获取指定目录下所有的文件，包括子目录下的文件
@@ -20,7 +21,8 @@ final class File {
 	 * @param string $dir
 	 * @return array
 	 */
-	public static function getFiles($dir) {
+	public static function getFiles($dir)
+	{
 		$files = [];
 		$each = function ($dir) use (&$each, &$files) {
 			$it = new \FilesystemIterator($dir);
@@ -41,10 +43,11 @@ final class File {
 	/**
 	 * 递归指定目录下所有的文件，包括子目录下的文件
 	 *
-	 * @param string   $dir
+	 * @param string $dir
 	 * @param callable $callback
 	 */
-	public static function each($dir, callable $callback) {
+	public static function each($dir, callable $callback)
+	{
 		$each = function ($dir) use (&$each, $callback) {
 			$it = new \FilesystemIterator($dir);
 
@@ -73,7 +76,8 @@ final class File {
 	 * @param string $dir
 	 * @return bool
 	 */
-	public static function delete($dir) {
+	public static function delete($dir)
+	{
 		$each = function ($dir) use (&$each) {
 			if (!is_dir($dir)) {
 				return true;
@@ -113,7 +117,8 @@ final class File {
 	 *
 	 * @param array $files
 	 */
-	public static function createDirOrFiles(array $files) {
+	public static function createDirOrFiles(array $files)
+	{
 		foreach ($files as $key => $value) {
 			$deep = substr($value, -1);
 			if ($deep == DIRECTORY_SEPARATOR) {
@@ -130,18 +135,20 @@ final class File {
 	 * @param string $prefix
 	 * @return false|string
 	 */
-	public static function tempFilePath($prefix = '') {
+	public static function tempFilePath($prefix = '')
+	{
 		return tempnam(sys_get_temp_dir(), empty($prefix) ? uniqid() : $prefix);
 	}
 
 	/**
 	 * 写入数据到临时文件中
 	 *
-	 * @param mixed  $data
+	 * @param mixed $data
 	 * @param string $prefix
 	 * @return false|string
 	 */
-	public static function putTempFile($data, $prefix = '') {
+	public static function putTempFile($data, $prefix = '')
+	{
 		$filePath = static::tempFilePath($prefix);
 		if ($filePath === false) {
 			return false;

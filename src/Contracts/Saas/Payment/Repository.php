@@ -9,7 +9,8 @@ namespace Xin\Contracts\Saas\Payment;
 
 use Xin\Contracts\Payment\Factory;
 
-interface Repository extends Factory {
+interface Repository extends Factory
+{
 
 	/**
 	 * 锁定 appId
@@ -28,7 +29,7 @@ interface Repository extends Factory {
 	/**
 	 * 根据id获取微信支付的实例
 	 *
-	 * @param int   $id
+	 * @param int $id
 	 * @param array $options
 	 * @return \Yansongda\Pay\Gateways\Wechat
 	 */
@@ -37,9 +38,9 @@ interface Repository extends Factory {
 	/**
 	 * 根据应用id获取微信支付的实例
 	 *
-	 * @param int    $appId
+	 * @param int $appId
 	 * @param string $name
-	 * @param array  $options
+	 * @param array $options
 	 * @return \Yansongda\Pay\Gateways\Wechat
 	 */
 	public function wechatOfAppId($appId, $name = null, array $options = []);
@@ -54,7 +55,7 @@ interface Repository extends Factory {
 	/**
 	 * 根据应用id获取支付宝支付的实例
 	 *
-	 * @param int   $id
+	 * @param int $id
 	 * @param array $options
 	 * @return \Yansongda\Pay\Gateways\Alipay
 	 */
@@ -63,9 +64,9 @@ interface Repository extends Factory {
 	/**
 	 * 根据应用id获取支付宝支付的实例
 	 *
-	 * @param int    $appId
+	 * @param int $appId
 	 * @param string $name
-	 * @param array  $options
+	 * @param array $options
 	 * @return \Yansongda\Pay\Gateways\Alipay
 	 */
 	public function alipayOfAppId($appId, $name = null, array $options = []);

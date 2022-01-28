@@ -6,7 +6,8 @@ use Xin\Capsule\Service;
 use Xin\Contracts\Robot\Robot;
 use Xin\Http\HasHttpRequests;
 
-class QyWork extends Service implements Robot {
+class QyWork extends Service implements Robot
+{
 
 	use HasHttpRequests;
 
@@ -15,7 +16,8 @@ class QyWork extends Service implements Robot {
 	/**
 	 * @inheritDoc
 	 */
-	public function sendMessage(array $message, array $mentionedList = null) {
+	public function sendMessage(array $message, array $mentionedList = null)
+	{
 		if (!empty($mentionedList)) {
 			$message['mentioned_list'] = $mentionedList;
 		}
@@ -34,7 +36,8 @@ class QyWork extends Service implements Robot {
 	/**
 	 * @inheritDoc
 	 */
-	public function sendTextMessage(string $content, array $mentionedList = null, array $attributes = []) {
+	public function sendTextMessage(string $content, array $mentionedList = null, array $attributes = [])
+	{
 		return $this->sendMessage(array_merge($attributes, [
 			'msgtype' => 'text',
 			'text' => [
@@ -46,7 +49,8 @@ class QyWork extends Service implements Robot {
 	/**
 	 * @inheritDoc
 	 */
-	public function sendMarkdownMessage($content, array $mentionedList = null, array $attributes = []) {
+	public function sendMarkdownMessage($content, array $mentionedList = null, array $attributes = [])
+	{
 		return $this->sendMessage(array_merge($attributes, [
 			'msgtype' => 'markdown',
 			'markdown' => [
@@ -58,7 +62,8 @@ class QyWork extends Service implements Robot {
 	/**
 	 * @inheritDoc
 	 */
-	public function sendImageMessage($content, $fileMD5, array $mentionedList = null, array $attributes = []) {
+	public function sendImageMessage($content, $fileMD5, array $mentionedList = null, array $attributes = [])
+	{
 		return $this->sendMessage(array_merge($attributes, [
 			'msgtype' => 'image',
 			'image' => [
@@ -71,7 +76,8 @@ class QyWork extends Service implements Robot {
 	/**
 	 * @inheritDoc
 	 */
-	public function sendFeedCardMessage($articles, array $mentionedList = null, array $attributes = []) {
+	public function sendFeedCardMessage($articles, array $mentionedList = null, array $attributes = [])
+	{
 		return $this->sendMessage(array_merge($attributes, [
 			'msgtype' => 'news',
 			'news' => [
@@ -83,7 +89,8 @@ class QyWork extends Service implements Robot {
 	/**
 	 * @inheritDoc
 	 */
-	public function sendFileMessage($mediaId, array $mentionedList = null) {
+	public function sendFileMessage($mediaId, array $mentionedList = null)
+	{
 		return $this->sendMessage(array_merge($attributes, [
 			'msgtype' => 'file',
 			'file' => [

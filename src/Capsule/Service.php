@@ -4,7 +4,8 @@ namespace Xin\Capsule;
 
 use Xin\Support\Traits\Macroable;
 
-abstract class Service {
+abstract class Service
+{
 
 	use Macroable, WithConfig, WithContainer;
 
@@ -21,7 +22,8 @@ abstract class Service {
 	/**
 	 * @param array $config
 	 */
-	public function __construct(array $config) {
+	public function __construct(array $config)
+	{
 		$this->config = array_merge_recursive($this->config, $config);
 	}
 
@@ -29,7 +31,8 @@ abstract class Service {
 	 * 获取单例
 	 * @return static|null
 	 */
-	public static function getInstance() {
+	public static function getInstance()
+	{
 		if (static::$defaultInstance == null) {
 			static::$defaultInstance = static::makeInstance();
 		}
@@ -41,7 +44,8 @@ abstract class Service {
 	 * 生成实例
 	 * @return static
 	 */
-	public static function makeInstance() {
+	public static function makeInstance()
+	{
 		throw new \RuntimeException('Interface not implemented!');
 	}
 

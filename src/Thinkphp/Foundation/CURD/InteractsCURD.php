@@ -17,7 +17,8 @@ use Xin\Thinkphp\Facade\Hint;
 /**
  * @property-read \think\Request|\Xin\Thinkphp\Http\HasValidate $request
  */
-trait InteractsCURD {
+trait InteractsCURD
+{
 
 	use Attribute;
 
@@ -27,7 +28,8 @@ trait InteractsCURD {
 	 * @param mixed $data
 	 * @return string
 	 */
-	protected function showListView($data) {
+	protected function showListView($data)
+	{
 		$this->assign('data', $data);
 
 		return $this->fetch($this->property('listTpl', 'index'));
@@ -39,7 +41,8 @@ trait InteractsCURD {
 	 * @param \think\db\Query $query
 	 * @return \think\db\Query
 	 */
-	protected function querySelect(Query $query) {
+	protected function querySelect(Query $query)
+	{
 		return $query;
 	}
 
@@ -49,7 +52,8 @@ trait InteractsCURD {
 	 * @param mixed $list
 	 * @return mixed
 	 */
-	protected function listHandle($list) {
+	protected function listHandle($list)
+	{
 		return $list;
 	}
 
@@ -59,7 +63,8 @@ trait InteractsCURD {
 	 * @return mixed
 	 * @throws \think\db\exception\DbException
 	 */
-	public function index() {
+	public function index()
+	{
 		$keywordField = $this->property('keywordField');
 		$keywords = $this->request->keywordsSql();
 
@@ -89,7 +94,8 @@ trait InteractsCURD {
 	 *
 	 * @return string
 	 */
-	protected function showCreateView($model = null) {
+	protected function showCreateView($model = null)
+	{
 		return $this->fetch($this->property('createTpl', 'edit'));
 	}
 
@@ -97,10 +103,11 @@ trait InteractsCURD {
 	 * 数据创建之前回调
 	 *
 	 * @param \think\Model $model
-	 * @param array        $data
+	 * @param array $data
 	 * @return array
 	 */
-	protected function beforeCreate($model, $data) {
+	protected function beforeCreate($model, $data)
+	{
 		return $data;
 	}
 
@@ -108,9 +115,10 @@ trait InteractsCURD {
 	 * 数据创建之后回调
 	 *
 	 * @param \think\Model $model
-	 * @param array        $data
+	 * @param array $data
 	 */
-	protected function afterCreate($model, $data) {
+	protected function afterCreate($model, $data)
+	{
 	}
 
 	/**
@@ -120,7 +128,8 @@ trait InteractsCURD {
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\DbException
 	 */
-	public function create() {
+	public function create()
+	{
 		if ($this->request->isGet()) {
 			$model = null;
 
@@ -158,7 +167,8 @@ trait InteractsCURD {
 	 * @param \think\Model $model
 	 * @return string
 	 */
-	protected function showDetailView($model) {
+	protected function showDetailView($model)
+	{
 		$this->assign('info', $model);
 
 		return $this->fetch($this->property('detailTpl', 'edit'));
@@ -171,7 +181,8 @@ trait InteractsCURD {
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public function show() {
+	public function show()
+	{
 		$model = $this->findIsEmptyAssert();
 
 		return $this->showDetailView($model);
@@ -183,7 +194,8 @@ trait InteractsCURD {
 	 * @param \think\Model $model
 	 * @return string
 	 */
-	protected function showUpdateView($model) {
+	protected function showUpdateView($model)
+	{
 		$this->assign('info', $model);
 
 		return $this->fetch($this->property('updateTpl', 'edit'));
@@ -193,10 +205,11 @@ trait InteractsCURD {
 	 * 数据更新之前回调
 	 *
 	 * @param \think\Model $model
-	 * @param array        $data
+	 * @param array $data
 	 * @return array
 	 */
-	protected function beforeUpdate($model, $data) {
+	protected function beforeUpdate($model, $data)
+	{
 		return $data;
 	}
 
@@ -204,9 +217,10 @@ trait InteractsCURD {
 	 * 数据更新之后回调
 	 *
 	 * @param \think\Model $model
-	 * @param array        $data
+	 * @param array $data
 	 */
-	protected function afterUpdate($model, $data) {
+	protected function afterUpdate($model, $data)
+	{
 	}
 
 	/**
@@ -217,7 +231,8 @@ trait InteractsCURD {
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public function update() {
+	public function update()
+	{
 		$model = $this->findIsEmptyAssert();
 
 		if ($this->request->isGet()) {
@@ -250,11 +265,12 @@ trait InteractsCURD {
 	 * 写入数据库时允许的字段
 	 *
 	 * @param \think\db\BaseQuery|\think\Model $model
-	 * @param mixed                            $data
-	 * @param bool                             $isUpdate
+	 * @param mixed $data
+	 * @param bool $isUpdate
 	 * @return mixed
 	 */
-	protected function writeAllowField($model, &$data, $isUpdate = false) {
+	protected function writeAllowField($model, &$data, $isUpdate = false)
+	{
 		if (method_exists($model, 'allowField')) {
 			return $model->allowField([]);
 		} else {
@@ -270,7 +286,8 @@ trait InteractsCURD {
 	 *
 	 * @return array
 	 */
-	protected function allowFields() {
+	protected function allowFields()
+	{
 		return array_merge([
 			'status' => 'in:0,1',
 		], $this->property('allowFields', []));
@@ -282,7 +299,8 @@ trait InteractsCURD {
 	 * @param string $field
 	 * @return bool
 	 */
-	protected function isAllowField($field) {
+	protected function isAllowField($field)
+	{
 		$allowFields = $this->allowFields();
 
 		return in_array($field, array_map('strval', array_keys($allowFields)));
@@ -291,23 +309,25 @@ trait InteractsCURD {
 	/**
 	 * 数据设置之前回调
 	 *
-	 * @param array  $ids
+	 * @param array $ids
 	 * @param string $field
-	 * @param mixed  $value
+	 * @param mixed $value
 	 * @return mixed
 	 */
-	protected function beforeSetField(&$ids, &$field, &$value) {
+	protected function beforeSetField(&$ids, &$field, &$value)
+	{
 		return $value;
 	}
 
 	/**
 	 * 数据设置之后回调
 	 *
-	 * @param array  $ids
+	 * @param array $ids
 	 * @param string $field
-	 * @param mixed  $value
+	 * @param mixed $value
 	 */
-	protected function afterSetField($ids, $field, $value) {
+	protected function afterSetField($ids, $field, $value)
+	{
 	}
 
 	/**
@@ -317,7 +337,8 @@ trait InteractsCURD {
 	 * @return \think\Response
 	 * @throws \think\db\exception\DbException
 	 */
-	public function setFieldValue($field) {
+	public function setFieldValue($field)
+	{
 		if (!$this->isAllowField($field)) {
 			throw new HttpException(403, "{$field} not in allow field list.");
 		}
@@ -366,10 +387,11 @@ trait InteractsCURD {
 	/**
 	 * 数据删除之前操作
 	 *
-	 * @param array      $ids
+	 * @param array $ids
 	 * @param array|null $where
 	 */
-	protected function beforeDelete(&$ids, array &$where = null) {
+	protected function beforeDelete(&$ids, array &$where = null)
+	{
 	}
 
 	/**
@@ -377,7 +399,8 @@ trait InteractsCURD {
 	 *
 	 * @param array $ids
 	 */
-	protected function afterDelete($ids) {
+	protected function afterDelete($ids)
+	{
 	}
 
 	/**
@@ -386,7 +409,8 @@ trait InteractsCURD {
 	 * @return mixed
 	 * @throws \think\db\exception\DbException
 	 */
-	public function delete() {
+	public function delete()
+	{
 		$ids = $this->request->idsWithValid();
 		$force = $this->request->param('force/d', 0);
 
@@ -432,7 +456,8 @@ trait InteractsCURD {
 	 * @param int|null $id
 	 * @return array|string|\think\Model
 	 */
-	protected function findIsEmptyAssert($id = null) {
+	protected function findIsEmptyAssert($id = null)
+	{
 		if (is_null($id)) {
 			$id = $this->request->idWithValid();
 		}
@@ -446,7 +471,8 @@ trait InteractsCURD {
 	 * @param string $fallback
 	 * @return mixed
 	 */
-	protected function jumpUrl($fallback = 'index') {
+	protected function jumpUrl($fallback = 'index')
+	{
 		return $this->request->previousUrl($fallback);
 	}
 

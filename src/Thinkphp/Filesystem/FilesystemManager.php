@@ -22,13 +22,15 @@ use Xin\Support\Manager;
  * @property-read \think\App app
  * @mixin \Xin\Filesystem\Filesystem
  */
-class FilesystemManager extends Manager {
+class FilesystemManager extends Manager
+{
 
 	/**
 	 * @param null|string $name
 	 * @return \Xin\Filesystem\Filesystem
 	 */
-	public function disk($name = null) {
+	public function disk($name = null)
+	{
 		return $this->driver($name);
 	}
 
@@ -37,10 +39,11 @@ class FilesystemManager extends Manager {
 	 *
 	 * @access public
 	 * @param null|string $name 名称
-	 * @param mixed       $default 默认值
+	 * @param mixed $default 默认值
 	 * @return mixed
 	 */
-	public function getConfig($name = null, $default = null) {
+	public function getConfig($name = null, $default = null)
+	{
 		if (!is_null($name)) {
 			return $this->app->config->get('filesystem.' . $name, $default);
 		}
@@ -52,11 +55,12 @@ class FilesystemManager extends Manager {
 	 * 获取磁盘配置
 	 *
 	 * @param string $disk
-	 * @param null   $name
-	 * @param null   $default
+	 * @param null $name
+	 * @param null $default
 	 * @return array
 	 */
-	public function getDiskConfig($disk, $name = null, $default = null) {
+	public function getDiskConfig($disk, $name = null, $default = null)
+	{
 		if ($config = $this->getConfig("disks.{$disk}")) {
 			return Arr::get($config, $name, $default);
 		}
@@ -68,7 +72,8 @@ class FilesystemManager extends Manager {
 	 * @param string $name
 	 * @return array|mixed|string
 	 */
-	protected function resolveType($name) {
+	protected function resolveType($name)
+	{
 		return $this->getDiskConfig($name, 'type', 'local');
 	}
 
@@ -76,7 +81,8 @@ class FilesystemManager extends Manager {
 	 * @param string $name
 	 * @return array|mixed|string
 	 */
-	protected function resolveConfig($name) {
+	protected function resolveConfig($name)
+	{
 		return $this->getDiskConfig($name);
 	}
 
@@ -85,20 +91,22 @@ class FilesystemManager extends Manager {
 	 *
 	 * @return string|null
 	 */
-	public function getDefaultDriver() {
+	public function getDefaultDriver()
+	{
 		return $this->getConfig('default');
 	}
 
 	/**
 	 * 保存文件
 	 *
-	 * @param string               $path 路径
-	 * @param File                 $file 文件
+	 * @param string $path 路径
+	 * @param File $file 文件
 	 * @param null|string|\Closure $rule 文件名规则
-	 * @param array                $options 参数
+	 * @param array $options 参数
 	 * @return bool|string
 	 */
-	public function putFile(string $path, File $file, $rule = null, array $options = []) {
+	public function putFile(string $path, File $file, $rule = null, array $options = [])
+	{
 		return $this->putFileAs($path, $file, $file->hashName($rule), $options);
 	}
 
@@ -106,12 +114,13 @@ class FilesystemManager extends Manager {
 	 * 指定文件名保存文件
 	 *
 	 * @param string $path 路径
-	 * @param File   $file 文件
+	 * @param File $file 文件
 	 * @param string $name 文件名
-	 * @param array  $options 参数
+	 * @param array $options 参数
 	 * @return bool|string
 	 */
-	public function putFileAs(string $path, File $file, string $name, array $options = []) {
+	public function putFileAs(string $path, File $file, string $name, array $options = [])
+	{
 		$stream = fopen($file->getRealPath(), 'r');
 		$path = trim($path . '/' . $name, '/');
 
@@ -131,7 +140,8 @@ class FilesystemManager extends Manager {
 	 * @param string $disk
 	 * @return string
 	 */
-	public function publicPath($savePath, $disk = null) {
+	public function publicPath($savePath, $disk = null)
+	{
 		$disk = $disk ?: $this->getDefaultDriver();
 		$domain = $this->getDiskConfig($disk, 'url');
 
@@ -144,7 +154,8 @@ class FilesystemManager extends Manager {
 	 * @param array $config
 	 * @return mixed
 	 */
-	protected function createLocalDriver(array $config) {
+	protected function createLocalDriver(array $config)
+	{
 		return $this->app->make(Local::class, [$config]);
 	}
 
@@ -155,7 +166,8 @@ class FilesystemManager extends Manager {
 	 * @return mixed
 	 * @throws \Xin\Filesystem\FilesystemException
 	 */
-	protected function createQiniuDriver(array $config) {
+	protected function createQiniuDriver(array $config)
+	{
 		if (!class_exists('Qiniu\Auth')) {
 			throw new \LogicException("请先安装七牛云驱动！");
 		}
@@ -172,7 +184,8 @@ class FilesystemManager extends Manager {
 	 * @return mixed
 	 * @throws \Xin\Filesystem\FilesystemException
 	 */
-	protected function createAliyunDriver(array $config) {
+	protected function createAliyunDriver(array $config)
+	{
 		if (!class_exists('OSS\OssClient')) {
 			throw new \LogicException("请先安装阿里云OSS驱动！");
 		}
@@ -189,7 +202,8 @@ class FilesystemManager extends Manager {
 	 * @return mixed
 	 * @throws \Xin\Filesystem\FilesystemException
 	 */
-	protected function createQCloudDriver(array $config) {
+	protected function createQCloudDriver(array $config)
+	{
 		if (!class_exists('Qcloud\Cos\Client')) {
 			throw new \LogicException("请先安装腾讯云COS驱动！");
 		}

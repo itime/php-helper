@@ -7,7 +7,8 @@
 
 namespace Xin\Support;
 
-class UBB {
+class UBB
+{
 
 	/**
 	 * 解析UBB语法
@@ -15,7 +16,8 @@ class UBB {
 	 * @param string $Text 要解析的文本
 	 * @return mixed|string
 	 */
-	public static function parse($Text) {
+	public static function parse($Text)
+	{
 		$Text = trim($Text);
 		$Text = htmlspecialchars($Text);
 		$Text = preg_replace("/\\t/is", "  ", $Text);

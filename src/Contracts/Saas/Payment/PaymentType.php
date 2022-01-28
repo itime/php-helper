@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Saas\Payment;
 
-class PaymentType {
+class PaymentType
+{
 
 	// 微信支付
 	const WECHAT = 'wechat';

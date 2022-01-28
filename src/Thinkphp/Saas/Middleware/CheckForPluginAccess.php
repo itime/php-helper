@@ -11,7 +11,8 @@ use app\Request;
 use think\App;
 use think\exception\HttpException;
 
-abstract class CheckForPluginAccess {
+abstract class CheckForPluginAccess
+{
 
 	/**
 	 * @var \think\App
@@ -28,16 +29,18 @@ abstract class CheckForPluginAccess {
 	 *
 	 * @param \think\App $app
 	 */
-	public function __construct(App $app) {
+	public function __construct(App $app)
+	{
 		$this->app = $app;
 	}
 
 	/**
 	 * @param \app\Request $request
-	 * @param callable     $next
+	 * @param callable $next
 	 * @return \think\response\View
 	 */
-	public function handle(Request $request, $next) {
+	public function handle(Request $request, $next)
+	{
 		$this->app->middleware->add(function ($request, \Closure $next) {
 			if (!$this->hasPluginAccess($request)) {
 				$e = new HttpException(403, '无此权限！');
@@ -60,7 +63,8 @@ abstract class CheckForPluginAccess {
 	 * @param \app\Request $request
 	 * @return bool
 	 */
-	protected function hasPluginAccess(Request $request) {
+	protected function hasPluginAccess(Request $request)
+	{
 		$plugin = $request->plugin();
 		if (empty($plugin) || in_array($plugin, $this->exclude)) {
 			return true;

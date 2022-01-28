@@ -2,7 +2,8 @@
 
 namespace Xin\Excel\Concerns;
 
-interface WithLimit {
+interface WithLimit
+{
 
 	/**
 	 * @return int

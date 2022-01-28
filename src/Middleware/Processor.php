@@ -5,7 +5,8 @@ namespace Xin\Middleware;
 use Closure;
 use League\Pipeline\ProcessorInterface;
 
-class Processor implements ProcessorInterface {
+class Processor implements ProcessorInterface
+{
 
 	/**
 	 * @var Closure
@@ -15,14 +16,16 @@ class Processor implements ProcessorInterface {
 	/**
 	 * @param Closure $destination
 	 */
-	public function __construct(Closure $destination) {
+	public function __construct(Closure $destination)
+	{
 		$this->destination = $destination;
 	}
 
 	/**
 	 * @inerhitDoc
 	 */
-	public function process($payload, callable ...$stages) {
+	public function process($payload, callable ...$stages)
+	{
 		$pipeline = array_reduce(
 			array_reverse($stages),
 			$this->carry(),
@@ -37,7 +40,8 @@ class Processor implements ProcessorInterface {
 	 *
 	 * @return \Closure
 	 */
-	protected function carry() {
+	protected function carry()
+	{
 		return function ($stack, $pipe) {
 			return function ($passable) use ($stack, $pipe) {
 				try {
@@ -55,7 +59,8 @@ class Processor implements ProcessorInterface {
 	 * @param \Closure $destination
 	 * @return \Closure
 	 */
-	protected function prepareDestination(Closure $destination) {
+	protected function prepareDestination(Closure $destination)
+	{
 		return function ($passable) use ($destination) {
 			try {
 				return $destination($passable);
@@ -68,11 +73,12 @@ class Processor implements ProcessorInterface {
 	/**
 	 * Handle the given exception.
 	 *
-	 * @param mixed      $passable
+	 * @param mixed $passable
 	 * @param \Exception $e
 	 * @return mixed
 	 */
-	protected function handleException($passable, \Exception $e) {
+	protected function handleException($passable, \Exception $e)
+	{
 		throw $e;
 	}
 

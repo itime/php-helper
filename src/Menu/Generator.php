@@ -9,7 +9,8 @@ namespace Xin\Menu;
 
 use Xin\Contracts\Menu\Generator as GeneratorContract;
 
-class Generator implements GeneratorContract {
+class Generator implements GeneratorContract
+{
 
 	/**
 	 * @var array
@@ -39,7 +40,8 @@ class Generator implements GeneratorContract {
 	/**
 	 * @inheritDoc
 	 */
-	public function generate(array $menus, array $options = []) {
+	public function generate(array $menus, array $options = [])
+	{
 		$this->menus = $menus;
 		$this->query = isset($options['query']) ? $options['query'] : [];
 		$this->isAdministrator = isset($options['is_administrator']) ? $options['is_administrator'] : false;
@@ -58,10 +60,11 @@ class Generator implements GeneratorContract {
 
 	/**
 	 * @param string $rule
-	 * @param array  $menus
+	 * @param array $menus
 	 * @return bool
 	 */
-	protected function tree($rule, &$menus) {
+	protected function tree($rule, &$menus)
+	{
 		$isActive = false;
 
 		foreach ($menus as &$menu) {
@@ -100,7 +103,8 @@ class Generator implements GeneratorContract {
 	 * @param array $menu
 	 * @return bool
 	 */
-	protected function resolveIshow($menu) {
+	protected function resolveIshow($menu)
+	{
 		if (isset($menu['only_admin']) && $menu['only_admin']) {
 			if (!$this->isAdministrator) {
 				return false;
@@ -122,7 +126,8 @@ class Generator implements GeneratorContract {
 	 * @param array $menu
 	 * @return string
 	 */
-	protected function getFirstUrl($menu) {
+	protected function getFirstUrl($menu)
+	{
 		if (isset($menu['url']) && strpos($menu['url'], '/')) {
 			return $menu['url'];
 		}
@@ -140,7 +145,8 @@ class Generator implements GeneratorContract {
 	 * @param string $queryStr
 	 * @return bool
 	 */
-	protected function checkQueryParams($queryStr) {
+	protected function checkQueryParams($queryStr)
+	{
 		parse_str($queryStr, $query);
 
 		foreach ($query as $k => $v) {

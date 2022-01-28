@@ -2,7 +2,8 @@
 
 namespace Xin\Wechat\EasyWechat\Work\ExternalContact;
 
-class ContactWayClient extends \EasyWeChat\Work\ExternalContact\ContactWayClient {
+class ContactWayClient extends \EasyWeChat\Work\ExternalContact\ContactWayClient
+{
 
 	/**
 	 * 获取企业已配置的「联系我」方式.
@@ -12,7 +13,8 @@ class ContactWayClient extends \EasyWeChat\Work\ExternalContact\ContactWayClient
 	 * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
 	 * @throws \GuzzleHttp\Exception\GuzzleException
 	 */
-	public function list(array $params = []) {
+	public function list(array $params = [])
+	{
 		return $this->httpPostJson('cgi-bin/externalcontact/list_contact_way', $params);
 	}
 

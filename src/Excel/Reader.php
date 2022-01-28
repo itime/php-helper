@@ -15,7 +15,8 @@ use Xin\Excel\Events\BeforeImport;
 use Xin\Excel\Factories\ReaderFactory;
 use Xin\Excel\Imports\HeadingRowExtractor;
 
-class Reader {
+class Reader
+{
 
 	use  HasEventBus;
 
@@ -65,21 +66,23 @@ class Reader {
 	/**
 	 * @param array $config
 	 */
-	public function __construct($config = []) {
+	public function __construct($config = [])
+	{
 		$this->config = array_merge_recursive($this->config, $config);
 
 		$this->setDefaultValueBinder();
 	}
 
 	/**
-	 * @param object      $import
-	 * @param string      $filePath
+	 * @param object $import
+	 * @param string $filePath
 	 * @param string|null $readerType
 	 * @return $this
 	 * @throws Exception
 	 * @throws \Throwable
 	 */
-	protected function open($import, $filePath, $readerType = null) {
+	protected function open($import, $filePath, $readerType = null)
+	{
 		$this->importable = $import;
 
 		if ($import instanceof WithEvents) {
@@ -103,12 +106,13 @@ class Reader {
 
 	/**
 	 * @param Importable $import
-	 * @param string     $filePath
-	 * @param string     $readerType
+	 * @param string $filePath
+	 * @param string $readerType
 	 * @throws Exception
 	 * @throws \Throwable
 	 */
-	public function read($import, $filePath, $readerType = null, $calculateFormulas = false) {
+	public function read($import, $filePath, $readerType = null, $calculateFormulas = false)
+	{
 		$this->open($import, $filePath, $readerType);
 
 		foreach ($this->worksheetInfoList as $sheetIndex => $info) {
@@ -147,14 +151,16 @@ class Reader {
 	/**
 	 * @return IReader
 	 */
-	public function getPhpSpreadsheetReader(): IReader {
+	public function getPhpSpreadsheetReader(): IReader
+	{
 		return $this->reader;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getTotalRows(): array {
+	public function getTotalRows(): array
+	{
 		$totalRows = [];
 		foreach ($this->worksheetInfoList as $worksheet) {
 			$totalRows[$worksheet['worksheetName']] = $worksheet['totalRows'];
@@ -166,28 +172,32 @@ class Reader {
 	/**
 	 * @return Spreadsheet
 	 */
-	public function getDelegate() {
+	public function getDelegate()
+	{
 		return $this->spreadsheet;
 	}
 
 	/**
 	 * @param object $import
 	 */
-	public function beforeImport($import) {
+	public function beforeImport($import)
+	{
 		$this->raise(new BeforeImport($this, $import));
 	}
 
 	/**
 	 * @param object $import
 	 */
-	public function afterImport($import) {
+	public function afterImport($import)
+	{
 		$this->raise(new AfterImport($this, $import));
 	}
 
 	/**
 	 * @return $this
 	 */
-	public function setDefaultValueBinder() {
+	public function setDefaultValueBinder()
+	{
 		$valueBinder = $this->config['value_binder'] ?? DefaultValueBinder::class;
 		Cell::setValueBinder(app($valueBinder));
 

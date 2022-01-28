@@ -12,7 +12,8 @@ use think\Validate;
 /**
  * 配置验证器
  */
-class PluginValidate extends Validate {
+class PluginValidate extends Validate
+{
 
 	/**
 	 * 验证规则

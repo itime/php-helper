@@ -7,8 +7,9 @@
 
 namespace Xin\Contracts\Order;
 
-use Xin\Contracts\Foundation\Repository as BaseRepository;
+use Xin\Contracts\Repository\Repository as BaseRepository;
 
-interface Repository extends BaseRepository {
+interface Repository extends BaseRepository
+{
 
 }

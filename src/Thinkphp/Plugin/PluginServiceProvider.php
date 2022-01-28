@@ -12,20 +12,23 @@ use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Plugin\PluginManager;
 use Xin\Thinkphp\Plugin\Command\UpdateEventCache;
 
-class PluginServiceProvider extends Service {
+class PluginServiceProvider extends Service
+{
 
 	/**
 	 * 注册服务
 	 * @return void
 	 */
-	public function register() {
+	public function register()
+	{
 		$this->registerPluginManager();
 	}
 
 	/**
 	 * @return void
 	 */
-	public function boot() {
+	public function boot()
+	{
 		$this->registerDefaultConsole();
 
 		$this->registerConsole();
@@ -39,7 +42,8 @@ class PluginServiceProvider extends Service {
 	 * 注册插件管理器
 	 * @return void
 	 */
-	protected function registerPluginManager() {
+	protected function registerPluginManager()
+	{
 		$this->app->bind("pluginManager", PluginFactory::class);
 		$this->app->bind(PluginFactory::class, function () {
 			return new PluginManager(array_merge([
@@ -56,7 +60,8 @@ class PluginServiceProvider extends Service {
 	 * 注册默认命令行
 	 * @return void
 	 */
-	protected function registerDefaultConsole() {
+	protected function registerDefaultConsole()
+	{
 		$this->commands([
 			UpdateEventCache::class,
 		]);
@@ -66,7 +71,8 @@ class PluginServiceProvider extends Service {
 	 * 注册命令行
 	 * @return void
 	 */
-	protected function registerConsole() {
+	protected function registerConsole()
+	{
 		if (!$this->app->runningInConsole()) {
 			return;
 		}
@@ -100,7 +106,8 @@ class PluginServiceProvider extends Service {
 	 * @param string[] $commands
 	 * @return void
 	 */
-	protected function attachCommands($commands) {
+	protected function attachCommands($commands)
+	{
 		$commands = array_unique($commands);
 		$this->commands($commands);
 	}
@@ -110,7 +117,8 @@ class PluginServiceProvider extends Service {
 	 * @param string[] $tasks
 	 * @return void
 	 */
-	protected function attachTasks($tasks) {
+	protected function attachTasks($tasks)
+	{
 		$cronConfig = $this->app->config->get('cron');
 
 		$tasks = array_merge($cronConfig['tasks'], $tasks);
@@ -123,7 +131,8 @@ class PluginServiceProvider extends Service {
 	 * 注册Url类
 	 * @return void
 	 */
-	protected function registerUrl() {
+	protected function registerUrl()
+	{
 		$this->app->event->listen('HttpRun', function () {
 			$this->app->bind([
 				'think\route\Url' => Url::class,
@@ -135,7 +144,8 @@ class PluginServiceProvider extends Service {
 	 * 注册中间件
 	 * @return void
 	 */
-	protected function registerMiddleware() {
+	protected function registerMiddleware()
+	{
 		$this->app->event->listen('HttpRun', function () {
 			$this->app->middleware->add(function ($request, \Closure $next) {
 				/** @var PluginFactory $pm */

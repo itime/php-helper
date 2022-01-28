@@ -12,7 +12,8 @@ if (!function_exists('auth')) {
 	 * @param string $guard
 	 * @return object|\think\App|\Xin\Auth\AuthManager|\Xin\Contracts\Auth\Guard|\Xin\Contracts\Auth\StatefulGuard
 	 */
-	function auth($guard = null) {
+	function auth($guard = null)
+	{
 		$auth = app('auth');
 		if ($guard) {
 			return $auth->guard($guard);
@@ -29,7 +30,8 @@ if (!function_exists('auth_user')) {
 	 * @param string $guard
 	 * @return mixed
 	 */
-	function auth_user($guard = null) {
+	function auth_user($guard = null)
+	{
 		return auth($guard)->user();
 	}
 }
@@ -41,7 +43,8 @@ if (!function_exists('auth_user_id')) {
 	 * @param string $guard
 	 * @return int
 	 */
-	function auth_user_id($guard = null) {
+	function auth_user_id($guard = null)
+	{
 		return auth($guard)->id();
 	}
 }
@@ -53,7 +56,8 @@ if (!function_exists('is_administrator')) {
 	 * @param string $guard
 	 * @return bool
 	 */
-	function is_administrator($guard = null) {
+	function is_administrator($guard = null)
+	{
 		return auth($guard)->isAdministrator();
 	}
 }
@@ -65,7 +69,8 @@ if (!function_exists('is_login')) {
 	 * @param string $guard
 	 * @return bool
 	 */
-	function is_login($guard = null) {
+	function is_login($guard = null)
+	{
 		return auth($guard)->check();
 	}
 }
@@ -77,7 +82,8 @@ if (!function_exists('is_guest')) {
 	 * @param string $guard
 	 * @return bool
 	 */
-	function is_guest($guard = null) {
+	function is_guest($guard = null)
+	{
 		return auth($guard)->guest();
 	}
 }

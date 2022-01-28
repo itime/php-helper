@@ -9,7 +9,8 @@ namespace Xin\Foundation;
 
 use Xin\Support\Traits\Macroable;
 
-class ClassMapManager implements \ArrayAccess {
+class ClassMapManager implements \ArrayAccess
+{
 
 	use Macroable;
 
@@ -23,7 +24,8 @@ class ClassMapManager implements \ArrayAccess {
 	 *
 	 * @return array
 	 */
-	public function getMaps() {
+	public function getMaps()
+	{
 		return $this->maps;
 	}
 
@@ -31,7 +33,8 @@ class ClassMapManager implements \ArrayAccess {
 	 * 获取所有的类型
 	 * @return string[]
 	 */
-	public function getTypes() {
+	public function getTypes()
+	{
 		return array_keys($this->maps);
 	}
 
@@ -39,7 +42,8 @@ class ClassMapManager implements \ArrayAccess {
 	 * 获取所有映射的类
 	 * @return array
 	 */
-	public function getClassList() {
+	public function getClassList()
+	{
 		return array_values($this->maps);
 	}
 
@@ -49,7 +53,8 @@ class ClassMapManager implements \ArrayAccess {
 	 * @param string $type
 	 * @param string $class
 	 */
-	public function bind($type, $class) {
+	public function bind($type, $class)
+	{
 		if ($this->has($type)) {
 			throw new \LogicException("class map {$type} duplicate defined.");
 		}
@@ -63,7 +68,8 @@ class ClassMapManager implements \ArrayAccess {
 	 * @param string $type
 	 * @return bool
 	 */
-	public function has($type) {
+	public function has($type)
+	{
 		return isset($this->maps[$type]);
 	}
 
@@ -73,7 +79,8 @@ class ClassMapManager implements \ArrayAccess {
 	 * @param string $type
 	 * @return string
 	 */
-	public function get($type) {
+	public function get($type)
+	{
 		if (!$this->has($type)) {
 			throw new \LogicException("class map {$type} not defined.");
 		}
@@ -86,7 +93,8 @@ class ClassMapManager implements \ArrayAccess {
 	 * @param string $type
 	 * @return void
 	 */
-	public function forget($type) {
+	public function forget($type)
+	{
 		unset($this->maps[$type]);
 	}
 
@@ -94,7 +102,8 @@ class ClassMapManager implements \ArrayAccess {
 	 * 清除类型映射
 	 * @return void
 	 */
-	public function clear() {
+	public function clear()
+	{
 		$this->maps = [];
 	}
 
@@ -103,10 +112,11 @@ class ClassMapManager implements \ArrayAccess {
 	 *
 	 * @param string $type
 	 * @param string $method
-	 * @param array  $args
+	 * @param array $args
 	 * @return false|mixed
 	 */
-	public function call($type, $method, $args = []) {
+	public function call($type, $method, $args = [])
+	{
 		$class = $this->get($type);
 
 		if (!method_exists($class, $method)) {
@@ -120,11 +130,12 @@ class ClassMapManager implements \ArrayAccess {
 	 * 检查对应关联的资源是否存在
 	 *
 	 * @param string $type
-	 * @param int    $id
+	 * @param int $id
 	 * @return bool
 	 * @todo
 	 */
-	public function checkExist($type, $id) {
+	public function checkExist($type, $id)
+	{
 		$class = $this->get($type);
 
 		$result = false;
@@ -144,28 +155,32 @@ class ClassMapManager implements \ArrayAccess {
 	/**
 	 * @inheritDoc
 	 */
-	public function offsetExists($offset) {
+	public function offsetExists($offset)
+	{
 		return $this->has($offset);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function offsetGet($offset) {
+	public function offsetGet($offset)
+	{
 		return $this->get($offset);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function offsetSet($offset, $value) {
+	public function offsetSet($offset, $value)
+	{
 		$this->bind($offset, $value);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function offsetUnset($offset) {
+	public function offsetUnset($offset)
+	{
 		$this->forget($offset);
 	}
 

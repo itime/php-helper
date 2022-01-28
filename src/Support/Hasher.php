@@ -7,7 +7,8 @@
 
 namespace Xin\Support;
 
-class Hasher {
+class Hasher
+{
 
 	/**
 	 * The default cost factor.
@@ -29,7 +30,8 @@ class Hasher {
 	 * @param array $options
 	 * @return void
 	 */
-	public function __construct(array $options = []) {
+	public function __construct(array $options = [])
+	{
 		$this->rounds = $options['rounds'] ?? $this->rounds;
 		$this->verifyAlgorithm = $options['verify'] ?? $this->verifyAlgorithm;
 	}
@@ -38,11 +40,12 @@ class Hasher {
 	 * Hash the given value.
 	 *
 	 * @param string $value
-	 * @param array  $options
+	 * @param array $options
 	 * @return string
 	 * @throws \RuntimeException
 	 */
-	public function make($value, array $options = []) {
+	public function make($value, array $options = [])
+	{
 		$hash = password_hash($value, PASSWORD_BCRYPT, [
 			'cost' => $this->cost($options),
 		]);
@@ -59,11 +62,12 @@ class Hasher {
 	 *
 	 * @param string $value
 	 * @param string $hashedValue
-	 * @param array  $options
+	 * @param array $options
 	 * @return bool
 	 * @throws \RuntimeException
 	 */
-	public function check($value, $hashedValue, array $options = []) {
+	public function check($value, $hashedValue, array $options = [])
+	{
 		if ($this->verifyAlgorithm && $this->info($hashedValue)['algoName'] !== 'bcrypt') {
 			throw new \RuntimeException('This password does not use the Bcrypt algorithm.');
 		}
@@ -79,10 +83,11 @@ class Hasher {
 	 * Check if the given hash has been hashed using the given options.
 	 *
 	 * @param string $hashedValue
-	 * @param array  $options
+	 * @param array $options
 	 * @return bool
 	 */
-	public function needsRehash($hashedValue, array $options = []) {
+	public function needsRehash($hashedValue, array $options = [])
+	{
 		return password_needs_rehash($hashedValue, PASSWORD_BCRYPT, [
 			'cost' => $this->cost($options),
 		]);
@@ -94,7 +99,8 @@ class Hasher {
 	 * @param int $rounds
 	 * @return $this
 	 */
-	public function setRounds($rounds) {
+	public function setRounds($rounds)
+	{
 		$this->rounds = (int)$rounds;
 
 		return $this;
@@ -106,7 +112,8 @@ class Hasher {
 	 * @param array $options
 	 * @return int
 	 */
-	protected function cost(array $options = []) {
+	protected function cost(array $options = [])
+	{
 		return $options['rounds'] ?? $this->rounds;
 	}
 
@@ -116,7 +123,8 @@ class Hasher {
 	 * @param string $hashedValue
 	 * @return array
 	 */
-	public function info($hashedValue) {
+	public function info($hashedValue)
+	{
 		return password_get_info($hashedValue);
 	}
 

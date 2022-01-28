@@ -16,7 +16,8 @@ use Xin\Contracts\Auth\Factory as AuthFactory;
 use Xin\Contracts\Auth\UserProvider as UserProviderContract;
 use Xin\Thinkphp\Auth\Access\CheckForRoute;
 
-class AuthServiceProvider extends Service {
+class AuthServiceProvider extends Service
+{
 
 	/**
 	 * @var callable
@@ -26,7 +27,8 @@ class AuthServiceProvider extends Service {
 	/**
 	 * @inheritDoc
 	 */
-	public function register() {
+	public function register()
+	{
 		$this->registerAuthManager();
 
 		$this->registerGuards();
@@ -45,7 +47,8 @@ class AuthServiceProvider extends Service {
 	 *
 	 * @return void
 	 */
-	protected function registerAuthManager() {
+	protected function registerAuthManager()
+	{
 		$this->app->bind([
 			'auth' => AuthFactory::class,
 			AuthFactory::class => function () {
@@ -59,7 +62,8 @@ class AuthServiceProvider extends Service {
 	/**
 	 * 注册守卫者
 	 */
-	protected function registerGuards() {
+	protected function registerGuards()
+	{
 		/** @var AuthManager $auth */
 		$auth = $this->app->make('auth');
 
@@ -82,7 +86,8 @@ class AuthServiceProvider extends Service {
 	/**
 	 * 注册数据提供者
 	 */
-	protected function registerProviders() {
+	protected function registerProviders()
+	{
 		/** @var AuthManager $auth */
 		$auth = $this->app->make('auth');
 
@@ -102,7 +107,8 @@ class AuthServiceProvider extends Service {
 	/**
 	 * 注册Request用户完成器
 	 */
-	protected function registerRequestUserResolver() {
+	protected function registerRequestUserResolver()
+	{
 		$request = $this->app->request;
 		if (!method_exists($request, 'setUserResolver')) {
 			return;
@@ -120,7 +126,8 @@ class AuthServiceProvider extends Service {
 	 *
 	 * @return void
 	 */
-	protected function registerAccessGate() {
+	protected function registerAccessGate()
+	{
 		$this->app->bind('gate', GateContract::class);
 		$this->app->bind(GateContract::class, Gate::class);
 		$this->app->bind(Gate::class, function (App $app) {
@@ -135,7 +142,8 @@ class AuthServiceProvider extends Service {
 	 *
 	 * @return void
 	 */
-	protected function registerPolicies() {
+	protected function registerPolicies()
+	{
 		$this->app->bind('abilities.route', CheckForRoute::class);
 
 		/** @var Gate $gate */

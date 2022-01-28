@@ -2,7 +2,8 @@
 
 namespace Xin\Excel\Concerns;
 
-interface WithMapping {
+interface WithMapping
+{
 
 	/**
 	 * @param mixed $row

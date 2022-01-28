@@ -9,6 +9,7 @@ namespace Xin\Thinkphp\Saas\Payment;
 
 use think\Model;
 
-class DatabasePayment extends Model {
+class DatabasePayment extends Model
+{
 
 }

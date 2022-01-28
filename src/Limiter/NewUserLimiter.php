@@ -4,12 +4,14 @@ namespace Xin\Limiter;
 
 use App\Models\UserParticipation;
 
-class NewUserLimiter extends AbstractLimiter {
+class NewUserLimiter extends AbstractLimiter
+{
 
 	/**
 	 * @inheritDoc
 	 */
-	protected function check($data) {
+	protected function check($data)
+	{
 		if ($this->exists($data['type'], $data['user_id'])) {
 			throw new \LogicException();
 		}
@@ -20,7 +22,8 @@ class NewUserLimiter extends AbstractLimiter {
 	 * @param int $userId
 	 * @return bool
 	 */
-	protected function exists($type, $userId) {
+	protected function exists($type, $userId)
+	{
 		return UserParticipation::query()->where([
 			'type' => $type,
 			'user_id' => $userId,

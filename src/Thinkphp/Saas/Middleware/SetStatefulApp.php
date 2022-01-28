@@ -13,16 +13,18 @@ use think\Response;
 use Xin\Thinkphp\Facade\Auth;
 use Xin\Thinkphp\Saas\App\DatabaseApp;
 
-class SetStatefulApp {
+class SetStatefulApp
+{
 
 	/**
 	 * api模式下检查当前应用是否合法
 	 *
 	 * @param \think\Request|\Xin\Thinkphp\Http\HasApp $request
-	 * @param \Closure                                 $next
+	 * @param \Closure $next
 	 * @return mixed
 	 */
-	public function handle($request, \Closure $next) {
+	public function handle($request, \Closure $next)
+	{
 		$request->setAppResolver(function () {
 			$xApp = Session::get('app');
 
@@ -45,7 +47,8 @@ class SetStatefulApp {
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	protected function resolve($userId) {
+	protected function resolve($userId)
+	{
 		$xApp = DatabaseApp::where(['store_id' => $userId])->find();
 
 		if (!$xApp) {

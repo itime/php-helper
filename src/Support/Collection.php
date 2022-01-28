@@ -8,15 +8,17 @@
 
 namespace Xin\Support;
 
-class Collection extends Fluent implements \Countable, \IteratorAggregate {
+class Collection extends Fluent implements \Countable, \IteratorAggregate
+{
 
 	/**
 	 * 过滤器
 	 * @param callable $callback
-	 * @param int      $mode
+	 * @param int $mode
 	 * @return $this
 	 */
-	public function filter($callback = null, $mode = 0) {
+	public function filter($callback = null, $mode = 0)
+	{
 		return new static(array_filter($this->items, $callback, $mode));
 	}
 
@@ -26,7 +28,8 @@ class Collection extends Fluent implements \Countable, \IteratorAggregate {
 	 * @param string $index
 	 * @return $this
 	 */
-	public function column($key = null, $index = null) {
+	public function column($key = null, $index = null)
+	{
 		return new static(array_column($this->items, $key, $index));
 	}
 
@@ -38,7 +41,8 @@ class Collection extends Fluent implements \Countable, \IteratorAggregate {
 	 * @return \ArrayIterator An instance of an object implementing <b>Iterator</b> or
 	 *                        <b>Traversable</b>
 	 */
-	public function getIterator() {
+	public function getIterator()
+	{
 		return new \ArrayIterator($this->items);
 	}
 
@@ -52,7 +56,8 @@ class Collection extends Fluent implements \Countable, \IteratorAggregate {
 	 *             <p>
 	 *             The return value is cast to an integer
 	 */
-	public function count() {
+	public function count()
+	{
 		return count($this->items);
 	}
 
@@ -61,7 +66,8 @@ class Collection extends Fluent implements \Countable, \IteratorAggregate {
 	 *
 	 * @return array
 	 */
-	public function __set_state() {
+	public function __set_state()
+	{
 		return $this->all();
 	}
 

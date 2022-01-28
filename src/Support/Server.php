@@ -12,14 +12,16 @@ namespace Xin\Support;
 /**
  * 系统相关操作工具类
  */
-final class Server {
+final class Server
+{
 
 	/**
 	 * 获取客户的IP地址
 	 *
 	 * @return string
 	 */
-	public static function getRemoteIp() {
+	public static function getRemoteIp()
+	{
 		if (isset($_SERVER ["HTTP_X_FORWARDED_FOR"])) {
 			$ip = $_SERVER ["HTTP_X_FORWARDED_FOR"];
 		} elseif (isset($_SERVER ["HTTP_CLIENT_IP"])) {
@@ -38,7 +40,8 @@ final class Server {
 	 *
 	 * @return int
 	 */
-	public static function getRemotePort() {
+	public static function getRemotePort()
+	{
 		$port = 0;
 
 		if (isset($_SERVER ["REMOTE_PORT"])) {
@@ -59,7 +62,8 @@ final class Server {
 	 *
 	 * @return string
 	 */
-	public static function getHostName() {
+	public static function getHostName()
+	{
 		return $_SERVER ['SERVER_NAME'];
 	}
 
@@ -68,7 +72,8 @@ final class Server {
 	 *
 	 * @return string
 	 */
-	public static function getExecuteFile() {
+	public static function getExecuteFile()
+	{
 		$urls = explode('/', strip_tags($_SERVER ['REQUEST_URI']), 2);
 
 		return count($urls) > 1 ? $urls [1] : '';
@@ -79,7 +84,8 @@ final class Server {
 	 *
 	 * @return array
 	 */
-	public static function getAllHeader() {
+	public static function getAllHeader()
+	{
 		$headers = [];
 		foreach ($_SERVER as $key => $value) {
 			if ('HTTP_' == substr($key, 0, 5)) {
@@ -107,7 +113,8 @@ final class Server {
 	 * @param bool $isVersion 是否要返回版本号
 	 * @return string
 	 */
-	public static function getClientName($isVersion = true) {
+	public static function getClientName($isVersion = true)
+	{
 		// 获取客户端版本信息
 		$getVersion = function ($str, $checkname) {
 			$pos = strpos($str, $checkname);
@@ -156,7 +163,8 @@ final class Server {
 	 *
 	 * @return array
 	 */
-	public static function getClientInfo() {
+	public static function getClientInfo()
+	{
 		$info = [];
 		$user_agent = strtolower($_SERVER ['HTTP_USER_AGENT']);
 		$firstSpilt = strpos($user_agent, ')');
@@ -187,7 +195,8 @@ final class Server {
 	 * @param bool $isExportStyle
 	 * @return string
 	 */
-	public static function serializeParams($isExportStyle = true) {
+	public static function serializeParams($isExportStyle = true)
+	{
 		if ($isExportStyle) {
 			return var_export([
 				"GET" => $_GET,
@@ -210,7 +219,8 @@ final class Server {
 	 *
 	 * @return bool
 	 */
-	public static function isMobileVisit() {
+	public static function isMobileVisit()
+	{
 		// 如果有HTTP_X_WAP_PROFILE则一定是移动设备
 		if (isset ($_SERVER['HTTP_X_WAP_PROFILE'])) {
 			return true;
@@ -257,7 +267,8 @@ final class Server {
 	 * @param $callback
 	 * @param $param
 	 */
-	public static function javascriptCall($callback, $param = '') {
+	public static function javascriptCall($callback, $param = '')
+	{
 		if (is_string($param)) {
 			$param = '"' . addslashes($param) . '"';
 		} else {
@@ -283,7 +294,8 @@ final class Server {
 	 *
 	 * @param string $script
 	 */
-	public static function sendJavascript($script) {
+	public static function sendJavascript($script)
+	{
 		echo "<script type=\"text/javascript\">{$script}</script>";
 		flush();
 		ob_flush();
@@ -292,12 +304,13 @@ final class Server {
 	/**
 	 * URL重定向
 	 *
-	 * @param string  $url 重定向的URL地址
+	 * @param string $url 重定向的URL地址
 	 * @param integer $time 重定向的等待时间（秒）
-	 * @param string  $msg 重定向前的提示信息
+	 * @param string $msg 重定向前的提示信息
 	 * @return void
 	 */
-	public static function redirect($url, $time = 0, $msg = '') {
+	public static function redirect($url, $time = 0, $msg = '')
+	{
 		//多行URL地址支持
 		$url = str_replace(["\n", "\r"], '', $url);
 		if (empty($msg)) {

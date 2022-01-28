@@ -11,7 +11,8 @@ namespace Xin\Support;
  * Class Manager
  * @deprecated
  */
-abstract class Manager {
+abstract class Manager
+{
 
 	/**
 	 * The application instance.
@@ -47,7 +48,8 @@ abstract class Manager {
 	 * @param \Psr\Container\ContainerInterface $app
 	 * @return void
 	 */
-	public function __construct($app) {
+	public function __construct($app)
+	{
 		$this->app = $app;
 	}
 
@@ -81,7 +83,8 @@ abstract class Manager {
 	 * @return mixed
 	 * @throws \InvalidArgumentException
 	 */
-	public function driver($name = null) {
+	public function driver($name = null)
+	{
 		$name = $name ?: $this->getDefaultDriver();
 
 		if (is_null($name)) {
@@ -99,7 +102,8 @@ abstract class Manager {
 	 * @param string $name
 	 * @return mixed
 	 */
-	protected function getDriver($name) {
+	protected function getDriver($name)
+	{
 		return $this->drivers[$name] ?? $this->createDriver($name);
 	}
 
@@ -109,7 +113,8 @@ abstract class Manager {
 	 * @param $name
 	 * @return array
 	 */
-	protected function resolveParams($name) {
+	protected function resolveParams($name)
+	{
 		$config = $this->resolveConfig($name);
 
 		return [$config];
@@ -122,7 +127,8 @@ abstract class Manager {
 	 * @return mixed
 	 * @throws \InvalidArgumentException
 	 */
-	protected function createDriver($name) {
+	protected function createDriver($name)
+	{
 		$type = $this->resolveType($name);
 		$params = $this->resolveParams($name);
 
@@ -146,10 +152,11 @@ abstract class Manager {
 	 * Call a custom driver creator.
 	 *
 	 * @param string $name
-	 * @param array  $params
+	 * @param array $params
 	 * @return mixed
 	 */
-	protected function callCustomCreator($name, $params) {
+	protected function callCustomCreator($name, $params)
+	{
 		return call_user_func_array(
 			$this->customCreators[$name],
 			$params
@@ -159,11 +166,12 @@ abstract class Manager {
 	/**
 	 * Register a custom driver creator Closure.
 	 *
-	 * @param string   $driver
+	 * @param string $driver
 	 * @param \Closure $callback
 	 * @return $this
 	 */
-	public function extend($driver, \Closure $callback) {
+	public function extend($driver, \Closure $callback)
+	{
 		$this->customCreators[$driver] = $callback;
 
 		return $this;
@@ -174,7 +182,8 @@ abstract class Manager {
 	 *
 	 * @return array
 	 */
-	public function getDrivers() {
+	public function getDrivers()
+	{
 		return $this->drivers;
 	}
 
@@ -182,10 +191,11 @@ abstract class Manager {
 	 * Dynamically call the default driver instance.
 	 *
 	 * @param string $method
-	 * @param array  $parameters
+	 * @param array $parameters
 	 * @return mixed
 	 */
-	public function __call($method, $parameters) {
+	public function __call($method, $parameters)
+	{
 		return $this->driver()->$method(...$parameters);
 	}
 

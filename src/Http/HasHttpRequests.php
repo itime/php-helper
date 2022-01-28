@@ -12,7 +12,8 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
 
-trait HasHttpRequests {
+trait HasHttpRequests
+{
 
 	/**
 	 * @var \GuzzleHttp\ClientInterface
@@ -43,14 +44,16 @@ trait HasHttpRequests {
 	 *
 	 * @param array $defaults
 	 */
-	public static function setDefaultOptions($defaults = []) {
+	public static function setDefaultOptions($defaults = [])
+	{
 		static::$defaults = $defaults;
 	}
 
 	/**
 	 * Return current guzzle default settings.
 	 */
-	public static function getDefaultOptions() {
+	public static function getDefaultOptions()
+	{
 		return static::$defaults;
 	}
 
@@ -59,7 +62,8 @@ trait HasHttpRequests {
 	 *
 	 * @return $this
 	 */
-	public function setHttpClient(ClientInterface $httpClient) {
+	public function setHttpClient(ClientInterface $httpClient)
+	{
 		$this->httpClient = $httpClient;
 
 		return $this;
@@ -68,7 +72,8 @@ trait HasHttpRequests {
 	/**
 	 * Return GuzzleHttp\ClientInterface instance.
 	 */
-	public function getHttpClient(): ClientInterface {
+	public function getHttpClient(): ClientInterface
+	{
 		if (!($this->httpClient instanceof ClientInterface)) {
 			if (property_exists($this, 'app') && $this->app['http_client']) {
 				$this->httpClient = $this->app['http_client'];
@@ -83,12 +88,13 @@ trait HasHttpRequests {
 	/**
 	 * Add a middleware.
 	 *
-	 * @param callable    $middleware
+	 * @param callable $middleware
 	 * @param string|null $name
 	 *
 	 * @return $this
 	 */
-	public function pushMiddleware(callable $middleware, string $name = null) {
+	public function pushMiddleware(callable $middleware, string $name = null)
+	{
 		if (!is_null($name)) {
 			$this->middlewares[$name] = $middleware;
 		} else {
@@ -101,14 +107,16 @@ trait HasHttpRequests {
 	/**
 	 * Return all middlewares.
 	 */
-	public function getMiddlewares() {
+	public function getMiddlewares()
+	{
 		return $this->middlewares;
 	}
 
 	/**
 	 * Register Guzzle middlewares.
 	 */
-	protected function registerHttpMiddlewares() {
+	protected function registerHttpMiddlewares()
+	{
 		// log
 		// $this->pushMiddleware($this->logMiddleware(), 'log');
 	}
@@ -118,7 +126,8 @@ trait HasHttpRequests {
 	 *
 	 * @return \Closure
 	 */
-	protected function logMiddleware() {
+	protected function logMiddleware()
+	{
 		// $formatter = new MessageFormatter($this->app['config']['http.log_template'] ?? MessageFormatter::DEBUG);
 		//
 		// return Middleware::log($this->app['logger'], $formatter, LogLevel::DEBUG);
@@ -129,10 +138,11 @@ trait HasHttpRequests {
 	 *
 	 * @param string $url
 	 * @param string $method
-	 * @param array  $options
+	 * @param array $options
 	 * @return Response
 	 */
-	public function request($url, $method = 'GET', $options = []): Response {
+	public function request($url, $method = 'GET', $options = []): Response
+	{
 		$this->registerHttpMiddlewares();
 
 		$method = strtoupper($method);
@@ -159,10 +169,11 @@ trait HasHttpRequests {
 	 * GET request.
 	 *
 	 * @param string $url
-	 * @param array  $query
+	 * @param array $query
 	 * @return \Psr\Http\Message\ResponseInterface|Response
 	 */
-	public function httpGet($url, array $query = []) {
+	public function httpGet($url, array $query = [])
+	{
 		return $this->request($url, 'GET', ['query' => $query]);
 	}
 
@@ -170,10 +181,11 @@ trait HasHttpRequests {
 	 * POST request.
 	 *
 	 * @param string $url
-	 * @param array  $data
+	 * @param array $data
 	 * @return \Psr\Http\Message\ResponseInterface|Response
 	 */
-	public function httpPost($url, array $data = []) {
+	public function httpPost($url, array $data = [])
+	{
 		return $this->request($url, 'POST', ['form_params' => $data]);
 	}
 
@@ -181,11 +193,12 @@ trait HasHttpRequests {
 	 * JSON request.
 	 *
 	 * @param string $url
-	 * @param array  $data
-	 * @param array  $query
+	 * @param array $data
+	 * @param array $query
 	 * @return \Psr\Http\Message\ResponseInterface|Response
 	 */
-	public function httpPostJson($url, array $data = [], array $query = []) {
+	public function httpPostJson($url, array $data = [], array $query = [])
+	{
 		return $this->request($url, 'POST', ['query' => $query, 'json' => $data]);
 	}
 
@@ -193,12 +206,13 @@ trait HasHttpRequests {
 	 * Upload file.
 	 *
 	 * @param string $url
-	 * @param array  $files
-	 * @param array  $form
-	 * @param array  $query
+	 * @param array $files
+	 * @param array $form
+	 * @param array $query
 	 * @return \Psr\Http\Message\ResponseInterface|Response
 	 */
-	public function httpUpload($url, array $files = [], array $form = [], array $query = []) {
+	public function httpUpload($url, array $files = [], array $form = [], array $query = [])
+	{
 		$multipart = [];
 
 		foreach ($files as $name => $path) {
@@ -226,7 +240,8 @@ trait HasHttpRequests {
 	/**
 	 * @return $this
 	 */
-	public function setHandlerStack(HandlerStack $handlerStack) {
+	public function setHandlerStack(HandlerStack $handlerStack)
+	{
 		$this->handlerStack = $handlerStack;
 
 		return $this;
@@ -235,7 +250,8 @@ trait HasHttpRequests {
 	/**
 	 * Build a handler stack.
 	 */
-	public function getHandlerStack(): HandlerStack {
+	public function getHandlerStack(): HandlerStack
+	{
 		if ($this->handlerStack) {
 			return $this->handlerStack;
 		}
@@ -253,7 +269,8 @@ trait HasHttpRequests {
 	 * @param array $options
 	 * @return array
 	 */
-	protected function fixJsonIssue(array $options) {
+	protected function fixJsonIssue(array $options)
+	{
 		if (isset($options['json']) && is_array($options['json'])) {
 			$options['headers'] = array_merge($options['headers'] ?? [], ['Content-Type' => 'application/json']);
 
@@ -274,7 +291,8 @@ trait HasHttpRequests {
 	 *
 	 * @return callable
 	 */
-	protected function getGuzzleHandler() {
+	protected function getGuzzleHandler()
+	{
 		if (property_exists($this, 'app') && isset($this->app['guzzle_handler'])) {
 			return is_string($handler = $this->app->raw('guzzle_handler'))
 				? new $handler()

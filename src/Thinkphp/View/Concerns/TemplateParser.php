@@ -14,7 +14,8 @@ use Exception;
  *
  * @mixin \Xin\Thinkphp\View\Template
  */
-trait TemplateParser {
+trait TemplateParser
+{
 
 	/**
 	 * 保留内容信息
@@ -32,7 +33,8 @@ trait TemplateParser {
 	 * @return void
 	 * @noinspection PhpDocMissingThrowsInspection
 	 */
-	public function parse(string &$content): void {
+	public function parse(string &$content): void
+	{
 		// 内容为空不解析
 		if (empty($content)) {
 			return;
@@ -106,7 +108,8 @@ trait TemplateParser {
 	 * @return void
 	 * @throws \Exception
 	 */
-	protected function parsePhp(string &$content): void {
+	protected function parsePhp(string &$content): void
+	{
 		// 短标签的情况要将<?标签用echo方式输出 否则无法正常输出xml标识
 		$content = preg_replace('/(<\?(?!php|=|$))/i', '<?php echo \'\\1\'; ?>' . "\n", $content);
 
@@ -123,7 +126,8 @@ trait TemplateParser {
 	 * @param string $content 要解析的模板内容
 	 * @return void
 	 */
-	protected function parseLayout(string &$content): void {
+	protected function parseLayout(string &$content): void
+	{
 		// 读取模板中的布局标签
 		if (preg_match($this->getRegex('layout'), $content, $matches)) {
 			// 替换Layout标签
@@ -153,7 +157,8 @@ trait TemplateParser {
 	 * @param string $content 要解析的模板内容
 	 * @return void
 	 */
-	protected function parseInclude(string &$content): void {
+	protected function parseInclude(string &$content): void
+	{
 		$regex = $this->getRegex('include');
 		$func = function ($template) use (&$func, &$regex, &$content) {
 			if (preg_match_all($regex, $template, $matches, PREG_SET_ORDER)) {
@@ -193,7 +198,8 @@ trait TemplateParser {
 	 * @param string $content 要解析的模板内容
 	 * @throws \Exception
 	 */
-	protected function parseExtend(string &$content): void {
+	protected function parseExtend(string &$content): void
+	{
 		$regex = $this->getRegex('extend');
 		$array = $blocks = $baseBlocks = [];
 		$extend = '';
@@ -278,11 +284,12 @@ trait TemplateParser {
 	 * 替换页面中的literal标签
 	 *
 	 * @access private
-	 * @param string  $content 模板内容
+	 * @param string $content 模板内容
 	 * @param boolean $restore 是否为还原
 	 * @return void
 	 */
-	protected function parseLiteral(string &$content, bool $restore = false): void {
+	protected function parseLiteral(string &$content, bool $restore = false): void
+	{
 		$regex = $this->getRegex($restore ? 'restoreliteral' : 'literal');
 
 		if (preg_match_all($regex, $content, $matches, PREG_SET_ORDER)) {
@@ -313,11 +320,12 @@ trait TemplateParser {
 	 * 获取模板中的block标签
 	 *
 	 * @access private
-	 * @param string  $content 模板内容
+	 * @param string $content 模板内容
 	 * @param boolean $sort 是否排序
 	 * @return array
 	 */
-	protected function parseBlock(string &$content, bool $sort = false): array {
+	protected function parseBlock(string &$content, bool $sort = false): array
+	{
 		$regex = $this->getRegex('block');
 		$result = [];
 
@@ -369,7 +377,8 @@ trait TemplateParser {
 	 * @param string $content 模板内容
 	 * @return array|void
 	 */
-	protected function getIncludeTagLib(string &$content) {
+	protected function getIncludeTagLib(string &$content)
+	{
 		// 搜索是否有TagLib标签
 		if (preg_match($this->getRegex('taglib'), $content, $matches)) {
 			// 替换TagLib标签
@@ -383,12 +392,13 @@ trait TemplateParser {
 	 * TagLib库解析
 	 *
 	 * @access public
-	 * @param string  $tagLib 要解析的标签库
-	 * @param string  $content 要解析的模板内容
+	 * @param string $tagLib 要解析的标签库
+	 * @param string $content 要解析的模板内容
 	 * @param boolean $hide 是否隐藏标签库前缀
 	 * @return void
 	 */
-	public function parseTagLib(string $tagLib, string &$content, bool $hide = false): void {
+	public function parseTagLib(string $tagLib, string &$content, bool $hide = false): void
+	{
 		if (false !== strpos($tagLib, '\\')) {
 			// 支持指定标签库的命名空间
 			$className = $tagLib;
@@ -406,11 +416,12 @@ trait TemplateParser {
 	 * 分析标签属性
 	 *
 	 * @access public
-	 * @param string      $str 属性字符串
+	 * @param string $str 属性字符串
 	 * @param string|null $name 不为空时返回指定的属性名
 	 * @return array
 	 */
-	public function parseAttr(string $str, string $name = null): array {
+	public function parseAttr(string $str, string $name = null): array
+	{
 		$regex = '/\s+(?>(?P<name>[\w-]+)\s*)=(?>\s*)([\"\'])(?P<value>(?:(?!\\2).)*)\\2/is';
 		$array = [];
 
@@ -436,7 +447,8 @@ trait TemplateParser {
 	 * @param string $content 要解析的模板内容
 	 * @return void
 	 */
-	protected function parseTag(string &$content): void {
+	protected function parseTag(string &$content): void
+	{
 		$regex = $this->getRegex('tag');
 
 		if (preg_match_all($regex, $content, $matches, PREG_SET_ORDER)) {
@@ -569,7 +581,8 @@ trait TemplateParser {
 	 *
 	 * @param string $content
 	 */
-	protected function parseDirective(string &$content): void {
+	protected function parseDirective(string &$content): void
+	{
 		$regex = $this->getRegex('@');
 		if (!preg_match_all($regex, $content, $matches, PREG_SET_ORDER)) {
 			return;
@@ -598,7 +611,8 @@ trait TemplateParser {
 	 * @param string $varStr 变量数据
 	 * @return void
 	 */
-	public function parseVar(string &$varStr): void {
+	public function parseVar(string &$varStr): void
+	{
 		$varStr = trim($varStr);
 
 		if (preg_match_all('/\$[a-zA-Z_](?>\w*)(?:[:\.][0-9a-zA-Z_](?>\w*))+/', $varStr, $matches, PREG_OFFSET_CAPTURE)) {
@@ -655,10 +669,11 @@ trait TemplateParser {
 	 *
 	 * @access public
 	 * @param string $varStr 变量字符串
-	 * @param bool   $autoescape 自动转义
+	 * @param bool $autoescape 自动转义
 	 * @return string
 	 */
-	public function parseVarFunction(string &$varStr, bool $autoescape = true): string {
+	public function parseVarFunction(string &$varStr, bool $autoescape = true): string
+	{
 		if (!$autoescape && false === strpos($varStr, '|')) {
 			return $varStr;
 		} elseif ($autoescape && !preg_match('/\|(\s)?raw(\||\s)?/i', $varStr)) {
@@ -752,7 +767,8 @@ trait TemplateParser {
 	 * @param array $vars 变量数组
 	 * @return string
 	 */
-	public function parseRequestVar(array $vars): string {
+	public function parseRequestVar(array $vars): string
+	{
 		$type = strtoupper(trim(array_shift($vars)));
 		$param = implode('.', $vars);
 
@@ -793,7 +809,8 @@ trait TemplateParser {
 	 * @param array $vars 变量数组
 	 * @return string
 	 */
-	public function parseThinkVar(array $vars): string {
+	public function parseThinkVar(array $vars): string
+	{
 		$type = strtoupper(trim(array_shift($vars)));
 		$param = implode('.', $vars);
 
@@ -824,7 +841,8 @@ trait TemplateParser {
 	 * @param string $tagName 标签名
 	 * @return string
 	 */
-	protected function getRegex(string $tagName): string {
+	protected function getRegex(string $tagName): string
+	{
 		$regex = '';
 
 		if ('tag' == $tagName) {

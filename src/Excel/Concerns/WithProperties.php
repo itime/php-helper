@@ -2,7 +2,8 @@
 
 namespace Xin\Excel\Concerns;
 
-interface WithProperties {
+interface WithProperties
+{
 
 	public function properties(): array;
 

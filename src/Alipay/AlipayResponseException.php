@@ -7,6 +7,7 @@
 
 namespace Xin\Alipay;
 
-class AlipayResponseException extends AlipayException {
+class AlipayResponseException extends AlipayException
+{
 
 }

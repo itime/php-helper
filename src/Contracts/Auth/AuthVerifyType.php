@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Auth;
 
-interface AuthVerifyType {
+interface AuthVerifyType
+{
 
 	/**
 	 * 不验证

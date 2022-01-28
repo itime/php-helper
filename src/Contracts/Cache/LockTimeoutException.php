@@ -9,6 +9,7 @@ namespace Xin\Contracts\Cache;
 
 use Exception;
 
-class LockTimeoutException extends Exception {
+class LockTimeoutException extends Exception
+{
 
 }

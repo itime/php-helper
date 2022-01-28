@@ -14,7 +14,8 @@ use think\Facade;
  * @method void shouldUse($name = null) static
  * @mixin \Xin\Auth\AuthManager
  */
-class Auth extends Facade {
+class Auth extends Facade
+{
 
 	/**
 	 * 获取当前Facade对应类名（或者已经绑定的容器对象标识）
@@ -22,7 +23,8 @@ class Auth extends Facade {
 	 * @access protected
 	 * @return string
 	 */
-	protected static function getFacadeClass() {
+	protected static function getFacadeClass()
+	{
 		return 'auth';
 	}
 

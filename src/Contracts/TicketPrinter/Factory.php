@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\TicketPrinter;
 
-interface Factory {
+interface Factory
+{
 
 	/**
 	 * 获取打印机

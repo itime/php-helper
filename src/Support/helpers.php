@@ -11,11 +11,12 @@ if (!function_exists('tap')) {
 	/**
 	 * Call the given Closure with the given value then return the value.
 	 *
-	 * @param mixed         $value
+	 * @param mixed $value
 	 * @param callable|null $callback
 	 * @return mixed
 	 */
-	function tap($value, $callback = null) {
+	function tap($value, $callback = null)
+	{
 		if (is_null($callback)) {
 			return new HigherOrderTapProxy($value);
 		}
@@ -33,7 +34,8 @@ if (!function_exists('value')) {
 	 * @param mixed $value
 	 * @return mixed
 	 */
-	function value($value) {
+	function value($value)
+	{
 		return $value instanceof Closure ? $value() : $value;
 	}
 }
@@ -45,7 +47,8 @@ if (!function_exists('blank')) {
 	 * @param mixed $value
 	 * @return bool
 	 */
-	function blank($value) {
+	function blank($value)
+	{
 		if (is_null($value)) {
 			return true;
 		}
@@ -66,16 +69,16 @@ if (!function_exists('blank')) {
 	}
 }
 
-if (! function_exists('filled')) {
+if (!function_exists('filled')) {
 	/**
 	 * Determine if a value is "filled".
 	 *
-	 * @param  mixed  $value
+	 * @param mixed $value
 	 * @return bool
 	 */
 	function filled($value)
 	{
-		return ! blank($value);
+		return !blank($value);
 	}
 }
 
@@ -85,7 +88,8 @@ if (!function_exists('windows_os')) {
 	 *
 	 * @return bool
 	 */
-	function windows_os() {
+	function windows_os()
+	{
 		return strtolower(substr(PHP_OS, 0, 3)) === 'win';
 	}
 }
@@ -96,10 +100,11 @@ if (!function_exists('object_get')) {
 	 *
 	 * @param object $object
 	 * @param string $key
-	 * @param mixed  $default
+	 * @param mixed $default
 	 * @return mixed
 	 */
-	function object_get($object, $key, $default = null) {
+	function object_get($object, $key, $default = null)
+	{
 		if (is_null($key) || trim($key) == '') {
 			return $object;
 		}
@@ -120,14 +125,15 @@ if (!function_exists('build_mysql_distance_field')) {
 	/**
 	 * 生成计算位置字段
 	 *
-	 * @param float  $longitude
-	 * @param float  $latitude
+	 * @param float $longitude
+	 * @param float $latitude
 	 * @param string $lng_name
 	 * @param string $lat_name
 	 * @param string $as_name
 	 * @return string
 	 */
-	function build_mysql_distance_field($longitude, $latitude, $lng_name = 'longitude', $lat_name = 'latitude', $as_name = 'distance') {
+	function build_mysql_distance_field($longitude, $latitude, $lng_name = 'longitude', $lat_name = 'latitude', $as_name = 'distance')
+	{
 		$sql = "ROUND(6378.138*2*ASIN(SQRT(POW(SIN(({$latitude}*PI()/180-{$lat_name}*PI()/180)/2),2)+COS({$latitude}*PI()/180)*COS({$lat_name}*PI()/180)*POW(SIN(({$longitude}*PI()/180-{$lng_name}*PI()/180)/2),2)))*1000)";
 		if ($as_name) {
 			$sql .= " AS {$as_name}";
@@ -142,12 +148,13 @@ if (!function_exists('analysis_words')) {
 	 * 关键字分词
 	 *
 	 * @param string $keyword
-	 * @param int    $num 最大返回条数
-	 * @param int    $holdLength 保留字数
+	 * @param int $num 最大返回条数
+	 * @param int $holdLength 保留字数
 	 * @return array
 	 * @deprecated
 	 */
-	function analysis_words($keyword, $num = 5, $holdLength = 48) {
+	function analysis_words($keyword, $num = 5, $holdLength = 48)
+	{
 		if ($keyword === null || $keyword === "") {
 			return [];
 		}
@@ -175,7 +182,8 @@ if (!function_exists('build_keyword_sql')) {
 	 * @return array
 	 * @deprecated
 	 */
-	function build_keyword_sql($keywords) {
+	function build_keyword_sql($keywords)
+	{
 		$keywords = analysis_words($keywords);
 
 		return array_map(function ($item) {
@@ -191,7 +199,8 @@ if (!function_exists('get_class_const_list')) {
 	 * @param string $class
 	 * @return array|bool
 	 */
-	function get_class_const_list($class) {
+	function get_class_const_list($class)
+	{
 		try {
 			$ref = new \ReflectionClass($class);
 
@@ -211,7 +220,8 @@ if (!function_exists('get_const_value')) {
 	 * @param string $name
 	 * @return mixed
 	 */
-	function get_const_value($class, $name) {
+	function get_const_value($class, $name)
+	{
 		try {
 			$ref = new \ReflectionClass($class);
 			if (!$ref->hasConstant($name)) {
@@ -234,7 +244,8 @@ if (!function_exists('const_exist')) {
 	 * @param string $name
 	 * @return bool
 	 */
-	function const_exist($class, $name) {
+	function const_exist($class, $name)
+	{
 		try {
 			$ref = new \ReflectionClass($class);
 
@@ -253,7 +264,8 @@ if (!function_exists('now')) {
 	 * @param DateTimeZone|string|null $tz $tz
 	 * @return \Carbon\Carbon
 	 */
-	function now($tz = null) {
+	function now($tz = null)
+	{
 		return \Carbon\Carbon::now($tz);
 	}
 }

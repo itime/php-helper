@@ -22,7 +22,8 @@ use Xin\Wechat\Exceptions\WechatException;
  * Class ExceptionHandle
  * @method void reportTo(\Throwable $e, string $log)
  */
-class ExceptionHandle extends Handle {
+class ExceptionHandle extends Handle
+{
 
 	/**
 	 * 不需要记录信息（日志）的异常类列表
@@ -41,7 +42,8 @@ class ExceptionHandle extends Handle {
 	/**
 	 * @inheritDoc
 	 */
-	public function report(\Throwable $exception): void {
+	public function report(\Throwable $exception): void
+	{
 		if ($this->isIgnoreReport($exception)) {
 			return;
 		}
@@ -80,7 +82,8 @@ class ExceptionHandle extends Handle {
 	/**
 	 * @inheritDoc
 	 */
-	public function render($request, \Throwable $e): Response {
+	public function render($request, \Throwable $e): Response
+	{
 		// 参数验证错误
 		if ($e instanceof ValidateException) {
 			return Hint::error($e->getMessage(), 400);
@@ -105,7 +108,8 @@ class ExceptionHandle extends Handle {
 	 * @param \Xin\Auth\AuthenticationException $e
 	 * @return \think\Response
 	 */
-	protected function authenticationHandle(AuthenticationException $e): Response {
+	protected function authenticationHandle(AuthenticationException $e): Response
+	{
 		if ($this->isJson()) {
 			return Hint::error("登录已失效", -1, $e->redirectTo());
 		} else {
@@ -116,7 +120,8 @@ class ExceptionHandle extends Handle {
 	/**
 	 * @inheritDoc
 	 */
-	protected function renderHttpException(HttpException $e): Response {
+	protected function renderHttpException(HttpException $e): Response
+	{
 		$statusCode = $e->getStatusCode();
 
 		if ($this->isJson() && in_array($statusCode, [403, 404])) {
@@ -134,7 +139,8 @@ class ExceptionHandle extends Handle {
 	/**
 	 * @inheritDoc
 	 */
-	protected function convertExceptionToResponse(\Throwable $exception): Response {
+	protected function convertExceptionToResponse(\Throwable $exception): Response
+	{
 		if (!$this->isJson()) {
 			return parent::convertExceptionToResponse($exception);
 		}
@@ -177,7 +183,8 @@ class ExceptionHandle extends Handle {
 	 *
 	 * @return bool
 	 */
-	protected function isJson() {
+	protected function isJson()
+	{
 		return $this->app->http->getName() === 'api'
 			|| $this->app->request->isAjax()
 			|| $this->app->request->isJson();

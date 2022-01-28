@@ -11,12 +11,14 @@ use Xin\Contracts\Payment\Factory as PaymentFactory;
 use Xin\Payment\PaymentManager;
 use Xin\Thinkphp\Foundation\ServiceProvider;
 
-class PaymentServiceProvider extends ServiceProvider {
+class PaymentServiceProvider extends ServiceProvider
+{
 
 	/**
 	 * 启动器
 	 */
-	public function register() {
+	public function register()
+	{
 		$this->app->bind([
 			'payment' => PaymentFactory::class,
 			PaymentFactory::class => PaymentManager::class,

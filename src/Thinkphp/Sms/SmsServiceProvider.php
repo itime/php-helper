@@ -14,12 +14,14 @@ use Xin\Thinkphp\Foundation\ServiceProvider;
 /**
  * Class SmsServiceProvider
  */
-class SmsServiceProvider extends ServiceProvider {
+class SmsServiceProvider extends ServiceProvider
+{
 
 	/**
 	 * @inheritDoc
 	 */
-	public function register() {
+	public function register()
+	{
 		$this->registerManager();
 	}
 
@@ -27,7 +29,8 @@ class SmsServiceProvider extends ServiceProvider {
 	 * 注册提示管理器
 	 * @return void
 	 */
-	protected function registerManager() {
+	protected function registerManager()
+	{
 		$this->app->bind([
 			'sms' => SmsFactory::class,
 			SmsFactory::class => SmsManager::class,

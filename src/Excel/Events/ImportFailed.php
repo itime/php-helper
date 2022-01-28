@@ -4,7 +4,8 @@ namespace Xin\Excel\Events;
 
 use Throwable;
 
-class ImportFailed {
+class ImportFailed
+{
 
 	/**
 	 * @var Throwable
@@ -14,14 +15,16 @@ class ImportFailed {
 	/**
 	 * @param Throwable $e
 	 */
-	public function __construct(Throwable $e) {
+	public function __construct(Throwable $e)
+	{
 		$this->e = $e;
 	}
 
 	/**
 	 * @return Throwable
 	 */
-	public function getException(): Throwable {
+	public function getException(): Throwable
+	{
 		return $this->e;
 	}
 

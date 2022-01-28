@@ -2,7 +2,8 @@
 
 namespace Xin\Excel;
 
-class TableImport implements Importable {
+class TableImport implements Importable
+{
 
 	/**
 	 * @var Column[]
@@ -38,7 +39,8 @@ class TableImport implements Importable {
 	 * @param Column[] $columns
 	 * @param callable $eachCallback
 	 */
-	public function __construct(array $columns, callable $eachCallback) {
+	public function __construct(array $columns, callable $eachCallback)
+	{
 		$this->columns = $columns;
 		$this->eachCallback = $eachCallback;
 	}
@@ -46,7 +48,8 @@ class TableImport implements Importable {
 	/**
 	 * @inheritDoc
 	 */
-	public function onRow(Row $row) {
+	public function onRow(Row $row)
+	{
 		if ($this->eachCallback) {
 			call_user_func($this->eachCallback, $row);
 		}
@@ -55,28 +58,32 @@ class TableImport implements Importable {
 	/**
 	 * @inheritDoc
 	 */
-	public function startRow() {
+	public function startRow()
+	{
 		return $this->startRow;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function limit() {
+	public function limit()
+	{
 		return $this->limit;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function isSkipsEmptyRows() {
+	public function isSkipsEmptyRows()
+	{
 		return $this->isSkipsEmptyRows;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function endColumn() {
+	public function endColumn()
+	{
 		return $this->endColumn;
 	}
 

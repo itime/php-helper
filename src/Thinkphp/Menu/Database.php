@@ -11,7 +11,8 @@ use think\exception\ClassNotFoundException;
 use Xin\Menu\Driver;
 use Xin\Support\Arr;
 
-class Database extends Driver {
+class Database extends Driver
+{
 
 	/**
 	 * @var \think\Collection
@@ -27,7 +28,8 @@ class Database extends Driver {
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	protected function load($plugin = null) {
+	protected function load($plugin = null)
+	{
 		if ($this->data === null) {
 			$this->data = $this->model()->order('sort')->select();
 		}
@@ -44,7 +46,8 @@ class Database extends Driver {
 	/**
 	 * @inheritDoc
 	 */
-	public function all() {
+	public function all()
+	{
 		$this->load();
 
 		return $this->data;
@@ -53,7 +56,8 @@ class Database extends Driver {
 	/**
 	 * @inheritDoc
 	 */
-	public function get($filter = null) {
+	public function get($filter = null)
+	{
 		$this->load();
 
 		if ($filter) {
@@ -66,12 +70,13 @@ class Database extends Driver {
 	/**
 	 * 根据一组菜单进行查找某个菜单
 	 *
-	 * @param array  $menus
+	 * @param array $menus
 	 * @param string $url
 	 * @param string $plugin
 	 * @return \think\Model
 	 */
-	protected function &find($menus, $url, $plugin) {
+	protected function &find($menus, $url, $plugin)
+	{
 		$default = null;
 
 		foreach ($menus as &$item) {
@@ -93,7 +98,8 @@ class Database extends Driver {
 	 * @param array $parent
 	 * @return int
 	 */
-	protected function findParentId($current, $parent) {
+	protected function findParentId($current, $parent)
+	{
 		if (isset($current['parent'])) {
 			foreach ($this->data as $item) {
 				$name = $item['name'] ?? $item['url'] ?? '';
@@ -111,7 +117,8 @@ class Database extends Driver {
 	/**
 	 * @inheritDoc
 	 */
-	public function puts($menus, $plugin = null, $append = []) {
+	public function puts($menus, $plugin = null, $append = [])
+	{
 		$plugin = empty($plugin) ? '' : $plugin;
 
 		$addedMenuIdList = [];
@@ -173,7 +180,8 @@ class Database extends Driver {
 	/**
 	 * @inheritDoc
 	 */
-	public function forget($condition) {
+	public function forget($condition)
+	{
 		$this->model()->where($condition)->delete();
 
 		foreach ($this->data as $key => &$menu) {
@@ -192,7 +200,8 @@ class Database extends Driver {
 	 * @param array $data
 	 * @return \think\Model
 	 */
-	protected function model(array $data = []) {
+	protected function model(array $data = [])
+	{
 		$modelClass = $this->modelClass();
 
 		return new $modelClass($data);
@@ -203,7 +212,8 @@ class Database extends Driver {
 	 *
 	 * @return string
 	 */
-	protected function modelClass() {
+	protected function modelClass()
+	{
 		$class = $this->config('model');
 
 		if (!class_exists($class)) {
@@ -213,7 +223,8 @@ class Database extends Driver {
 		return $class;
 	}
 
-	public function refresh($plugin = null) {
+	public function refresh($plugin = null)
+	{
 		// TODO: Implement refresh() method.
 	}
 

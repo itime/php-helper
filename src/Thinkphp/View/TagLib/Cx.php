@@ -21,7 +21,8 @@ use Xin\Thinkphp\View\TagLib;
  * @subpackage  Driver.Taglib
  * @author    liu21st <liu21st@gmail.com>
  */
-class Cx extends Taglib {
+class Cx extends Taglib
+{
 
 	// 标签定义
 	protected $tags = [
@@ -61,11 +62,12 @@ class Cx extends Taglib {
 	 * {php}echo $name{/php}
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagPhp(array $tag, string $content): string {
+	public function tagPhp(array $tag, string $content): string
+	{
 		$parseStr = '<?php ' . $content . ' ?>';
 
 		return $parseStr;
@@ -80,11 +82,12 @@ class Cx extends Taglib {
 	 * {/volist}
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagVolist(array $tag, string $content): string {
+	public function tagVolist(array $tag, string $content): string
+	{
 		$name = $tag['name'];
 		$id = $tag['id'];
 		$empty = isset($tag['empty']) ? $tag['empty'] : '';
@@ -132,11 +135,12 @@ class Cx extends Taglib {
 	 * {/foreach}
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagForeach(array $tag, string $content): string {
+	public function tagForeach(array $tag, string $content): string
+	{
 		// 直接使用表达式
 		if (!empty($tag['expression'])) {
 			$expression = ltrim(rtrim($tag['expression'], ')'), '(');
@@ -218,11 +222,12 @@ class Cx extends Taglib {
 	 * 表达式支持 eq neq gt egt lt elt == > >= < <= or and || &&
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagIf(array $tag, string $content): string {
+	public function tagIf(array $tag, string $content): string
+	{
 		$condition = !empty($tag['expression']) ? $tag['expression'] : $tag['condition'];
 		$condition = $this->parseCondition($condition);
 		$parseStr = '<?php if(' . $condition . '): ?>' . $content . '<?php endif; ?>';
@@ -235,11 +240,12 @@ class Cx extends Taglib {
 	 * 格式：见if标签
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagElseif(array $tag, string $content): string {
+	public function tagElseif(array $tag, string $content): string
+	{
 		$condition = !empty($tag['expression']) ? $tag['expression'] : $tag['condition'];
 		$condition = $this->parseCondition($condition);
 		$parseStr = '<?php elseif(' . $condition . '): ?>';
@@ -255,7 +261,8 @@ class Cx extends Taglib {
 	 * @param array $tag 标签属性
 	 * @return string
 	 */
-	public function tagElse(array $tag): string {
+	public function tagElse(array $tag): string
+	{
 		$parseStr = '<?php else: ?>';
 
 		return $parseStr;
@@ -271,11 +278,12 @@ class Cx extends Taglib {
 	 * {/switch}
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagSwitch(array $tag, string $content): string {
+	public function tagSwitch(array $tag, string $content): string
+	{
 		$name = !empty($tag['expression']) ? $tag['expression'] : $tag['name'];
 		$name = $this->autoBuildVar($name);
 		$parseStr = '<?php switch(' . $name . '): ?>' . $content . '<?php endswitch; ?>';
@@ -287,11 +295,12 @@ class Cx extends Taglib {
 	 * case标签解析 需要配合switch才有效
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagCase(array $tag, string $content): string {
+	public function tagCase(array $tag, string $content): string
+	{
 		$value = isset($tag['expression']) ? $tag['expression'] : $tag['value'];
 		$flag = substr($value, 0, 1);
 
@@ -326,7 +335,8 @@ class Cx extends Taglib {
 	 * @param array $tag 标签属性
 	 * @return string
 	 */
-	public function tagDefault(array $tag): string {
+	public function tagDefault(array $tag): string
+	{
 		$parseStr = '<?php default: ?>';
 
 		return $parseStr;
@@ -338,11 +348,12 @@ class Cx extends Taglib {
 	 * 格式： {compare name="" type="eq" value="" }content{/compare}
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagCompare(array $tag, string $content): string {
+	public function tagCompare(array $tag, string $content): string
+	{
 		$name = $tag['name'];
 		$value = $tag['value'];
 		$type = isset($tag['type']) ? $tag['type'] : 'eq'; // 比较类型
@@ -376,11 +387,12 @@ class Cx extends Taglib {
 	 * example: {range name="a"  value="1,2,3" type='in' }content{/range}
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagRange(array $tag, string $content): string {
+	public function tagRange(array $tag, string $content): string
+	{
 		$name = $tag['name'];
 		$value = $tag['value'];
 		$type = isset($tag['type']) ? $tag['type'] : 'in'; // 比较类型
@@ -414,11 +426,12 @@ class Cx extends Taglib {
 	 * 格式： {present name="" }content{/present}
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagPresent(array $tag, string $content): string {
+	public function tagPresent(array $tag, string $content): string
+	{
 		$name = $tag['name'];
 		$name = $this->autoBuildVar($name);
 		$parseStr = '<?php if(isset(' . $name . ')): ?>' . $content . '<?php endif; ?>';
@@ -432,11 +445,12 @@ class Cx extends Taglib {
 	 * 格式： {notpresent name="" }content{/notpresent}
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagNotpresent(array $tag, string $content): string {
+	public function tagNotpresent(array $tag, string $content): string
+	{
 		$name = $tag['name'];
 		$name = $this->autoBuildVar($name);
 		$parseStr = '<?php if(!isset(' . $name . ')): ?>' . $content . '<?php endif; ?>';
@@ -450,11 +464,12 @@ class Cx extends Taglib {
 	 * 格式： {empty name="" }content{/empty}
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagEmpty(array $tag, string $content): string {
+	public function tagEmpty(array $tag, string $content): string
+	{
 		$name = $tag['name'];
 		$name = $this->autoBuildVar($name);
 		$parseStr = '<?php if(empty(' . $name . ') || ((' . $name . ' instanceof \think\Collection || ' . $name . ' instanceof \think\Paginator ) && ' . $name . '->isEmpty())): ?>' . $content . '<?php endif; ?>';
@@ -468,11 +483,12 @@ class Cx extends Taglib {
 	 * 格式： {notempty name="" }content{/notempty}
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagNotempty(array $tag, string $content): string {
+	public function tagNotempty(array $tag, string $content): string
+	{
 		$name = $tag['name'];
 		$name = $this->autoBuildVar($name);
 		$parseStr = '<?php if(!(empty(' . $name . ') || ((' . $name . ' instanceof \think\Collection || ' . $name . ' instanceof \think\Paginator ) && ' . $name . '->isEmpty()))): ?>' . $content . '<?php endif; ?>';
@@ -485,11 +501,12 @@ class Cx extends Taglib {
 	 * {defined name='TXT'}已定义{/defined}
 	 *
 	 * @access public
-	 * @param array  $tag
+	 * @param array $tag
 	 * @param string $content
 	 * @return string
 	 */
-	public function tagDefined(array $tag, string $content): string {
+	public function tagDefined(array $tag, string $content): string
+	{
 		$name = $tag['name'];
 		$parseStr = '<?php if(defined("' . $name . '")): ?>' . $content . '<?php endif; ?>';
 
@@ -501,11 +518,12 @@ class Cx extends Taglib {
 	 * {notdefined name='TXT'}已定义{/notdefined}
 	 *
 	 * @access public
-	 * @param array  $tag
+	 * @param array $tag
 	 * @param string $content
 	 * @return string
 	 */
-	public function tagNotdefined(array $tag, string $content): string {
+	public function tagNotdefined(array $tag, string $content): string
+	{
 		$name = $tag['name'];
 		$parseStr = '<?php if(!defined("' . $name . '")): ?>' . $content . '<?php endif; ?>';
 
@@ -517,11 +535,12 @@ class Cx extends Taglib {
 	 * 格式：{load file="/static/css/base.css" /}
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagLoad(array $tag, string $content): string {
+	public function tagLoad(array $tag, string $content): string
+	{
 		$file = isset($tag['file']) ? $tag['file'] : $tag['href'];
 		$type = isset($tag['type']) ? strtolower($tag['type']) : '';
 
@@ -564,11 +583,12 @@ class Cx extends Taglib {
 	 * 格式： {assign name="" value="" /}
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagAssign(array $tag, string $content): string {
+	public function tagAssign(array $tag, string $content): string
+	{
 		$name = $this->autoBuildVar($tag['name']);
 		$flag = substr($tag['value'], 0, 1);
 
@@ -589,11 +609,12 @@ class Cx extends Taglib {
 	 * 格式： {define name="" value="" /}
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagDefine(array $tag, string $content): string {
+	public function tagDefine(array $tag, string $content): string
+	{
 		$name = '\'' . $tag['name'] . '\'';
 		$flag = substr($tag['value'], 0, 1);
 
@@ -616,11 +637,12 @@ class Cx extends Taglib {
 	 * {/for}
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagFor(array $tag, string $content): string {
+	public function tagFor(array $tag, string $content): string
+	{
 		//设置默认值
 		$start = 0;
 		$end = 0;
@@ -669,11 +691,12 @@ class Cx extends Taglib {
 	 * 格式：{url link="模块/控制器/方法" vars="参数" suffix="true或者false 是否带有后缀" domain="true或者false 是否携带域名" /}
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagUrl(array $tag, string $content): string {
+	public function tagUrl(array $tag, string $content): string
+	{
 		$url = isset($tag['link']) ? $tag['link'] : '';
 		$vars = isset($tag['vars']) ? $tag['vars'] : '';
 		$suffix = isset($tag['suffix']) ? $tag['suffix'] : 'true';
@@ -696,11 +719,12 @@ class Cx extends Taglib {
 	 * {/function}
 	 *
 	 * @access public
-	 * @param array  $tag 标签属性
+	 * @param array $tag 标签属性
 	 * @param string $content 标签内容
 	 * @return string
 	 */
-	public function tagFunction(array $tag, string $content): string {
+	public function tagFunction(array $tag, string $content): string
+	{
 		$name = !empty($tag['name']) ? $tag['name'] : 'func';
 		$vars = !empty($tag['vars']) ? $tag['vars'] : '';
 		$call = !empty($tag['call']) ? $tag['call'] : '';
@@ -722,11 +746,12 @@ class Cx extends Taglib {
 	/**
 	 * 解析Stack标签
 	 *
-	 * @param array  $tag
+	 * @param array $tag
 	 * @param string $content
 	 * @return string
 	 */
-	protected function tagStack(array $tag, string $content) {
+	protected function tagStack(array $tag, string $content)
+	{
 		$name = $tag['name'];
 
 		return '<?php echo \Xin\Thinkphp\View\Template::getStack("' . $name . '");?>';
@@ -735,11 +760,12 @@ class Cx extends Taglib {
 	/**
 	 * 解析Stack标签
 	 *
-	 * @param array  $tag
+	 * @param array $tag
 	 * @param string $content
 	 * @return string
 	 */
-	protected function tagPush(array $tag, string $content) {
+	protected function tagPush(array $tag, string $content)
+	{
 		$name = $tag['name'];
 		$parseStr = '<?php {ob_start();if(PHP_VERSION > 8.0){ob_implicit_flush(false);}else{ob_implicit_flush(0);}?>';
 		$parseStr .= $content;

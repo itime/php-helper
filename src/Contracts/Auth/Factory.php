@@ -10,7 +10,8 @@ namespace Xin\Contracts\Auth;
 /**
  * Interface Factory
  */
-interface Factory {
+interface Factory
+{
 
 	/**
 	 * 尝试从本地缓存获取守卫者

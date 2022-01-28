@@ -7,6 +7,7 @@
 
 namespace Xin\Bus\Balance;
 
-class BalanceModifyException extends \LogicException {
+class BalanceModifyException extends \LogicException
+{
 
 }

@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Auth\Access;
 
-interface Gate {
+interface Gate
+{
 
 	/**
 	 * 确定给定的能力是否已定义
@@ -20,7 +21,7 @@ interface Gate {
 	/**
 	 * 定义一个新的授权能力
 	 *
-	 * @param string          $ability
+	 * @param string $ability
 	 * @param callable|string $callback
 	 * @return static
 	 */
@@ -54,7 +55,7 @@ interface Gate {
 	/**
 	 * 检查当前用户是否未拥有给定授予的能力
 	 *
-	 * @param string      $ability
+	 * @param string $ability
 	 * @param array|mixed $arguments
 	 * @return bool
 	 */
@@ -64,7 +65,7 @@ interface Gate {
 	 * 检查当前用户是否拥有给定授予的能力
 	 *
 	 * @param iterable|string $abilities
-	 * @param array|mixed     $arguments
+	 * @param array|mixed $arguments
 	 * @return bool
 	 */
 	public function check($abilities, $arguments = []);
@@ -73,7 +74,7 @@ interface Gate {
 	 * 检查当前用户是否拥有其中一个授予的能力
 	 *
 	 * @param iterable|string $abilities
-	 * @param array|mixed     $arguments
+	 * @param array|mixed $arguments
 	 * @return bool
 	 */
 	public function any($abilities, $arguments = []);
@@ -81,7 +82,7 @@ interface Gate {
 	/**
 	 * 根据当前用户获取特定授权结果
 	 *
-	 * @param string      $ability
+	 * @param string $ability
 	 * @param array|mixed $arguments
 	 * @return mixed
 	 */

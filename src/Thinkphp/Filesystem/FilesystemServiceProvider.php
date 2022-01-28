@@ -11,12 +11,14 @@ use League\Flysystem\FilesystemInterface as BaseFilesystemInterface;
 use think\Service;
 use Xin\Filesystem\FilesystemInterface;
 
-class FilesystemServiceProvider extends Service {
+class FilesystemServiceProvider extends Service
+{
 
 	/**
 	 * 注册对象存储提供者
 	 */
-	public function register() {
+	public function register()
+	{
 		$this->app->bind([
 			'filesystem' => FilesystemInterface::class,
 			BaseFilesystemInterface::class => FilesystemInterface::class,

@@ -2,7 +2,8 @@
 
 namespace Xin\Excel\Events;
 
-abstract class Event {
+abstract class Event
+{
 
 	/**
 	 * @return object
@@ -19,7 +20,8 @@ abstract class Event {
 	 *
 	 * @return bool
 	 */
-	public function appliesToConcern(string $concern): bool {
+	public function appliesToConcern(string $concern): bool
+	{
 		return $this->getConcernable() instanceof $concern;
 	}
 

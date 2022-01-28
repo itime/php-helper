@@ -7,12 +7,13 @@
 
 namespace Xin\Contracts\Payment;
 
-interface Factory {
+interface Factory
+{
 
 	/**
 	 * 微信支付
 	 *
-	 * @param null  $name
+	 * @param null $name
 	 * @param array $options
 	 * @return \Yansongda\Pay\Gateways\Wechat
 	 */
@@ -28,7 +29,7 @@ interface Factory {
 	/**
 	 * 支付宝支付
 	 *
-	 * @param null  $name
+	 * @param null $name
 	 * @param array $options
 	 * @return \Yansongda\Pay\Gateways\Alipay
 	 */

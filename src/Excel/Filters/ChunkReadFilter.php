@@ -4,7 +4,8 @@ namespace Xin\Excel\Filters;
 
 use PhpOffice\PhpSpreadsheet\Reader\IReadFilter;
 
-class ChunkReadFilter implements IReadFilter {
+class ChunkReadFilter implements IReadFilter
+{
 
 	/**
 	 * @var int
@@ -27,12 +28,13 @@ class ChunkReadFilter implements IReadFilter {
 	private $worksheetName;
 
 	/**
-	 * @param int    $headingRow
-	 * @param int    $startRow
-	 * @param int    $chunkSize
+	 * @param int $headingRow
+	 * @param int $startRow
+	 * @param int $chunkSize
 	 * @param string $worksheetName
 	 */
-	public function __construct(int $headingRow, int $startRow, int $chunkSize, string $worksheetName) {
+	public function __construct(int $headingRow, int $startRow, int $chunkSize, string $worksheetName)
+	{
 		$this->headingRow = $headingRow;
 		$this->startRow = $startRow;
 		$this->endRow = $startRow + $chunkSize;
@@ -41,12 +43,13 @@ class ChunkReadFilter implements IReadFilter {
 
 	/**
 	 * @param string $column
-	 * @param int    $row
+	 * @param int $row
 	 * @param string $worksheetName
 	 *
 	 * @return bool
 	 */
-	public function readCell($column, $row, $worksheetName = '') {
+	public function readCell($column, $row, $worksheetName = '')
+	{
 		//  Only read the heading row, and the rows that are configured in $this->_startRow and $this->_endRow
 		return ($worksheetName === $this->worksheetName || $worksheetName === '')
 			&& ($row === $this->headingRow || ($row >= $this->startRow && $row < $this->endRow));

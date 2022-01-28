@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Sms;
 
-interface Message {
+interface Message
+{
 
 	/**
 	 * 获取内容

@@ -2,7 +2,8 @@
 
 namespace Xin\Excel;
 
-class Column {
+class Column
+{
 
 	/**
 	 * @var string
@@ -44,7 +45,8 @@ class Column {
 	 * @param string $title
 	 * @param string $type
 	 */
-	public function __construct($key, $title = null, $type = 'string') {
+	public function __construct($key, $title = null, $type = 'string')
+	{
 		$this->key = $key;
 		$this->title = $title === null ? $key : $title;
 		$this->type = $type;
@@ -53,7 +55,8 @@ class Column {
 	/**
 	 * @return string
 	 */
-	public function getKey() {
+	public function getKey()
+	{
 		return $this->key;
 	}
 
@@ -61,7 +64,8 @@ class Column {
 	 * @param string $key
 	 * @return $this
 	 */
-	public function setKey($key) {
+	public function setKey($key)
+	{
 		$this->key = $key;
 
 		return $this;
@@ -70,7 +74,8 @@ class Column {
 	/**
 	 * @return string
 	 */
-	public function getTitle() {
+	public function getTitle()
+	{
 		return $this->title;
 	}
 
@@ -78,7 +83,8 @@ class Column {
 	 * @param string $title
 	 * @return $this
 	 */
-	public function setTitle($title) {
+	public function setTitle($title)
+	{
 		$this->title = $title;
 
 		return $this;
@@ -87,7 +93,8 @@ class Column {
 	/**
 	 * @return string
 	 */
-	public function getType() {
+	public function getType()
+	{
 		return $this->type;
 	}
 
@@ -95,7 +102,8 @@ class Column {
 	 * @param string $type
 	 * @return $this
 	 */
-	public function setType($type) {
+	public function setType($type)
+	{
 		$this->type = $type;
 
 		return $this;
@@ -104,7 +112,8 @@ class Column {
 	/**
 	 * @return int
 	 */
-	public function getWidth() {
+	public function getWidth()
+	{
 		return $this->width;
 	}
 
@@ -112,7 +121,8 @@ class Column {
 	 * @param int $width
 	 * @return $this
 	 */
-	public function setWidth($width) {
+	public function setWidth($width)
+	{
 		$this->width = $width;
 		$this->autoSize = false;
 
@@ -122,7 +132,8 @@ class Column {
 	/**
 	 * @return bool
 	 */
-	public function isAutoSize() {
+	public function isAutoSize()
+	{
 		return $this->autoSize;
 	}
 
@@ -130,7 +141,8 @@ class Column {
 	 * @param bool $autoSize
 	 * @return $this
 	 */
-	public function setAutoSize($autoSize) {
+	public function setAutoSize($autoSize)
+	{
 		$this->autoSize = $autoSize;
 
 		return $this;
@@ -139,7 +151,8 @@ class Column {
 	/**
 	 * @return array
 	 */
-	public function getStyles() {
+	public function getStyles()
+	{
 		return $this->styles;
 	}
 
@@ -147,7 +160,8 @@ class Column {
 	 * @param array $styles
 	 * @return $this
 	 */
-	public function setStyles(array $styles) {
+	public function setStyles(array $styles)
+	{
 		$this->styles = $styles;
 
 		return $this;
@@ -156,21 +170,24 @@ class Column {
 	/**
 	 * @return bool
 	 */
-	public function hasValueResolver() {
+	public function hasValueResolver()
+	{
 		return $this->valueResolver != null;
 	}
 
 	/**
 	 * @return callable
 	 */
-	public function getValueResolver() {
+	public function getValueResolver()
+	{
 		return $this->valueResolver;
 	}
 
 	/**
 	 * @param callable $valueResolver
 	 */
-	public function setValueResolver(callable $valueResolver) {
+	public function setValueResolver(callable $valueResolver)
+	{
 		$this->valueResolver = $valueResolver;
 	}
 
@@ -180,17 +197,19 @@ class Column {
 	 * @param string $type
 	 * @return static
 	 */
-	public static function create($key, $title = null, $type = 'string') {
+	public static function create($key, $title = null, $type = 'string')
+	{
 		return new static($key, $title, $type);
 	}
 
 	/**
 	 * @param callable $valueResolver
-	 * @param string   $title
-	 * @param string   $type
+	 * @param string $title
+	 * @param string $type
 	 * @return static
 	 */
-	public static function custom(callable $valueResolver, $title, $type = '') {
+	public static function custom(callable $valueResolver, $title, $type = '')
+	{
 		$column = new static('', $title, $type);
 		$column->setValueResolver($valueResolver);
 

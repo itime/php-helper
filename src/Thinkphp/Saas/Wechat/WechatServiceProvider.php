@@ -12,7 +12,8 @@ use Xin\Contracts\Saas\Wechat\Repository as WechatRepository;
 use Xin\Saas\Wechat\WechatManager as SaasWechatManager;
 use Xin\Wechat\WechatManager;
 
-class WechatServiceProvider extends Service {
+class WechatServiceProvider extends Service
+{
 
 	/**
 	 * @var int
@@ -22,7 +23,8 @@ class WechatServiceProvider extends Service {
 	/**
 	 * 启动器
 	 */
-	public function register() {
+	public function register()
+	{
 		$this->app->bind([
 			WechatManager::class => SaasWechatManager::class,
 			WechatRepository::class => SaasWechatManager::class,
@@ -43,7 +45,8 @@ class WechatServiceProvider extends Service {
 	 * @param int $appId
 	 * @return void
 	 */
-	public static function bindAppId($appId) {
+	public static function bindAppId($appId)
+	{
 		static::$appId = $appId;
 	}
 

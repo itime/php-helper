@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Menu;
 
-interface Generator {
+interface Generator
+{
 
 	/**
 	 * 生成菜单

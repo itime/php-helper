@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Saas\Wechat;
 
-class WechatType {
+class WechatType
+{
 
 	// 公众号类型
 	const OFFICIAL_ACCOUNT = 'official_account';

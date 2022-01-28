@@ -4,7 +4,8 @@ namespace Xin\Excel\Events;
 
 use Xin\Excel\Reader;
 
-class AfterImport extends Event {
+class AfterImport extends Event
+{
 
 	/**
 	 * @var Reader
@@ -20,7 +21,8 @@ class AfterImport extends Event {
 	 * @param Reader $reader
 	 * @param object $importable
 	 */
-	public function __construct(Reader $reader, $importable) {
+	public function __construct(Reader $reader, $importable)
+	{
 		$this->reader = $reader;
 		$this->importable = $importable;
 	}
@@ -28,21 +30,24 @@ class AfterImport extends Event {
 	/**
 	 * @return Reader
 	 */
-	public function getReader(): Reader {
+	public function getReader(): Reader
+	{
 		return $this->reader;
 	}
 
 	/**
 	 * @return object
 	 */
-	public function getConcernable() {
+	public function getConcernable()
+	{
 		return $this->importable;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getDelegate() {
+	public function getDelegate()
+	{
 		return $this->reader;
 	}
 

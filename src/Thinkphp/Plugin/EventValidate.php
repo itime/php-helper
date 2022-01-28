@@ -9,7 +9,8 @@ namespace Xin\Thinkphp\Plugin;
 
 use think\Validate;
 
-class EventValidate extends Validate {
+class EventValidate extends Validate
+{
 
 	/**
 	 * 验证规则

@@ -12,9 +12,10 @@ use think\Model;
 
 /**
  * @property array addons
- * @property int   status
+ * @property int status
  */
-class DatabaseEvent extends Model {
+class DatabaseEvent extends Model
+{
 
 	/**
 	 * @var string
@@ -54,7 +55,8 @@ class DatabaseEvent extends Model {
 	 *
 	 * @return string
 	 */
-	public function getTypeTextAttr() {
+	public function getTypeTextAttr()
+	{
 		$type = $this->getData('type');
 
 		return self::$TYPE_TEXT_LIST[$type] ?? '';
@@ -66,7 +68,8 @@ class DatabaseEvent extends Model {
 	 * @param string $addons
 	 * @return array
 	 */
-	public function getAddonsAttr($addons) {
+	public function getAddonsAttr($addons)
+	{
 		return empty($addons) ? [] : explode(",", $addons);
 	}
 
@@ -76,7 +79,8 @@ class DatabaseEvent extends Model {
 	 * @param array $addons
 	 * @return string
 	 */
-	public function setAddonsAttr($addons) {
+	public function setAddonsAttr($addons)
+	{
 		return implode(",", $addons);
 	}
 
@@ -88,7 +92,8 @@ class DatabaseEvent extends Model {
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function onAfterWrite(self $event) {
+	public static function onAfterWrite(self $event)
+	{
 		if (isset($event->id)) {
 			static::putIntoCache($event);
 		} else {
@@ -104,20 +109,22 @@ class DatabaseEvent extends Model {
 	 *
 	 * @param static $event
 	 */
-	public static function onAfterDelete(self $event) {
+	public static function onAfterDelete(self $event)
+	{
 		Cache::delete(static::CACHE_PREFIX . $event->name);
 	}
 
 	/**
 	 * 挂载插件
 	 *
-	 * @param string     $addon
+	 * @param string $addon
 	 * @param array|null $names
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function mountAddon($addon, $names) {
+	public static function mountAddon($addon, $names)
+	{
 		$names = is_array($names) ? $names : [$names];
 		$eventCollection = static::where('name', 'in', $names)->select();
 
@@ -137,12 +144,13 @@ class DatabaseEvent extends Model {
 	 * 取消挂载插件
 	 *
 	 * @param array|null $names
-	 * @param string     $addon
+	 * @param string $addon
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function unmountAddon($addon, $names = null) {
+	public static function unmountAddon($addon, $names = null)
+	{
 		$eventCollection = static::whereFindInSet('addons', $addon)->select();
 
 		/** @var static $event */
@@ -161,7 +169,8 @@ class DatabaseEvent extends Model {
 	/**
 	 * 自动更新事件缓存
 	 */
-	public static function autoRefreshCache() {
+	public static function autoRefreshCache()
+	{
 		if (Cache::get(static::CACHE_PREFIX)) {
 			return;
 		}
@@ -178,7 +187,8 @@ class DatabaseEvent extends Model {
 	 * @noinspection PhpUnhandledExceptionInspection
 	 * @noinspection PhpDocMissingThrowsInspection
 	 */
-	public static function refreshCache() {
+	public static function refreshCache()
+	{
 		$eventCollection = static::where('status', 1)->select();
 
 		/** @var static $event */
@@ -194,7 +204,8 @@ class DatabaseEvent extends Model {
 	 *
 	 * @param static $event
 	 */
-	public static function putIntoCache(self $event) {
+	public static function putIntoCache(self $event)
+	{
 		$addons = $event->status ? $event->addons : [];
 		$cacheKey = static::CACHE_PREFIX . $event->getData('name');
 
@@ -210,7 +221,8 @@ class DatabaseEvent extends Model {
 	 * @param string $name
 	 * @return array
 	 */
-	public static function fetchFromCache($name) {
+	public static function fetchFromCache($name)
+	{
 		return Cache::get(static::CACHE_PREFIX . $name);
 	}
 
@@ -220,7 +232,8 @@ class DatabaseEvent extends Model {
 	 * @param int $type
 	 * @return string
 	 */
-	public static function getLayerOfType($type) {
+	public static function getLayerOfType($type)
+	{
 		switch ($type) {
 			case 0:
 				return "weight";

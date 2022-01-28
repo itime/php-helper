@@ -9,7 +9,8 @@ namespace Xin\Enum;
 
 use MyCLabs\Enum\Enum as BaseEnum;
 
-class Enum extends BaseEnum {
+class Enum extends BaseEnum
+{
 
 	/**
 	 * @var string[]
@@ -22,7 +23,8 @@ class Enum extends BaseEnum {
 	 * @param int $value
 	 * @return string
 	 */
-	public static function text($value, $default = '--') {
+	public static function text($value, $default = '--')
+	{
 		return static::$TEXT_MAP[$value] ?? $default;
 	}
 
@@ -31,7 +33,8 @@ class Enum extends BaseEnum {
 	 *
 	 * @return string[]
 	 */
-	public static function texts() {
+	public static function texts()
+	{
 		return static::$TEXT_MAP;
 	}
 
@@ -39,7 +42,8 @@ class Enum extends BaseEnum {
 	 * 获取枚举类型数据
 	 * @return array
 	 */
-	public static function data() {
+	public static function data()
+	{
 		$objClass = new \ReflectionClass(static::class);
 		$constants = $objClass->getConstants();
 

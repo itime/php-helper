@@ -11,7 +11,8 @@ use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Support\Arr;
 use Xin\Support\Collection;
 
-class PluginManager implements PluginFactory {
+class PluginManager implements PluginFactory
+{
 
 	/**
 	 * @var array
@@ -38,28 +39,32 @@ class PluginManager implements PluginFactory {
 	 *
 	 * @param array $config
 	 */
-	public function __construct(array $config) {
+	public function __construct(array $config)
+	{
 		$this->config = $config;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function rootPath($path = '') {
+	public function rootPath($path = '')
+	{
 		return $this->config['path'] . ($path ? $path . DIRECTORY_SEPARATOR : $path);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function has($plugin) {
+	public function has($plugin)
+	{
 		return class_exists($this->pluginClass($plugin, "Plugin"));
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function installPlugin($plugin) {
+	public function installPlugin($plugin)
+	{
 		$pluginInfo = $this->plugin($plugin);
 
 		$this->plugin($plugin)->plugin()->install($pluginInfo, $this);
@@ -70,7 +75,8 @@ class PluginManager implements PluginFactory {
 	/**
 	 * @inheritDoc
 	 */
-	public function uninstallPlugin($plugin) {
+	public function uninstallPlugin($plugin)
+	{
 		$pluginInfo = $this->plugin($plugin);
 
 		$this->plugin($plugin)->plugin()->uninstall($pluginInfo, $this);
@@ -81,7 +87,8 @@ class PluginManager implements PluginFactory {
 	/**
 	 * @inheritDoc
 	 */
-	public function plugin($plugin) {
+	public function plugin($plugin)
+	{
 		if ($this->plugins->has($plugin)) {
 			return $this->plugins->get($plugin);
 		}
@@ -100,7 +107,8 @@ class PluginManager implements PluginFactory {
 	/**
 	 * @inheritDoc
 	 */
-	public function plugins() {
+	public function plugins()
+	{
 		if ($this->plugins) {
 			return $this->useFilter();
 		}
@@ -130,7 +138,8 @@ class PluginManager implements PluginFactory {
 	 * 使用过滤器返回插件列表
 	 * @return Collection
 	 */
-	protected function useFilter() {
+	protected function useFilter()
+	{
 		return array_reduce($this->filters, function (Collection $plugins, $filter) {
 			return $plugins->filter($filter);
 		}, $this->plugins);
@@ -139,7 +148,8 @@ class PluginManager implements PluginFactory {
 	/**
 	 * @inheritDoc
 	 */
-	public function filter(callable $filterCallback) {
+	public function filter(callable $filterCallback)
+	{
 		$this->filters[] = $filterCallback;
 	}
 
@@ -147,7 +157,8 @@ class PluginManager implements PluginFactory {
 	 * @inheritDoc
 	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
-	public function pluginBoot(array $plugins = []) {
+	public function pluginBoot(array $plugins = [])
+	{
 		if ($this->isPluginBoot) {
 			return;
 		}
@@ -162,21 +173,24 @@ class PluginManager implements PluginFactory {
 	/**
 	 * @inheritDoc
 	 */
-	public function pluginClass($plugin, $class) {
+	public function pluginClass($plugin, $class)
+	{
 		return "\\" . $this->rootNamespace() . "\\{$plugin}\\{$class}";
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function controllerClass($plugin, $controller, $layer = 'controller') {
+	public function controllerClass($plugin, $controller, $layer = 'controller')
+	{
 		return $this->pluginClass($plugin, "{$layer}\\{$controller}Controller");
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function pluginPath($plugin) {
+	public function pluginPath($plugin)
+	{
 		return $this->rootPath($plugin);
 	}
 
@@ -185,14 +199,16 @@ class PluginManager implements PluginFactory {
 	 *
 	 * @return string
 	 */
-	public function rootNamespace() {
+	public function rootNamespace()
+	{
 		return Arr::get($this->config, 'namespace', 'plugin');
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function config($name, $default = null) {
+	public function config($name, $default = null)
+	{
 		return Arr::get($this->config, $name, $default);
 	}
 

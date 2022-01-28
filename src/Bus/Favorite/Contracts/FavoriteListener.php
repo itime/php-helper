@@ -9,7 +9,8 @@ namespace Xin\Bus\Favorite\Contracts;
 
 use app\common\event\FavoriteEvent;
 
-interface FavoriteListener {
+interface FavoriteListener
+{
 
 	/**
 	 * 收藏/取消收藏回调

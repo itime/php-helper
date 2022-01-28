@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\RedPacket;
 
-interface Receiver {
+interface Receiver
+{
 
 	/**
 	 * 领取红包

@@ -5,14 +5,15 @@
 
 namespace Xin\Contracts\Auth;
 
-interface Guard {
+interface Guard
+{
 
 	/**
 	 * 获取用户信息
 	 *
 	 * @param string|null $field
-	 * @param mixed|null  $default
-	 * @param int         $verifyType
+	 * @param mixed|null $default
+	 * @param int $verifyType
 	 * @return mixed
 	 */
 	public function getUser($field = null, $default = null, $verifyType = AuthVerifyType::BASE);

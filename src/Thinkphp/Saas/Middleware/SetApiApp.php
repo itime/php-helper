@@ -13,7 +13,8 @@ use Xin\Thinkphp\Saas\Exceptions\AppNotFoundException;
 use Xin\Thinkphp\Saas\Payment\PaymentServiceProvider;
 use Xin\Thinkphp\Saas\Wechat\WechatServiceProvider;
 
-class SetApiApp {
+class SetApiApp
+{
 
 	/**
 	 * @var \Xin\Thinkphp\Http\HasApp
@@ -24,10 +25,11 @@ class SetApiApp {
 	 * api模式下检查当前应用是否合法
 	 *
 	 * @param \Xin\Thinkphp\Http\HasApp $request
-	 * @param \Closure                  $next
+	 * @param \Closure $next
 	 * @return mixed
 	 */
-	public function handle($request, \Closure $next) {
+	public function handle($request, \Closure $next)
+	{
 		$this->request = $request;
 
 		$request->setAppResolver(function (Request $request) {
@@ -57,7 +59,8 @@ class SetApiApp {
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	protected function resolve($accessId) {
+	protected function resolve($accessId)
+	{
 		$xApp = DatabaseApp::where('access_id', $accessId)->find();
 		if (!$xApp) {
 			throw AppNotFoundException::ofAccessId($accessId);
@@ -70,7 +73,8 @@ class SetApiApp {
 	 * 微信实例器绑定AppId
 	 * @return void
 	 */
-	protected function wechatBindAppId() {
+	protected function wechatBindAppId()
+	{
 		WechatServiceProvider::bindAppId($this->request->appId());
 	}
 
@@ -78,7 +82,8 @@ class SetApiApp {
 	 * 支付器绑定AppId
 	 * @return void
 	 */
-	protected function paymentBindAppId() {
+	protected function paymentBindAppId()
+	{
 		PaymentServiceProvider::bindAppId($this->request->appId());
 	}
 

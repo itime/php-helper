@@ -9,7 +9,8 @@ namespace Xin\Support;
 
 use Doctrine\Inflector\InflectorFactory;
 
-class Pluralizer {
+class Pluralizer
+{
 
 	/**
 	 * Uncountable word forms.
@@ -70,7 +71,8 @@ class Pluralizer {
 	/**
 	 * @return \Doctrine\Inflector\Inflector
 	 */
-	public static function inflector() {
+	public static function inflector()
+	{
 		if (static::$inflector === null) {
 			static::$inflector = InflectorFactory::create()->build();
 		}
@@ -82,10 +84,11 @@ class Pluralizer {
 	 * Get the plural form of an English word.
 	 *
 	 * @param string $value
-	 * @param int    $count
+	 * @param int $count
 	 * @return string
 	 */
-	public static function plural($value, $count = 2) {
+	public static function plural($value, $count = 2)
+	{
 		if ((int)abs($count) === 1 || static::uncountable($value)) {
 			return $value;
 		}
@@ -101,7 +104,8 @@ class Pluralizer {
 	 * @param string $value
 	 * @return string
 	 */
-	public static function singular($value) {
+	public static function singular($value)
+	{
 		$singular = static::inflector()->singularize($value);
 
 		return static::matchCase($singular, $value);
@@ -113,7 +117,8 @@ class Pluralizer {
 	 * @param string $value
 	 * @return bool
 	 */
-	protected static function uncountable($value) {
+	protected static function uncountable($value)
+	{
 		return in_array(strtolower($value), static::$uncountable);
 	}
 
@@ -124,7 +129,8 @@ class Pluralizer {
 	 * @param string $comparison
 	 * @return string
 	 */
-	protected static function matchCase($value, $comparison) {
+	protected static function matchCase($value, $comparison)
+	{
 		$functions = ['mb_strtolower', 'mb_strtoupper', 'ucfirst', 'ucwords'];
 
 		foreach ($functions as $function) {

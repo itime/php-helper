@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Plugin;
 
-interface PluginInfo {
+interface PluginInfo
+{
 
 	/**
 	 * 获取插件名字

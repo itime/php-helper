@@ -12,7 +12,8 @@ use Xin\Contracts\Stat\Provider as StatProviderContract;
 use Xin\Contracts\Stat\Repository as StatRepository;
 use Xin\Support\Time;
 
-class DatabaseProvider implements StatProviderContract {
+class DatabaseProvider implements StatProviderContract
+{
 
 	/**
 	 * @var \think\Db
@@ -32,11 +33,12 @@ class DatabaseProvider implements StatProviderContract {
 	/**
 	 * StatProvider constructor.
 	 *
-	 * @param \think\App     $app
+	 * @param \think\App $app
 	 * @param StatRepository $stat
-	 * @param array          $config
+	 * @param array $config
 	 */
-	public function __construct(App $app, StatRepository $stat, array $config = []) {
+	public function __construct(App $app, StatRepository $stat, array $config = [])
+	{
 		$this->app = $app;
 		$this->db = $app['db'];
 
@@ -47,7 +49,8 @@ class DatabaseProvider implements StatProviderContract {
 	/**
 	 * @inheritDoc
 	 */
-	public function getCacheKey($name, array $options = []) {
+	public function getCacheKey($name, array $options = [])
+	{
 		$todayBeginTime = Time::today()[0];
 		$prefix = md5(implode('_', array_keys($options)));
 
@@ -57,7 +60,8 @@ class DatabaseProvider implements StatProviderContract {
 	/**
 	 * @inheritDoc
 	 */
-	public function getIdByTime($name, $time, array $options = []) {
+	public function getIdByTime($name, $time, array $options = [])
+	{
 		return $this->query()->where(array_merge($options, [
 			'name' => $name,
 			'create_time' => $time,
@@ -67,7 +71,8 @@ class DatabaseProvider implements StatProviderContract {
 	/**
 	 * @inheritDoc
 	 */
-	public function getValueByTime($name, $time = null, array $options = []) {
+	public function getValueByTime($name, $time = null, array $options = [])
+	{
 		return $this->query()->where('name', $name)
 			->where('create_time', '>', $time - 1)
 			->where($options)->sum('value');
@@ -76,7 +81,8 @@ class DatabaseProvider implements StatProviderContract {
 	/**
 	 * @inheritDoc
 	 */
-	public function getValueById($id, array $options = []) {
+	public function getValueById($id, array $options = [])
+	{
 		return $this->query()->where('id', $id)->where($options)
 			->order('id desc')->value('value');
 	}
@@ -84,14 +90,16 @@ class DatabaseProvider implements StatProviderContract {
 	/**
 	 * @inheritDoc
 	 */
-	public function incById($id, $step = 1, array $options = []) {
+	public function incById($id, $step = 1, array $options = [])
+	{
 		return $this->query()->where('id', $id)->inc('value')->save();
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function getTotal($name, array $options = []) {
+	public function getTotal($name, array $options = [])
+	{
 		return $this->query()->where('name', $name)
 			->where($options)
 			->sum('value');
@@ -100,7 +108,8 @@ class DatabaseProvider implements StatProviderContract {
 	/**
 	 * @inheritDoc
 	 */
-	public function insert($data, array $options = []) {
+	public function insert($data, array $options = [])
+	{
 		return $this->query()->insertGetId(array_merge($options, $data));
 	}
 
@@ -109,7 +118,8 @@ class DatabaseProvider implements StatProviderContract {
 	 *
 	 * @return \think\Db|\think\db\Query|\think\Model
 	 */
-	protected function query() {
+	protected function query()
+	{
 		if (isset($this->config['model'])) {
 			$model = $this->config['model'];
 
@@ -124,7 +134,8 @@ class DatabaseProvider implements StatProviderContract {
 	 *
 	 * @return \think\Db|\think\db\Query|\think\Model
 	 */
-	protected function ipQuery() {
+	protected function ipQuery()
+	{
 		if (isset($this->config['ip_model'])) {
 			$model = $this->config['ip_model'];
 
@@ -137,7 +148,8 @@ class DatabaseProvider implements StatProviderContract {
 	/**
 	 * @inheritDoc
 	 */
-	public function getIPIdByTime($ip, $time, array $options = []) {
+	public function getIPIdByTime($ip, $time, array $options = [])
+	{
 		return $this->ipQuery()->where([
 			'ip' => $ip,
 			'time' => Time::today()[0],
@@ -147,7 +159,8 @@ class DatabaseProvider implements StatProviderContract {
 	/**
 	 * @inheritDoc
 	 */
-	public function insertIpLog($data, array $options = []) {
+	public function insertIpLog($data, array $options = [])
+	{
 		return $this->ipQuery()->insertGetId(array_merge($options, $data));
 	}
 

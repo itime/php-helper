@@ -7,13 +7,14 @@
 
 namespace Xin\Contracts\Wechat;
 
-interface Factory {
+interface Factory
+{
 
 	/**
 	 * 获取默认微信开放平台实例
 	 *
 	 * @param string $name
-	 * @param array  $options
+	 * @param array $options
 	 * @return \EasyWeChat\OpenPlatform\Application
 	 */
 	public function openPlatform($name = null, array $options = []);
@@ -30,7 +31,7 @@ interface Factory {
 	 * 获取默认微信公众号实例
 	 *
 	 * @param string $name
-	 * @param array  $options
+	 * @param array $options
 	 * @return \EasyWeChat\OfficialAccount\Application
 	 */
 	public function officialAccount($name = null, array $options = []);
@@ -47,7 +48,7 @@ interface Factory {
 	 * 获取默认小程序实例
 	 *
 	 * @param string $name
-	 * @param array  $options
+	 * @param array $options
 	 * @return \EasyWeChat\MiniProgram\Application
 	 */
 	public function miniProgram($name = null, array $options = []);

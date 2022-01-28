@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Auth\Access;
 
-interface AuthenticRule {
+interface AuthenticRule
+{
 
 	/**
 	 * 获取规则方案

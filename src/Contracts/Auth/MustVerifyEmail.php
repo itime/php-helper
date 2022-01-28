@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Auth;
 
-interface MustVerifyEmail {
+interface MustVerifyEmail
+{
 
 	/**
 	 * Determine if the user has verified their email address.

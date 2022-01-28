@@ -14,21 +14,24 @@ use Xin\Thinkphp\Notification\Message\WxSubscribeMessage;
 use yunwuxin\Notification;
 use yunwuxin\notification\Channel;
 
-class Weapp extends Channel {
+class Weapp extends Channel
+{
 
 	/**
 	 * @var \think\App
 	 */
 	protected $app;
 
-	public function __construct(App $app) {
+	public function __construct(App $app)
+	{
 		$this->app = $app;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function send($notifiable, Notification $notification) {
+	public function send($notifiable, Notification $notification)
+	{
 		$message = $this->getMessage($notifiable, $notification);
 
 		if (!$message instanceof WxSubscribeMessage) {
@@ -46,7 +49,8 @@ class Weapp extends Channel {
 	 *
 	 * @return \EasyWeChat\MiniProgram\Application
 	 */
-	protected function miniprogram(Notification $notification) {
+	protected function miniprogram(Notification $notification)
+	{
 		/** @var \Xin\Contracts\Foundation\Wechat $ws */
 		$ws = $this->app['wechat'];
 

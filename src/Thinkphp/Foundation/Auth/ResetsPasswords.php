@@ -15,7 +15,8 @@ use Xin\Thinkphp\Facade\Auth;
 use Xin\Thinkphp\Facade\Hash;
 use Xin\Thinkphp\Facade\Hint;
 
-trait ResetsPasswords {
+trait ResetsPasswords
+{
 
 	use RedirectsUsers;
 
@@ -25,7 +26,8 @@ trait ResetsPasswords {
 	 * @param \think\Request $request
 	 * @return mixed
 	 */
-	public function reset(Request $request) {
+	public function reset(Request $request)
+	{
 		if ($request->isGet()) {
 			return $this->showResetForm($request);
 		}
@@ -57,7 +59,8 @@ trait ResetsPasswords {
 	 * @return \think\response\View
 	 * @noinspection PhpUnusedParameterInspection
 	 */
-	public function showResetForm(Request $request) {
+	public function showResetForm(Request $request)
+	{
 		return view('auth/password_reset');
 	}
 
@@ -67,7 +70,8 @@ trait ResetsPasswords {
 	 * @param Request $request
 	 * @return array
 	 */
-	protected function validateReset(Request $request) {
+	protected function validateReset(Request $request)
+	{
 		$validate = new Validate();
 		$validate->failException(true);
 
@@ -101,7 +105,8 @@ trait ResetsPasswords {
 	 * @param mixed $user
 	 * @param array $credentials
 	 */
-	protected function validateOriginalPassword($user, $credentials) {
+	protected function validateOriginalPassword($user, $credentials)
+	{
 		$originalPassword = $credentials[$this->password()];
 
 		$authPasswordField = $this->authPassword();
@@ -117,7 +122,8 @@ trait ResetsPasswords {
 	 * @param \think\Request $request
 	 * @return array
 	 */
-	protected function credentials(Request $request) {
+	protected function credentials(Request $request)
+	{
 		return $request->only([
 			$this->password(),
 			$this->newPassword(),
@@ -129,10 +135,11 @@ trait ResetsPasswords {
 	 * Reset the given user's password.
 	 *
 	 * @param \think\Model $user
-	 * @param array        $credentials
+	 * @param array $credentials
 	 * @return bool
 	 */
-	protected function resetPassword($user, array $credentials) {
+	protected function resetPassword($user, array $credentials)
+	{
 		$authPasswordField = $this->authPassword();
 
 		$user[$authPasswordField] = Hash::make(
@@ -154,11 +161,12 @@ trait ResetsPasswords {
 	 * Get the response for a successful password reset.
 	 *
 	 * @param \think\Request $request
-	 * @param array          $credentials
+	 * @param array $credentials
 	 * @return \think\Response
 	 * @noinspection PhpUnusedParameterInspection
 	 */
-	protected function sendResetResponse(Request $request, array $credentials) {
+	protected function sendResetResponse(Request $request, array $credentials)
+	{
 		return $request->isJson() || $request->isAjax()
 			? Hint::success("修改成功！", $this->redirectPath())
 			: redirect($this->redirectPath());
@@ -168,11 +176,12 @@ trait ResetsPasswords {
 	 * Get the response for a failed password reset.
 	 *
 	 * @param \think\Request $request
-	 * @param array          $credentials
+	 * @param array $credentials
 	 * @return \think\Response
 	 * @noinspection PhpUnusedParameterInspection
 	 */
-	protected function sendResetFailedResponse(Request $request, array $credentials) {
+	protected function sendResetFailedResponse(Request $request, array $credentials)
+	{
 		return Hint::error('修改失败！');
 	}
 
@@ -181,7 +190,8 @@ trait ResetsPasswords {
 	 *
 	 * @return string
 	 */
-	protected function authPassword() {
+	protected function authPassword()
+	{
 		return 'password';
 	}
 
@@ -190,7 +200,8 @@ trait ResetsPasswords {
 	 *
 	 * @return string
 	 */
-	protected function password() {
+	protected function password()
+	{
 		return 'password';
 	}
 
@@ -199,7 +210,8 @@ trait ResetsPasswords {
 	 *
 	 * @return string
 	 */
-	protected function newPassword() {
+	protected function newPassword()
+	{
 		return 'new_password';
 	}
 
@@ -208,7 +220,8 @@ trait ResetsPasswords {
 	 *
 	 * @return string
 	 */
-	protected function confirmPassword() {
+	protected function confirmPassword()
+	{
 		return 'confirm_password';
 	}
 
@@ -217,7 +230,8 @@ trait ResetsPasswords {
 	 *
 	 * @return \Xin\Contracts\Auth\Guard|\Xin\Contracts\Auth\StatefulGuard
 	 */
-	protected function guard() {
+	protected function guard()
+	{
 		return Auth::guard();
 	}
 

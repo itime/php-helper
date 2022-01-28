@@ -7,7 +7,8 @@
 
 namespace Xin\Wechat\Events;
 
-class WechatUserCreated {
+class WechatUserCreated
+{
 
 	/**
 	 * The authenticated user.
@@ -22,7 +23,8 @@ class WechatUserCreated {
 	 * @param mixed $user
 	 * @return void
 	 */
-	public function __construct($user) {
+	public function __construct($user)
+	{
 		$this->user = $user;
 	}
 

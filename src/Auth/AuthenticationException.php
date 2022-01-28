@@ -7,7 +7,8 @@
 
 namespace Xin\Auth;
 
-class AuthenticationException extends \Exception {
+class AuthenticationException extends \Exception
+{
 
 	/**
 	 * @var string
@@ -29,9 +30,10 @@ class AuthenticationException extends \Exception {
 	 *
 	 * @param string $guard
 	 * @param string $redirectTo
-	 * @param array  $config
+	 * @param array $config
 	 */
-	public function __construct($guard, $redirectTo = '', array $config = []) {
+	public function __construct($guard, $redirectTo = '', array $config = [])
+	{
 		parent::__construct('Unauthenticated.', -1);
 
 		$this->guard = $guard;
@@ -47,21 +49,24 @@ class AuthenticationException extends \Exception {
 	/**
 	 * @return array
 	 */
-	public function getConfig() {
+	public function getConfig()
+	{
 		return $this->config;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getGuard() {
+	public function getGuard()
+	{
 		return $this->guard;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function redirectTo() {
+	public function redirectTo()
+	{
 		return $this->redirectTo;
 	}
 

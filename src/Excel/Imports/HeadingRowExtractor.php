@@ -6,7 +6,8 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Xin\Excel\Importable;
 use Xin\Excel\Row;
 
-class HeadingRowExtractor {
+class HeadingRowExtractor
+{
 
 	/**
 	 * @const int
@@ -18,7 +19,8 @@ class HeadingRowExtractor {
 	 *
 	 * @return int
 	 */
-	public static function headingRow($importable): int {
+	public static function headingRow($importable): int
+	{
 		return method_exists($importable, 'headingRow')
 			? $importable->headingRow()
 			: self::DEFAULT_HEADING_ROW;
@@ -26,12 +28,13 @@ class HeadingRowExtractor {
 
 
 	/**
-	 * @param Worksheet  $worksheet
+	 * @param Worksheet $worksheet
 	 * @param Importable $importable
 	 *
 	 * @return array
 	 */
-	public static function extract(Worksheet $worksheet, $importable): array {
+	public static function extract(Worksheet $worksheet, $importable): array
+	{
 		$headingRowNumber = self::headingRow($importable);
 		$rows = iterator_to_array($worksheet->getRowIterator($headingRowNumber, $headingRowNumber));
 		$headingRow = reset($rows);

@@ -26,14 +26,16 @@ use Xin\Contracts\Auth\Access\Gate as GateContract;
  * @method static array abilities()
  * @see \Xin\Contracts\Auth\Access\Gate
  */
-class Gate extends Facade {
+class Gate extends Facade
+{
 
 	/**
 	 * Get the registered name of the component.
 	 *
 	 * @return string
 	 */
-	protected static function getFacadeClass() {
+	protected static function getFacadeClass()
+	{
 		return GateContract::class;
 	}
 

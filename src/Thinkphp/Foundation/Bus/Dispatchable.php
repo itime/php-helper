@@ -9,7 +9,8 @@ namespace Xin\Thinkphp\Foundation\Bus;
 
 use think\facade\Queue;
 
-trait Dispatchable {
+trait Dispatchable
+{
 
 	//	/**
 	//	 * 默认队列
@@ -21,12 +22,13 @@ trait Dispatchable {
 	/**
 	 * Dispatch the job with the given arguments.
 	 *
-	 * @param mixed  $data
-	 * @param int    $delay
+	 * @param mixed $data
+	 * @param int $delay
 	 * @param string $queue
 	 * @return mixed
 	 */
-	public static function dispatch($data = null, $delay = 0, $queue = '') {
+	public static function dispatch($data = null, $delay = 0, $queue = '')
+	{
 		$queue = static::resolveQueue($queue);
 
 		return Queue::later($delay, static::class, $data, $queue);
@@ -35,11 +37,12 @@ trait Dispatchable {
 	/**
 	 * Dispatch a command to its appropriate handler in the current process.
 	 *
-	 * @param mixed  $data
+	 * @param mixed $data
 	 * @param string $queue
 	 * @return mixed
 	 */
-	public static function dispatchNow($data = null, $queue = '') {
+	public static function dispatchNow($data = null, $queue = '')
+	{
 		$queue = static::resolveQueue($queue);
 
 		return Queue::push(static::class, $data, $queue);
@@ -51,7 +54,8 @@ trait Dispatchable {
 	 * @param string $queue
 	 * @return string
 	 */
-	private static function resolveQueue($queue) {
+	private static function resolveQueue($queue)
+	{
 		if (empty($queue) && property_exists(static::class, 'defaultQueue')) {
 			$queue = static::$defaultQueue;
 		}

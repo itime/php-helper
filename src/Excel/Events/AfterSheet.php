@@ -4,7 +4,8 @@ namespace Xin\Excel\Events;
 
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class AfterSheet extends Event {
+class AfterSheet extends Event
+{
 
 	/**
 	 * @var Worksheet
@@ -18,9 +19,10 @@ class AfterSheet extends Event {
 
 	/**
 	 * @param Worksheet $sheet
-	 * @param object    $exportable
+	 * @param object $exportable
 	 */
-	public function __construct(Worksheet $sheet, $exportable) {
+	public function __construct(Worksheet $sheet, $exportable)
+	{
 		$this->sheet = $sheet;
 		$this->exportable = $exportable;
 	}
@@ -28,21 +30,24 @@ class AfterSheet extends Event {
 	/**
 	 * @return Worksheet
 	 */
-	public function getSheet() {
+	public function getSheet()
+	{
 		return $this->sheet;
 	}
 
 	/**
 	 * @return object
 	 */
-	public function getConcernable() {
+	public function getConcernable()
+	{
 		return $this->exportable;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getDelegate() {
+	public function getDelegate()
+	{
 		return $this->sheet;
 	}
 

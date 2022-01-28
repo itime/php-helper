@@ -7,7 +7,8 @@ use Closure;
 use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\Worksheet\Row as SpreadsheetRow;
 
-class Row implements ArrayAccess {
+class Row implements ArrayAccess
+{
 
 	/**
 	 * @var array
@@ -31,9 +32,10 @@ class Row implements ArrayAccess {
 
 	/**
 	 * @param SpreadsheetRow $row
-	 * @param array          $headingRow
+	 * @param array $headingRow
 	 */
-	public function __construct(SpreadsheetRow $row, array $headingRow = []) {
+	public function __construct(SpreadsheetRow $row, array $headingRow = [])
+	{
 		$this->row = $row;
 		$this->headingRow = $headingRow;
 	}
@@ -41,19 +43,21 @@ class Row implements ArrayAccess {
 	/**
 	 * @return SpreadsheetRow
 	 */
-	public function getDelegate(): SpreadsheetRow {
+	public function getDelegate(): SpreadsheetRow
+	{
 		return $this->row;
 	}
 
 	/**
-	 * @param null        $nullValue
-	 * @param bool        $calculateFormulas
-	 * @param bool        $formatData
+	 * @param null $nullValue
+	 * @param bool $calculateFormulas
+	 * @param bool $formatData
 	 * @param string|null $endColumn
 	 *
 	 * @return array
 	 */
-	public function toArray($nullValue = null, $calculateFormulas = false, $formatData = true, ?string $endColumn = null) {
+	public function toArray($nullValue = null, $calculateFormulas = false, $formatData = true, ?string $endColumn = null)
+	{
 		if (is_array($this->rowCache)) {
 			return $this->rowCache;
 		}
@@ -86,30 +90,36 @@ class Row implements ArrayAccess {
 	 * @param bool $calculateFormulas
 	 * @return bool
 	 */
-	public function isEmpty($calculateFormulas = false): bool {
+	public function isEmpty($calculateFormulas = false): bool
+	{
 		return count(array_filter($this->toArray(null, $calculateFormulas, false))) === 0;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getIndex(): int {
+	public function getIndex(): int
+	{
 		return $this->row->getRowIndex();
 	}
 
-	public function offsetExists($offset) {
+	public function offsetExists($offset)
+	{
 		return isset(($this->toArray())[$offset]);
 	}
 
-	public function offsetGet($offset) {
+	public function offsetGet($offset)
+	{
 		return ($this->toArray())[$offset];
 	}
 
-	public function offsetSet($offset, $value) {
+	public function offsetSet($offset, $value)
+	{
 		//
 	}
 
-	public function offsetUnset($offset) {
+	public function offsetUnset($offset)
+	{
 		//
 	}
 
@@ -117,7 +127,8 @@ class Row implements ArrayAccess {
 	 * @param Closure|null $preparationCallback
 	 * @internal
 	 */
-	public function setPreparationCallback(Closure $preparationCallback = null) {
+	public function setPreparationCallback(Closure $preparationCallback = null)
+	{
 		$this->preparationCallback = $preparationCallback;
 	}
 

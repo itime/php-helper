@@ -9,7 +9,8 @@ namespace Xin\Thinkphp\View\Storage;
 
 use Exception;
 
-class File {
+class File
+{
 
 	protected $cacheFile;
 
@@ -22,7 +23,8 @@ class File {
 	 * @return void
 	 * @noinspection PhpDocMissingThrowsInspection
 	 */
-	public function write(string $cacheFile, string $content): void {
+	public function write(string $cacheFile, string $content): void
+	{
 		// 检测模板目录
 		$dir = dirname($cacheFile);
 
@@ -41,10 +43,11 @@ class File {
 	 *
 	 * @access public
 	 * @param string $cacheFile 缓存的文件名
-	 * @param array  $vars 变量数组
+	 * @param array $vars 变量数组
 	 * @return void
 	 */
-	public function read(string $cacheFile, array $vars = []): void {
+	public function read(string $cacheFile, array $vars = []): void
+	{
 		$this->cacheFile = $cacheFile;
 
 		if (!empty($vars) && is_array($vars)) {
@@ -61,10 +64,11 @@ class File {
 	 *
 	 * @access public
 	 * @param string $cacheFile 缓存的文件名
-	 * @param int    $cacheTime 缓存时间
+	 * @param int $cacheTime 缓存时间
 	 * @return bool
 	 */
-	public function check(string $cacheFile, int $cacheTime): bool {
+	public function check(string $cacheFile, int $cacheTime): bool
+	{
 		// 缓存文件不存在, 直接返回false
 		if (!file_exists($cacheFile)) {
 			return false;

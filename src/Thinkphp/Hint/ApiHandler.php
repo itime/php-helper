@@ -9,19 +9,22 @@ namespace Xin\Thinkphp\Hint;
 
 use think\Response;
 
-class ApiHandler extends AbstractHandler {
+class ApiHandler extends AbstractHandler
+{
 
 	/**
 	 * @inheritDoc
 	 */
-	public function render($data = null) {
+	public function render($data = null)
+	{
 		return Response::create($this->optimizeData($data), 'json');
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function isAjax() {
+	public function isAjax()
+	{
 		return true;
 	}
 

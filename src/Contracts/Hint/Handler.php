@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Hint;
 
-interface Handler {
+interface Handler
+{
 
 	/**
 	 * 渲染
@@ -18,7 +19,7 @@ interface Handler {
 
 	/**
 	 * 渲染并输出
-	 * @param mixed         $response
+	 * @param mixed $response
 	 * @param callable|null $callback
 	 */
 	public function output($response, callable $callback = null);

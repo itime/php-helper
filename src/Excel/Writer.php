@@ -15,7 +15,8 @@ use Xin\Excel\Concerns\WithProperties;
 use Xin\Excel\Factories\WriterFactory;
 use Xin\Support\Arr;
 
-class Writer {
+class Writer
+{
 
 	use HasEventBus;
 
@@ -75,7 +76,8 @@ class Writer {
 	/**
 	 * @param array $config
 	 */
-	public function __construct($config = []) {
+	public function __construct($config = [])
+	{
 		$this->config = array_merge_recursive($this->config, $config);
 
 		$this->setDefaultValueBinder();
@@ -84,7 +86,8 @@ class Writer {
 	/**
 	 * @return Writer
 	 */
-	public function setDefaultValueBinder() {
+	public function setDefaultValueBinder()
+	{
 		$valueBinder = $this->config['value_binder'] ?? DefaultValueBinder::class;
 		Cell::setValueBinder(app($valueBinder));
 
@@ -95,13 +98,14 @@ class Writer {
 	 * 写入到文件
 	 *
 	 * @param Exportable $export
-	 * @param string     $filePath
-	 * @param string     $writerType
+	 * @param string $filePath
+	 * @param string $writerType
 	 * @return string
 	 * @throws \PhpOffice\PhpSpreadsheet\Exception
 	 * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
 	 */
-	public function write($export, $filePath, $writerType = null) {
+	public function write($export, $filePath, $writerType = null)
+	{
 		$this->open($export);
 
 		$this->initColumns();
@@ -114,7 +118,8 @@ class Writer {
 	/**
 	 * @param Exportable $export
 	 */
-	protected function open($export) {
+	protected function open($export)
+	{
 		$this->exportable = $export;
 		$this->spreadsheet = new Spreadsheet;
 		$this->spreadsheet->disconnectWorksheets();
@@ -134,7 +139,8 @@ class Writer {
 	 *
 	 * @throws \PhpOffice\PhpSpreadsheet\Exception
 	 */
-	protected function initColumns() {
+	protected function initColumns()
+	{
 		$startRow = 1;
 
 		$columnIndex = 1;
@@ -170,7 +176,8 @@ class Writer {
 	/**
 	 * 数据导出处理
 	 */
-	protected function handleData() {
+	protected function handleData()
+	{
 		$currentPage = 1;
 		$chunkSize = $this->exportable->chunkSize();
 
@@ -199,7 +206,8 @@ class Writer {
 	 * @param array $data
 	 * @return bool
 	 */
-	protected function handleDataItems($data) {
+	protected function handleDataItems($data)
+	{
 		foreach ($data as $index => $row) {
 			$this->exportCount++;
 
@@ -236,7 +244,8 @@ class Writer {
 	/**
 	 * 处理文档描述信息
 	 */
-	protected function handleDocumentProperties() {
+	protected function handleDocumentProperties()
+	{
 		$properties = $this->config['properties'];
 
 		if ($this->exportable instanceof WithProperties) {
@@ -290,11 +299,12 @@ class Writer {
 	/**
 	 * 文档默认样式处理
 	 *
-	 * @param mixed       $exportObj
+	 * @param mixed $exportObj
 	 * @param Spreadsheet $spreadsheet
 	 * @throws \PhpOffice\PhpSpreadsheet\Exception
 	 */
-	protected function handleDocumentStyles($exportObj, $spreadsheet) {
+	protected function handleDocumentStyles($exportObj, $spreadsheet)
+	{
 		$defaultStyles = $this->config['styles'];
 
 		if ($exportObj instanceof WithDefaultStyles) {
@@ -308,9 +318,10 @@ class Writer {
 	 * 追加数据
 	 *
 	 * @param array $row
-	 * @param null  $startCell
+	 * @param null $startCell
 	 */
-	protected function appendRow($row, $startCell = null) {
+	protected function appendRow($row, $startCell = null)
+	{
 		return $this->appendRows([$row], $startCell);
 	}
 
@@ -318,10 +329,11 @@ class Writer {
 	 * 追加数据（一组）
 	 *
 	 * @param array[] $rows
-	 * @param null    $startCell
+	 * @param null $startCell
 	 * @return Worksheet
 	 */
-	protected function appendRows($rows, $startCell = null) {
+	protected function appendRows($rows, $startCell = null)
+	{
 		if (!$startCell) {
 			$startCell = 'A' . ($this->worksheet->getHighestRow() + 1);
 		}
@@ -337,7 +349,8 @@ class Writer {
 	 * @return string
 	 * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
 	 */
-	protected function save($filePath, $writerType) {
+	protected function save($filePath, $writerType)
+	{
 		$writer = WriterFactory::make(
 			$writerType,
 			$this->spreadsheet,
@@ -362,7 +375,8 @@ class Writer {
 	 * @param string $type
 	 * @return string
 	 */
-	public static function getFormatCode($type) {
+	public static function getFormatCode($type)
+	{
 		$codes = [
 			'number' => NumberFormat::FORMAT_NUMBER,
 			'integer' => NumberFormat::FORMAT_NUMBER,

@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Auth;
 
-interface StatefulGuard extends Guard {
+interface StatefulGuard extends Guard
+{
 
 	/**
 	 * 登录
@@ -28,7 +29,7 @@ interface StatefulGuard extends Guard {
 	/**
 	 * 根据属性登录
 	 *
-	 * @param array         $credentials
+	 * @param array $credentials
 	 * @param \Closure|null $notExistCallback
 	 * @param \Closure|null $preCheckCallback
 	 * @return \Xin\Contracts\Auth\Guard

@@ -11,7 +11,8 @@ namespace Xin\Support;
 /**
  * 安全相关工具类
  */
-final class Secure {
+final class Secure
+{
 
 	/**
 	 * 获取签名证书ID
@@ -20,7 +21,8 @@ final class Secure {
 	 * @param string $cert_pwd 签名证书密码
 	 * @return mixed
 	 */
-	public static function getSignCertId($cert_path, $cert_pwd) {
+	public static function getSignCertId($cert_path, $cert_pwd)
+	{
 		$pkcs12certdata = file_get_contents($cert_path);
 		openssl_pkcs12_read($pkcs12certdata, $certs, $cert_pwd);
 		$x509data = $certs ['cert'];
@@ -37,7 +39,8 @@ final class Secure {
 	 * @param $cert_pwd
 	 * @return mixed
 	 */
-	public static function getPrivateKey($cert_path, $cert_pwd) {
+	public static function getPrivateKey($cert_path, $cert_pwd)
+	{
 		$pkcs12 = file_get_contents($cert_path);
 		openssl_pkcs12_read($pkcs12, $certs, $cert_pwd);
 
@@ -51,7 +54,8 @@ final class Secure {
 	 * @param $cert_dir
 	 * @return string
 	 */
-	public static function getPulbicKeyByCertId($certId, $cert_dir) {
+	public static function getPulbicKeyByCertId($certId, $cert_dir)
+	{
 		$handle = opendir($cert_dir);
 		if (!$handle) return null;
 
@@ -78,7 +82,8 @@ final class Secure {
 	 * @param string $cert_path 证书路径
 	 * @return string
 	 */
-	public static function getCertIdByCerPath($cert_path) {
+	public static function getCertIdByCerPath($cert_path)
+	{
 		$x509data = file_get_contents($cert_path);
 		openssl_x509_read($x509data);
 		$certdata = openssl_x509_parse($x509data);
@@ -93,7 +98,8 @@ final class Secure {
 	 * @param string $public_key 证书公钥
 	 * @return string
 	 */
-	public static function rsaSign($content, $public_key) {
+	public static function rsaSign($content, $public_key)
+	{
 		$pkeyid = openssl_get_privatekey($public_key);
 		openssl_sign($content, $sign, $pkeyid);
 		openssl_free_key($pkeyid);
@@ -110,7 +116,8 @@ final class Secure {
 	 * @param string $public_key 证书公钥
 	 * @return bool
 	 */
-	public static function rsaVerify($content, $sign, $public_key) {
+	public static function rsaVerify($content, $sign, $public_key)
+	{
 		$sign = base64_decode($sign);
 		$pkeyid = openssl_get_publickey($public_key);
 		$verify = '';
@@ -130,11 +137,12 @@ final class Secure {
 	 *
 	 * @param string $data 要加密的字符串
 	 * @param string $key 加密密钥
-	 * @param int    $expire 过期时间 单位 秒
+	 * @param int $expire 过期时间 单位 秒
 	 * @return string
 	 * @author 麦当苗儿 <zuojiazi@vip.qq.com>
 	 */
-	public static function encrypt($data, $key = '', $expire = 0) {
+	public static function encrypt($data, $key = '', $expire = 0)
+	{
 		$key = md5($key);
 		$data = base64_encode($data);
 		$x = 0;
@@ -165,7 +173,8 @@ final class Secure {
 	 * @return string
 	 * @author 麦当苗儿 <zuojiazi@vip.qq.com>
 	 */
-	public static function decrypt($data, $key = '') {
+	public static function decrypt($data, $key = '')
+	{
 		$key = md5($key);
 		$data = str_replace(['-', '_'], ['+', '/'], $data);
 		$mod4 = strlen($data) % 4;

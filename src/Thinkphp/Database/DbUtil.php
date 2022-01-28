@@ -10,14 +10,16 @@ namespace Xin\Thinkphp\Database;
 use think\db\exception\PDOException;
 use think\facade\Db;
 
-class DbUtil {
+class DbUtil
+{
 
 	/**
 	 * @param callable $callback
 	 * @return void
 	 * @throws PDOException
 	 */
-	public static function call(callable $callback) {
+	public static function call(callable $callback)
+	{
 		try {
 			return $callback();
 		} catch (PDOException $e) {
@@ -36,7 +38,8 @@ class DbUtil {
 	/**
 	 * @return void
 	 */
-	public static function dumpSqls() {
+	public static function dumpSqls()
+	{
 		Db::listen(function ($sql) {
 			dump($sql);
 		});

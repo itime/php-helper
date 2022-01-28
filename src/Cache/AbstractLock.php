@@ -12,7 +12,8 @@ use Xin\Contracts\Cache\LockTimeoutException;
 use Xin\Support\Str;
 use Xin\Support\Traits\InteractsWithTime;
 
-abstract class AbstractLock implements LockContract {
+abstract class AbstractLock implements LockContract
+{
 
 	use InteractsWithTime;
 
@@ -40,12 +41,13 @@ abstract class AbstractLock implements LockContract {
 	/**
 	 * Create a new lock instance.
 	 *
-	 * @param string      $name
-	 * @param int         $seconds
+	 * @param string $name
+	 * @param int $seconds
 	 * @param string|null $owner
 	 * @return void
 	 */
-	public function __construct($name, $seconds, $owner = null) {
+	public function __construct($name, $seconds, $owner = null)
+	{
 		if (is_null($owner)) {
 			$owner = Str::random();
 		}
@@ -82,7 +84,8 @@ abstract class AbstractLock implements LockContract {
 	 * @param callable|null $callback
 	 * @return mixed
 	 */
-	public function get($callback = null) {
+	public function get($callback = null)
+	{
 		$result = $this->acquire();
 
 		if ($result && is_callable($callback)) {
@@ -99,12 +102,13 @@ abstract class AbstractLock implements LockContract {
 	/**
 	 * Attempt to acquire the lock for the given number of seconds.
 	 *
-	 * @param int           $seconds
+	 * @param int $seconds
 	 * @param callable|null $callback
 	 * @return bool
 	 * @throws \Xin\Contracts\Cache\LockTimeoutException
 	 */
-	public function block($seconds, $callback = null) {
+	public function block($seconds, $callback = null)
+	{
 		$starting = $this->currentTime();
 
 		while (!$this->acquire()) {
@@ -131,7 +135,8 @@ abstract class AbstractLock implements LockContract {
 	 *
 	 * @return string
 	 */
-	public function owner() {
+	public function owner()
+	{
 		return $this->owner;
 	}
 
@@ -140,7 +145,8 @@ abstract class AbstractLock implements LockContract {
 	 *
 	 * @return bool
 	 */
-	protected function isOwnedByCurrentProcess() {
+	protected function isOwnedByCurrentProcess()
+	{
 		return $this->getCurrentOwner() === $this->owner;
 	}
 

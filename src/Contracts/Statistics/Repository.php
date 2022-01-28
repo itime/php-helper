@@ -7,14 +7,15 @@
 
 namespace Xin\Contracts\Statistics;
 
-interface Repository {
+interface Repository
+{
 
 	/**
 	 * 自定义统计
 	 *
 	 * @param string $name
-	 * @param int    $step
-	 * @param array  $options
+	 * @param int $step
+	 * @param array $options
 	 */
 	public function tally($name, $step = 1, array $options = []);
 
@@ -29,8 +30,8 @@ interface Repository {
 	 * 获取统计的值
 	 *
 	 * @param string $name
-	 * @param int    $time
-	 * @param array  $options
+	 * @param int $time
+	 * @param array $options
 	 * @return int
 	 */
 	public function value($name, $time = null, array $options = []);
@@ -39,7 +40,7 @@ interface Repository {
 	 * 获取统计总值
 	 *
 	 * @param string $name
-	 * @param array  $options
+	 * @param array $options
 	 * @return int
 	 */
 	public function total($name, array $options = []);

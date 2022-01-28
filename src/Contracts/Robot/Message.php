@@ -2,7 +2,8 @@
 
 namespace Xin\Contracts\Robot;
 
-interface Message {
+interface Message
+{
 
 	/**
 	 * @return string

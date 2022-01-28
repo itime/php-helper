@@ -10,7 +10,8 @@ namespace Xin\Thinkphp\Foundation\Middleware;
 use think\Cookie;
 use think\Request;
 
-class StoreUrl {
+class StoreUrl
+{
 
 	/**
 	 * @var \think\Cookie
@@ -22,16 +23,18 @@ class StoreUrl {
 	 *
 	 * @param \think\Cookie $cookie
 	 */
-	public function __construct(Cookie $cookie) {
+	public function __construct(Cookie $cookie)
+	{
 		$this->cookie = $cookie;
 	}
 
 	/**
 	 * @param \think\Request|\Xin\Thinkphp\Http\Requestable $request
-	 * @param \Closure                                      $next
+	 * @param \Closure $next
 	 * @return mixed
 	 */
-	public function handle(Request $request, \Closure $next) {
+	public function handle(Request $request, \Closure $next)
+	{
 		/** @var \think\Response $response */
 		$response = $next($request);
 
@@ -49,7 +52,8 @@ class StoreUrl {
 	/**
 	 * @param \think\Request|\Xin\Thinkphp\Http\Requestable $request
 	 */
-	private function storeUrl($request) {
+	private function storeUrl($request)
+	{
 		$previousUrl = $this->cookie->get('_previous_url');
 		$currentUrl = $this->cookie->get('_current_url');
 

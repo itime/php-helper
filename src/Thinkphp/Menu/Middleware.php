@@ -13,7 +13,8 @@ use Xin\Menu\MenuManager;
 use Xin\Thinkphp\Facade\Auth;
 use Xin\Thinkphp\Foundation\RequestUtil;
 
-class Middleware {
+class Middleware
+{
 
 	/**
 	 * @var \think\App
@@ -30,7 +31,8 @@ class Middleware {
 	 *
 	 * @param \think\App $app
 	 */
-	public function __construct(App $app) {
+	public function __construct(App $app)
+	{
 		$this->app = $app;
 	}
 
@@ -38,10 +40,11 @@ class Middleware {
 	 * 应用初始化
 	 *
 	 * @param \think\Request $request
-	 * @param \Closure       $next
+	 * @param \Closure $next
 	 * @return mixed
 	 */
-	public function handle($request, \Closure $next) {
+	public function handle($request, \Closure $next)
+	{
 		$this->request = $request;
 
 		$this->registerServices($request);
@@ -56,7 +59,8 @@ class Middleware {
 	 *
 	 * @param \think\Request $request
 	 */
-	protected function registerServices($request) {
+	protected function registerServices($request)
+	{
 		$this->app->bind([
 			'menu' => Factory::class,
 			Factory::class => MenuManager::class,
@@ -91,7 +95,8 @@ class Middleware {
 	/**
 	 * 注册菜单驱动
 	 */
-	protected function registerDrivers() {
+	protected function registerDrivers()
+	{
 		/** @var MenuManager $manager */
 		$manager = $this->app['menu'];
 
@@ -105,7 +110,8 @@ class Middleware {
 	 *
 	 * @return callable|null
 	 */
-	protected function getFilterResolver() {
+	protected function getFilterResolver()
+	{
 		return null;
 	}
 
@@ -114,7 +120,8 @@ class Middleware {
 	 *
 	 * @return array
 	 */
-	protected function getGenerateOptions() {
+	protected function getGenerateOptions()
+	{
 		return [
 			'rule' => $this->getPathRule(),
 			'query' => $this->getQuery(),
@@ -128,7 +135,8 @@ class Middleware {
 	 *
 	 * @param \Xin\Menu\MenuManager $manager
 	 */
-	protected function shouldUse(MenuManager $manager) {
+	protected function shouldUse(MenuManager $manager)
+	{
 		$manager->shouldUse($this->app->http->getName());
 	}
 
@@ -137,7 +145,8 @@ class Middleware {
 	 *
 	 * @return string
 	 */
-	protected function getPathRule() {
+	protected function getPathRule()
+	{
 		return RequestUtil::getPathRule($this->request);
 	}
 
@@ -146,7 +155,8 @@ class Middleware {
 	 *
 	 * @return array
 	 */
-	protected function getQuery() {
+	protected function getQuery()
+	{
 		return $this->request->get() + $this->request->route();
 	}
 
@@ -155,7 +165,8 @@ class Middleware {
 	 *
 	 * @return bool
 	 */
-	protected function isAdministrator() {
+	protected function isAdministrator()
+	{
 		return Auth::isAdministrator();
 	}
 
@@ -164,7 +175,8 @@ class Middleware {
 	 *
 	 * @return bool
 	 */
-	protected function isDevMode() {
+	protected function isDevMode()
+	{
 		return $this->app->config->get('web.develop_mode') == 1;
 	}
 

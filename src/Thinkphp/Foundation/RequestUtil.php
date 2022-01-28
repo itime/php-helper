@@ -10,7 +10,8 @@ namespace Xin\Thinkphp\Foundation;
 use think\facade\App;
 use Xin\Thinkphp\Plugin\Url;
 
-class RequestUtil {
+class RequestUtil
+{
 
 	/**
 	 * 获取路径规则
@@ -18,7 +19,8 @@ class RequestUtil {
 	 * @param \think\Request $request
 	 * @return string
 	 */
-	public static function getPathRule($request = null) {
+	public static function getPathRule($request = null)
+	{
 		$request = $request ?: App::make('request');
 		$path = $request->path();
 

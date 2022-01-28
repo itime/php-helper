@@ -4,7 +4,8 @@ namespace Xin\Limiter;
 
 use League\Pipeline\StageInterface;
 
-abstract class AbstractLimiter implements StageInterface {
+abstract class AbstractLimiter implements StageInterface
+{
 
 	/**
 	 * @var string
@@ -24,7 +25,8 @@ abstract class AbstractLimiter implements StageInterface {
 	/**
 	 * 初始化数据
 	 */
-	public function __construct($config) {
+	public function __construct($config)
+	{
 		$this->config = array_merge_recursive($this->getDefaultConfig(), $config);
 
 		if (empty($this->name)) {
@@ -35,7 +37,8 @@ abstract class AbstractLimiter implements StageInterface {
 	/**
 	 * @inheritDoc
 	 */
-	public function __invoke($payload) {
+	public function __invoke($payload)
+	{
 		$this->payload = $payload;
 
 		if (isset($this->config['status']) && $this->config['status'] == 0) {
@@ -57,10 +60,11 @@ abstract class AbstractLimiter implements StageInterface {
 	/**
 	 * 读取限制配置
 	 * @param string $key
-	 * @param array  $default
+	 * @param array $default
 	 * @return array
 	 */
-	protected function getConfig($key = null, $default = null) {
+	protected function getConfig($key = null, $default = null)
+	{
 		return $key ? $this->config[$key] ?? $default : $this->config;
 	}
 
@@ -68,7 +72,8 @@ abstract class AbstractLimiter implements StageInterface {
 	 * 获取默认限制配置
 	 * @return array
 	 */
-	protected function getDefaultConfig() {
+	protected function getDefaultConfig()
+	{
 		return [];
 	}
 

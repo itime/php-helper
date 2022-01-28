@@ -11,7 +11,8 @@ use Xin\Capsule\Service;
 use Xin\Contracts\Hint\Handler;
 use Xin\Contracts\Hint\Hint as HintContract;
 
-class Hint extends Service implements HintContract {
+class Hint extends Service implements HintContract
+{
 
 	/**
 	 * @var Handler
@@ -19,10 +20,11 @@ class Hint extends Service implements HintContract {
 	protected $handler;
 
 	/**
-	 * @param array   $config
+	 * @param array $config
 	 * @param Handler $handler
 	 */
-	public function __construct(array $config, Handler $handler) {
+	public function __construct(array $config, Handler $handler)
+	{
 		parent::__construct($config);
 
 		$this->handler = $handler;
@@ -35,14 +37,16 @@ class Hint extends Service implements HintContract {
 	/**
 	 * @inheritDoc
 	 */
-	public function result($data = [], array $extend = []) {
+	public function result($data = [], array $extend = [])
+	{
 		return $this->success('OK', null, $data, $extend);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function success($msg, $url = null, $data = null, array $extend = []) {
+	public function success($msg, $url = null, $data = null, array $extend = [])
+	{
 		if (!$this->handler->isAjax() || $url) {
 			$url = $this->successUrl($url);
 			$extend['url'] = $url;
@@ -54,7 +58,8 @@ class Hint extends Service implements HintContract {
 	/**
 	 * @inheritDoc
 	 */
-	public function error($msg, $code = 0, $url = null, array $extend = []) {
+	public function error($msg, $code = 0, $url = null, array $extend = [])
+	{
 		if ($msg instanceof \Exception) {
 			$code = $msg->getCode();
 			$msg = $msg->getMessage();
@@ -67,7 +72,8 @@ class Hint extends Service implements HintContract {
 	/**
 	 * @inheritDoc
 	 */
-	public function alert($msg, $code = 0, $url = null, array $extend = []) {
+	public function alert($msg, $code = 0, $url = null, array $extend = [])
+	{
 		return $this->error($msg, $code, $url, array_merge([
 			'tips_type' => 'alert',
 		], $extend));
@@ -78,11 +84,12 @@ class Hint extends Service implements HintContract {
 	 *
 	 * @param string $code
 	 * @param string $msg
-	 * @param mixed  $data
-	 * @param array  $extend
+	 * @param mixed $data
+	 * @param array $extend
 	 * @return \think\response
 	 */
-	protected function render($code, $msg, $data, array $extend = []) {
+	protected function render($code, $msg, $data, array $extend = [])
+	{
 		return $this->handler->render(array_merge([
 			'code' => $code,
 			'msg' => $msg,
@@ -93,7 +100,8 @@ class Hint extends Service implements HintContract {
 	/**
 	 * @inheritDoc
 	 */
-	public function outputSuccess($msg, $url = null, $data = null, array $extend = [], callable $callback = null) {
+	public function outputSuccess($msg, $url = null, $data = null, array $extend = [], callable $callback = null)
+	{
 		$this->output(
 			$this->success($msg, $url, $data, $extend),
 			$callback
@@ -103,7 +111,8 @@ class Hint extends Service implements HintContract {
 	/**
 	 * @inheritDoc
 	 */
-	public function outputError($msg, $code = 0, $url = null, array $extend = [], callable $callback = null) {
+	public function outputError($msg, $code = 0, $url = null, array $extend = [], callable $callback = null)
+	{
 		$this->output(
 			$this->error($msg, $code, $url, $extend),
 			$callback
@@ -113,7 +122,8 @@ class Hint extends Service implements HintContract {
 	/**
 	 * @inheritDoc
 	 */
-	public function outputAlert($msg, $code = 0, $url = null, array $extend = [], callable $callback = null) {
+	public function outputAlert($msg, $code = 0, $url = null, array $extend = [], callable $callback = null)
+	{
 		$this->output(
 			$this->alert($msg, $code, $url, $extend),
 			$callback
@@ -123,10 +133,11 @@ class Hint extends Service implements HintContract {
 	/**
 	 * 直接输出
 	 *
-	 * @param mixed         $response
+	 * @param mixed $response
 	 * @param callable|null $callback
 	 */
-	protected function output($response, callable $callback = null) {
+	protected function output($response, callable $callback = null)
+	{
 		$this->handler->output($response, $callback);
 	}
 
@@ -134,7 +145,8 @@ class Hint extends Service implements HintContract {
 	 * @param string $url
 	 * @return string
 	 */
-	protected function successUrl($url) {
+	protected function successUrl($url)
+	{
 		if (is_null($url) && isset($_SERVER["HTTP_REFERER"])) {
 			$url = $_SERVER["HTTP_REFERER"];
 		} elseif ($url) {
@@ -148,7 +160,8 @@ class Hint extends Service implements HintContract {
 	 * @param string $url
 	 * @return string
 	 */
-	protected function errorUrl($url) {
+	protected function errorUrl($url)
+	{
 		if (is_null($url)) {
 			$url = $this->handler->isAjax() ? '' : 'javascript:history.back(-1);';
 		} elseif ($url) {

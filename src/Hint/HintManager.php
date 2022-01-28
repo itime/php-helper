@@ -15,7 +15,8 @@ use Xin\Support\Arr;
  * Class HintManager
  * @mixin Hint
  */
-class HintManager extends Manager implements HintFactory {
+class HintManager extends Manager implements HintFactory
+{
 
 	/**
 	 * @var \Closure
@@ -28,7 +29,8 @@ class HintManager extends Manager implements HintFactory {
 	 * @param string $name
 	 * @return \Xin\Contracts\Hint\Hint
 	 */
-	public function hint($name = null) {
+	public function hint($name = null)
+	{
 		return $this->driver($name);
 	}
 
@@ -37,7 +39,8 @@ class HintManager extends Manager implements HintFactory {
 	 *
 	 * @return $this|\Xin\Hint\HintManager
 	 */
-	public function shouldUseApi() {
+	public function shouldUseApi()
+	{
 		return $this->shouldUse('api');
 	}
 
@@ -46,7 +49,8 @@ class HintManager extends Manager implements HintFactory {
 	 *
 	 * @return $this|\Xin\Hint\HintManager
 	 */
-	public function shouldUseWeb() {
+	public function shouldUseWeb()
+	{
 		return $this->shouldUse('web');
 	}
 
@@ -55,7 +59,8 @@ class HintManager extends Manager implements HintFactory {
 	 *
 	 * @return $this|\Xin\Hint\HintManager
 	 */
-	public function shouldUse($name) {
+	public function shouldUse($name)
+	{
 		$this->setDefaultDriver($name);
 
 		return $this;
@@ -66,14 +71,16 @@ class HintManager extends Manager implements HintFactory {
 	 *
 	 * @param \Closure $resolverCallback
 	 */
-	public function setAutoResolver(\Closure $resolverCallback) {
+	public function setAutoResolver(\Closure $resolverCallback)
+	{
 		$this->autoResolverCallback = $resolverCallback;
 	}
 
 	/**
 	 * @inerhitDoc
 	 */
-	protected function getDefaultDriver() {
+	protected function getDefaultDriver()
+	{
 		if (is_callable($this->autoResolverCallback)) {
 			return call_user_func($this->autoResolverCallback);
 		}
@@ -84,18 +91,21 @@ class HintManager extends Manager implements HintFactory {
 	/**
 	 * @inerhitDoc
 	 */
-	protected function setDefaultDriver($name) {
+	protected function setDefaultDriver($name)
+	{
 		$this->setConfig('defaults.hint', $name);
 	}
 
-	public function getDriverConfig($name) {
+	public function getDriverConfig($name)
+	{
 		return $this->getConfig($name ? "hints.{$name}" : 'hints');
 	}
 
 	/**
 	 * @return string
 	 */
-	protected function getDefault($type) {
+	protected function getDefault($type)
+	{
 		return Arr::get($this->config, "defaults.{$type}", 'default');
 	}
 

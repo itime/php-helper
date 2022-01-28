@@ -2,6 +2,7 @@
 
 namespace Xin\Wechat\Exceptions;
 
-class WechatNotConfigureException extends WechatException {
+class WechatNotConfigureException extends WechatException
+{
 
 }

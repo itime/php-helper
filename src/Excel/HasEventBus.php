@@ -2,7 +2,8 @@
 
 namespace Xin\Excel;
 
-trait HasEventBus {
+trait HasEventBus
+{
 
 	/**
 	 * @var array
@@ -19,30 +20,34 @@ trait HasEventBus {
 	 *
 	 * @param array $listeners
 	 */
-	public function registerListeners(array $listeners) {
+	public function registerListeners(array $listeners)
+	{
 		foreach ($listeners as $event => $listener) {
 			$this->events[$event][] = $listener;
 		}
 	}
 
-	public function clearListeners() {
+	public function clearListeners()
+	{
 		$this->events = [];
 	}
 
 	/**
 	 * Register a global event listener.
 	 *
-	 * @param string   $event
+	 * @param string $event
 	 * @param callable $listener
 	 */
-	public static function listen(string $event, callable $listener) {
+	public static function listen(string $event, callable $listener)
+	{
 		static::$globalEvents[$event][] = $listener;
 	}
 
 	/**
 	 * @param object $event
 	 */
-	public function raise($event) {
+	public function raise($event)
+	{
 		foreach ($this->listeners($event) as $listener) {
 			$listener($event);
 		}
@@ -53,7 +58,8 @@ trait HasEventBus {
 	 *
 	 * @return callable[]
 	 */
-	public function listeners($event): array {
+	public function listeners($event): array
+	{
 		$name = \get_class($event);
 
 		$localListeners = $this->events[$name] ?? [];

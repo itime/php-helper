@@ -9,7 +9,8 @@ namespace Xin\Support;
 
 use Xin\Support\Traits\Macroable;
 
-class MacroProxy {
+class MacroProxy
+{
 
 	use Macroable;
 
@@ -26,7 +27,8 @@ class MacroProxy {
 	 * @param mixed $target
 	 * @return void
 	 */
-	public function __construct($target) {
+	public function __construct($target)
+	{
 		$this->target = $target;
 	}
 
@@ -34,11 +36,12 @@ class MacroProxy {
 	 * Dynamically handle calls to the class.
 	 *
 	 * @param string $method
-	 * @param array  $parameters
+	 * @param array $parameters
 	 * @return mixed
 	 * @throws \BadMethodCallException
 	 */
-	public function __call($method, $parameters) {
+	public function __call($method, $parameters)
+	{
 		if (!static::hasMacro($method)) {
 			throw new \BadMethodCallException(sprintf(
 				'Method %s::%s does not exist.', static::class, $method

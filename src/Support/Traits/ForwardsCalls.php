@@ -8,18 +8,20 @@
 
 namespace Xin\Support\Traits;
 
-trait ForwardsCalls {
+trait ForwardsCalls
+{
 
 	/**
 	 * Forward a method call to the given object.
 	 *
-	 * @param mixed  $object
+	 * @param mixed $object
 	 * @param string $method
-	 * @param array  $parameters
+	 * @param array $parameters
 	 * @return mixed|void
 	 * @throws \BadMethodCallException
 	 */
-	protected function forwardCallTo($object, $method, $parameters) {
+	protected function forwardCallTo($object, $method, $parameters)
+	{
 		try {
 			return $object->{$method}(...$parameters);
 		} catch (\Error|\BadMethodCallException $e) {
@@ -45,7 +47,8 @@ trait ForwardsCalls {
 	 * @return void
 	 * @throws \BadMethodCallException
 	 */
-	protected static function throwBadMethodCallException($method) {
+	protected static function throwBadMethodCallException($method)
+	{
 		throw new \BadMethodCallException(sprintf(
 			'Call to undefined method %s::%s()', static::class, $method
 		));

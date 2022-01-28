@@ -10,7 +10,8 @@ namespace Xin\Thinkphp\Transaction\Transactions;
 use Xin\Contracts\Transaction\Transaction as TransactionContract;
 use Xin\Thinkphp\Transaction\DatabaseTransaction;
 
-class Database implements TransactionContract {
+class Database implements TransactionContract
+{
 
 	/**
 	 * @var \Xin\Thinkphp\Transaction\DatabaseTransaction
@@ -22,51 +23,63 @@ class Database implements TransactionContract {
 	 *
 	 * @param \Xin\Thinkphp\Transaction\DatabaseTransaction $data
 	 */
-	public function __construct(DatabaseTransaction $data) {
+	public function __construct(DatabaseTransaction $data)
+	{
 		$this->data = $data;
 	}
 
-	public function isWaiting() {
+	public function isWaiting()
+	{
 		// TODO: Implement isWaiting() method.
 	}
 
-	public function isPending() {
+	public function isPending()
+	{
 		// TODO: Implement isPending() method.
 	}
 
-	public function isComplete() {
+	public function isComplete()
+	{
 		// TODO: Implement isComplete() method.
 	}
 
-	public function setWaiting() {
+	public function setWaiting()
+	{
 		// TODO: Implement setWaiting() method.
 	}
 
-	public function setPending() {
+	public function setPending()
+	{
 		// TODO: Implement setPending() method.
 	}
 
-	public function setComplete() {
+	public function setComplete()
+	{
 		// TODO: Implement setComplete() method.
 	}
 
-	public function isError() {
+	public function isError()
+	{
 		// TODO: Implement isError() method.
 	}
 
-	public function getError() {
+	public function getError()
+	{
 		// TODO: Implement getError() method.
 	}
 
-	public function setError($error) {
+	public function setError($error)
+	{
 		// TODO: Implement setError() method.
 	}
 
-	public function getNumber() {
+	public function getNumber()
+	{
 		// TODO: Implement getNumber() method.
 	}
 
-	public function getId() {
+	public function getId()
+	{
 		// TODO: Implement getId() method.
 	}
 

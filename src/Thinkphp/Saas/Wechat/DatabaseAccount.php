@@ -14,17 +14,18 @@ use Xin\Wechat\AuthEnum;
 /**
  * 微信账号模型
  *
- * @property-read int    app_type 应用类型：0 小程序，1 公众号
- * @property-read int    authorization_type 授权类型 0.手动配置 1.开放平台授权
+ * @property-read int app_type 应用类型：0 小程序，1 公众号
+ * @property-read int authorization_type 授权类型 0.手动配置 1.开放平台授权
  * @property-read string third_id 原始ID
  * @property-read string appid 小程序/公众号AppId
  * @property-read string secret 小程序/公众号Secret
  * @property-read string authorizer_refresh_token 小程序/公众号刷新令牌
- * @property-read array  authorizer_func_info 小程序/公众号权限信息
- * @property-read array  authorizer_func_info_arr 小程序/公众号权限信息（前台显示）
- * @property-read int    closed 是否解除授权
+ * @property-read array authorizer_func_info 小程序/公众号权限信息
+ * @property-read array authorizer_func_info_arr 小程序/公众号权限信息（前台显示）
+ * @property-read int closed 是否解除授权
  */
-class DatabaseAccount extends Model {
+class DatabaseAccount extends Model
+{
 
 	use Appable;
 
@@ -38,7 +39,8 @@ class DatabaseAccount extends Model {
 	 *
 	 * @return array
 	 */
-	protected function getAuthorizerFuncInfoAttr() {
+	protected function getAuthorizerFuncInfoAttr()
+	{
 		$authorizerInfo = $this->getData('authorizer_info');
 		if (empty($authorizerInfo)) {
 			return [];
@@ -52,7 +54,8 @@ class DatabaseAccount extends Model {
 	 *
 	 * @return array
 	 */
-	protected function getAuthorizerFuncInfoArrAttr() {
+	protected function getAuthorizerFuncInfoArrAttr()
+	{
 		$funcInfo = $this->getData('authorizer_func_info');
 
 		$result = [];
@@ -69,7 +72,8 @@ class DatabaseAccount extends Model {
 	 *
 	 * @return $this
 	 */
-	public function sync() {
+	public function sync()
+	{
 		if ($this->getOrigin('authorization_type')) {
 			$data = $this->loadAuthorizeInfo();
 			$this->save($data);
@@ -83,7 +87,8 @@ class DatabaseAccount extends Model {
 	 *
 	 * @return array
 	 */
-	public function loadAuthorizeInfo() {
+	public function loadAuthorizeInfo()
+	{
 		return $this->getAuthorizerInfoByAppId($this->getOrigin('appid'));
 	}
 
@@ -93,7 +98,8 @@ class DatabaseAccount extends Model {
 	 * @param string $appId
 	 * @return array
 	 */
-	protected static function getAuthorizerInfoByAppId($appId) {
+	protected static function getAuthorizerInfoByAppId($appId)
+	{
 		/** @var \EasyWeChat\OpenPlatform\Application $openPlatform */
 		$openPlatform = app('wechat')->openPlatformOfAppId($appId);
 		$result = $openPlatform->getAuthorizer($appId);
@@ -145,7 +151,8 @@ class DatabaseAccount extends Model {
 	 * @param array $data
 	 * @return static|\think\Model
 	 */
-	public static function fastCreate(array $data = []) {
+	public static function fastCreate(array $data = [])
+	{
 		if (isset($data['authorization_type']) && $data['authorization_type'] == 1) {
 			$data = array_merge(self::getAuthorizerInfoByAppId($data['appid']), $data);
 		}

@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Cache;
 
-interface Lock {
+interface Lock
+{
 
 	/**
 	 * Attempt to acquire the lock.
@@ -20,7 +21,7 @@ interface Lock {
 	/**
 	 * Attempt to acquire the lock for the given number of seconds.
 	 *
-	 * @param int           $seconds
+	 * @param int $seconds
 	 * @param callable|null $callback
 	 * @return bool
 	 */

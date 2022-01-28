@@ -8,7 +8,8 @@
 
 namespace Xin\Contracts\Support;
 
-interface Arrayable {
+interface Arrayable
+{
 
 	/**
 	 * Get the instance as an array.

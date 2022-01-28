@@ -16,7 +16,8 @@ use Xin\Robot\RobotManager;
 use Xin\Support\Arr;
 use Xin\Support\LimitThrottle;
 
-class Robot implements LogHandlerInterface {
+class Robot implements LogHandlerInterface
+{
 
 	/**
 	 * @var \think\App
@@ -32,9 +33,10 @@ class Robot implements LogHandlerInterface {
 	 * Bot constructor.
 	 *
 	 * @param \think\App $app
-	 * @param array      $config
+	 * @param array $config
 	 */
-	public function __construct(App $app, array $config) {
+	public function __construct(App $app, array $config)
+	{
 		$this->app = $app;
 		$this->config = $config;
 	}
@@ -45,9 +47,10 @@ class Robot implements LogHandlerInterface {
 	 * @param array $log
 	 * @return bool
 	 */
-	public function save(array $log): bool {
+	public function save(array $log): bool
+	{
 		if (!isset($log['error']) || !$this->isAllowSendBotMessage($errCount)) {
-			// return true;
+			return true;
 		}
 
 		$log = substr($log['error'][0], 0, 512);
@@ -90,7 +93,8 @@ MARKDOWN;
 	 *
 	 * @return string
 	 */
-	protected function robot() {
+	protected function robot()
+	{
 		if (isset($this->config['robot']) && $this->config['robot']) {
 			return $this->config['robot'];
 		}
@@ -103,7 +107,8 @@ MARKDOWN;
 	 * @param string $contents
 	 * @return void
 	 */
-	protected function sendRobotMessage($contents) {
+	protected function sendRobotMessage($contents)
+	{
 		try {
 			/** @var RobotManager $factory */
 			$factory = $this->app->robot;
@@ -118,7 +123,8 @@ MARKDOWN;
 	 * @param int $count
 	 * @return bool
 	 */
-	protected function isAllowSendBotMessage(&$count = 0) {
+	protected function isAllowSendBotMessage(&$count = 0)
+	{
 		if (!$this->app->has('robot') || !$this->robot() ||
 			!in_array(env('app_env'), $this->getAllowEnvs())
 		) {
@@ -142,7 +148,8 @@ MARKDOWN;
 	 * 获取运行的环境列表
 	 * @return array
 	 */
-	protected function getAllowEnvs() {
+	protected function getAllowEnvs()
+	{
 		return Arr::wrap($this->config['allow_envs'] ?? ['production']);
 	}
 
@@ -151,7 +158,8 @@ MARKDOWN;
 	 *
 	 * @return int
 	 */
-	protected function getErrorCount() {
+	protected function getErrorCount()
+	{
 		$key = $this->getErrorCacheKey();
 		$count = $this->app->cache->get($key);
 
@@ -170,7 +178,8 @@ MARKDOWN;
 	 *
 	 * @return string
 	 */
-	protected function getErrorCacheKey() {
+	protected function getErrorCacheKey()
+	{
 		$url = $this->app->request->url();
 		$url = preg_replace('/\&timestamp=\d{0,10}/', '', $url);
 

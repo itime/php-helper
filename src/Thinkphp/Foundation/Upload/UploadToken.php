@@ -20,7 +20,8 @@ use function Qiniu\base64_urlSafeDecode;
  *
  * @property string callbackAction
  */
-trait UploadToken {
+trait UploadToken
+{
 
 	/**
 	 * 获取上传token
@@ -28,7 +29,8 @@ trait UploadToken {
 	 * @param \think\Request $request
 	 * @return \think\Response
 	 */
-	public function token(Request $request) {
+	public function token(Request $request)
+	{
 		Hint::shouldUseApi();
 
 		if (!$request->isPost()) {
@@ -63,10 +65,11 @@ trait UploadToken {
 	 * 上传策略
 	 *
 	 * @param \think\Request $request
-	 * @param string         $type
+	 * @param string $type
 	 * @return array
 	 */
-	protected function policy(Request $request, $type) {
+	protected function policy(Request $request, $type)
+	{
 		// $returnBody = '{"url":"'.$domain.'/$(key)","key":"$(key)","hash":"$(etag)","fsize":$(fsize)}';
 		// '{"app_id":'.$appId.',"url":"'.$domain.'/$(key)","key":"$(key)","hash":"$(etag)","fsize":$(fsize)}';
 
@@ -97,10 +100,11 @@ trait UploadToken {
 
 	/**
 	 * @param string $type
-	 * @param array  $file
+	 * @param array $file
 	 * @return string
 	 */
-	protected function resolveExt($type, array $file) {
+	protected function resolveExt($type, array $file)
+	{
 		if (!isset($file['type'])) {
 			throw new ValidateException("文件类型不支持上传。");
 		}
@@ -117,7 +121,8 @@ trait UploadToken {
 	/**
 	 * @return \string[][]
 	 */
-	protected function extMaps() {
+	protected function extMaps()
+	{
 		return [
 			'image' => [
 				'image/png' => 'png',
@@ -140,7 +145,8 @@ trait UploadToken {
 	 * @param \think\Request $request
 	 * @return string
 	 */
-	protected function callbackUrl(Request $request) {
+	protected function callbackUrl(Request $request)
+	{
 		return $request->domain() . url($this->callbackAction());
 	}
 
@@ -148,7 +154,8 @@ trait UploadToken {
 	 * @param string $type
 	 * @return string
 	 */
-	protected function callbackBody($type) {
+	protected function callbackBody($type)
+	{
 		$url = config('filesystem.disks.' . $this->disk() . '.url');
 
 		return json_encode([
@@ -168,7 +175,8 @@ trait UploadToken {
 	 * @param \think\Request $request
 	 * @return \think\Response
 	 */
-	protected function saveByToken(Request $request) {
+	protected function saveByToken(Request $request)
+	{
 		Hint::shouldUseApi();
 
 		$data = $request->post();
@@ -204,7 +212,8 @@ trait UploadToken {
 	 * @param string $string
 	 * @return string
 	 */
-	private function string2Hex($string) {
+	private function string2Hex($string)
+	{
 		$hex = '';
 		for ($i = 0; $i < strlen($string); $i++) {
 			$hex .= dechex(ord($string[$i]));
@@ -216,7 +225,8 @@ trait UploadToken {
 	/**
 	 * @return string
 	 */
-	protected function callbackAction() {
+	protected function callbackAction()
+	{
 		if (property_exists($this, 'callbackAction')) {
 			return $this->callbackAction;
 		}
@@ -226,10 +236,11 @@ trait UploadToken {
 
 	/**
 	 * @param string $method
-	 * @param array  $args
+	 * @param array $args
 	 * @return \think\Response
 	 */
-	public function __call($method, $args) {
+	public function __call($method, $args)
+	{
 		if ($method === $this->callbackAction()) {
 			return $this->saveByToken(app()->request);
 		}

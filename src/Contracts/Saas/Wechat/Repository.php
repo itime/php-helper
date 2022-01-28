@@ -9,7 +9,8 @@ namespace Xin\Contracts\Saas\Wechat;
 
 use Xin\Contracts\Wechat\Factory as WechatFactory;
 
-interface Repository extends WechatFactory {
+interface Repository extends WechatFactory
+{
 
 	/**
 	 * 锁定 appId
@@ -28,7 +29,7 @@ interface Repository extends WechatFactory {
 	/**
 	 * 获取id微信开放平台实例
 	 *
-	 * @param int   $id
+	 * @param int $id
 	 * @param array $options
 	 * @return \EasyWeChat\OpenPlatform\Application
 	 */
@@ -37,9 +38,9 @@ interface Repository extends WechatFactory {
 	/**
 	 * 获取应用id微信开放平台实例
 	 *
-	 * @param int    $appId
+	 * @param int $appId
 	 * @param string $name
-	 * @param array  $options
+	 * @param array $options
 	 * @return \EasyWeChat\OpenPlatform\Application
 	 */
 	public function openPlatformOfAppId($appId, $name = null, array $options = []);
@@ -54,7 +55,7 @@ interface Repository extends WechatFactory {
 	/**
 	 * 根据id获取微信公众号实例
 	 *
-	 * @param int   $id
+	 * @param int $id
 	 * @param array $options
 	 * @return \EasyWeChat\OfficialAccount\Application|\EasyWeChat\OpenPlatform\Authorizer\OfficialAccount\Application
 	 */
@@ -63,9 +64,9 @@ interface Repository extends WechatFactory {
 	/**
 	 * 根据应用id获取微信公众号实例
 	 *
-	 * @param int    $appId
+	 * @param int $appId
 	 * @param string $name
-	 * @param array  $options
+	 * @param array $options
 	 * @return \EasyWeChat\OfficialAccount\Application|\EasyWeChat\OpenPlatform\Authorizer\OfficialAccount\Application
 	 */
 	public function officialAccountOfAppId($appId, $name = null, array $options = []);
@@ -89,8 +90,8 @@ interface Repository extends WechatFactory {
 	/**
 	 * 根据应用id获取小程序实例
 	 *
-	 * @param int   $appId
-	 * @param null  $name
+	 * @param int $appId
+	 * @param null $name
 	 * @param array $options
 	 * @return \EasyWeChat\MiniProgram\Application|\EasyWeChat\OpenPlatform\Authorizer\MiniProgram\Application
 	 */
@@ -107,7 +108,7 @@ interface Repository extends WechatFactory {
 	 * 根据id获取企业微信实例
 	 *
 	 * @param string $id
-	 * @param array  $options
+	 * @param array $options
 	 * @return \EasyWeChat\MiniProgram\Application|\EasyWeChat\OpenPlatform\Authorizer\MiniProgram\Application
 	 */
 	public function workOfId($id, array $options = []);
@@ -115,9 +116,9 @@ interface Repository extends WechatFactory {
 	/**
 	 * 根据应用id获取企业微信实例
 	 *
-	 * @param int    $appId
+	 * @param int $appId
 	 * @param string $name
-	 * @param array  $options
+	 * @param array $options
 	 * @return \EasyWeChat\MiniProgram\Application|\EasyWeChat\OpenPlatform\Authorizer\MiniProgram\Application
 	 */
 	public function workOfAppId($appId, $name = null, array $options = []);
@@ -133,7 +134,7 @@ interface Repository extends WechatFactory {
 	 * 根据id获取企业微信开放平台实例
 	 *
 	 * @param string $id
-	 * @param array  $options
+	 * @param array $options
 	 * @return \EasyWeChat\MiniProgram\Application|\EasyWeChat\OpenPlatform\Authorizer\MiniProgram\Application
 	 */
 	public function openWorkOfId($id, array $options = []);
@@ -141,9 +142,9 @@ interface Repository extends WechatFactory {
 	/**
 	 * 根据应用id获取企业微信开放平台实例
 	 *
-	 * @param int    $appId
+	 * @param int $appId
 	 * @param string $name
-	 * @param array  $options
+	 * @param array $options
 	 * @return \EasyWeChat\MiniProgram\Application|\EasyWeChat\OpenPlatform\Authorizer\MiniProgram\Application
 	 */
 	public function openWorkOfAppId($appId, $name = null, array $options = []);

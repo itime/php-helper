@@ -7,7 +7,8 @@
 
 namespace Xin\Auth\Events;
 
-class Registered {
+class Registered
+{
 
 	/**
 	 * The authenticated user.
@@ -22,7 +23,8 @@ class Registered {
 	 * @param mixed $user
 	 * @return void
 	 */
-	public function __construct($user) {
+	public function __construct($user)
+	{
 		$this->user = $user;
 	}
 

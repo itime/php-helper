@@ -13,7 +13,8 @@ use think\Request;
 use Xin\Support\Arr;
 use Xin\Support\Str;
 
-class CheckForApiSign {
+class CheckForApiSign
+{
 
 	/**
 	 * @var \think\App
@@ -28,7 +29,8 @@ class CheckForApiSign {
 	/**
 	 * @param \think\App $app
 	 */
-	public function __construct(App $app) {
+	public function __construct(App $app)
+	{
 		$this->app = $app;
 	}
 
@@ -36,11 +38,12 @@ class CheckForApiSign {
 	 * 检查站点是否允许访问
 	 *
 	 * @param \think\Request $request
-	 * @param \Closure       $next
+	 * @param \Closure $next
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	public function handle(Request $request, \Closure $next) {
+	public function handle(Request $request, \Closure $next)
+	{
 		if ($this->app->config->get('app.env') != 'local') {
 			self::setSecretKey($request->app('access_key'));
 			$this->check($request);
@@ -54,7 +57,8 @@ class CheckForApiSign {
 	 *
 	 * @param \think\Request $request
 	 */
-	protected function check(Request $request) {
+	protected function check(Request $request)
+	{
 		$timestamp = $request->get('timestamp');
 		if ($timestamp < $request->time() - 600) {
 			throw new HttpException(404, '页面不存在！');
@@ -84,7 +88,8 @@ class CheckForApiSign {
 	 * @param \think\Request $request
 	 * @return string
 	 */
-	protected function resolveSign(Request $request) {
+	protected function resolveSign(Request $request)
+	{
 		$sign = $request->get('sign');
 		if (empty($sign)) {
 			$sign = $request->header('sign');
@@ -103,7 +108,8 @@ class CheckForApiSign {
 	 * @param \think\Request $request
 	 * @return array|mixed|string
 	 */
-	protected function resolveSignType(Request $request) {
+	protected function resolveSignType(Request $request)
+	{
 		$signType = $request->get('sign_type');
 		if (empty($signType)) {
 			$signType = $request->header('sign_type');
@@ -119,7 +125,8 @@ class CheckForApiSign {
 	/**
 	 * 加密密钥
 	 */
-	protected static function secretKey() {
+	protected static function secretKey()
+	{
 		return self::$secretKey;
 	}
 
@@ -127,11 +134,12 @@ class CheckForApiSign {
 	 * 生成签名数据
 	 *
 	 * @param string $key
-	 * @param array  $data
+	 * @param array $data
 	 * @param string $signType
 	 * @return string
 	 */
-	protected function makeSign($data, $signType) {
+	protected function makeSign($data, $signType)
+	{
 		Arr::sort($data);
 		$queryString = Str::buildUrlQuery($data) . static::secretKey();
 
@@ -143,7 +151,8 @@ class CheckForApiSign {
 	 *
 	 * @param string $secretKey
 	 */
-	public static function setSecretKey($secretKey) {
+	public static function setSecretKey($secretKey)
+	{
 		self::$secretKey = $secretKey;
 	}
 

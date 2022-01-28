@@ -7,13 +7,14 @@
 
 namespace Xin\Contracts\Statistics;
 
-interface Provider {
+interface Provider
+{
 
 	/**
 	 * 获取缓存 key
 	 *
 	 * @param string $name
-	 * @param array  $options
+	 * @param array $options
 	 * @return string
 	 */
 	public function getCacheKey($name, array $options = []);
@@ -22,8 +23,8 @@ interface Provider {
 	 * 根据时间获取统计ID
 	 *
 	 * @param string $name
-	 * @param int    $time
-	 * @param array  $options
+	 * @param int $time
+	 * @param array $options
 	 * @return mixed
 	 */
 	public function getIdByTime($name, $time, array $options = []);
@@ -32,8 +33,8 @@ interface Provider {
 	 * 根据时间获取统计的值
 	 *
 	 * @param string $name
-	 * @param int    $time
-	 * @param array  $options
+	 * @param int $time
+	 * @param array $options
 	 * @return int
 	 */
 	public function getValueByTime($name, $time = null, array $options = []);
@@ -41,7 +42,7 @@ interface Provider {
 	/**
 	 * 根据ID获取统计的值
 	 *
-	 * @param int   $id
+	 * @param int $id
 	 * @param array $options
 	 * @return int
 	 */
@@ -51,7 +52,7 @@ interface Provider {
 	 * 获取统计总值
 	 *
 	 * @param string $name
-	 * @param array  $options
+	 * @param array $options
 	 * @return int
 	 */
 	public function getTotal($name, array $options = []);
@@ -68,8 +69,8 @@ interface Provider {
 	/**
 	 * 更新计数器
 	 *
-	 * @param int   $id
-	 * @param int   $step
+	 * @param int $id
+	 * @param int $step
 	 * @param array $options
 	 * @return int
 	 */
@@ -79,8 +80,8 @@ interface Provider {
 	 * 根据实际获取统计IP数据
 	 *
 	 * @param string $ip
-	 * @param int    $time
-	 * @param array  $options
+	 * @param int $time
+	 * @param array $options
 	 * @return int
 	 */
 	public function getIPIdByTime($ip, $time, array $options = []);

@@ -17,7 +17,8 @@ namespace Xin\Support;
  * 当前版本等于新版本 Version::eq( '1.20.63.56' , '1.20.63.056' )===true;
  * 当前版本小于新版本 Version::lt( '1.20.62.56' , '1.20.63.056' )===true;
  */
-final class Version {
+final class Version
+{
 
 	/**
 	 * 当前版本大于新版本
@@ -26,7 +27,8 @@ final class Version {
 	 * @param string $new
 	 * @return bool
 	 */
-	public static function gt($current, $new) {
+	public static function gt($current, $new)
+	{
 		return self::check($current, $new) === 1;
 	}
 
@@ -37,7 +39,8 @@ final class Version {
 	 * @param $new
 	 * @return int
 	 */
-	public static function check($current, $new) {
+	public static function check($current, $new)
+	{
 		if ($current == $new) {
 			return 0;
 		}
@@ -67,7 +70,8 @@ final class Version {
 	 * @param string $new
 	 * @return bool
 	 */
-	public static function egt($current, $new) {
+	public static function egt($current, $new)
+	{
 		$res = self::check($current, $new);
 
 		return $res === 1 || $res === 0;
@@ -80,7 +84,8 @@ final class Version {
 	 * @param string $new
 	 * @return bool
 	 */
-	public static function eq($current, $new) {
+	public static function eq($current, $new)
+	{
 		return self::check($current, $new) === 0;
 	}
 
@@ -91,7 +96,8 @@ final class Version {
 	 * @param string $new
 	 * @return bool
 	 */
-	public static function lt($current, $new) {
+	public static function lt($current, $new)
+	{
 		return self::check($current, $new) === -1;
 	}
 
@@ -102,7 +108,8 @@ final class Version {
 	 * @param string $new
 	 * @return bool
 	 */
-	public static function elt($current, $new) {
+	public static function elt($current, $new)
+	{
 		$res = self::check($current, $new);
 
 		return $res === -1 || $res === 0;

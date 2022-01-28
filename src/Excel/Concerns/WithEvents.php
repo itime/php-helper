@@ -2,7 +2,8 @@
 
 namespace Xin\Excel\Concerns;
 
-interface WithEvents {
+interface WithEvents
+{
 
 	/**
 	 * @return array

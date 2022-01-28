@@ -5,7 +5,8 @@ namespace Xin\TicketPrinter;
 /**
  * 小票打印机类型 枚举类
  */
-class PrinterType {
+class PrinterType
+{
 
 	/* @const FEI_E_YUN 飞鹅打印机 */
 	const FEI_E_YUN = 'FEI_E_YUN';
@@ -18,7 +19,8 @@ class PrinterType {
 	 *
 	 * @return array
 	 */
-	public static function getTypeName() {
+	public static function getTypeName()
+	{
 		return [
 			self::FEI_E_YUN => '飞鹅打印机',
 			self::PRINT_CENTER => '365云打印',

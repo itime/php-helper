@@ -14,19 +14,21 @@ use Xin\Excel\Concerns\WithCustomCsvSettings;
 use Xin\Excel\Concerns\WithMultipleSheets;
 use Xin\Excel\Concerns\WithPreCalculateFormulas;
 
-class WriterFactory {
+class WriterFactory
+{
 
 	use MapsCsvSettings;
 
 	/**
-	 * @param string      $writerType
+	 * @param string $writerType
 	 * @param Spreadsheet $spreadsheet
-	 * @param object      $export
+	 * @param object $export
 	 *
 	 * @return IWriter
 	 * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
 	 */
-	public static function make(string $writerType, Spreadsheet $spreadsheet, $export): IWriter {
+	public static function make(string $writerType, Spreadsheet $spreadsheet, $export): IWriter
+	{
 		$writer = IOFactory::createWriter($spreadsheet, $writerType);
 
 		$writer->setUseDiskCaching(
@@ -72,7 +74,8 @@ class WriterFactory {
 	 *
 	 * @return bool
 	 */
-	private static function includesCharts($export): bool {
+	private static function includesCharts($export): bool
+	{
 		if ($export instanceof WithCharts) {
 			return true;
 		}

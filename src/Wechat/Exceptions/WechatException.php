@@ -2,6 +2,7 @@
 
 namespace Xin\Wechat\Exceptions;
 
-class WechatException extends \LogicException {
+class WechatException extends \LogicException
+{
 
 }

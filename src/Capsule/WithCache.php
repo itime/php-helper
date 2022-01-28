@@ -9,7 +9,8 @@ namespace Xin\Capsule;
 
 use Psr\SimpleCache\CacheInterface;
 
-trait WithCache {
+trait WithCache
+{
 
 	/**
 	 * @var CacheInterface
@@ -25,7 +26,8 @@ trait WithCache {
 	 * 获取缓存器
 	 * @return CacheInterface
 	 */
-	public function cache() {
+	public function cache()
+	{
 		if (!$this->cache) {
 			$this->cache = static::getDefaultCache();
 		}
@@ -37,7 +39,8 @@ trait WithCache {
 	 * 设置缓存器
 	 * @param CacheInterface $cache
 	 */
-	public function setCache(CacheInterface $cache) {
+	public function setCache(CacheInterface $cache)
+	{
 		$this->cache = $cache;
 	}
 
@@ -45,7 +48,8 @@ trait WithCache {
 	 * 获取默认缓存
 	 * @return CacheInterface
 	 */
-	public static function getDefaultCache() {
+	public static function getDefaultCache()
+	{
 		if (is_callable(static::$defaultCacheResolver)) {
 			return call_user_func(static::$defaultCacheResolver);
 		}
@@ -57,7 +61,8 @@ trait WithCache {
 	 * 设置缓存默认缓存解析器
 	 * @param callable $cacheResolver
 	 */
-	public static function setDefaultCacheResolver(callable $cacheResolver) {
+	public static function setDefaultCacheResolver(callable $cacheResolver)
+	{
 		static::$defaultCacheResolver = $cacheResolver;
 	}
 

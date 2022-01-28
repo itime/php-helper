@@ -10,7 +10,8 @@ namespace Xin\Thinkphp\Http;
 use Xin\Contracts\Auth\AuthVerifyType;
 use Xin\Thinkphp\Facade\Auth;
 
-trait HasUser {
+trait HasUser
+{
 
 	/**
 	 * @var \Closure
@@ -22,7 +23,8 @@ trait HasUser {
 	 *
 	 * @param \Closure $resolverCallback
 	 */
-	public function setUserResolver(\Closure $resolverCallback) {
+	public function setUserResolver(\Closure $resolverCallback)
+	{
 		$this->userResolverCallback = $resolverCallback;
 	}
 
@@ -30,11 +32,12 @@ trait HasUser {
 	 * 获取用户信息
 	 *
 	 * @param string $field
-	 * @param mixed  $default
-	 * @param int    $verifyType
+	 * @param mixed $default
+	 * @param int $verifyType
 	 * @return mixed
 	 */
-	public function user($field = null, $default = null, $verifyType = AuthVerifyType::BASE) {
+	public function user($field = null, $default = null, $verifyType = AuthVerifyType::BASE)
+	{
 		if (is_null($this->userResolverCallback)) {
 			$this->userResolverCallback = function ($field = null, $default = null, $verifyType = AuthVerifyType::BASE) {
 				return Auth::getUser($field, $default, $verifyType);
@@ -50,7 +53,8 @@ trait HasUser {
 	 * @param int $verifyType
 	 * @return int
 	 */
-	public function userId($verifyType = 1) {
+	public function userId($verifyType = 1)
+	{
 		return $this->user('id', 0, $verifyType);
 	}
 

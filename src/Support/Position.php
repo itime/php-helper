@@ -16,7 +16,8 @@ namespace Xin\Support;
  * 谷歌中国地图和搜搜中国地图采用的是GCJ02地理坐标系; BD09坐标系：即百度坐标系，GCJ02坐标系经加密后的坐标系;
  * 搜狗坐标系、图吧坐标系等，估计也是在GCJ02基础上加密而成的。 chenhua
  */
-final class Position {
+final class Position
+{
 
 	const  BAIDU_LBS_TYPE = "bd09ll";
 
@@ -33,7 +34,8 @@ final class Position {
 	 * @param float $lon
 	 * @return array
 	 */
-	public static function gps84ToGcj02($lat, $lon) {
+	public static function gps84ToGcj02($lat, $lon)
+	{
 		if (self::outOfChina($lat, $lon)) {
 			return null;
 		}
@@ -58,7 +60,8 @@ final class Position {
 	 * @param double $lon
 	 * @return bool
 	 */
-	public static function outOfChina($lat, $lon) {
+	public static function outOfChina($lat, $lon)
+	{
 		if ($lon < 72.004 || $lon > 137.8347)
 			return true;
 		if ($lat < 0.8293 || $lat > 55.8271)
@@ -74,7 +77,8 @@ final class Position {
 	 * @param float $y
 	 * @return float
 	 */
-	public static function transformLat($x, $y) {
+	public static function transformLat($x, $y)
+	{
 		$ret = -100.0 + 2.0 * $x + 3.0 * $y + 0.2 * $y * $y + 0.1 * $x * $y
 			+ 0.2 * sqrt(abs($x));
 		$ret += (20.0 * sin(6.0 * $x * self::PI) + 20.0 * sin(2.0 * $x * self::PI)) * 2.0 / 3.0;
@@ -91,7 +95,8 @@ final class Position {
 	 * @param float $y
 	 * @return float
 	 */
-	public static function transformLon($x, $y) {
+	public static function transformLon($x, $y)
+	{
 		$ret = 300.0 + $x + 2.0 * $y + 0.1 * $x * $x + 0.1 * $x * $y + 0.1
 			* sqrt(abs($x));
 		$ret += (20.0 * sin(6.0 * $x * self::PI) + 20.0 * sin(2.0 * $x * self::PI)) * 2.0 / 3.0;
@@ -109,7 +114,8 @@ final class Position {
 	 * @param float $gg_lon
 	 * @return array
 	 */
-	public static function gcj02ToBD09($gg_lat, $gg_lon) {
+	public static function gcj02ToBD09($gg_lat, $gg_lon)
+	{
 		$x = $gg_lon;
 		$y = $gg_lat;
 		$z = sqrt($x * $x + $y * $y) + 0.00002 * sin($y * self::PI);
@@ -127,7 +133,8 @@ final class Position {
 	 * @param double $bd_lon
 	 * @return array
 	 */
-	public static function bd09ToGps84($bd_lat, $bd_lon) {
+	public static function bd09ToGps84($bd_lat, $bd_lon)
+	{
 		$gcj02 = self::bd09ToGcj02($bd_lat, $bd_lon);
 
 		return self::gcjToGps84($gcj02[0], $gcj02[1]);
@@ -140,7 +147,8 @@ final class Position {
 	 * @param float $bd_lon
 	 * @return array
 	 */
-	public static function bd09ToGcj02($bd_lat, $bd_lon) {
+	public static function bd09ToGcj02($bd_lat, $bd_lon)
+	{
 		$x = $bd_lon - 0.0065;
 		$y = $bd_lat - 0.006;
 		$z = sqrt($x * $x + $y * $y) - 0.00002 * sin($y * self::PI);
@@ -158,7 +166,8 @@ final class Position {
 	 * @param float $lon
 	 * @return array
 	 **/
-	public static function gcjToGps84($lat, $lon) {
+	public static function gcjToGps84($lat, $lon)
+	{
 		$gps = self::transform($lat, $lon);
 		$latitude = $lat * 2 - $gps[0];
 		$longitude = $lon * 2 - $gps[1];
@@ -173,7 +182,8 @@ final class Position {
 	 * @param double $lon
 	 * @return array
 	 */
-	public static function transform($lat, $lon) {
+	public static function transform($lat, $lon)
+	{
 		if (self::outOfChina($lat, $lon)) {
 			return [$lat, $lon];
 		}
@@ -196,11 +206,12 @@ final class Position {
 	 *
 	 * @param array $from [起点坐标(经纬度),例如:array(118.012951,36.810024)]
 	 * @param array $to [终点坐标(经纬度)]
-	 * @param bool  $km 是否以公里为单位 false:米 true:公里(千米)
-	 * @param int   $decimal 精度 保留小数位数
+	 * @param bool $km 是否以公里为单位 false:米 true:公里(千米)
+	 * @param int $decimal 精度 保留小数位数
 	 * @return float
 	 */
-	public static function getDistance($from, $to, $km = false, $decimal = 2) {
+	public static function getDistance($from, $to, $km = false, $decimal = 2)
+	{
 		$EARTH_RADIUS = 6378.138; // 地球半径系数(6370.996)
 
 		$distance = $EARTH_RADIUS * 2 * asin(sqrt(pow(sin(($from[1] * pi() / 180 - $to[1] * pi() / 180) / 2), 2) +

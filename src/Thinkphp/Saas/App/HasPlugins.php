@@ -15,14 +15,16 @@ use Xin\Thinkphp\Plugin\DatabasePlugin;
  * @property \think\model\Collection plugins
  * @property \think\model\Collection available_plugins
  */
-trait HasPlugins {
+trait HasPlugins
+{
 
 	/**
 	 * 关联插件模型
 	 *
 	 * @return \think\model\relation\BelongsToMany
 	 */
-	public function plugins() {
+	public function plugins()
+	{
 		return $this->belongsToMany(DatabasePlugin::class, DatabaseAppPlugin::class, 'plugin_id');
 	}
 
@@ -30,10 +32,11 @@ trait HasPlugins {
 	 * 检查插件是否存在
 	 *
 	 * @param string $name
-	 * @param bool   $isAvailable
+	 * @param bool $isAvailable
 	 * @return bool
 	 */
-	public function hasPlugin($name, $isAvailable = true) {
+	public function hasPlugin($name, $isAvailable = true)
+	{
 		return $this->hasPlugins([$name], $isAvailable);
 	}
 
@@ -41,11 +44,12 @@ trait HasPlugins {
 	 * 检查给定的一组插件是否存在
 	 *
 	 * @param array $names
-	 * @param bool  $isAvailable
-	 * @param bool  $any
+	 * @param bool $isAvailable
+	 * @param bool $any
 	 * @return bool
 	 */
-	public function hasPlugins($names, $isAvailable = true, $any = true) {
+	public function hasPlugins($names, $isAvailable = true, $any = true)
+	{
 		if (empty($names)) {
 			return false;
 		}
@@ -73,14 +77,15 @@ trait HasPlugins {
 	 * 关联多个插件
 	 *
 	 * @param string $name
-	 * @param int    $expireTime
-	 * @param array  $options
+	 * @param int $expireTime
+	 * @param array $options
 	 * @return \think\Collection
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public function attachPlugin($name, $expireTime = 0, $options = []) {
+	public function attachPlugin($name, $expireTime = 0, $options = [])
+	{
 		return $this->attachPlugins([$name => $expireTime], $options);
 	}
 
@@ -94,7 +99,8 @@ trait HasPlugins {
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public function attachPlugins($nameAndExpireTimes, $options = []) {
+	public function attachPlugins($nameAndExpireTimes, $options = [])
+	{
 		$names = array_keys($nameAndExpireTimes);
 
 		// 检查关联的插件是否合法
@@ -153,7 +159,8 @@ trait HasPlugins {
 	 *
 	 * @return \think\model\Collection
 	 */
-	protected function getAvailablePluginsAttr() {
+	protected function getAvailablePluginsAttr()
+	{
 		/** @var \think\model\Collection $ownPlugins */
 		$ownPlugins = $this->plugins()->where('app_id', $this->getOrigin('id'))->select()->filter(function ($item) {
 			$expireTime = $item['pivot']['expire_time'];
@@ -169,7 +176,8 @@ trait HasPlugins {
 	 *
 	 * @return \think\model\Collection
 	 */
-	private function getPlugins() {
+	private function getPlugins()
+	{
 		return $this->getAttr('plugins');
 	}
 

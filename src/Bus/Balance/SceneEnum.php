@@ -10,7 +10,8 @@ namespace Xin\Bus\Balance;
 /**
  * 余额变动场景枚举类
  */
-class SceneEnum {
+class SceneEnum
+{
 
 	// 用户充值
 	const RECHARGE = 10;
@@ -29,7 +30,8 @@ class SceneEnum {
 	 *
 	 * @return array
 	 */
-	public static function data() {
+	public static function data()
+	{
 		return [
 			self::RECHARGE => [
 				'name' => '用户充值',

@@ -7,7 +7,8 @@
 
 namespace Xin\Auth\Events;
 
-class LoginFailed {
+class LoginFailed
+{
 
 	/**
 	 * The authentication guard name.
@@ -33,12 +34,13 @@ class LoginFailed {
 	/**
 	 * Create a new event instance.
 	 *
-	 * @param string                                          $guard
+	 * @param string $guard
 	 * @param \Illuminate\Contracts\Auth\Authenticatable|null $user
-	 * @param array                                           $credentials
+	 * @param array $credentials
 	 * @return void
 	 */
-	public function __construct($guard, $user, $credentials) {
+	public function __construct($guard, $user, $credentials)
+	{
 		$this->user = $user;
 		$this->guard = $guard;
 		$this->credentials = $credentials;

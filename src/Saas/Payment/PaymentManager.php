@@ -13,7 +13,8 @@ use Xin\Contracts\Saas\Wechat\ConfigProvider;
 use Xin\Payment\Exceptions\PaymentNotConfigureException;
 use Xin\Payment\PaymentManager as BasePaymentManager;
 
-class PaymentManager extends BasePaymentManager implements Repository {
+class PaymentManager extends BasePaymentManager implements Repository
+{
 
 	/**
 	 * @var ConfigProvider
@@ -38,7 +39,8 @@ class PaymentManager extends BasePaymentManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct(array $config, ConfigProvider $configProvider) {
+	public function __construct(array $config, ConfigProvider $configProvider)
+	{
 		parent::__construct($config);
 
 		$this->configProvider = $configProvider;
@@ -47,7 +49,8 @@ class PaymentManager extends BasePaymentManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function wechat($name = null, array $options = []) {
+	public function wechat($name = null, array $options = [])
+	{
 		$default = $options['default'] ?? false;
 
 		if (!$default) {
@@ -66,7 +69,8 @@ class PaymentManager extends BasePaymentManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function wechatOfId($id, array $options) {
+	public function wechatOfId($id, array $options)
+	{
 		$config = $this->configProvider->retrieveById($id, PaymentType::WECHAT);
 
 		if (empty($config)) {
@@ -79,7 +83,8 @@ class PaymentManager extends BasePaymentManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function wechatOfAppId($appId, $name = null, array $options = []) {
+	public function wechatOfAppId($appId, $name = null, array $options = [])
+	{
 		$config = $this->configProvider->retrieveByAppId($appId, PaymentType::WECHAT, $name);
 
 		if (empty($config)) {
@@ -92,7 +97,8 @@ class PaymentManager extends BasePaymentManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function alipay($name = null, array $options = []) {
+	public function alipay($name = null, array $options = [])
+	{
 		$default = $options['default'] ?? false;
 
 		if (!$default) {
@@ -111,7 +117,8 @@ class PaymentManager extends BasePaymentManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function alipayOfId($id, array $options = []) {
+	public function alipayOfId($id, array $options = [])
+	{
 		$config = $this->configProvider->retrieveById($id, PaymentType::ALIPAY);
 
 		if (empty($config)) {
@@ -124,7 +131,8 @@ class PaymentManager extends BasePaymentManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function alipayOfAppId($appId, $name = null, array $options = []) {
+	public function alipayOfAppId($appId, $name = null, array $options = [])
+	{
 		$config = $this->configProvider->retrieveByAppId($appId, PaymentType::ALIPAY, $name);
 
 		if (empty($config)) {
@@ -137,21 +145,24 @@ class PaymentManager extends BasePaymentManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function shouldUseOfAppId($appId) {
+	public function shouldUseOfAppId($appId)
+	{
 		$this->lockAppId = $appId;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function shouldUseOfWechatId($id) {
+	public function shouldUseOfWechatId($id)
+	{
 		$this->lockWechatId = $id;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function shouldUseOfAlipayId($id) {
+	public function shouldUseOfAlipayId($id)
+	{
 		$this->lockAlipayId = $id;
 	}
 

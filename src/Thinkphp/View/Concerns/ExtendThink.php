@@ -7,9 +7,11 @@
 
 namespace Xin\Thinkphp\View\Concerns;
 
-trait ExtendThink {
+trait ExtendThink
+{
 
-	protected function extendThink() {
+	protected function extendThink()
+	{
 		$this->extend('$Think', function (array $vars) {
 			$type = strtoupper(trim(array_shift($vars)));
 			$param = implode('.', $vars);
@@ -41,7 +43,8 @@ trait ExtendThink {
 		});
 	}
 
-	protected function extendRequest() {
+	protected function extendRequest()
+	{
 		$this->extend('$Request', function (array $vars) {
 			// 获取Request请求对象参数
 			$method = array_shift($vars);

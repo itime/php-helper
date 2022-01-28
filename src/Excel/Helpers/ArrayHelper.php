@@ -2,14 +2,16 @@
 
 namespace Xin\Excel\Helpers;
 
-class ArrayHelper {
+class ArrayHelper
+{
 
 	/**
 	 * @param array $array
 	 *
 	 * @return array
 	 */
-	public static function ensureMultipleRows(array $array): array {
+	public static function ensureMultipleRows(array $array): array
+	{
 		if (static::hasMultipleRows($array)) {
 			return $array;
 		}
@@ -25,7 +27,8 @@ class ArrayHelper {
 	 *
 	 * @return bool
 	 */
-	public static function hasMultipleRows(array $array): bool {
+	public static function hasMultipleRows(array $array): bool
+	{
 		return count($array) === count(array_filter($array, 'is_array'));
 	}
 

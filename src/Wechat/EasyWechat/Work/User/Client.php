@@ -4,7 +4,8 @@ namespace Xin\Wechat\EasyWechat\Work\User;
 
 use EasyWeChat\Work\User\Client as BaseClient;
 
-class Client extends BaseClient {
+class Client extends BaseClient
+{
 
 	/**
 	 * Create a user.
@@ -14,7 +15,8 @@ class Client extends BaseClient {
 	 * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
 	 * @throws \GuzzleHttp\Exception\GuzzleException
 	 */
-	public function toOpenuserid(array $useridList) {
+	public function toOpenuserid(array $useridList)
+	{
 		return $this->httpPostJson('cgi-bin/batch/userid_to_openuserid', [
 			'userid_list' => $useridList,
 		]);

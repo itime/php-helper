@@ -7,7 +7,8 @@
 
 namespace Xin\Auth\Access\Rule;
 
-class MenuAuthenticRule extends AuthenticRule {
+class MenuAuthenticRule extends AuthenticRule
+{
 
 	/**
 	 * 规则方案
@@ -19,7 +20,8 @@ class MenuAuthenticRule extends AuthenticRule {
 	 *
 	 * @param string $rule
 	 */
-	public function __construct($rule) {
+	public function __construct($rule)
+	{
 		parent::__construct(self::SCHEME_NAME, $rule);
 	}
 

@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Finder;
 
-interface Finder {
+interface Finder
+{
 
 	/**
 	 * Hint path delimiter value.
@@ -35,7 +36,7 @@ interface Finder {
 	/**
 	 * Add a namespace hint to the finder.
 	 *
-	 * @param string       $namespace
+	 * @param string $namespace
 	 * @param string|array $hints
 	 * @return void
 	 */
@@ -44,7 +45,7 @@ interface Finder {
 	/**
 	 * Prepend a namespace hint to the finder.
 	 *
-	 * @param string       $namespace
+	 * @param string $namespace
 	 * @param string|array $hints
 	 * @return void
 	 */
@@ -53,7 +54,7 @@ interface Finder {
 	/**
 	 * Replace the namespace hints for the given namespace.
 	 *
-	 * @param string       $namespace
+	 * @param string $namespace
 	 * @param string|array $hints
 	 * @return void
 	 */

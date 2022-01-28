@@ -12,16 +12,18 @@ use think\Response;
 /**
  * Class AllowCrossDomain
  */
-class AllowCrossDomain {
+class AllowCrossDomain
+{
 
 	/**
 	 * 初始化应用
 	 *
 	 * @param \think\Request $request
-	 * @param \Closure       $next
+	 * @param \Closure $next
 	 * @return mixed
 	 */
-	public function handle($request, \Closure $next) {
+	public function handle($request, \Closure $next)
+	{
 		$httpOrigin = $this->httpOrigin($request);
 
 		if ($request->isOptions()) {
@@ -45,7 +47,8 @@ class AllowCrossDomain {
 	 * @param \think\Request $request
 	 * @return string
 	 */
-	protected function httpOrigin($request) {
+	protected function httpOrigin($request)
+	{
 		$httpOrigin = $request->header('origin');
 		if (empty($httpOrigin)) {
 			$httpOrigin = '*';
@@ -60,7 +63,8 @@ class AllowCrossDomain {
 	 * @param \think\Request $request
 	 * @return array
 	 */
-	protected function headers($request) {
+	protected function headers($request)
+	{
 		return [];
 	}
 
@@ -68,11 +72,12 @@ class AllowCrossDomain {
 	 * 响应内容增加跨域支持
 	 *
 	 * @param \think\Request $request
-	 * @param Response       $response
-	 * @param string         $httpOrigin
+	 * @param Response $response
+	 * @param string $httpOrigin
 	 * @return mixed
 	 */
-	protected function resolveResponse($request, $response, $httpOrigin) {
+	protected function resolveResponse($request, $response, $httpOrigin)
+	{
 		if (!$response instanceof Response) {
 			return $response;
 		}

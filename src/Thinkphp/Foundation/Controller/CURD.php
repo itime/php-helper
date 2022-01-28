@@ -3,20 +3,22 @@
 namespace Xin\Thinkphp\Foundation\Controller;
 
 use Closure;
-use Xin\Contracts\Foundation\Repository;
+use Xin\Contracts\Repository\Repository;
 use Xin\Thinkphp\Facade\Hint;
 use Xin\Thinkphp\Http\HasValidate;
 
 /**
  * @property HasValidate $request
  */
-trait CURD {
+trait CURD
+{
 
 	/**
 	 * 列表
 	 * @return \think\Response
 	 */
-	public function lists() {
+	public function lists()
+	{
 		$this->attachHandler('filterable');
 
 		$data = $this->repository()->paginate();
@@ -28,7 +30,8 @@ trait CURD {
 	 * 详情
 	 * @return \think\Response
 	 */
-	public function detail() {
+	public function detail()
+	{
 		$id = $this->request->idWithValid();
 
 		$this->attachHandler('detailable');
@@ -42,7 +45,8 @@ trait CURD {
 	 * 创建数据
 	 * @return \think\Response
 	 */
-	public function store() {
+	public function store()
+	{
 		$this->attachHandler('validateable');
 
 		$this->attachHandler('storeable');
@@ -58,7 +62,8 @@ trait CURD {
 	 * 显示数据
 	 * @return \think\Response
 	 */
-	public function show() {
+	public function show()
+	{
 		$id = $this->request->idWithValid();
 
 		$this->attachHandler('showable');
@@ -72,7 +77,8 @@ trait CURD {
 	 * 更新数据
 	 * @return \think\Response
 	 */
-	public function update() {
+	public function update()
+	{
 		$id = $this->request->idWithValid();
 
 		$this->attachHandler('validateable');
@@ -87,7 +93,8 @@ trait CURD {
 	 * 删除数据
 	 * @return \think\Response
 	 */
-	public function delete() {
+	public function delete()
+	{
 		$ids = $this->request->idsWithValid();
 
 		$this->attachHandler('deleteable');
@@ -101,7 +108,8 @@ trait CURD {
 	 * 回收数据
 	 * @return \think\Response
 	 */
-	public function recovery() {
+	public function recovery()
+	{
 		$ids = $this->request->idsWithValid();
 
 		$this->attachHandler('recoveryable');
@@ -115,7 +123,8 @@ trait CURD {
 	 * 恢复数据
 	 * @return \think\Response
 	 */
-	public function restore() {
+	public function restore()
+	{
 		$ids = $this->request->idsWithValid();
 
 		$this->attachHandler('restoreable');
@@ -129,7 +138,8 @@ trait CURD {
 	 * @param string $name
 	 * @return void
 	 */
-	protected function attachHandler($name) {
+	protected function attachHandler($name)
+	{
 		if (method_exists($this, $name)) {
 			$this->repository()->$name(Closure::fromCallable([$this, $name]));
 		}

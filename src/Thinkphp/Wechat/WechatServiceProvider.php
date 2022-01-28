@@ -8,14 +8,16 @@ use Xin\Wechat\WechatManager;
 use Xin\Wechat\WechatMediaManager;
 use Xin\Wechat\WechatUserSessionManager;
 
-class WechatServiceProvider extends ServiceProvider {
+class WechatServiceProvider extends ServiceProvider
+{
 
 	/**
 	 * Register any application services.
 	 *
 	 * @return void
 	 */
-	public function register() {
+	public function register()
+	{
 		// 注册微信实例工厂
 		$this->registerWechatFactory();
 
@@ -33,7 +35,8 @@ class WechatServiceProvider extends ServiceProvider {
 	 * 注册微信实例工厂
 	 * @return void
 	 */
-	protected function registerWechatFactory() {
+	protected function registerWechatFactory()
+	{
 		$this->app->bind([
 			'wechat' => WechatFactory::class,
 			WechatFactory::class => WechatManager::class,
@@ -49,7 +52,8 @@ class WechatServiceProvider extends ServiceProvider {
 	 * 注册微信实例
 	 * @return void
 	 */
-	protected function registerWechatApplications() {
+	protected function registerWechatApplications()
+	{
 		$this->app->bind('wechat.miniprogram', function ($app) {
 			return $app['wechat']->miniProgram();
 		});
@@ -75,8 +79,9 @@ class WechatServiceProvider extends ServiceProvider {
 	 * 注册微信素材服务
 	 * @return void
 	 */
-	protected function registerWechatMediaManager() {
-		WechatMediaManager::setDefaultCacheResolver(function () {
+	protected function registerWechatMediaManager()
+	{
+		WechatMediaManager::setDefaultCacheResolver(static function () {
 			return app('cache');
 		});
 
@@ -95,7 +100,8 @@ class WechatServiceProvider extends ServiceProvider {
 	 * 注册微信 用户Session 管理服务
 	 * @return void
 	 */
-	protected function registerWechatUserSessionManager() {
+	protected function registerWechatUserSessionManager()
+	{
 		WechatUserSessionManager::setDefaultCacheResolver(function () {
 			return app('cache');
 		});

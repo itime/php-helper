@@ -17,12 +17,14 @@ use Xin\Support\Str;
  * @method static \Xin\Wechat\EasyWeChat\OpenWork\Application           openWork(array $config)
  * @method static \Xin\Wechat\EasyWeChat\MicroMerchant\Application      microMerchant(array $config)
  */
-class Factory extends BaseFactory {
+class Factory extends BaseFactory
+{
 
 	/**
 	 * @inheritDoc
 	 */
-	public static function make($name, array $config) {
+	public static function make($name, array $config)
+	{
 		$namespace = Str::studly($name);
 		$application = "\\" . __NAMESPACE__ . "\\{$namespace}\\Application";
 
@@ -33,11 +35,12 @@ class Factory extends BaseFactory {
 	 * Dynamically pass methods to the application.
 	 *
 	 * @param string $name
-	 * @param array  $arguments
+	 * @param array $arguments
 	 *
 	 * @return mixed
 	 */
-	public static function __callStatic($name, $arguments) {
+	public static function __callStatic($name, $arguments)
+	{
 		return static::make($name, ...$arguments);
 	}
 

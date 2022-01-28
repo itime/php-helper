@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Config;
 
-interface Repository extends \ArrayAccess {
+interface Repository extends \ArrayAccess
+{
 
 	/**
 	 * 检测指定的 key 是否存在
@@ -21,7 +22,7 @@ interface Repository extends \ArrayAccess {
 	 * 获取配置
 	 *
 	 * @param string $key
-	 * @param mixed  $default
+	 * @param mixed $default
 	 * @return mixed
 	 */
 	public function get($key, $default = null);
@@ -30,8 +31,8 @@ interface Repository extends \ArrayAccess {
 	 * 设置配置
 	 *
 	 * @param string $key
-	 * @param mixed  $value
-	 * @param bool   $isMerge
+	 * @param mixed $value
+	 * @param bool $isMerge
 	 * @return mixed
 	 */
 	public function set($key, $value, $isMerge = true);

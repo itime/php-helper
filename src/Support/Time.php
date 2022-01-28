@@ -2,14 +2,16 @@
 
 namespace Xin\Support;
 
-class Time {
+class Time
+{
 
 	/**
 	 * 返回今日开始和结束的时间戳
 	 *
 	 * @return array
 	 */
-	public static function today() {
+	public static function today()
+	{
 		[$y, $m, $d] = explode('-', date('Y-m-d'));
 
 		return [
@@ -23,7 +25,8 @@ class Time {
 	 *
 	 * @return array
 	 */
-	public static function yesterday() {
+	public static function yesterday()
+	{
 		$yesterday = date('d') - 1;
 
 		return [
@@ -37,7 +40,8 @@ class Time {
 	 *
 	 * @return array
 	 */
-	public static function week() {
+	public static function week()
+	{
 		[$y, $m, $d, $w] = explode('-', date('Y-m-d-w'));
 		if ($w == 0) $w = 7; //修正周日的问题
 
@@ -51,7 +55,8 @@ class Time {
 	 *
 	 * @return array
 	 */
-	public static function lastWeek() {
+	public static function lastWeek()
+	{
 		$timestamp = time();
 
 		return [
@@ -65,7 +70,8 @@ class Time {
 	 *
 	 * @return array
 	 */
-	public static function month() {
+	public static function month()
+	{
 		[$y, $m, $t] = explode('-', date('Y-m-t'));
 
 		return [
@@ -79,7 +85,8 @@ class Time {
 	 *
 	 * @return array
 	 */
-	public static function lastMonth() {
+	public static function lastMonth()
+	{
 		$y = date('Y');
 		$m = date('m');
 		$begin = mktime(0, 0, 0, $m - 1, 1, $y);
@@ -93,7 +100,8 @@ class Time {
 	 *
 	 * @return array
 	 */
-	public static function year() {
+	public static function year()
+	{
 		$y = date('Y');
 
 		return [
@@ -107,7 +115,8 @@ class Time {
 	 *
 	 * @return array
 	 */
-	public static function lastYear() {
+	public static function lastYear()
+	{
 		$year = date('Y') - 1;
 
 		return [
@@ -119,11 +128,12 @@ class Time {
 	/**
 	 * 获取几天前零点到现在/昨日结束的时间戳
 	 *
-	 * @param int  $day 天数
+	 * @param int $day 天数
 	 * @param bool $now 返回现在或者昨天结束时间戳
 	 * @return array
 	 */
-	public static function dayToNow($day = 1, $now = true) {
+	public static function dayToNow($day = 1, $now = true)
+	{
 		$end = time();
 		if (!$now) {
 			[$foo, $end] = self::yesterday();
@@ -141,7 +151,8 @@ class Time {
 	 * @param int $day
 	 * @return int
 	 */
-	public static function daysAgo($day = 1) {
+	public static function daysAgo($day = 1)
+	{
 		$nowTime = time();
 
 		return $nowTime - self::daysToSecond($day);
@@ -153,7 +164,8 @@ class Time {
 	 * @param int $day
 	 * @return int
 	 */
-	public static function daysAfter($day = 1) {
+	public static function daysAfter($day = 1)
+	{
 		$nowTime = time();
 
 		return $nowTime + self::daysToSecond($day);
@@ -165,7 +177,8 @@ class Time {
 	 * @param int $day
 	 * @return int
 	 */
-	public static function daysToSecond($day = 1) {
+	public static function daysToSecond($day = 1)
+	{
 		return $day * 86400;
 	}
 
@@ -175,14 +188,16 @@ class Time {
 	 * @param int $week
 	 * @return int
 	 */
-	public static function weekToSecond($week = 1) {
+	public static function weekToSecond($week = 1)
+	{
 		return self::daysToSecond() * 7 * $week;
 	}
 
 	/**
 	 * 获取毫秒级别的时间戳
 	 */
-	public static function getMillisecond() {
+	public static function getMillisecond()
+	{
 		$time = explode(" ", microtime());
 		$time = $time[1] . ($time[0] * 1000);
 		$time2 = explode(".", $time);
@@ -197,7 +212,8 @@ class Time {
 	 * @param int $timeStamp
 	 * @return string
 	 */
-	public static function formatRelative($timeStamp) {
+	public static function formatRelative($timeStamp)
+	{
 		$currentTime = time();
 
 		// 判断传入时间戳是否早于当前时间戳
@@ -229,11 +245,12 @@ class Time {
 	 * 范围日期转换时间戳
 	 *
 	 * @param string $rangeDatetime
-	 * @param int    $maxRange 最大时间间隔
+	 * @param int $maxRange 最大时间间隔
 	 * @param string $delimiter
 	 * @return array
 	 */
-	public static function parseRange($rangeDatetime, $maxRange = 0, $delimiter = ' - ') {
+	public static function parseRange($rangeDatetime, $maxRange = 0, $delimiter = ' - ')
+	{
 		$rangeDatetime = explode($delimiter, $rangeDatetime, 2);
 		$rangeDatetime[0] = strtotime($rangeDatetime[0]);
 		$rangeDatetime[1] = isset($rangeDatetime[1]) ? strtotime($rangeDatetime[1]) : time();
@@ -257,7 +274,8 @@ class Time {
 	 * @param array $times
 	 * @return array
 	 */
-	public static function sort($times) {
+	public static function sort($times)
+	{
 		usort($times, function ($com1, $com2) {
 			$com1 = strtotime($com1);
 			$com2 = strtotime($com2);

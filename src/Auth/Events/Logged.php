@@ -7,7 +7,8 @@
 
 namespace Xin\Auth\Events;
 
-class Logged {
+class Logged
+{
 
 	/**
 	 * The authentication guard name.
@@ -33,12 +34,13 @@ class Logged {
 	/**
 	 * Create a new event instance.
 	 *
-	 * @param string                    $guard
+	 * @param string $guard
 	 * @param \Xin\Contracts\Auth\Guard $user
-	 * @param bool                      $remember
+	 * @param bool $remember
 	 * @return void
 	 */
-	public function __construct($guard, $user, $remember) {
+	public function __construct($guard, $user, $remember)
+	{
 		$this->user = $user;
 		$this->guard = $guard;
 		$this->remember = $remember;

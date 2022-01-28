@@ -7,6 +7,7 @@
 
 namespace Xin\Auth;
 
-class LoginException extends \LogicException {
+class LoginException extends \LogicException
+{
 
 }

@@ -12,7 +12,8 @@ use Xin\Contracts\Stat\Provider as StatProviderContract;
 use Xin\Contracts\Stat\Repository as StatRepository;
 use Xin\Support\Time;
 
-class Stat implements StatRepository {
+class Stat implements StatRepository
+{
 
 	/**
 	 * @var \think\App
@@ -42,11 +43,12 @@ class Stat implements StatRepository {
 	/**
 	 * Stat constructor.
 	 *
-	 * @param \think\App                        $app
-	 * @param array                             $config
+	 * @param \think\App $app
+	 * @param array $config
 	 * @param \Xin\Contracts\Stat\Provider|null $provider
 	 */
-	public function __construct(App $app, array $config = [], StatProviderContract $provider = null) {
+	public function __construct(App $app, array $config = [], StatProviderContract $provider = null)
+	{
 		$this->app = $app;
 		$this->request = $app['request'];
 		$this->cache = $app['cache'];
@@ -61,7 +63,8 @@ class Stat implements StatRepository {
 	/**
 	 * @inheritDoc
 	 */
-	public function tally($name, $step = 1, array $options = []) {
+	public function tally($name, $step = 1, array $options = [])
+	{
 		$statId = $this->resolveStatID($name, $options);
 
 		$this->provider->incById($statId, $step, $options);
@@ -70,7 +73,8 @@ class Stat implements StatRepository {
 	/**
 	 * @inheritDoc
 	 */
-	public function tallyIP(array $options = []) {
+	public function tallyIP(array $options = [])
+	{
 		if ($this->existIp($options)) {
 			return;
 		}
@@ -93,7 +97,8 @@ class Stat implements StatRepository {
 	/**
 	 * @inheritDoc
 	 */
-	public function value($name, $time = null, array $options = []) {
+	public function value($name, $time = null, array $options = [])
+	{
 		if ($time) {
 			return $this->provider->getValueByTime($name, $time, $options);
 		} else {
@@ -106,7 +111,8 @@ class Stat implements StatRepository {
 	/**
 	 * @inheritDoc
 	 */
-	public function total($name, array $options = []) {
+	public function total($name, array $options = [])
+	{
 		return $this->provider->getTotal($name, $options);
 	}
 
@@ -114,10 +120,11 @@ class Stat implements StatRepository {
 	 * 获取统计ID
 	 *
 	 * @param string $name
-	 * @param array  $options
+	 * @param array $options
 	 * @return int
 	 */
-	protected function resolveStatID($name, array $options) {
+	protected function resolveStatID($name, array $options)
+	{
 		$todayBeginTime = Time::today()[0];
 		$cacheKey = $this->provider->getCacheKey($name, $options);
 
@@ -147,7 +154,8 @@ class Stat implements StatRepository {
 	 * @param array $options
 	 * @return bool
 	 */
-	protected function existIp(array $options) {
+	protected function existIp(array $options)
+	{
 		return $this->provider->getIPIdByTime(
 				$this->request->ip(),
 				Time::today()[0],

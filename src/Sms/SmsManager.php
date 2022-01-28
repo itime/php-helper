@@ -15,7 +15,8 @@ use Xin\Support\Arr;
 /**
  * @mixin \Xin\Contracts\Sms\Channel
  */
-class SmsManager extends Manager implements Factory {
+class SmsManager extends Manager implements Factory
+{
 
 	/**
 	 * @var \Overtrue\EasySms\EasySms
@@ -25,18 +26,20 @@ class SmsManager extends Manager implements Factory {
 	/**
 	 * @inerhitDoc
 	 */
-	public function channel($name = null) {
+	public function channel($name = null)
+	{
 		return $this->driver($name);
 	}
 
 	/**
 	 * 创建EasySms实例
 	 * @param string $name
-	 * @param array  $config
+	 * @param array $config
 	 * @return HigherOrderEasySmsProxy
 	 * @throws \Overtrue\EasySms\Exceptions\InvalidArgumentException
 	 */
-	public function createDefaultDriver($name, array $config) {
+	public function createDefaultDriver($name, array $config)
+	{
 		return new HigherOrderEasySmsProxy(
 			$this->service()->gateway($name), $config
 		);
@@ -45,21 +48,24 @@ class SmsManager extends Manager implements Factory {
 	/**
 	 * @inerhitDoc
 	 */
-	protected function getDefaultDriver() {
+	protected function getDefaultDriver()
+	{
 		return $this->getConfig('defaults.channel', 'default');
 	}
 
 	/**
 	 * @inerhitDoc
 	 */
-	protected function setDefaultDriver($name) {
+	protected function setDefaultDriver($name)
+	{
 		return $this->getConfig('defaults.channel', 'default');
 	}
 
 	/**
 	 * @inerhitDoc
 	 */
-	public function getDriverConfig($name) {
+	public function getDriverConfig($name)
+	{
 		$key = 'channels';
 
 		return $this->getConfig($name ? "{$key}.{$name}" : $key);
@@ -68,7 +74,8 @@ class SmsManager extends Manager implements Factory {
 	/**
 	 * @return EasySms
 	 */
-	protected function service() {
+	protected function service()
+	{
 		if (!$this->service) {
 			$this->service = new EasySms(
 				Arr::transformKeys($this->config, [

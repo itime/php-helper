@@ -7,7 +7,8 @@
 
 namespace Xin\Support;
 
-class LimitThrottle {
+class LimitThrottle
+{
 
 	/**
 	 * @var array
@@ -27,11 +28,12 @@ class LimitThrottle {
 	/**
 	 * LimitThrottle constructor.
 	 *
-	 * @param array    $limits
+	 * @param array $limits
 	 * @param callable $valueCallback
 	 * @param callable $thenCallback
 	 */
-	public function __construct(array $limits, callable $valueCallback, callable $thenCallback) {
+	public function __construct(array $limits, callable $valueCallback, callable $thenCallback)
+	{
 		$this->limits = array_reverse($limits);
 		$this->valueCallback = $valueCallback;
 		$this->thenCallback = $thenCallback;
@@ -42,7 +44,8 @@ class LimitThrottle {
 	 *
 	 * @return mixed
 	 */
-	public function exec() {
+	public function exec()
+	{
 		$value = $this->getValue();
 		if ($value == 1) {
 			return $this->call($value);
@@ -64,7 +67,8 @@ class LimitThrottle {
 	 * @param int $value
 	 * @return int
 	 */
-	protected function getLimit($value) {
+	protected function getLimit($value)
+	{
 		foreach ($this->limits as $limit) {
 			if ($value >= $limit) {
 				return $limit;
@@ -79,7 +83,8 @@ class LimitThrottle {
 	 *
 	 * @return int
 	 */
-	protected function getValue() {
+	protected function getValue()
+	{
 		try {
 			return call_user_func($this->valueCallback);
 		} catch (\Throwable $e) {
@@ -94,7 +99,8 @@ class LimitThrottle {
 	 * @param int $value
 	 * @return mixed
 	 */
-	protected function call($value) {
+	protected function call($value)
+	{
 		try {
 			return call_user_func($this->thenCallback, $this->limits, $value);
 		} catch (\Throwable $e) {
@@ -110,7 +116,8 @@ class LimitThrottle {
 	 * @param callable $thenCallback
 	 * @return mixed|null
 	 */
-	public static function general(callable $valueCallback, callable $thenCallback) {
+	public static function general(callable $valueCallback, callable $thenCallback)
+	{
 		return (new static(
 			[50, 100, 500, 1000, 5000, 10000, 50000, 100000],
 			$valueCallback, $thenCallback

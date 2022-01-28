@@ -9,12 +9,14 @@ namespace Xin\Thinkphp\Hint;
 
 use think\Response;
 
-class WebHandler extends AbstractHandler {
+class WebHandler extends AbstractHandler
+{
 
 	/**
 	 * @inheritDoc
 	 */
-	public function render($data) {
+	public function render($data)
+	{
 		if ($this->isSuccess($data)) {
 			$template = $this->service->getConfig('dispatch_success_tmpl');
 			$data['wait'] = 1;
@@ -33,7 +35,8 @@ class WebHandler extends AbstractHandler {
 	/**
 	 * @inheritDoc
 	 */
-	public function isAjax() {
+	public function isAjax()
+	{
 		return false;
 	}
 

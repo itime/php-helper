@@ -18,7 +18,8 @@ use GuzzleHttp\Exception\BadResponseException;
  * @method Response delete($url, $data = null, $options = [])
  * @method Response upload($url, $data = null, $options = [])
  */
-class Client {
+class Client
+{
 
 	/**
 	 * @var array
@@ -40,7 +41,8 @@ class Client {
 	 *
 	 * @param array $options
 	 */
-	public function __construct($options = []) {
+	public function __construct($options = [])
+	{
 		$this->options = $options;
 		$this->client = new \GuzzleHttp\Client($options);
 	}
@@ -50,12 +52,13 @@ class Client {
 	 *
 	 * @param string $method
 	 * @param string $url
-	 * @param mixed  $data
-	 * @param array  $options
+	 * @param mixed $data
+	 * @param array $options
 	 * @return \Xin\Http\Response
 	 * @throws \GuzzleHttp\Exception\GuzzleException
 	 */
-	public function request($method, $url, $data = null, $options = []) {
+	public function request($method, $url, $data = null, $options = [])
+	{
 		$method = strtoupper($method);
 
 		if ($data) {
@@ -97,7 +100,8 @@ class Client {
 	 *
 	 * @return static
 	 */
-	public static function instance() {
+	public static function instance()
+	{
 		if (static::$instance === null) {
 			static::$instance = new static([
 				'timeout' => 30,
@@ -119,10 +123,11 @@ class Client {
 	 * 动态方法
 	 *
 	 * @param string $name
-	 * @param array  $arguments
+	 * @param array $arguments
 	 * @return false|mixed
 	 */
-	public function __call($name, $arguments) {
+	public function __call($name, $arguments)
+	{
 		array_unshift($arguments, $name);
 
 		return call_user_func_array([$this, 'request'], $arguments);
@@ -132,10 +137,11 @@ class Client {
 	 * 静态调用动态方法
 	 *
 	 * @param string $name
-	 * @param array  $arguments
+	 * @param array $arguments
 	 * @return false|mixed
 	 */
-	public static function __callStatic($name, $arguments) {
+	public static function __callStatic($name, $arguments)
+	{
 		return call_user_func_array([static::instance(), $name], $arguments);
 	}
 

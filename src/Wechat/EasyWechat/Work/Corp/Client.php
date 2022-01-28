@@ -7,7 +7,8 @@ use EasyWeChat\Kernel\BaseClient;
 /**
  * 继承复写的accesstoken
  */
-class Client extends BaseClient {
+class Client extends BaseClient
+{
 
 	/**
 	 * 转换为加密的CorpId
@@ -19,7 +20,8 @@ class Client extends BaseClient {
 	 * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
 	 * @throws \GuzzleHttp\Exception\GuzzleException
 	 */
-	public function toOpenCorpId() {
+	public function toOpenCorpId()
+	{
 		return $this->httpPostJson('cgi-bin/corp/to_open_corpid', [
 			'corpid' => $this->app['config']['corp_id'],
 		]);

@@ -1,15 +1,22 @@
 <?php
+/**
+ * Talents come from diligence, and knowledge is gained by accumulation.
+ *
+ * @author: 晋<657306123@qq.com>
+ */
 
-namespace Xin\Thinkphp\Repository;
+namespace Xin\Repository;
 
-trait HasMiddlewareHandler {
+trait HasMiddlewareHandler
+{
 
 	/**
 	 * @param string $class
 	 * @return void
 	 * @noinspection PhpDocMissingThrowsInspection
 	 */
-	public function setupHandler($class) {
+	public function setupHandler($class)
+	{
 		$reflect = new \ReflectionClass($class);
 		$instance = $reflect->newInstance();
 
@@ -55,7 +62,8 @@ trait HasMiddlewareHandler {
 	 * @return void
 	 * @noinspection PhpDocMissingThrowsInspection
 	 */
-	public static function setupGlobalHandler($class) {
+	public static function setupGlobalHandler($class)
+	{
 		$reflect = new \ReflectionClass($class);
 		$instance = $reflect->newInstance();
 

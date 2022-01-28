@@ -13,7 +13,8 @@ use Xin\Support\Str;
 /**
  * 路由地址生成
  */
-class Url extends UrlBuild {
+class Url extends UrlBuild
+{
 
 	/**
 	 * @var string
@@ -24,11 +25,12 @@ class Url extends UrlBuild {
 	 * 直接解析URL地址
 	 *
 	 * @access protected
-	 * @param string      $url URL
+	 * @param string $url URL
 	 * @param string|bool $domain Domain
 	 * @return string
 	 */
-	protected function parseUrl(string $url, &$domain): string {
+	protected function parseUrl(string $url, &$domain): string
+	{
 		/** @var \think\Request|\Xin\Thinkphp\Http\Requestable $request */
 		$request = $this->app->request;
 
@@ -83,7 +85,8 @@ class Url extends UrlBuild {
 	 * @param string $controller
 	 * @return string
 	 */
-	protected function parseController($controller) {
+	protected function parseController($controller)
+	{
 		if ($pos = strrpos($controller, '.')) {
 			$controller = substr($controller, 0, $pos) . '.' . Str::snake(substr($controller, $pos + 1));
 		} else {

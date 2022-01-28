@@ -11,7 +11,8 @@ use RuntimeException;
 use Xin\Contracts\Saas\Wechat\ConfigProvider as ConfigProviderContract;
 use Xin\Contracts\Saas\Wechat\WechatType;
 
-class ConfigProvider implements ConfigProviderContract {
+class ConfigProvider implements ConfigProviderContract
+{
 
 	/**
 	 * @var int[]
@@ -27,7 +28,8 @@ class ConfigProvider implements ConfigProviderContract {
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public function retrieveById($id, $type) {
+	public function retrieveById($id, $type)
+	{
 		if (in_array($type, [WechatType::WORK, WechatType::OPEN_WORK])) {
 			return $this->getByWorkId($id);
 		} else {
@@ -42,7 +44,8 @@ class ConfigProvider implements ConfigProviderContract {
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	protected function getByWechatAccountId($id) {
+	protected function getByWechatAccountId($id)
+	{
 		$info = DatabaseAccount::where('id', $id)->find();
 
 		if (empty($info)) {
@@ -57,7 +60,8 @@ class ConfigProvider implements ConfigProviderContract {
 	 * @return mixed
 	 * @todo
 	 */
-	protected function getByWorkId($id) {
+	protected function getByWorkId($id)
+	{
 		throw new RuntimeException("not implements work config read.");
 	}
 
@@ -67,7 +71,8 @@ class ConfigProvider implements ConfigProviderContract {
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public function retrieveByAppId($appId, $type, $name = null) {
+	public function retrieveByAppId($appId, $type, $name = null)
+	{
 		if (in_array($type, [WechatType::WORK, WechatType::OPEN_WORK])) {
 			return $this->getByWorkAppId($appId);
 		} else {
@@ -83,7 +88,8 @@ class ConfigProvider implements ConfigProviderContract {
 	 * @throws \think\db\exception\ModelNotFoundException
 	 * @todo 开放平台
 	 */
-	protected function getByWechatAccountAppId($appId, $type) {
+	protected function getByWechatAccountAppId($appId, $type)
+	{
 		$info = DatabaseAccount::where([
 			'app_id' => $appId,
 			'app_type' => static::$appTypeMaps[$type],
@@ -101,7 +107,8 @@ class ConfigProvider implements ConfigProviderContract {
 	 * @return mixed
 	 * @todo
 	 */
-	protected function getByWorkAppId($appId) {
+	protected function getByWorkAppId($appId)
+	{
 		throw new RuntimeException("not implements work config read.");
 	}
 

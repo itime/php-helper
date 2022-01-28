@@ -5,7 +5,8 @@ namespace Xin\Excel\Helpers;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Xin\Excel\Exceptions\NoTypeDetectedException;
 
-class FileTypeDetector {
+class FileTypeDetector
+{
 
 	/**
 	 * @param             $filePath
@@ -14,7 +15,8 @@ class FileTypeDetector {
 	 * @return string|null
 	 * @throws NoTypeDetectedException
 	 */
-	public static function detect($filePath, string $type = null) {
+	public static function detect($filePath, string $type = null)
+	{
 		if (null !== $type) {
 			return $type;
 		}
@@ -34,13 +36,14 @@ class FileTypeDetector {
 	}
 
 	/**
-	 * @param string      $filePath
+	 * @param string $filePath
 	 * @param string|null $type
 	 *
 	 * @return string
 	 * @throws NoTypeDetectedException
 	 */
-	public static function detectStrict(string $filePath, string $type = null): string {
+	public static function detectStrict(string $filePath, string $type = null): string
+	{
 		$type = static::detect($filePath, $type);
 
 		if (!$type) {

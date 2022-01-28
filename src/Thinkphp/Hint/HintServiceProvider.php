@@ -16,12 +16,14 @@ use Xin\Thinkphp\Foundation\ServiceProvider;
 /**
  * Class HintServiceProvider
  */
-class HintServiceProvider extends ServiceProvider {
+class HintServiceProvider extends ServiceProvider
+{
 
 	/**
 	 * @inheritDoc
 	 */
-	public function register() {
+	public function register()
+	{
 		$this->registerManager();
 		$this->registerScenes();
 	}
@@ -30,7 +32,8 @@ class HintServiceProvider extends ServiceProvider {
 	 * 注册提示管理器
 	 * @return void
 	 */
-	protected function registerManager() {
+	protected function registerManager()
+	{
 		$this->app->bind([
 			'hint' => HintFactory::class,
 			HintFactory::class => HintManager::class,
@@ -48,7 +51,8 @@ class HintServiceProvider extends ServiceProvider {
 	/**
 	 * 注册提示器场景
 	 */
-	protected function registerScenes() {
+	protected function registerScenes()
+	{
 		/** @var HintManager $manager */
 		$manager = $this->app['hint'];
 
@@ -71,14 +75,16 @@ class HintServiceProvider extends ServiceProvider {
 	/**
 	 * @return string
 	 */
-	protected function getScene() {
+	protected function getScene()
+	{
 		return $this->isApiRequest() ? "api" : "web";
 	}
 
 	/**
 	 * @return bool
 	 */
-	protected function isApiRequest() {
+	protected function isApiRequest()
+	{
 		return $this->app->request->isAjax() ||
 			$this->app->request->isJson() ||
 			Str::endsWith($this->app->http->getName(), 'api');

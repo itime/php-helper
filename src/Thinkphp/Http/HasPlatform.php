@@ -10,7 +10,8 @@ namespace Xin\Thinkphp\Http;
 /**
  * @mixin Requestable
  */
-trait HasPlatform {
+trait HasPlatform
+{
 
 	/**
 	 * @var string
@@ -22,7 +23,8 @@ trait HasPlatform {
 	 *
 	 * @return string
 	 */
-	public function platform() {
+	public function platform()
+	{
 		if (is_null($this->platform)) {
 			$userAgent = $this->server('HTTP_USER_AGENT');
 			$referer = $this->server('HTTP_REFERER');
@@ -56,7 +58,8 @@ trait HasPlatform {
 	 *
 	 * @return bool
 	 */
-	public function isFromWechat() {
+	public function isFromWechat()
+	{
 		return "wechat" === $this->platform();
 	}
 
@@ -65,7 +68,8 @@ trait HasPlatform {
 	 *
 	 * @return bool
 	 */
-	public function isFromAlipay() {
+	public function isFromAlipay()
+	{
 		return "alipay" === $this->platform();
 	}
 
@@ -74,7 +78,8 @@ trait HasPlatform {
 	 *
 	 * @return bool
 	 */
-	public function isFromBaidu() {
+	public function isFromBaidu()
+	{
 		return "baidu" === $this->platform();
 	}
 
@@ -83,7 +88,8 @@ trait HasPlatform {
 	 *
 	 * @return bool
 	 */
-	public function isFromBrowser() {
+	public function isFromBrowser()
+	{
 		return "browser" === $this->platform();
 	}
 

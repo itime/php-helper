@@ -9,7 +9,8 @@ namespace Xin\Menu;
 
 use Xin\Support\Arr;
 
-class PhpFile extends Driver {
+class PhpFile extends Driver
+{
 
 	/**
 	 * @var array
@@ -24,7 +25,8 @@ class PhpFile extends Driver {
 	/**
 	 * 初始化加载文件
 	 */
-	protected function load() {
+	protected function load()
+	{
 		if (!is_null($this->data)) {
 			return;
 		}
@@ -48,7 +50,8 @@ class PhpFile extends Driver {
 	/**
 	 * @inheritDoc
 	 */
-	public function all() {
+	public function all()
+	{
 		$this->load();
 
 		return $this->data;
@@ -57,7 +60,8 @@ class PhpFile extends Driver {
 	/**
 	 * @inheritDoc
 	 */
-	public function get($filter = null) {
+	public function get($filter = null)
+	{
 		$this->load();
 
 		return $this->data;
@@ -66,7 +70,8 @@ class PhpFile extends Driver {
 	/**
 	 * @inheritDoc
 	 */
-	public function puts($menus, $plugin = null, $append = []) {
+	public function puts($menus, $plugin = null, $append = [])
+	{
 		$plugin = empty($plugin) ? '' : $plugin;
 
 		$this->load();
@@ -84,7 +89,8 @@ class PhpFile extends Driver {
 	 * @param array $menu
 	 * @param array $append
 	 */
-	protected function insert($menu, $plugin, $append = []) {
+	protected function insert($menu, $plugin, $append = [])
+	{
 		$menu = array_merge($menu, $append);
 		$menu['plugin'] = $plugin;
 		$menu['link'] = $menu['link'] ?? (isset($menu['child']) ? 0 : 1) ?? 1;
@@ -116,7 +122,8 @@ class PhpFile extends Driver {
 	/**
 	 * @inheritDoc
 	 */
-	public function forget($condition) {
+	public function forget($condition)
+	{
 		$this->load();
 
 		if (is_numeric($condition)) {
@@ -142,7 +149,8 @@ class PhpFile extends Driver {
 	 *
 	 * @param bool $ignoreError
 	 */
-	protected function write($ignoreError = false) {
+	protected function write($ignoreError = false)
+	{
 		$targetPath = $this->config('target_path');
 		if (empty($targetPath)) {
 			if (!$ignoreError) {
@@ -169,7 +177,8 @@ class PhpFile extends Driver {
 	 *
 	 * @param array $list
 	 */
-	protected function sort(array &$list) {
+	protected function sort(array &$list)
+	{
 		usort($list, function ($it1, $it2) {
 			$sort1 = isset($it1['sort']) ? $it1['sort'] : 0;
 			$sort2 = isset($it2['sort']) ? $it2['sort'] : 0;
@@ -184,7 +193,8 @@ class PhpFile extends Driver {
 	 * @param string $plugin
 	 * @return bool
 	 */
-	public function refresh($plugin = null) {
+	public function refresh($plugin = null)
+	{
 		if (empty($plugin)) {
 			$this->data = null;
 			$targetPath = $this->config('target_path');
@@ -203,7 +213,8 @@ class PhpFile extends Driver {
 	/**
 	 * @param callable $loadCallback
 	 */
-	public function setLoadCallback(callable $loadCallback): void {
+	public function setLoadCallback(callable $loadCallback): void
+	{
 		$this->loadCallback = $loadCallback;
 	}
 

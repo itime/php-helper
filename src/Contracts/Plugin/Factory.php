@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Plugin;
 
-interface Factory {
+interface Factory
+{
 
 	/**
 	 * 插件根路径
@@ -101,7 +102,7 @@ interface Factory {
 	 * 获取配置信息
 	 *
 	 * @param string $name
-	 * @param mixed  $default
+	 * @param mixed $default
 	 * @return mixed
 	 */
 	public function config($name, $default = null);

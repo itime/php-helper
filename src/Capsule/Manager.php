@@ -5,7 +5,8 @@ namespace Xin\Capsule;
 use InvalidArgumentException;
 use Xin\Support\Traits\Macroable;
 
-abstract class Manager {
+abstract class Manager
+{
 
 	use WithConfig,
 		WithContainer,
@@ -35,7 +36,8 @@ abstract class Manager {
 	 * @param array $config
 	 * @noinspection PhpMissingParamTypeInspection
 	 */
-	public function __construct(array $config = []) {
+	public function __construct(array $config = [])
+	{
 		$this->config = array_merge_recursive($this->config, $config);
 	}
 
@@ -44,7 +46,8 @@ abstract class Manager {
 	 * @param string|null $name
 	 * @return mixed
 	 */
-	public function driver($name = null) {
+	public function driver($name = null)
+	{
 		$name = $name ?: $this->getDefaultDriver();
 
 		return $this->drivers[$name] ?? $this->drivers[$name] = $this->createDriver($name);
@@ -57,7 +60,8 @@ abstract class Manager {
 	 *
 	 * @return mixed
 	 */
-	protected function createDriver($name) {
+	protected function createDriver($name)
+	{
 		// 获取驱动相关配置
 		$config = $this->getDriverConfig($name);
 
@@ -105,10 +109,11 @@ abstract class Manager {
 	 *
 	 * @param string $name
 	 * @param string $driver
-	 * @param array  $config
+	 * @param array $config
 	 * @return mixed
 	 */
-	protected function callCustomCreator($name, $driver, array $config) {
+	protected function callCustomCreator($name, $driver, array $config)
+	{
 		return $this->customCreators[$driver]($name, $config);
 	}
 
@@ -117,7 +122,8 @@ abstract class Manager {
 	 * @param string $driver
 	 * @return void
 	 */
-	protected function setDriverContainer($driver) {
+	protected function setDriverContainer($driver)
+	{
 		if (method_exists($driver, 'setContainer')) {
 			$driver->setContainer($this->getContainer());
 		}
@@ -126,11 +132,12 @@ abstract class Manager {
 	/**
 	 * 自定义一个创建器
 	 *
-	 * @param string   $driver
+	 * @param string $driver
 	 * @param \Closure $callback
 	 * @return $this
 	 */
-	public function extend($driver, \Closure $callback) {
+	public function extend($driver, \Closure $callback)
+	{
 		$this->customCreators[$driver] = $callback;
 
 		return $this;
@@ -160,7 +167,8 @@ abstract class Manager {
 	 * 获取所有已创建的驱动实例
 	 * @return array
 	 */
-	public function getDrivers() {
+	public function getDrivers()
+	{
 		return $this->drivers;
 	}
 
@@ -169,7 +177,8 @@ abstract class Manager {
 	 *
 	 * @return $this
 	 */
-	public function forgetDrivers() {
+	public function forgetDrivers()
+	{
 		$this->drivers = [];
 
 		return $this;
@@ -179,12 +188,13 @@ abstract class Manager {
 	 * Pass dynamic methods call onto Flysystem.
 	 *
 	 * @param string $method
-	 * @param array  $parameters
+	 * @param array $parameters
 	 * @return mixed
 	 *
 	 * @throws \BadMethodCallException
 	 */
-	public function __call($method, array $parameters) {
+	public function __call($method, array $parameters)
+	{
 		if (static::hasMacro($method)) {
 			return $this->macroCall($method, $parameters);
 		}

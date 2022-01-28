@@ -7,7 +7,8 @@
 
 namespace Xin\Contracts\Sms;
 
-interface Factory {
+interface Factory
+{
 
 	/**
 	 * @param string $name

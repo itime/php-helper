@@ -2,7 +2,8 @@
 
 namespace Xin\Contracts\Robot;
 
-interface Factory {
+interface Factory
+{
 
 	/**
 	 * 选择机器人

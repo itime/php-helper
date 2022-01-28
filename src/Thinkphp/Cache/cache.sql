@@ -15,7 +15,8 @@
 */
 
 SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
+SET
+FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
 -- Table structure for cache
@@ -23,19 +24,20 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `cache`;
 CREATE TABLE `cache`
 (
-    `id`          int(11) unsigned                        NOT NULL AUTO_INCREMENT,
+    `id`          int(11) unsigned NOT NULL AUTO_INCREMENT,
     `key`         varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '键名',
     `type`        varchar(24) COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT '类型',
     `value`       text COLLATE utf8mb4_unicode_ci         NOT NULL COMMENT '持久化缓存数据',
     `tag`         varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '标签名',
-    `expire_time` int(11) unsigned                        NOT NULL COMMENT '有效期',
+    `expire_time` int(11) unsigned NOT NULL COMMENT '有效期',
     PRIMARY KEY (`id`),
     UNIQUE KEY `caches_key_unique` (`key`) USING BTREE,
-    KEY `tag` (`tag`) USING BTREE
+    KEY           `tag` (`tag`) USING BTREE
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT ='持久化缓存表'
   ROW_FORMAT = Dynamic;
 
-SET FOREIGN_KEY_CHECKS = 1;
+SET
+FOREIGN_KEY_CHECKS = 1;

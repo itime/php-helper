@@ -2,14 +2,16 @@
 
 namespace Xin\Excel\Exceptions;
 
-class SheetNotFoundException extends \Exception {
+class SheetNotFoundException extends \Exception
+{
 
 	/**
 	 * @param string $name
 	 *
 	 * @return SheetNotFoundException
 	 */
-	public static function byName(string $name): SheetNotFoundException {
+	public static function byName(string $name): SheetNotFoundException
+	{
 		return new static("Your requested sheet name [{$name}] is out of bounds.");
 	}
 
@@ -19,7 +21,8 @@ class SheetNotFoundException extends \Exception {
 	 *
 	 * @return SheetNotFoundException
 	 */
-	public static function byIndex(int $index, int $sheetCount): SheetNotFoundException {
+	public static function byIndex(int $index, int $sheetCount): SheetNotFoundException
+	{
 		return new static("Your requested sheet index: {$index} is out of bounds. The actual number of sheets is {$sheetCount}.");
 	}
 

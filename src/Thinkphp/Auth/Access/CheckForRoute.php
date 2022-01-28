@@ -11,7 +11,8 @@ use think\App;
 use Xin\Support\Str;
 use Xin\Thinkphp\Foundation\RequestUtil;
 
-class CheckForRoute {
+class CheckForRoute
+{
 
 	/**
 	 * @var \think\App
@@ -26,7 +27,8 @@ class CheckForRoute {
 	/**
 	 * @param \think\App $app
 	 */
-	public function __construct(App $app) {
+	public function __construct(App $app)
+	{
 		$this->app = $app;
 		$this->request = $app['request'];
 	}
@@ -34,11 +36,12 @@ class CheckForRoute {
 	/**
 	 * 处理器
 	 *
-	 * @param mixed  $user
+	 * @param mixed $user
 	 * @param string $checkUrl
 	 * @return bool
 	 */
-	public function handle($user, $checkUrl) {
+	public function handle($user, $checkUrl)
+	{
 		if (method_exists($user, 'isAdmin') && $user->isAdmin()) {
 			return true;
 		}
@@ -59,7 +62,8 @@ class CheckForRoute {
 	 * @param string $url
 	 * @return array
 	 */
-	protected function findByUrl($url) {
+	protected function findByUrl($url)
+	{
 		/** @var \Xin\Menu\MenuManager $menuManager */
 		$menuManager = $this->app['menu'];
 		$menus = $menuManager->all();
@@ -84,7 +88,8 @@ class CheckForRoute {
 	 * @param array $menu
 	 * @return void
 	 */
-	protected function isOwn($user, $menu) {
+	protected function isOwn($user, $menu)
+	{
 		if (!method_exists($user, 'getAllMenuIds')) {
 			return false;
 		}
@@ -95,14 +100,16 @@ class CheckForRoute {
 	/**
 	 * @return string
 	 */
-	protected function getCurrentPath() {
+	protected function getCurrentPath()
+	{
 		return RequestUtil::getPathRule($this->request);
 	}
 
 	/**
 	 * @return array
 	 */
-	protected function getCurrentQuery() {
+	protected function getCurrentQuery()
+	{
 		return $this->request->get() + $this->request->route();
 	}
 

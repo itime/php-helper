@@ -7,7 +7,8 @@ use League\Pipeline\ProcessorInterface;
 use League\Pipeline\StageInterface;
 use Xin\Capsule\WithConfig;
 
-class LimitManager {
+class LimitManager
+{
 
 	use WithConfig;
 
@@ -36,16 +37,18 @@ class LimitManager {
 	/**
 	 * @param array $config
 	 */
-	public function __construct(array $config = []) {
+	public function __construct(array $config = [])
+	{
 		$this->config = $config;
 	}
 
 	/**
 	 * 定义命名限制器
-	 * @param string          $name
+	 * @param string $name
 	 * @param string|callable $stageProvider
 	 */
-	public function named($name, $stageProvider) {
+	public function named($name, $stageProvider)
+	{
 		$this->namedStages[$name] = $stageProvider;
 	}
 
@@ -54,7 +57,8 @@ class LimitManager {
 	 * @param callable[] $limiters
 	 * @return $this
 	 */
-	public function appends(array $limiters) {
+	public function appends(array $limiters)
+	{
 		foreach ($limiters as $limiter) {
 			$this->append($limiter);
 		}
@@ -67,7 +71,8 @@ class LimitManager {
 	 * @param StageInterface $limiter
 	 * @return $this
 	 */
-	public function append(StageInterface $limiter) {
+	public function append(StageInterface $limiter)
+	{
 		$this->limiters[] = $limiter;
 
 		return $this;
@@ -78,7 +83,8 @@ class LimitManager {
 	 * @param array $payload
 	 * @return mixed
 	 */
-	public function process($payload) {
+	public function process($payload)
+	{
 		return (new Pipeline(
 			$this->createProcessor(),
 			...$this->limiters()
@@ -88,7 +94,8 @@ class LimitManager {
 	/**
 	 * @return array
 	 */
-	protected function limiters() {
+	protected function limiters()
+	{
 		return array_merge(
 			$this->prepareNamedLimiters(),
 			...$this->limiters
@@ -98,7 +105,8 @@ class LimitManager {
 	/**
 	 * @return array
 	 */
-	protected function prepareNamedLimiters() {
+	protected function prepareNamedLimiters()
+	{
 		$stages = [];
 		foreach ($this->config as $key => $config) {
 			if (!isset($this->namedStages[$key])) {
@@ -121,7 +129,8 @@ class LimitManager {
 	/**
 	 * @return ProcessorInterface|null
 	 */
-	protected function createProcessor() {
+	protected function createProcessor()
+	{
 		return null;
 	}
 

@@ -11,11 +11,13 @@
 
 namespace Xin\Thinkphp\View\Exceptions;
 
-class TemplateNotFoundException extends \RuntimeException {
+class TemplateNotFoundException extends \RuntimeException
+{
 
 	protected $template;
 
-	public function __construct(string $message, string $template = '') {
+	public function __construct(string $message, string $template = '')
+	{
 		parent::__construct($message);
 
 		$this->message = $message;
@@ -28,7 +30,8 @@ class TemplateNotFoundException extends \RuntimeException {
 	 * @access public
 	 * @return string
 	 */
-	public function getTemplate(): string {
+	public function getTemplate(): string
+	{
 		return $this->template;
 	}
 

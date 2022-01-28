@@ -14,7 +14,8 @@ use Xin\Support\Str;
  * @property-read string access_id
  * @property-read string access_key
  */
-class DatabaseApp extends Model {
+class DatabaseApp extends Model
+{
 
 	use HasPlugins;
 
@@ -38,7 +39,8 @@ class DatabaseApp extends Model {
 	 * @param DatabaseApp $model
 	 * @return void
 	 */
-	public static function onBeforeInsert(DatabaseApp $model) {
+	public static function onBeforeInsert(DatabaseApp $model)
+	{
 		$model['access_id'] = substr(md5(microtime() . uniqid()), 0, 22);
 		$model['access_key'] = Str::random(32);
 	}
@@ -48,7 +50,8 @@ class DatabaseApp extends Model {
 	 * @param bool $save
 	 * @return void
 	 */
-	public function resetAccessKey($save = true) {
+	public function resetAccessKey($save = true)
+	{
 		$this->setAttr('access_key', Str::random(32));
 		if ($save) {
 			$this->save();

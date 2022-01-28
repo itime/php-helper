@@ -7,7 +7,8 @@
 
 namespace Xin\Auth\Events;
 
-class Verified {
+class Verified
+{
 
 	/**
 	 * The verified user.
@@ -22,7 +23,8 @@ class Verified {
 	 * @param \Xin\Contracts\Auth\MustVerifyEmail $user
 	 * @return void
 	 */
-	public function __construct($user) {
+	public function __construct($user)
+	{
 		$this->user = $user;
 	}
 

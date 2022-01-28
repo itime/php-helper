@@ -17,7 +17,8 @@ use Overtrue\EasySms\Support\Config;
 use Xin\Capsule\Service;
 use Xin\Contracts\Sms\Channel;
 
-class HigherOrderEasySmsProxy extends Service implements Channel {
+class HigherOrderEasySmsProxy extends Service implements Channel
+{
 
 	/**
 	 * @var GatewayInterface
@@ -26,9 +27,10 @@ class HigherOrderEasySmsProxy extends Service implements Channel {
 
 	/**
 	 * @param GatewayInterface $gateway
-	 * @param array            $config
+	 * @param array $config
 	 */
-	public function __construct(GatewayInterface $gateway, array $config) {
+	public function __construct(GatewayInterface $gateway, array $config)
+	{
 		parent::__construct($config);
 		$this->gateway = $gateway;
 	}
@@ -37,7 +39,8 @@ class HigherOrderEasySmsProxy extends Service implements Channel {
 	 * @inheritDoc
 	 * @return array
 	 */
-	public function send($phone, $message) {
+	public function send($phone, $message)
+	{
 		$phone = $this->formatPhoneNumber($phone);
 		$message = $this->formatMessage($message);
 
@@ -75,7 +78,8 @@ class HigherOrderEasySmsProxy extends Service implements Channel {
 	 *
 	 * @return \Overtrue\EasySms\Contracts\PhoneNumberInterface
 	 */
-	protected function formatPhoneNumber($number) {
+	protected function formatPhoneNumber($number)
+	{
 		if ($number instanceof PhoneNumberInterface) {
 			return $number;
 		}
@@ -88,7 +92,8 @@ class HigherOrderEasySmsProxy extends Service implements Channel {
 	 *
 	 * @return \Overtrue\EasySms\Contracts\MessageInterface
 	 */
-	protected function formatMessage($message) {
+	protected function formatMessage($message)
+	{
 		if (!($message instanceof MessageInterface)) {
 			if (!\is_array($message)) {
 				$message = [

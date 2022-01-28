@@ -11,19 +11,21 @@ use think\exception\HttpException;
 use think\facade\Db;
 use think\file\UploadedFile;
 
-trait UploadFinder {
+trait UploadFinder
+{
 
 	/**
 	 * 查找文件
 	 *
-	 * @param string                   $type
+	 * @param string $type
 	 * @param \think\file\UploadedFile $file
 	 * @return array|\think\Model|null
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	protected function findByFile($type, UploadedFile $file) {
+	protected function findByFile($type, UploadedFile $file)
+	{
 		return $this->findBySHA1($type, $file->md5());
 	}
 
@@ -37,7 +39,8 @@ trait UploadFinder {
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	protected function findBySHA1($type, $sha1) {
+	protected function findBySHA1($type, $sha1)
+	{
 		return $this->db($type)->where([
 			'sha1' => $sha1,
 		])->find();
@@ -53,7 +56,8 @@ trait UploadFinder {
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	protected function findByMD5($type, $md5) {
+	protected function findByMD5($type, $md5)
+	{
 		return $this->db($type)->where([
 			'md5' => $md5,
 		])->find();
@@ -63,10 +67,11 @@ trait UploadFinder {
 	 * 保存数据
 	 *
 	 * @param string $type
-	 * @param array  $data
+	 * @param array $data
 	 * @return array
 	 */
-	protected function saveDb($type, $data) {
+	protected function saveDb($type, $data)
+	{
 		$this->onSaveData($type, $data);
 
 		$data['create_time'] = request()->time();
@@ -86,16 +91,18 @@ trait UploadFinder {
 	 * 数据保存事件
 	 *
 	 * @param string $type
-	 * @param array  $data
+	 * @param array $data
 	 */
-	protected function onSaveData($type, &$data) {
+	protected function onSaveData($type, &$data)
+	{
 	}
 
 	/**
 	 * @param null $type
 	 * @return \think\facade\Db|\think\db\Query
 	 */
-	protected function db($type = null) {
+	protected function db($type = null)
+	{
 		return Db::name($type !== 'image' ? 'file' : 'image');
 	}
 

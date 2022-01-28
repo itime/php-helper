@@ -13,7 +13,8 @@ use think\Validate;
 /**
  * 配置验证器
  */
-class SettingValidate extends Validate {
+class SettingValidate extends Validate
+{
 
 	/**
 	 * 验证规则
@@ -49,7 +50,8 @@ class SettingValidate extends Validate {
 	/**
 	 * SettingValidate constructor.
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		$typeList = Config::get('web.config_type_list');
 		if (!empty($typeList)) {
 			$this->rule['type'] .= "|in:" . implode(",", array_keys($typeList));

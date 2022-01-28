@@ -11,7 +11,8 @@ use think\App;
 use Xin\Auth\AuthenticationException;
 use Xin\Contracts\Auth\Factory as Auth;
 
-class Authenticate {
+class Authenticate
+{
 
 	use InteractsExcept;
 
@@ -37,10 +38,11 @@ class Authenticate {
 	/**
 	 * Create a new middleware instance.
 	 *
-	 * @param \think\App                  $app
+	 * @param \think\App $app
 	 * @param \Xin\Contracts\Auth\Factory $auth
 	 */
-	public function __construct(App $app, Auth $auth) {
+	public function __construct(App $app, Auth $auth)
+	{
 		$this->app = $app;
 		$this->auth = $auth;
 	}
@@ -49,12 +51,13 @@ class Authenticate {
 	 * Handle an incoming request.
 	 *
 	 * @param \think\Request $request
-	 * @param \Closure       $next
-	 * @param string         ...$guards
+	 * @param \Closure $next
+	 * @param string ...$guards
 	 * @return mixed
 	 * @throws \Xin\Auth\AuthenticationException
 	 */
-	public function handle($request, \Closure $next, ...$guards) {
+	public function handle($request, \Closure $next, ...$guards)
+	{
 		$this->authenticate($request, $guards);
 
 		return $next($request);
@@ -64,11 +67,12 @@ class Authenticate {
 	 * Determine if the user is logged in to any of the given guards.
 	 *
 	 * @param \think\Request $request
-	 * @param array          $guards
+	 * @param array $guards
 	 * @return \Xin\Contracts\Auth\Guard|\Xin\Contracts\Auth\StatefulGuard
 	 * @throws \Xin\Auth\AuthenticationException
 	 */
-	protected function authenticate($request, array $guards) {
+	protected function authenticate($request, array $guards)
+	{
 		if (empty($guards)) {
 			$guards = [null];
 		}
@@ -97,7 +101,8 @@ class Authenticate {
 	 * @param \think\Request $request
 	 * @return string|void
 	 */
-	protected function redirectTo($request) {
+	protected function redirectTo($request)
+	{
 		if ($request->isJson() || $request->isAjax()) {
 			return;
 		}

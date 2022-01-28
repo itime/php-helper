@@ -2,7 +2,8 @@
 
 namespace Xin\Excel\Concerns;
 
-interface WithStartRow {
+interface WithStartRow
+{
 
 	/**
 	 * @return int

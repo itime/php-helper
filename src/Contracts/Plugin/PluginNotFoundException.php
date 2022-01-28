@@ -7,6 +7,7 @@
 
 namespace Xin\Contracts\Plugin;
 
-interface PluginNotFoundException {
+interface PluginNotFoundException
+{
 
 }

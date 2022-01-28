@@ -7,7 +7,8 @@
 
 namespace Xin\Auth\Events;
 
-class Logout {
+class Logout
+{
 
 	/**
 	 * The authentication guard name.
@@ -26,11 +27,12 @@ class Logout {
 	/**
 	 * Create a new event instance.
 	 *
-	 * @param string                    $guard
+	 * @param string $guard
 	 * @param \Xin\Contracts\Auth\Guard $user
 	 * @return void
 	 */
-	public function __construct($guard, $user) {
+	public function __construct($guard, $user)
+	{
 		$this->user = $user;
 		$this->guard = $guard;
 	}

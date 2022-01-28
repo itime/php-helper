@@ -9,7 +9,8 @@ namespace Xin\Thinkphp\Transaction;
 
 use think\Model;
 
-class DatabaseTransaction extends Model {
+class DatabaseTransaction extends Model
+{
 
 	/**
 	 * @var string

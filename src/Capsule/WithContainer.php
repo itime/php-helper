@@ -4,7 +4,8 @@ namespace Xin\Capsule;
 
 use Psr\Container\ContainerInterface;
 
-trait WithContainer {
+trait WithContainer
+{
 
 	/**
 	 * @var ContainerInterface
@@ -14,14 +15,16 @@ trait WithContainer {
 	/**
 	 * @return ContainerInterface
 	 */
-	public function getContainer() {
+	public function getContainer()
+	{
 		return $this->container;
 	}
 
 	/**
 	 * @param ContainerInterface $container
 	 */
-	public function setContainer(ContainerInterface $container) {
+	public function setContainer(ContainerInterface $container)
+	{
 		$this->container = $container;
 	}
 

@@ -4,7 +4,8 @@ namespace Xin\Support;
 
 use Xin\Contracts\Support\Arrayable;
 
-class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayable {
+class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayable
+{
 
 	/**
 	 * The collection data.
@@ -18,7 +19,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 *
 	 * @param array $items
 	 */
-	public function __construct(array $items = []) {
+	public function __construct(array $items = [])
+	{
 		foreach ($items as $key => $value) {
 			$this->set($key, $value);
 		}
@@ -29,7 +31,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 *
 	 * @return array
 	 */
-	public function all() {
+	public function all()
+	{
 		return $this->items;
 	}
 
@@ -39,7 +42,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 * @param array $keys
 	 * @return $this
 	 */
-	public function only(array $keys) {
+	public function only(array $keys)
+	{
 		$return = [];
 
 		foreach ($keys as $key) {
@@ -59,7 +63,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 * @param mixed $keys
 	 * @return static
 	 */
-	public function except($keys) {
+	public function except($keys)
+	{
 		$keys = is_array($keys) ? $keys : func_get_args();
 
 		return new static(Arr::except($this->items, $keys));
@@ -71,7 +76,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 * @param Collection|array $items
 	 * @return $this
 	 */
-	public function merge($items) {
+	public function merge($items)
+	{
 		$clone = new static($this->all());
 
 		foreach ($items as $key => $value) {
@@ -87,7 +93,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 * @param string $key
 	 * @return bool
 	 */
-	public function has($key) {
+	public function has($key)
+	{
 		return !is_null(Arr::get($this->items, $key));
 	}
 
@@ -96,7 +103,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 *
 	 * @return mixed
 	 */
-	public function first() {
+	public function first()
+	{
 		return reset($this->items);
 	}
 
@@ -105,7 +113,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 *
 	 * @return bool
 	 */
-	public function last() {
+	public function last()
+	{
 		$end = end($this->items);
 
 		reset($this->items);
@@ -117,9 +126,10 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 * add the item value.
 	 *
 	 * @param string $key
-	 * @param mixed  $value
+	 * @param mixed $value
 	 */
-	public function add($key, $value) {
+	public function add($key, $value)
+	{
 		Arr::set($this->items, $key, $value);
 	}
 
@@ -127,9 +137,10 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 * Set the item value.
 	 *
 	 * @param string $key
-	 * @param mixed  $value
+	 * @param mixed $value
 	 */
-	public function set($key, $value) {
+	public function set($key, $value)
+	{
 		Arr::set($this->items, $key, $value);
 	}
 
@@ -137,10 +148,11 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 * Retrieve item from Collection.
 	 *
 	 * @param string $key
-	 * @param mixed  $default
+	 * @param mixed $default
 	 * @return mixed
 	 */
-	public function get($key, $default = null) {
+	public function get($key, $default = null)
+	{
 		return Arr::get($this->items, $key, $default);
 	}
 
@@ -149,7 +161,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 *
 	 * @param string $key
 	 */
-	public function forget($key) {
+	public function forget($key)
+	{
 		Arr::forget($this->items, $key);
 	}
 
@@ -158,7 +171,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 *
 	 * @return array
 	 */
-	public function toArray() {
+	public function toArray()
+	{
 		return $this->all();
 	}
 
@@ -168,7 +182,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 * @param int $option
 	 * @return string
 	 */
-	public function toJson($option = JSON_UNESCAPED_UNICODE) {
+	public function toJson($option = JSON_UNESCAPED_UNICODE)
+	{
 		return json_encode($this->all(), $option);
 	}
 
@@ -177,7 +192,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 *
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString()
+	{
 		return $this->toJson();
 	}
 
@@ -189,7 +205,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 * @return mixed data which can be serialized by <b>json_encode</b>,
 	 *               which is a value of any type other than a resource
 	 */
-	public function jsonSerialize() {
+	public function jsonSerialize()
+	{
 		return $this->items;
 	}
 
@@ -200,7 +217,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 * @see http://php.net/manual/en/serializable.serialize.php
 	 * @return string the string representation of the object or null
 	 */
-	public function serialize() {
+	public function serialize()
+	{
 		return serialize($this->items);
 	}
 
@@ -214,7 +232,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 *                           </p>
 	 * @return mixed|void
 	 */
-	public function unserialize($serialized) {
+	public function unserialize($serialized)
+	{
 		return $this->items = unserialize($serialized);
 	}
 
@@ -224,7 +243,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 * @param string $key
 	 * @return mixed
 	 */
-	public function __get($key) {
+	public function __get($key)
+	{
 		return $this->get($key);
 	}
 
@@ -232,9 +252,10 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 * Assigns a value to the specified data.
 	 *
 	 * @param string $key
-	 * @param mixed  $value
+	 * @param mixed $value
 	 */
-	public function __set($key, $value) {
+	public function __set($key, $value)
+	{
 		$this->set($key, $value);
 	}
 
@@ -244,7 +265,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 * @param string $key
 	 * @return bool
 	 */
-	public function __isset($key) {
+	public function __isset($key)
+	{
 		return $this->has($key);
 	}
 
@@ -253,7 +275,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 *
 	 * @param string $key
 	 */
-	public function __unset($key) {
+	public function __unset($key)
+	{
 		$this->forget($key);
 	}
 
@@ -268,7 +291,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 * @return bool true on success or false on failure.
 	 *              The return value will be casted to boolean if non-boolean was returned
 	 */
-	public function offsetExists($offset) {
+	public function offsetExists($offset)
+	{
 		return $this->has($offset);
 	}
 
@@ -281,7 +305,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 *                      The offset to unset.
 	 *                      </p>
 	 */
-	public function offsetUnset($offset) {
+	public function offsetUnset($offset)
+	{
 		if ($this->offsetExists($offset)) {
 			$this->forget($offset);
 		}
@@ -297,7 +322,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 *                      </p>
 	 * @return mixed Can return all value types
 	 */
-	public function offsetGet($offset) {
+	public function offsetGet($offset)
+	{
 		return $this->offsetExists($offset) ? $this->get($offset) : null;
 	}
 
@@ -313,7 +339,8 @@ class Fluent implements \ArrayAccess, \JsonSerializable, \Serializable, Arrayabl
 	 *                      The value to set.
 	 *                      </p>
 	 */
-	public function offsetSet($offset, $value) {
+	public function offsetSet($offset, $value)
+	{
 		$this->set($offset, $value);
 	}
 

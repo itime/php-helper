@@ -10,12 +10,14 @@ namespace Xin\Thinkphp\Validate;
 use think\Validate;
 use Xin\Thinkphp\Foundation\ServiceProvider;
 
-class ValidateServiceProvider extends ServiceProvider {
+class ValidateServiceProvider extends ServiceProvider
+{
 
 	/**
 	 * @inheritDoc
 	 */
-	public function register() {
+	public function register()
+	{
 		Validate::maker(function (Validate $v) {
 			$v->extend('alphaDash2', function ($value) use ($v) {
 				return $v->regex($value, '/^[A-Za-z0-9\.\-\_\\\]+$/');

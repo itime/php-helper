@@ -9,7 +9,8 @@ namespace Xin\Thinkphp\Notification\Message;
 
 use Xin\Contracts\Support\Arrayable;
 
-class WxTemplateMessage implements Arrayable {
+class WxTemplateMessage implements Arrayable
+{
 
 	/**
 	 * @var string
@@ -39,7 +40,8 @@ class WxTemplateMessage implements Arrayable {
 	/**
 	 * @return string
 	 */
-	public function getOpenid() {
+	public function getOpenid()
+	{
 		return $this->openid;
 	}
 
@@ -47,7 +49,8 @@ class WxTemplateMessage implements Arrayable {
 	 * @param string $openid
 	 * @return $this
 	 */
-	public function setOpenid($openid) {
+	public function setOpenid($openid)
+	{
 		$this->openid = $openid;
 
 		return $this;
@@ -56,7 +59,8 @@ class WxTemplateMessage implements Arrayable {
 	/**
 	 * @return string
 	 */
-	public function getTemplateId() {
+	public function getTemplateId()
+	{
 		return $this->templateId;
 	}
 
@@ -64,7 +68,8 @@ class WxTemplateMessage implements Arrayable {
 	 * @param string $templateId
 	 * @return $this
 	 */
-	public function setTemplateId($templateId) {
+	public function setTemplateId($templateId)
+	{
 		$this->templateId = $templateId;
 
 		return $this;
@@ -73,7 +78,8 @@ class WxTemplateMessage implements Arrayable {
 	/**
 	 * @return string
 	 */
-	public function getUrl() {
+	public function getUrl()
+	{
 		return $this->url;
 	}
 
@@ -81,7 +87,8 @@ class WxTemplateMessage implements Arrayable {
 	 * @param string $url
 	 * @return $this
 	 */
-	public function setUrl($url) {
+	public function setUrl($url)
+	{
 		$this->url = $url;
 
 		return $this;
@@ -90,7 +97,8 @@ class WxTemplateMessage implements Arrayable {
 	/**
 	 * @return array
 	 */
-	public function getMiniprogram() {
+	public function getMiniprogram()
+	{
 		return $this->miniprogram;
 	}
 
@@ -98,7 +106,8 @@ class WxTemplateMessage implements Arrayable {
 	 * @param array $miniprogram
 	 * @return $this
 	 */
-	public function setMiniprogram(array $miniprogram) {
+	public function setMiniprogram(array $miniprogram)
+	{
 		$this->miniprogram = $miniprogram;
 
 		return $this;
@@ -107,7 +116,8 @@ class WxTemplateMessage implements Arrayable {
 	/**
 	 * @return array
 	 */
-	public function getData() {
+	public function getData()
+	{
 		return $this->data;
 	}
 
@@ -115,7 +125,8 @@ class WxTemplateMessage implements Arrayable {
 	 * @param array $data
 	 * @return $this
 	 */
-	public function setData(array $data) {
+	public function setData(array $data)
+	{
 		$this->data = $data;
 
 		return $this;
@@ -124,7 +135,8 @@ class WxTemplateMessage implements Arrayable {
 	/**
 	 * @inheritDoc
 	 */
-	public function toArray() {
+	public function toArray()
+	{
 		$data = [
 			'touser' => $this->openid,
 			'template_id' => $this->templateId,

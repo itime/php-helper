@@ -10,7 +10,8 @@ use Xin\Wechat\EasyWechat\Work\ExternalContact\ContactWayClient;
 use Xin\Wechat\Exceptions\WechatInvalidConfigException;
 use Xin\Wechat\Exceptions\WechatNotConfigureException;
 
-class WechatManager implements WechatFactory {
+class WechatManager implements WechatFactory
+{
 
 	/**
 	 * @var array
@@ -22,14 +23,16 @@ class WechatManager implements WechatFactory {
 	 *
 	 * @param array $config
 	 */
-	public function __construct(array $config) {
+	public function __construct(array $config)
+	{
 		$this->config = $config;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function openPlatform($name = null, array $options = []) {
+	public function openPlatform($name = null, array $options = [])
+	{
 		$name = $name ?: $this->getDefault('open_platform');
 
 		$config = $this->getConfig("open_platform.{$name}");
@@ -48,7 +51,8 @@ class WechatManager implements WechatFactory {
 	 * @param array $options
 	 * @return \EasyWeChat\OpenPlatform\Application
 	 */
-	protected function factoryOpenPlatform($config, $options) {
+	protected function factoryOpenPlatform($config, $options)
+	{
 		$config = $this->checkApplicationConfig($config);
 
 		return $this->initApplication(
@@ -60,14 +64,16 @@ class WechatManager implements WechatFactory {
 	/**
 	 * @inheritDoc
 	 */
-	public function hasOpenPlatform($name = null) {
+	public function hasOpenPlatform($name = null)
+	{
 		return $this->hasConfig('open_platform' . ($name ?: $this->getDefault('open_platform')));
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function officialAccount($name = null, array $options = []) {
+	public function officialAccount($name = null, array $options = [])
+	{
 		$name = $name ?: $this->getDefault('open_platform');
 
 		$config = $this->getConfig("official_account.{$name}");
@@ -84,7 +90,8 @@ class WechatManager implements WechatFactory {
 	 * @param array $options
 	 * @return \EasyWeChat\OpenPlatform\Application
 	 */
-	protected function factoryOfficialAccount($config, $options) {
+	protected function factoryOfficialAccount($config, $options)
+	{
 		$config = $this->checkApplicationConfig($config);
 
 		return $this->initApplication(
@@ -96,14 +103,16 @@ class WechatManager implements WechatFactory {
 	/**
 	 * @inheritDoc
 	 */
-	public function hasOfficialAccount($name = null) {
+	public function hasOfficialAccount($name = null)
+	{
 		return $this->hasConfig('official_account' . ($name ?: $this->getDefault('official')));
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function miniProgram($name = null, array $options = []) {
+	public function miniProgram($name = null, array $options = [])
+	{
 		$name = $name ?: $this->getDefault('mini_program');
 
 		$config = $this->getConfig("mini_program.{$name}");
@@ -120,7 +129,8 @@ class WechatManager implements WechatFactory {
 	 * @param array $options
 	 * @return \EasyWeChat\OpenPlatform\Application
 	 */
-	protected function factoryMiniProgram($config, $options) {
+	protected function factoryMiniProgram($config, $options)
+	{
 		$config = $this->checkApplicationConfig($config);
 
 		return $this->initApplication(
@@ -132,7 +142,8 @@ class WechatManager implements WechatFactory {
 	/**
 	 * @inheritDoc
 	 */
-	public function hasMiniProgram($name = null) {
+	public function hasMiniProgram($name = null)
+	{
 		return $this->hasConfig('mini_program' . ($name ?: $this->getDefault('mini_program')));
 	}
 
@@ -142,7 +153,8 @@ class WechatManager implements WechatFactory {
 	 * @param array $config
 	 * @return array
 	 */
-	protected function checkApplicationConfig(array $config) {
+	protected function checkApplicationConfig(array $config)
+	{
 		if (!isset($config['app_id']) || empty($config['app_id'])) {
 			throw new WechatInvalidConfigException("wechat config 'app_id' not defined.");
 		}
@@ -163,7 +175,8 @@ class WechatManager implements WechatFactory {
 	/**
 	 * @inheritDoc
 	 */
-	public function work($name = null, array $options = []) {
+	public function work($name = null, array $options = [])
+	{
 		$name = $name ?: $this->getDefault('work');
 
 		$config = $this->getConfig("work.{$name}");
@@ -180,7 +193,8 @@ class WechatManager implements WechatFactory {
 	 * @param array $options
 	 * @return mixed
 	 */
-	protected function factoryWork($config, array $options = []) {
+	protected function factoryWork($config, array $options = [])
+	{
 		$config = array_merge($this->getConfig('defaults', []), $config);
 
 		$app = Factory::work($config);
@@ -194,14 +208,16 @@ class WechatManager implements WechatFactory {
 	/**
 	 * @inheritDoc
 	 */
-	public function hasWork($name = null) {
+	public function hasWork($name = null)
+	{
 		return $this->hasConfig('work' . ($name ?: $this->getDefault('work')));
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function openWork($name = null, array $options = []) {
+	public function openWork($name = null, array $options = [])
+	{
 		$name = $name ?: $this->getDefault('open_work');
 
 		$config = $this->getConfig("open_work.{$name}");
@@ -218,7 +234,8 @@ class WechatManager implements WechatFactory {
 	 * @param array $options
 	 * @return mixed
 	 */
-	protected function factoryOpenWork($config, array $options = []) {
+	protected function factoryOpenWork($config, array $options = [])
+	{
 		$config = array_merge($this->getConfig('defaults', []), $config);
 		$app = Factory::openWork($config);
 
@@ -228,16 +245,18 @@ class WechatManager implements WechatFactory {
 	/**
 	 * @inheritDoc
 	 */
-	public function hasOpenWork($name = null) {
+	public function hasOpenWork($name = null)
+	{
 		return $this->hasConfig('openworks' . ($name ?: $this->getDefault('openwork')));
 	}
 
 	/**
 	 * @param ServiceContainer $app
-	 * @param array            $options
+	 * @param array $options
 	 * @return mixed
 	 */
-	protected function initApplication(ServiceContainer $app, array $options) {
+	protected function initApplication(ServiceContainer $app, array $options)
+	{
 		//// 监听微信响应数据
 		//$app->events->addListener(HttpResponseCreated::class, function(HttpResponseCreated $event){
 		//	$response = $event->response;
@@ -261,7 +280,8 @@ class WechatManager implements WechatFactory {
 	/**
 	 * @return string
 	 */
-	protected function getDefault($type) {
+	protected function getDefault($type)
+	{
 		return Arr::get($this->config, "defaults.{$type}", 'default');
 	}
 
@@ -271,7 +291,8 @@ class WechatManager implements WechatFactory {
 	 * @param string|null $key
 	 * @return mixed
 	 */
-	public function getConfig($key = null, $default = null) {
+	public function getConfig($key = null, $default = null)
+	{
 		if (null === $key) {
 			return $this->config;
 		}
@@ -285,7 +306,8 @@ class WechatManager implements WechatFactory {
 	 * @param string $key
 	 * @return bool
 	 */
-	public function hasConfig($key = null) {
+	public function hasConfig($key = null)
+	{
 		if ($key == null) {
 			return !empty($this->config);
 		}

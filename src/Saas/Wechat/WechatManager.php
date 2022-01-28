@@ -13,7 +13,8 @@ use Xin\Contracts\Saas\Wechat\WechatType;
 use Xin\Wechat\Exceptions\WechatNotConfigureException;
 use Xin\Wechat\WechatManager as BaseWechatManager;
 
-class WechatManager extends BaseWechatManager implements Repository {
+class WechatManager extends BaseWechatManager implements Repository
+{
 
 	/**
 	 * @var ConfigProvider
@@ -53,7 +54,8 @@ class WechatManager extends BaseWechatManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct(array $config, ConfigProvider $configProvider) {
+	public function __construct(array $config, ConfigProvider $configProvider)
+	{
 		parent::__construct($config);
 
 		$this->configProvider = $configProvider;
@@ -62,7 +64,8 @@ class WechatManager extends BaseWechatManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function openPlatform($name = null, array $options = []) {
+	public function openPlatform($name = null, array $options = [])
+	{
 		$default = $options['default'] ?? false;
 
 		if (!$default) {
@@ -81,7 +84,8 @@ class WechatManager extends BaseWechatManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function openPlatformOfId($id, array $options = []) {
+	public function openPlatformOfId($id, array $options = [])
+	{
 		$config = $this->configProvider->retrieveById($id, WechatType::OPEN_PLATFORM);
 
 		if (empty($config)) {
@@ -94,7 +98,8 @@ class WechatManager extends BaseWechatManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function openPlatformOfAppId($appId, $name = null, array $options = []) {
+	public function openPlatformOfAppId($appId, $name = null, array $options = [])
+	{
 		$config = $this->configProvider->retrieveByAppId($appId, WechatType::OFFICIAL_ACCOUNT, $name);
 
 		if (empty($config)) {
@@ -107,7 +112,8 @@ class WechatManager extends BaseWechatManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function officialAccount($name = null, array $options = []) {
+	public function officialAccount($name = null, array $options = [])
+	{
 		$default = $options['default'] ?? false;
 
 		if (!$default) {
@@ -126,7 +132,8 @@ class WechatManager extends BaseWechatManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function officialAccountOfId($id, array $options = []) {
+	public function officialAccountOfId($id, array $options = [])
+	{
 		$config = $this->configProvider->retrieveById($id, WechatType::OFFICIAL_ACCOUNT);
 
 		if (empty($config)) {
@@ -139,7 +146,8 @@ class WechatManager extends BaseWechatManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function officialAccountOfAppId($appId, $name = null, array $options = []) {
+	public function officialAccountOfAppId($appId, $name = null, array $options = [])
+	{
 		$config = $this->configProvider->retrieveByAppId($appId, WechatType::OFFICIAL_ACCOUNT, $name);
 
 		if (empty($config)) {
@@ -152,7 +160,8 @@ class WechatManager extends BaseWechatManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function miniProgram($name = null, array $options = []) {
+	public function miniProgram($name = null, array $options = [])
+	{
 		$default = $options['default'] ?? false;
 
 		if (!$default) {
@@ -171,7 +180,8 @@ class WechatManager extends BaseWechatManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function miniProgramOfId($id, array $options = []) {
+	public function miniProgramOfId($id, array $options = [])
+	{
 		$config = $this->configProvider->retrieveById($id, WechatType::MINI_PROGRAM);
 
 		if (empty($config)) {
@@ -184,7 +194,8 @@ class WechatManager extends BaseWechatManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function miniProgramOfAppId($appId, $name = null, array $options = []) {
+	public function miniProgramOfAppId($appId, $name = null, array $options = [])
+	{
 		$config = $this->configProvider->retrieveByAppId($appId, WechatType::MINI_PROGRAM, $name);
 
 		if (empty($config)) {
@@ -197,7 +208,8 @@ class WechatManager extends BaseWechatManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function work($name = null, array $options = []) {
+	public function work($name = null, array $options = [])
+	{
 		$default = $options['default'] ?? false;
 
 		if (!$default) {
@@ -218,7 +230,8 @@ class WechatManager extends BaseWechatManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function workOfId($id, array $options = []) {
+	public function workOfId($id, array $options = [])
+	{
 		$config = $this->configProvider->retrieveById($id, WechatType::WORK);
 
 		if (empty($config)) {
@@ -231,7 +244,8 @@ class WechatManager extends BaseWechatManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function workOfAppId($appId, $name = null, array $options = []) {
+	public function workOfAppId($appId, $name = null, array $options = [])
+	{
 		$config = $this->configProvider->retrieveByAppId($appId, WechatType::WORK, $name);
 
 		if (empty($config)) {
@@ -244,7 +258,8 @@ class WechatManager extends BaseWechatManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function openWork($name = null, array $options = []) {
+	public function openWork($name = null, array $options = [])
+	{
 		$default = $options['default'] ?? false;
 
 		if (!$default) {
@@ -265,7 +280,8 @@ class WechatManager extends BaseWechatManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function openWorkOfId($id, array $options = []) {
+	public function openWorkOfId($id, array $options = [])
+	{
 		$config = $this->configProvider->retrieveById($id, WechatType::OPEN_WORK);
 
 		if (empty($config)) {
@@ -278,7 +294,8 @@ class WechatManager extends BaseWechatManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function openWorkOfAppId($appId, $name = null, array $options = []) {
+	public function openWorkOfAppId($appId, $name = null, array $options = [])
+	{
 		$config = $this->configProvider->retrieveByAppId($appId, WechatType::OPEN_WORK, $name);
 
 		if (empty($config)) {
@@ -291,42 +308,48 @@ class WechatManager extends BaseWechatManager implements Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function shouldUseOfAppId($appId) {
+	public function shouldUseOfAppId($appId)
+	{
 		$this->lockAppId = $appId;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function shouldUseOfOpenPlatformId($id) {
+	public function shouldUseOfOpenPlatformId($id)
+	{
 		$this->lockOpenPlatformId = $id;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function shouldUseOfOfficialAccountOfId($id) {
+	public function shouldUseOfOfficialAccountOfId($id)
+	{
 		$this->lockOfficialAccountId = $id;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function shouldUseMiniProgramOfId($id) {
+	public function shouldUseMiniProgramOfId($id)
+	{
 		$this->lockMiniProgramId = $id;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function shouldUseWorkId($id) {
+	public function shouldUseWorkId($id)
+	{
 		$this->lockWorkId = $id;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function shouldUseOpenWorkId($id) {
+	public function shouldUseOpenWorkId($id)
+	{
 		$this->lockOpenWorkId = $id;
 	}
 

@@ -11,7 +11,8 @@ use Carbon\Carbon;
 use Psr\SimpleCache\CacheInterface;
 use Xin\Capsule\WithCache;
 
-class WechatUserSessionManager {
+class WechatUserSessionManager
+{
 
 	use WithCache;
 
@@ -28,7 +29,8 @@ class WechatUserSessionManager {
 	/**
 	 * @param CacheInterface|null $cache
 	 */
-	public function __construct(CacheInterface $cache = null) {
+	public function __construct(CacheInterface $cache = null)
+	{
 		$this->cache = $cache;
 	}
 
@@ -39,7 +41,8 @@ class WechatUserSessionManager {
 	 * @noinspection PhpUnhandledExceptionInspection
 	 * @noinspection PhpDocMissingThrowsInspection
 	 */
-	public function get($openid) {
+	public function get($openid)
+	{
 		return $this->getMemory($openid, function () use ($openid) {
 			$key = $this->getCacheKey($openid);
 
@@ -49,11 +52,12 @@ class WechatUserSessionManager {
 
 	/**
 	 * 直接从内存中获取
-	 * @param string   $openid
+	 * @param string $openid
 	 * @param callable $resolver
 	 * @return string
 	 */
-	protected function getMemory($openid, $resolver = null) {
+	protected function getMemory($openid, $resolver = null)
+	{
 		if (isset($this->memoryData[$openid])) {
 			$item = $this->memoryData[$openid];
 			if ($item['ttl'] <= now()->getTimestamp()) {
@@ -70,12 +74,13 @@ class WechatUserSessionManager {
 	 * 设置
 	 * @param string $openid
 	 * @param string $sessionKey
-	 * @param mixed  $ttl
+	 * @param mixed $ttl
 	 * @return void
 	 * @noinspection PhpDocMissingThrowsInspection
 	 * @noinspection PhpUnhandledExceptionInspection
 	 */
-	public function set($openid, $sessionKey, $ttl = null) {
+	public function set($openid, $sessionKey, $ttl = null)
+	{
 		$ttl = $ttl ?: now()->addSeconds(7000);
 		$ttl = is_int($ttl) ? Carbon::createFromTimestamp($ttl) : $ttl;
 
@@ -96,7 +101,8 @@ class WechatUserSessionManager {
 	 * @noinspection PhpDocMissingThrowsInspection
 	 * @noinspection PhpUnhandledExceptionInspection
 	 */
-	public function forget($openid) {
+	public function forget($openid)
+	{
 		$key = $this->getCacheKey($openid);
 		$this->cache()->delete($key);
 	}
@@ -105,7 +111,8 @@ class WechatUserSessionManager {
 	 * @param string $name
 	 * @return string
 	 */
-	protected function getCacheKey($name) {
+	protected function getCacheKey($name)
+	{
 		return $this->prefix . $name;
 	}
 

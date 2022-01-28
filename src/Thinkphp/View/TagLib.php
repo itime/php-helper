@@ -21,7 +21,8 @@ use Exception;
  * @subpackage  Template
  * @author    liu21st <liu21st@gmail.com>
  */
-class TagLib {
+class TagLib
+{
 
 	/**
 	 * 标签库定义XML文件
@@ -84,7 +85,8 @@ class TagLib {
 	 * @access public
 	 * @param Template $template 模板引擎对象
 	 */
-	public function __construct(Template $template) {
+	public function __construct(Template $template)
+	{
 		$this->tpl = $template;
 	}
 
@@ -97,7 +99,8 @@ class TagLib {
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function parseTag(string &$content, string $lib = ''): void {
+	public function parseTag(string &$content, string $lib = ''): void
+	{
 		$tags = [];
 		$lib = $lib ? strtolower($lib) . ':' : '';
 
@@ -186,7 +189,8 @@ class TagLib {
 	 *
 	 * @param string $content
 	 */
-	protected function parseTagComplete(&$content) {
+	protected function parseTagComplete(&$content)
+	{
 	}
 
 	/**
@@ -194,7 +198,8 @@ class TagLib {
 	 * @param string $content
 	 * @return array
 	 */
-	protected function parseNodes($regex, &$content) {
+	protected function parseNodes($regex, &$content)
+	{
 		$nodes = [];
 		if (preg_match_all($regex, $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
 			$right = [];
@@ -228,10 +233,11 @@ class TagLib {
 	 *
 	 * @access public
 	 * @param array|string $tags 标签名
-	 * @param boolean      $close 是否为闭合标签
+	 * @param boolean $close 是否为闭合标签
 	 * @return string
 	 */
-	public function getRegex($tags, bool $close): string {
+	public function getRegex($tags, bool $close): string
+	{
 		$begin = $this->tpl->getConfig('taglib_begin');
 		$end = $this->tpl->getConfig('taglib_end');
 		$single = strlen(ltrim($begin, '\\')) == 1 && strlen(ltrim($end, '\\')) == 1 ? true : false;
@@ -266,7 +272,8 @@ class TagLib {
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function parseAttr(string $str, string $name, string $alias = ''): array {
+	public function parseAttr(string $str, string $name, string $alias = ''): array
+	{
 		$regex = '/\s+(?>(?P<name>[\w-]+)\s*)=(?>\s*)([\"\'])(?P<value>(?:(?!\\2).)*)\\2/is';
 		$result = [];
 
@@ -332,7 +339,8 @@ class TagLib {
 	 * @param string $condition 表达式标签内容
 	 * @return string
 	 */
-	public function parseCondition(string $condition): string {
+	public function parseCondition(string $condition): string
+	{
 		if (strpos($condition, ':')) {
 			$condition = ' ' . substr(strstr($condition, ':'), 1);
 		}
@@ -350,7 +358,8 @@ class TagLib {
 	 * @param string $name 变量描述
 	 * @return string
 	 */
-	public function autoBuildVar(string &$name): string {
+	public function autoBuildVar(string &$name): string
+	{
 		$flag = substr($name, 0, 1);
 
 		if (':' == $flag) {
@@ -379,7 +388,8 @@ class TagLib {
 	 * @access public
 	 * @return array
 	 */
-	public function getTags(): array {
+	public function getTags(): array
+	{
 		return $this->tags;
 	}
 

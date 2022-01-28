@@ -15,17 +15,19 @@ use think\Validate;
  *
  * @mixin Requestable
  */
-trait HasValidate {
+trait HasValidate
+{
 
 	/**
 	 * 验证数据
 	 *
 	 * @param string|array $name 要获取的参数名称
 	 * @param string|array $validate 验证器名或者验证规则数组
-	 * @param bool         $batch 是否批量验证
+	 * @param bool $batch 是否批量验证
 	 * @return array
 	 */
-	public function validate($name, $validate, bool $batch = false) {
+	public function validate($name, $validate, bool $batch = false)
+	{
 		if (!is_array($validate)) {
 			$validate = [
 				'rules' => $validate,
@@ -79,7 +81,8 @@ trait HasValidate {
 	 * @param string $field
 	 * @return array
 	 */
-	public function idsWithValid($field = 'ids') {
+	public function idsWithValid($field = 'ids')
+	{
 		$ids = $this->ids($field);
 		if (empty($ids)) {
 			throw new ValidateException("param {$field} invalid.");
@@ -94,7 +97,8 @@ trait HasValidate {
 	 * @param string $field
 	 * @return int
 	 */
-	public function idWithValid($field = 'id') {
+	public function idWithValid($field = 'id')
+	{
 		$id = $this->param("{$field}/d");
 		if ($id < 1) {
 			throw new ValidateException("param {$field} invalid.");
@@ -107,11 +111,12 @@ trait HasValidate {
 	 * 获取整形数据并验证
 	 *
 	 * @param string $field
-	 * @param array  $array
-	 * @param mixed  $default
+	 * @param array $array
+	 * @param mixed $default
 	 * @return mixed
 	 */
-	public function intWithValidArray($field, $array, $default = null) {
+	public function intWithValidArray($field, $array, $default = null)
+	{
 		$int = $this->param("{$field}/d", $default);
 		if (!in_array($int, $array)) {
 			throw new ValidateException("param {$field} invalid.");
@@ -124,11 +129,12 @@ trait HasValidate {
 	 * 获取字符串数据并验证
 	 *
 	 * @param string $field
-	 * @param mixed  $default
+	 * @param mixed $default
 	 * @param string $filter
 	 * @return int
 	 */
-	public function stringWithValid($field, $default = null, $filter = '') {
+	public function stringWithValid($field, $default = null, $filter = '')
+	{
 		$value = $this->param("{$field}", $default, $filter);
 
 		if (empty($value)) {

@@ -2,7 +2,7 @@
 	"name":"xin/helper",
 	"description":"PHP项目日常开发必备基础库，数组工具类、字符串工具类、数字工具类、函数工具类、服务器工具类、加密工具类",
 	"type":"library",
-	"version":"4.3.7",
+	"version":"4.4.0",
 	"authors":[
 		{
 			"name":"晋",
@@ -15,7 +15,7 @@
 		"nesbot/carbon":"^2.0",
 		"swiftmailer/swiftmailer":"^6.2",
 		"doctrine/inflector":"^2.0",
-		"ramsey/uuid":"^3.5",
+		"ramsey/uuid":"^3.5 | ^4.0",
 		"opis/closure":"^3.6",
 		"league/pipeline":"^1.0",
 		"ext-json":"*",
@@ -48,6 +48,11 @@
 		"overtrue/wechat":"微信开发必备SDK包",
 		"overtrue/easy-sms": "一款满足你的多种发送需求的短信发送组件"
 	},
-	"minimum-stability":"stable",
-	"prefer-stable":true
+	"minimum-stability":"dev",
+	"prefer-stable":true,
+	"config": {
+		"allow-plugins": {
+			"easywechat-composer/easywechat-composer": false
+		}
+	}
 }

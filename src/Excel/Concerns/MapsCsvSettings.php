@@ -4,7 +4,8 @@ namespace Xin\Excel\Concerns;
 
 use Illuminate\Support\Arr;
 
-trait MapsCsvSettings {
+trait MapsCsvSettings
+{
 
 	/**
 	 * @var string
@@ -54,7 +55,8 @@ trait MapsCsvSettings {
 	/**
 	 * @param array $config
 	 */
-	public static function applyCsvSettings(array $config) {
+	public static function applyCsvSettings(array $config)
+	{
 		static::$delimiter = Arr::get($config, 'delimiter', static::$delimiter);
 		static::$enclosure = Arr::get($config, 'enclosure', static::$enclosure);
 		static::$lineEnding = Arr::get($config, 'line_ending', static::$lineEnding);
