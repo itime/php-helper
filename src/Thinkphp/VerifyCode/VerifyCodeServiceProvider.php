@@ -28,7 +28,7 @@ class VerifyCodeServiceProvider extends ServiceProvider
 			VerifyCodeFactory::class => VerifyCodeManager::class,
 			VerifyCodeManager::class => function () {
 				$manager = new VerifyCodeManager(
-					$this->app->config->get('sms')
+					$this->app->config->get('verify_code')
 				);
 				$manager->setContainer($this->app);
 
