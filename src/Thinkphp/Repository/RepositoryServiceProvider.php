@@ -26,6 +26,7 @@ class RepositoryServiceProvider extends ServiceProvider
 	{
 		$this->app->bind([
 			'repository' => RepositoryFactory::class,
+			RepositoryFactory::class => RepositoryManager::class,
 			RepositoryManager::class => function () {
 				$config = array_merge(
 					[

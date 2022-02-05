@@ -45,7 +45,7 @@ class RobotManager extends Manager implements Factory
 	/**
 	 * @inerhitDoc
 	 */
-	protected function getDefaultDriver()
+	public function getDefaultDriver()
 	{
 		return $this->getConfig('defaults.robot', 'default');
 	}
@@ -53,7 +53,7 @@ class RobotManager extends Manager implements Factory
 	/**
 	 * @inerhitDoc
 	 */
-	protected function setDefaultDriver($name)
+	public function setDefaultDriver($name)
 	{
 		$this->setConfig('defaults.robot', $name);
 	}

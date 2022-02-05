@@ -147,21 +147,32 @@ abstract class Manager
 	 * 获取默认驱动
 	 * @return string
 	 */
-	abstract protected function getDefaultDriver();
+	public function getDefaultDriver()
+	{
+		return $this->getConfig('defaults.driver', 'default');
+	}
 
 
 	/**
 	 * 设置默认驱动
 	 * @param string $name
 	 */
-	abstract protected function setDefaultDriver($name);
+	public function setDefaultDriver($name)
+	{
+		$this->setConfig('defaults.driver', $name);
+	}
 
 	/**
 	 * 获取驱动配置
 	 * @param string $name
 	 * @return array|\ArrayAccess|mixed
 	 */
-	abstract public function getDriverConfig($name);
+	public function getDriverConfig($name)
+	{
+		$key = 'drivers';
+
+		return $this->getConfig($name ? "{$key}.{$name}" : $key);
+	}
 
 	/**
 	 * 获取所有已创建的驱动实例

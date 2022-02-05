@@ -348,12 +348,19 @@ final class Str
 		];
 
 		$poolStr = '';
-		if (0 == $type) $poolStr = $pool[0];
-		if (1 == $type) $poolStr = $pool[1];
-		if (2 == $type) $poolStr = $pool[2];
-		if (3 == $type) $poolStr = $pool[0] . $pool[1];
-		if (4 == $type) $poolStr = $pool[1] . $pool[2];
-		if (5 == $type) $poolStr = $pool[0] . $pool[1] . $pool[2];
+		if (0 == $type) {
+			$poolStr = $pool[0];
+		} elseif (1 == $type) {
+			$poolStr = $pool[1];
+		} elseif (2 == $type) {
+			$poolStr = $pool[2];
+		} elseif (3 == $type) {
+			$poolStr = $pool[0] . $pool[1];
+		} elseif (4 == $type) {
+			$poolStr = $pool[1] . $pool[2];
+		} elseif (5 == $type) {
+			$poolStr = $pool[0] . $pool[1] . $pool[2];
+		}
 
 		return self::substr(str_shuffle(str_repeat($poolStr, $length)), 0, $length);
 	}

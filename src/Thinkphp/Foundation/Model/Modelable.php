@@ -7,8 +7,13 @@
 
 namespace Xin\Thinkphp\Foundation\Model;
 
+use think\db\Query;
+use Xin\Support\SQL;
+
 /**
  * @mixin \think\Model
+ * @method self plainList()
+ * @method self search(array $data)
  */
 trait Modelable
 {
@@ -184,6 +189,44 @@ trait Modelable
 	public static function getPublicFields()
 	{
 		return static::getPlainFields();
+	}
+
+	/**
+	 * 获取要搜索的字段列表
+	 * @return array
+	 */
+	public static function getSearchFields()
+	{
+		return static::getPlainFields();
+	}
+
+	/**
+	 * @param \think\db\Query $query
+	 */
+	public function scopePlainList(Query $query)
+	{
+		$query->field(static::getPlainFields());
+	}
+
+	/**
+	 * @param array $data
+	 * @return void
+	 */
+	public function scopeSearch(Query $query, $data)
+	{
+		$data = array_filter($data, 'filled');
+		$query->withSearch(static::getSearchFields(), $data);
+	}
+
+	/**
+	 * 标题搜索器
+	 * @param Query $query
+	 * @param string $value
+	 * @return void
+	 */
+	public function searchKeywordsAttr(Query $query, $value)
+	{
+		$query->where('title', 'like', SQL::keywords($value));
 	}
 
 	/**

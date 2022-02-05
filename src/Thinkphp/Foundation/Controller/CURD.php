@@ -1,153 +1,208 @@
 <?php
+/**
+ * Talents come from diligence, and knowledge is gained by accumulation.
+ *
+ * @author: 晋<657306123@qq.com>
+ */
 
 namespace Xin\Thinkphp\Foundation\Controller;
 
-use Closure;
-use Xin\Contracts\Repository\Repository;
+use think\Model;
+use think\model\Collection;
+use Xin\Contracts\Repository\Factory as RepositoryFactory;
 use Xin\Thinkphp\Facade\Hint;
-use Xin\Thinkphp\Http\HasValidate;
+use Xin\Thinkphp\Http\Requestable;
+use Xin\Thinkphp\Repository\Repository;
 
 /**
- * @property HasValidate $request
+ * @method mixed filterable($input, callable $next)
+ * @method mixed detailable($input, callable $next)
+ * @method mixed validateable($input, callable $next)
+ * @method mixed storeable($input, callable $next)
+ * @method mixed showable($input, callable $next)
+ * @method mixed updateable($input, callable $next)
+ * @method mixed deleteable($input, callable $next)
+ * @method mixed recoveryable($input, callable $next)
+ * @method mixed restoreable($input, callable $next)
+ * @property Requestable $request
  */
 trait CURD
 {
 
 	/**
-	 * 列表
+	 * 返回首页数据
+	 * @return mixed
+	 * @noinspection PhpReturnDocTypeMismatchInspection
+	 */
+	public function index()
+	{
+		$search = $this->request->param();
+
+		$data = $this->attachHandler('filterable')
+			->repository()
+			->paginate(
+				$search,
+				$this->property('indexWith', []),
+				$this->request->paginate()
+			);
+
+		return $this->renderIndex($data);
+	}
+
+	/**
+	 * 渲染首页数据
+	 * @param Collection $data
 	 * @return \think\Response
 	 */
-	public function lists()
+	protected function renderIndex($data)
 	{
-		$this->attachHandler('filterable');
-
-		$data = $this->repository()->paginate();
-
 		return Hint::result($data);
 	}
 
 	/**
-	 * 详情
-	 * @return \think\Response
+	 * 返回详情数据
+	 * @return mixed
+	 * @noinspection PhpReturnDocTypeMismatchInspection
 	 */
 	public function detail()
 	{
 		$id = $this->request->idWithValid();
 
-		$this->attachHandler('detailable');
+		$info = $this->attachHandler('detailable')
+			->repository()
+			->detailById($id);
 
-		$info = $this->repository()->detail($id);
+		return $this->renderDetail($info);
+	}
 
+	/**
+	 * 渲染详情数据
+	 * @param Model $info
+	 * @return \think\Response
+	 */
+	protected function renderDetail($info)
+	{
 		return Hint::result($info);
 	}
 
 	/**
-	 * 创建数据
+	 * 创建数据操作
 	 * @return \think\Response
 	 */
-	public function store()
+	public function create()
 	{
-		$this->attachHandler('validateable');
+		$data = $this->request->param();
 
-		$this->attachHandler('storeable');
+		$info = $this->attachHandler([
+			'validateable', 'storeable'
+		])
+			->repository()
+			->store($data);
 
-		$info = $this->repository()->store(
-			$this->request->param()
-		);
-
-		return Hint::success('创建成功！', $info);
+		return Hint::success('创建成功！', null, $info);
 	}
 
 	/**
-	 * 显示数据
-	 * @return \think\Response
-	 */
-	public function show()
-	{
-		$id = $this->request->idWithValid();
-
-		$this->attachHandler('showable');
-
-		$info = $this->repository()->show($id);
-
-		return Hint::result($info);
-	}
-
-	/**
-	 * 更新数据
+	 * 更新数据操作
 	 * @return \think\Response
 	 */
 	public function update()
 	{
 		$id = $this->request->idWithValid();
 
-		$this->attachHandler('validateable');
-		$this->attachHandler('updateable');
+		$data = $this->request->param();
+		$info = $this->attachHandler([
+			'validateable', 'updateable'
+		])->repository()->updateById($id, $data);
 
-		$info = $this->repository()->update($id, $request->input());
-
-		return Hint::success('保存成功！', $info);
+		return Hint::success('保存成功！', null, $info);
 	}
 
 	/**
-	 * 删除数据
+	 * 删除/回收数据操作
 	 * @return \think\Response
 	 */
 	public function delete()
 	{
 		$ids = $this->request->idsWithValid();
+		$isForce = $this->request->param('force/d', 0);
 
-		$this->attachHandler('deleteable');
+		if ($isForce) {
+			$result = $this->attachHandler('deleteable')
+				->repository()->deleteByIdList($ids);
+		} else {
+			$result = $this->attachHandler('recoveryable')
+				->repository()->recoveryByIdList($ids);
+		}
 
-		$result = $this->repository()->delete($ids, true);
-
-		return Hint::success('删除成功！', $result);
+		return Hint::success('删除成功！', null, $result);
 	}
 
 	/**
-	 * 回收数据
-	 * @return \think\Response
-	 */
-	public function recovery()
-	{
-		$ids = $this->request->idsWithValid();
-
-		$this->attachHandler('recoveryable');
-
-		$result = $this->repository()->delete($ids, false);
-
-		return Hint::success('删除成功！', $result);
-	}
-
-	/**
-	 * 恢复数据
 	 * @return \think\Response
 	 */
 	public function restore()
 	{
 		$ids = $this->request->idsWithValid();
 
-		$this->attachHandler('restoreable');
+		$result = $this->attachHandler('restoreable')
+			->repository()->restoreByIdList($ids);
 
-		$result = $this->repository()->restore($ids);
-
-		return Hint::success('恢复成功！', $result);
+		return Hint::success('恢复成功！', null, $result);
 	}
 
 	/**
-	 * @param string $name
-	 * @return void
+	 * @param string|array $scenes
+	 * @return $this
 	 */
-	protected function attachHandler($name)
+	protected function attachHandler($scenes)
 	{
-		if (method_exists($this, $name)) {
-			$this->repository()->$name(Closure::fromCallable([$this, $name]));
+		$scenes = is_array($scenes) ? $scenes : [$scenes];
+		$thisRef = new \ReflectionClass($this);
+
+		$repository = $this->repository();
+		foreach ($scenes as $scene) {
+			if ($thisRef->hasMethod($scene)) {
+				$method = $thisRef->getMethod($scene);
+				$method->setAccessible(true);
+				$repository->$scene($method->getClosure($this));
+			}
 		}
+
+		return $this;
 	}
 
 	/**
 	 * @return Repository
 	 */
-	abstract protected function repository();
+	protected function repository(): Repository
+	{
+		$repository = $this->repositoryTo();
+		if ($repository instanceof Repository) {
+			return $repository;
+		}
 
+		return app(RepositoryFactory::class)->repository($repository);
+	}
+
+	/**
+	 * @return string|\Xin\Contracts\Repository\Repository
+	 */
+	abstract protected function repositoryTo();
+
+	/**
+	 * 获取属性
+	 *
+	 * @param string $property
+	 * @param mixed $default
+	 * @return mixed
+	 */
+	protected function property($property, $default = null)
+	{
+		if (property_exists($this, $property)) {
+			return $this->{$property};
+		}
+
+		return $default;
+	}
 }

@@ -4,6 +4,7 @@ namespace Xin\Support\Traits;
 
 use Carbon\Carbon;
 use DateInterval;
+use DateTime;
 use DateTimeInterface;
 
 trait InteractsWithTime
@@ -52,6 +53,28 @@ trait InteractsWithTime
 		}
 
 		return $delay;
+	}
+
+	/**
+	 * 解析TTL
+	 * @param mixed $ttl
+	 * @return int
+	 */
+	protected function parseTTL($ttl)
+	{
+		$ttl = $this->parseDateInterval($ttl);
+
+		if ($ttl === null) {
+			$ttl = 0;
+		} elseif ($ttl instanceof DateTimeInterface) {
+			$ttl = $ttl->getTimestamp() - $this->currentTime();
+		} elseif ($ttl instanceof DateInterval) {
+			$ttl = DateTime::createFromFormat('U', (string)$this->currentTime())
+					->add($ttl)
+					->format('U') - $this->currentTime();
+		}
+
+		return (int)$ttl;
 	}
 
 	/**

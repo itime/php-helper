@@ -48,7 +48,7 @@ class SmsManager extends Manager implements Factory
 	/**
 	 * @inerhitDoc
 	 */
-	protected function getDefaultDriver()
+	public function getDefaultDriver()
 	{
 		return $this->getConfig('defaults.channel', 'default');
 	}
@@ -56,7 +56,7 @@ class SmsManager extends Manager implements Factory
 	/**
 	 * @inerhitDoc
 	 */
-	protected function setDefaultDriver($name)
+	public function setDefaultDriver($name)
 	{
 		return $this->getConfig('defaults.channel', 'default');
 	}

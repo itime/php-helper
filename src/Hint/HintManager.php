@@ -79,7 +79,7 @@ class HintManager extends Manager implements HintFactory
 	/**
 	 * @inerhitDoc
 	 */
-	protected function getDefaultDriver()
+	public function getDefaultDriver()
 	{
 		if (is_callable($this->autoResolverCallback)) {
 			return call_user_func($this->autoResolverCallback);
@@ -91,11 +91,14 @@ class HintManager extends Manager implements HintFactory
 	/**
 	 * @inerhitDoc
 	 */
-	protected function setDefaultDriver($name)
+	public function setDefaultDriver($name)
 	{
 		$this->setConfig('defaults.hint', $name);
 	}
 
+	/**
+	 * @inerhitDoc
+	 */
 	public function getDriverConfig($name)
 	{
 		return $this->getConfig($name ? "hints.{$name}" : 'hints');

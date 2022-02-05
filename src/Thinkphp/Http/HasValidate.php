@@ -96,8 +96,21 @@ trait HasValidate
 	 *
 	 * @param string $field
 	 * @return int
+	 * @see validId alias
 	 */
 	public function idWithValid($field = 'id')
+	{
+		return $this->validId($field);
+	}
+
+	/**
+	 * 获取ID并验证
+	 *
+	 * @param string $field
+	 * @return int
+	 * @see validId alias
+	 */
+	public function validId($field = 'id')
 	{
 		$id = $this->param("{$field}/d");
 		if ($id < 1) {
