@@ -13,6 +13,7 @@ use Xin\Support\SQL;
 /**
  * @mixin \think\Model
  * @method self plainList()
+ * @method self simple()
  * @method self search(array $data)
  */
 trait Modelable
@@ -30,7 +31,7 @@ trait Modelable
 	 */
 	public static function getList($query = [], $options = [])
 	{
-		return static::newPlainQuery($query, $options)->select();
+		return static::plainQuery($query, $options)->select();
 	}
 
 	/**
@@ -45,7 +46,7 @@ trait Modelable
 	 */
 	public static function getPaginate($query, $options = [], $listRows = 15, $simple = false)
 	{
-		return static::newPlainQuery($query, $options)->paginate($listRows, $simple);
+		return static::plainQuery($query, $options)->paginate($listRows, $simple);
 	}
 
 	/**
@@ -58,9 +59,9 @@ trait Modelable
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function getPlain($query, $options = [])
+	public static function getSimpleInfo($query, $options = [])
 	{
-		$info = static::newPlainQuery($query, $options)->find();
+		$info = static::plainQuery($query, $options)->find();
 
 		return static::resolvePlain($info, $options);
 	}
@@ -75,11 +76,43 @@ trait Modelable
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public static function getPlainById($id, $options = [])
+	public static function getSimpleInfoById($id, $options = [])
 	{
-		$info = static::newPlainQuery(null, $options)->find($id);
+		$info = static::plainQuery(null, $options)->find($id);
 
 		return static::resolvePlain($info, $options);
+	}
+
+	/**
+	 * 获取简单的信息数据
+	 *
+	 * @param mixed $query
+	 * @param array $options
+	 * @return self
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
+	 * @deprecated
+	 */
+	public static function getPlain($query, $options = [])
+	{
+		return self::getSimpleInfo($query, $options);
+	}
+
+	/**
+	 * 获取简单的信息数据
+	 *
+	 * @param int $id
+	 * @param array $options
+	 * @return self
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
+	 * @deprecated
+	 */
+	public static function getPlainById($id, $options = [])
+	{
+		return self::getSimpleInfoById($id, $options);
 	}
 
 	/**
@@ -145,41 +178,24 @@ trait Modelable
 	}
 
 	/**
-	 * 解析基础查询对象
+	 * 获取列表要查询的字段列表，一般用于接口列表查询
 	 *
-	 * @param mixed $query
-	 * @param array $options
-	 * @return \think\db\Query|\think\Model
+	 * @return array
 	 */
-	public static function newPlainQuery($query = null, $options = [])
+	public static function getSimpleFields()
 	{
-		$fields = static::getPlainFields();
-		if (isset($options['field'])) {
-			if (is_callable($options['field'])) {
-				$fields = $options['field']($fields);
-			} else {
-				$fields = $options['field'];
-			}
-			unset($options['field']);
-		}
-
-		$newQuery = static::field($fields);
-
-		if ($query) {
-			$newQuery->where($query);
-		}
-
-		return static::applyOptions($newQuery, $options);
+		return [];
 	}
 
 	/**
 	 * 获取列表要查询的字段列表，一般用于接口列表查询
 	 *
 	 * @return array
+	 * @deprecated
 	 */
 	public static function getPlainFields()
 	{
-		return [];
+		return self::getSimpleFields();
 	}
 
 	/**
@@ -197,11 +213,31 @@ trait Modelable
 	 */
 	public static function getSearchFields()
 	{
-		return static::getPlainFields();
+		$allowSearchFields = static::getPlainFields();
+
+		$keywordField = static::getSearchKeywordParameter();
+		if ($keywordField) {
+			return array_merge($allowSearchFields, is_array($keywordField) ? [
+				$keywordField[0] => $keywordField[1]
+			] : [$keywordField]);
+		}
+
+		return $allowSearchFields;
 	}
 
 	/**
+	 * 获取关键字搜索参数
+	 * @return string
+	 */
+	public static function getSearchKeywordParameter()
+	{
+		return "keywords";
+	}
+
+	/**
+	 * 简单数据查询作用域
 	 * @param \think\db\Query $query
+	 * @deprecated
 	 */
 	public function scopePlainList(Query $query)
 	{
@@ -209,12 +245,23 @@ trait Modelable
 	}
 
 	/**
+	 * 简单数据查询作用域
+	 * @param \think\db\Query $query
+	 */
+	public function scopeSimple(Query $query)
+	{
+		$query->field(static::getSimpleFields() ?: static::getPlainFields());
+	}
+
+	/**
+	 * 搜索数据作用域
 	 * @param array $data
 	 * @return void
 	 */
 	public function scopeSearch(Query $query, $data)
 	{
 		$data = array_filter($data, 'filled');
+
 		$query->withSearch(static::getSearchFields(), $data);
 	}
 
@@ -226,7 +273,63 @@ trait Modelable
 	 */
 	public function searchKeywordsAttr(Query $query, $value)
 	{
-		$query->where('title', 'like', SQL::keywords($value));
+		$values = SQL::keywords($value);
+		if (empty($values)) {
+			return;
+		}
+
+		$query->where(implode('|', static::getSearchKeywordFields()), 'like', $values);
+	}
+
+	/**
+	 * 获取关键字搜索字段
+	 * @return string[]
+	 */
+	public static function getSearchKeywordFields()
+	{
+		return ["title"];
+	}
+
+	/**
+	 * 解析基础查询对象
+	 *
+	 * @param mixed $query
+	 * @param array $options
+	 * @return \think\db\Query|\think\Model
+	 * @deprecated
+	 */
+	public static function newPlainQuery($query = null, $options = [])
+	{
+		return static::plainQuery($query, $options);
+	}
+
+	/**
+	 * 获取基础查询对象
+	 *
+	 * @param mixed $query
+	 * @param array $options
+	 * @return \think\db\Query|\think\Model
+	 */
+	public static function plainQuery($query = null, $options = [])
+	{
+		$fields = static::getPlainFields();
+		if (isset($options['field'])) {
+			if (is_callable($options['field'])) {
+				$fields = $options['field']($fields);
+			} else {
+				$fields = $options['field'];
+			}
+			unset($options['field']);
+		}
+
+		$model = new static;
+		$newQuery = $model->field($fields);
+
+		if ($query) {
+			$newQuery->where($query);
+		}
+
+		return static::applyOptions($newQuery, $options);
 	}
 
 	/**
@@ -244,14 +347,14 @@ trait Modelable
 
 		if (is_callable($options)) {
 			return $options($baseQuery);
-		} else {
-			foreach ($options as $method => $option) {
-				if (method_exists($baseQuery, $method)) {
-					if (in_array($method, ['limit', 'page']) && is_array($option)) {
-						$baseQuery->$method(...$option);
-					} else {
-						$baseQuery->$method($option);
-					}
+		}
+
+		foreach ($options as $method => $option) {
+			if (method_exists($baseQuery, $method)) {
+				if (is_array($option) && in_array($method, ['limit', 'page'])) {
+					$baseQuery->$method(...$option);
+				} else {
+					$baseQuery->$method($option);
 				}
 			}
 		}

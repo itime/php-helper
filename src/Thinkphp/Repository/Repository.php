@@ -23,7 +23,11 @@ class Repository extends AbstractRepository
 	protected function registerSearchMiddleware()
 	{
 		$this->filterable(function ($input, $next) {
-			$search = $input['options']['search'] ?? [];
+			if (!isset($input['options']['search'])) {
+				$input['options']['search'] = [];
+			}
+
+			$search = $input['options']['search'];
 			if (empty($search)) {
 				return $next($input);
 			}
@@ -39,6 +43,7 @@ class Repository extends AbstractRepository
 					? $model->getSearchFields()
 					: $this->getSearchFields();
 
+				$search = array_filter($search, 'filled');
 				$query->withSearch($fields, $search);
 			}
 
@@ -79,7 +84,6 @@ class Repository extends AbstractRepository
 	public function filter($filter = null, array $with = [], array $options = [])
 	{
 		$query = $this->query($filter, $with, $options);
-
 
 		return $this->middleware([
 			'type' => static::SCENE_FILTER,
