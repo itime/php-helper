@@ -99,7 +99,17 @@ trait CURD
 			->repository()
 			->store($data);
 
-		return Hint::success('创建成功！', null, $info);
+		return $this->renderCreateResponse($info);
+	}
+
+	/**
+	 * 数据创建成功响应
+	 * @param Model $info
+	 * @return \think\Response
+	 */
+	protected function renderCreateResponse($info)
+	{
+		return Hint::success('创建成功！', $this->jumpUrl(), $info);
 	}
 
 	/**
@@ -115,7 +125,17 @@ trait CURD
 			'validateable', 'updateable'
 		])->repository()->updateById($id, $data);
 
-		return Hint::success('保存成功！', null, $info);
+		return $this->renderUpdateResponse($info);
+	}
+
+	/**
+	 * 数据更新成功响应
+	 * @param Model $info
+	 * @return \think\Response
+	 */
+	protected function renderUpdateResponse($info)
+	{
+		return Hint::success('保存成功！', $this->jumpUrl(), $info);
 	}
 
 	/**
@@ -129,12 +149,24 @@ trait CURD
 
 		if ($isForce) {
 			$result = $this->attachHandler('deleteable')
-				->repository()->deleteByIdList($ids);
+				->repository()
+				->deleteByIdList($ids);
 		} else {
 			$result = $this->attachHandler('recoveryable')
-				->repository()->recoveryByIdList($ids);
+				->repository()
+				->recoveryByIdList($ids);
 		}
 
+		return $this->renderDeleteResponse($result);
+	}
+
+	/**
+	 * 渲染删除响应
+	 * @param array $result
+	 * @return \think\Response
+	 */
+	protected function renderDeleteResponse($result)
+	{
 		return Hint::success('删除成功！', null, $result);
 	}
 
@@ -148,6 +180,16 @@ trait CURD
 		$result = $this->attachHandler('restoreable')
 			->repository()->restoreByIdList($ids);
 
+		return $this->renderRestoreResponse($result);
+	}
+
+	/**
+	 * 渲染数据恢复响应
+	 * @param array $result
+	 * @return \think\Response
+	 */
+	protected function renderRestoreResponse($result)
+	{
 		return Hint::success('恢复成功！', null, $result);
 	}
 
@@ -204,5 +246,16 @@ trait CURD
 		}
 
 		return $default;
+	}
+
+	/**
+	 * 跳转地址
+	 *
+	 * @param string $fallback
+	 * @return string
+	 */
+	protected function jumpUrl($fallback = 'index')
+	{
+		return null;
 	}
 }

@@ -142,4 +142,15 @@ trait PageCURD
 			]
 		);
 	}
+
+	/**
+	 * 跳转地址
+	 *
+	 * @param string $fallback
+	 * @return string
+	 */
+	protected function jumpUrl($fallback = 'index')
+	{
+		return $this->request->previousUrl($fallback);
+	}
 }
