@@ -213,7 +213,7 @@ trait Modelable
 	 */
 	public static function getSearchFields()
 	{
-		$allowSearchFields = static::getPlainFields();
+		$allowSearchFields = static::getSimpleFields();
 
 		$keywordField = static::getSearchKeywordParameter();
 		if ($keywordField) {
