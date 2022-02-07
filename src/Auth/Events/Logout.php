@@ -13,28 +13,34 @@ class Logout
 	/**
 	 * The authentication guard name.
 	 *
-	 * @var string
+	 * @var \Xin\Contracts\Auth\Guard
 	 */
 	public $guard;
 
 	/**
+	 * @var string
+	 */
+	public $guardName;
+
+	/**
 	 * The authenticated user.
 	 *
-	 * @var \Xin\Contracts\Auth\Guard
+	 * @var mixed
 	 */
 	public $user;
 
 	/**
 	 * Create a new event instance.
 	 *
-	 * @param string $guard
-	 * @param \Xin\Contracts\Auth\Guard $user
+	 * @param \Xin\Contracts\Auth\Guard $guard
+	 * @param mixed $user
 	 * @return void
 	 */
-	public function __construct($guard, $user)
+	public function __construct($guard, $user, $guardName = null)
 	{
 		$this->user = $user;
 		$this->guard = $guard;
+		$this->guardName = $guardName;
 	}
 
 }

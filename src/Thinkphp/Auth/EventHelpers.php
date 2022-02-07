@@ -22,7 +22,7 @@ trait EventHelpers
 	 */
 	protected function fireLoginEvent($user, $remember = false)
 	{
-		$this->app->event->trigger(new LoginEvent($this, $user, $remember));
+		$this->app->event->trigger(new LoginEvent($this, $user, $remember, $this->name));
 	}
 
 	/**
@@ -30,7 +30,7 @@ trait EventHelpers
 	 */
 	protected function fireFailedEvent($user, array $credentials)
 	{
-		$this->app->event->trigger(new LoginFailedEvent($this, $user, $credentials));
+		$this->app->event->trigger(new LoginFailedEvent($this, $user, $credentials, $this->name));
 	}
 
 	/**
@@ -38,7 +38,7 @@ trait EventHelpers
 	 */
 	protected function fireLogoutEvent($user)
 	{
-		$this->app->event->trigger(new LogoutEvent($this, $user));
+		$this->app->event->trigger(new LogoutEvent($this, $user, $this->name));
 	}
 
 }

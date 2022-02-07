@@ -20,7 +20,7 @@ class PasswordReset
 	/**
 	 * Create a new event instance.
 	 *
-	 * @param \Illuminate\Contracts\Auth\Authenticatable $user
+	 * @param mixed $user
 	 * @return void
 	 */
 	public function __construct($user)

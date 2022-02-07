@@ -13,14 +13,19 @@ class Logged
 	/**
 	 * The authentication guard name.
 	 *
-	 * @var string
+	 * @var \Xin\Contracts\Auth\Guard
 	 */
 	public $guard;
 
 	/**
+	 * @var string
+	 */
+	public $guardName;
+
+	/**
 	 * The authenticated user.
 	 *
-	 * @var \Xin\Contracts\Auth\Guard
+	 * @var mixed
 	 */
 	public $user;
 
@@ -34,16 +39,17 @@ class Logged
 	/**
 	 * Create a new event instance.
 	 *
-	 * @param string $guard
-	 * @param \Xin\Contracts\Auth\Guard $user
+	 * @param \Xin\Contracts\Auth\Guard $guard
+	 * @param mixed $user
 	 * @param bool $remember
 	 * @return void
 	 */
-	public function __construct($guard, $user, $remember)
+	public function __construct($guard, $user, $remember, $guardName = null)
 	{
 		$this->user = $user;
 		$this->guard = $guard;
 		$this->remember = $remember;
+		$this->guardName = $guardName;
 	}
 
 }

@@ -13,14 +13,19 @@ class LoginFailed
 	/**
 	 * The authentication guard name.
 	 *
-	 * @var string
+	 * @var \Xin\Contracts\Auth\Guard
 	 */
 	public $guard;
 
 	/**
+	 * @var string
+	 */
+	public $guardName;
+
+	/**
 	 * The user the attempter was trying to authenticate as.
 	 *
-	 * @var \Illuminate\Contracts\Auth\Authenticatable|null
+	 * @var mixed
 	 */
 	public $user;
 
@@ -34,16 +39,17 @@ class LoginFailed
 	/**
 	 * Create a new event instance.
 	 *
-	 * @param string $guard
-	 * @param \Illuminate\Contracts\Auth\Authenticatable|null $user
+	 * @param \Xin\Contracts\Auth\Guard $guard
+	 * @param mixed $user
 	 * @param array $credentials
 	 * @return void
 	 */
-	public function __construct($guard, $user, $credentials)
+	public function __construct($guard, $user, $credentials, $guardName = null)
 	{
 		$this->user = $user;
 		$this->guard = $guard;
 		$this->credentials = $credentials;
+		$this->guardName = $guardName;
 	}
 
 }
