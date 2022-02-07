@@ -184,7 +184,7 @@ trait Modelable
 	 */
 	public static function getSimpleFields()
 	{
-		return [];
+		return static::getPlainFields();
 	}
 
 	/**
@@ -195,7 +195,7 @@ trait Modelable
 	 */
 	public static function getPlainFields()
 	{
-		return self::getSimpleFields();
+		return [];
 	}
 
 	/**
@@ -204,7 +204,7 @@ trait Modelable
 	 */
 	public static function getPublicFields()
 	{
-		return static::getPlainFields();
+		return static::getSimpleFields();
 	}
 
 	/**
@@ -241,7 +241,7 @@ trait Modelable
 	 */
 	public function scopePlainList(Query $query)
 	{
-		$query->field(static::getPlainFields());
+		$query->field(static::getSimpleFields());
 	}
 
 	/**
@@ -312,7 +312,7 @@ trait Modelable
 	 */
 	public static function plainQuery($query = null, $options = [])
 	{
-		$fields = static::getPlainFields();
+		$fields = static::getSimpleFields();
 		if (isset($options['field'])) {
 			if (is_callable($options['field'])) {
 				$fields = $options['field']($fields);

@@ -191,7 +191,10 @@ class Template
 			}
 		}
 
-		$template = $this->parseTemplate($template);
+		if ('' == pathinfo($template, PATHINFO_EXTENSION)) {
+			// 获取模板文件名
+			$template = $this->parseTemplate($template);
+		}
 
 		$cacheFile = $this->config['cache_path'] . $this->config['cache_prefix'] . md5($this->config['layout_on'] . $this->config['layout_name'] . $template) . '.' . ltrim($this->config['cache_suffix'], '.');
 
