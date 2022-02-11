@@ -14,7 +14,7 @@ use Xin\Support\SQL;
  * @mixin \think\Model
  * @method self plainList()
  * @method self simple()
- * @method self search(array $data)
+ * @method self search(array $data, array $withoutFields = [])
  */
 trait Modelable
 {
@@ -255,14 +255,18 @@ trait Modelable
 
 	/**
 	 * 搜索数据作用域
+	 * @param Query $query
 	 * @param array $data
+	 * @param array $withoutFields
 	 * @return void
 	 */
-	public function scopeSearch(Query $query, $data)
+	public function scopeSearch(Query $query, array $data, array $withoutFields = [])
 	{
 		$data = array_filter($data, 'filled');
 
-		$query->withSearch(static::getSearchFields(), $data);
+		$fields = array_diff(static::getSearchFields(), $withoutFields);
+
+		$query->withSearch($fields, $data);
 	}
 
 	/**
