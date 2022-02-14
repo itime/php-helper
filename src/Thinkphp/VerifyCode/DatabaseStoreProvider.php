@@ -1,4 +1,9 @@
 <?php
+/**
+ * Talents come from diligence, and knowledge is gained by accumulation.
+ *
+ * @author: 晋<657306123@qq.com>
+ */
 
 namespace Xin\Thinkphp\VerifyCode;
 
@@ -18,7 +23,8 @@ class DatabaseStoreProvider extends Service implements Store
 			'type' => $type,
 			'identifier' => $identifier,
 			'code' => $code,
-			'expire_time' => now()->addSeconds($seconds)->getTimestamp()
+			'expire_time' => now()->addSeconds($seconds)->getTimestamp(),
+			'create_time' => now()->getTimestamp()
 		]);
 	}
 

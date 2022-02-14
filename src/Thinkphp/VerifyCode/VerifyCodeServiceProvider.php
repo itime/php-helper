@@ -1,4 +1,9 @@
 <?php
+/**
+ * Talents come from diligence, and knowledge is gained by accumulation.
+ *
+ * @author: 晋<657306123@qq.com>
+ */
 
 namespace Xin\Thinkphp\VerifyCode;
 
@@ -24,7 +29,7 @@ class VerifyCodeServiceProvider extends ServiceProvider
 	protected function registerVerifyCodeManager()
 	{
 		$this->app->bind([
-			'sms' => VerifyCodeFactory::class,
+			'verify_code' => VerifyCodeFactory::class,
 			VerifyCodeFactory::class => VerifyCodeManager::class,
 			VerifyCodeManager::class => function () {
 				$manager = new VerifyCodeManager(

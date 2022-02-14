@@ -18,7 +18,7 @@ interface Repository
 	 * @param string $identifier
 	 * @param string $code
 	 * @param string $type
-	 * @return string
+	 * @return bool
 	 */
 	public function verify($identifier, $code, $type = null);
 

@@ -6,9 +6,12 @@ use Xin\Contracts\VerifyCode\Repository as RepositoryContract;
 use Xin\Contracts\VerifyCode\Sender;
 use Xin\Contracts\VerifyCode\Store;
 use Xin\Support\Str;
+use Xin\Support\Traits\InteractsWithTime;
 
 class Repository implements RepositoryContract
 {
+	use InteractsWithTime;
+
 	/**
 	 * @var Store
 	 */
@@ -38,7 +41,9 @@ class Repository implements RepositoryContract
 
 		$code = $this->generateCode($options['length']);
 
-		$this->store->save($type, $identifier, $code);
+		$seconds = $this->parseTTL($options['ttl']);
+
+		$this->store->save($type, $identifier, $code, $seconds);
 
 		return $this->sender->send($identifier, $code);
 	}
@@ -73,6 +78,12 @@ class Repository implements RepositoryContract
 	{
 		$lastCode = $this->store->get($type, $identifier);
 
-		return $lastCode === (string)$code;
+		if ($lastCode === (string)$code) {
+			$this->store->forget($type, $identifier);
+
+			return true;
+		}
+
+		return false;
 	}
 }

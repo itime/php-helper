@@ -4,8 +4,12 @@ namespace Xin\VerifyCode;
 
 use Xin\Capsule\Manager;
 use Xin\Contracts\VerifyCode\Factory;
+use Xin\Contracts\VerifyCode\Sender;
 use Xin\Contracts\VerifyCode\Store;
 
+/**
+ * @mixin \Xin\Contracts\VerifyCode\Repository
+ */
 class VerifyCodeManager extends Manager implements Factory
 {
 	/**
@@ -45,9 +49,24 @@ class VerifyCodeManager extends Manager implements Factory
 	 */
 	public function createSmsDriver($name, $config)
 	{
+		return $this->createReposityory($config, new SmsSender($config));
+	}
+
+	/**
+	 * 创建仓库实例
+	 * @param array $config
+	 * @param Sender $sender
+	 * @return Repository
+	 */
+	protected function createReposityory($config, $sender)
+	{
+		if (method_exists($sender, 'setContainer')) {
+			$sender->setContainer($this->getContainer());
+		}
+
 		return new Repository(
 			$this->createStore($config),
-			new SmsSender($config)
+			$sender
 		);
 	}
 

@@ -18,7 +18,7 @@ class ValidateServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		Validate::maker(function (Validate $v) {
+		Validate::maker(static function (Validate $v) {
 			$v->extend('alphaDash2', function ($value) use ($v) {
 				return $v->regex($value, '/^[A-Za-z0-9\.\-\_\\\]+$/');
 			}, ':attribute只能是字母、数字和下划线_破折号-反斜杠\\');
@@ -27,9 +27,11 @@ class ValidateServiceProvider extends ServiceProvider
 				return $v->regex($value, '/^[A-Za-z0-9\-\_\\\]+$/');
 			}, ':attribute只能是汉字、字母、数字和下划线_破折号-反斜杠\\');
 
-			$v->extend('phone', function ($value) use ($v) {
+			$checkMobile = function ($value) use ($v) {
 				return $v->regex($value, '/^1\d{10}+$/');
-			}, ':attribute不是一个合法的手机号');
+			};
+			$v->extend('phone', $checkMobile, ':attribute不是一个合法的手机号');
+			$v->extend('mobile', $checkMobile, ':attribute不是一个合法的手机号');
 
 			$v->extend('password', function ($value) use ($v) {
 				return $v->regex($value, '/^[\\~!@#$%^&*()-_=+|{}\[\],.?\/:;\'\"\d\w]{6,16}/');

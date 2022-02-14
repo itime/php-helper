@@ -100,7 +100,7 @@ abstract class Manager
 
 
 		throw new InvalidArgumentException(
-			class_basename(get_class()) . " driver [{$config['driver']}] for [{$name}] is not defined."
+			class_basename(get_class()) . " driver [{$driver}] for [{$name}] is not defined."
 		);
 	}
 

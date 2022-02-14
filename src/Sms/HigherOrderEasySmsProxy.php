@@ -52,14 +52,6 @@ class HigherOrderEasySmsProxy extends Service implements Channel
 				'status' => Messenger::STATUS_SUCCESS,
 				'result' => $this->gateway->send($phone, $message, new Config($this->config)),
 			];
-		} catch (\Exception $e) {
-			$result = [
-				'success' => false,
-				'fail' => true,
-				'gateway' => $this->gateway->getName(),
-				'status' => Messenger::STATUS_FAILURE,
-				'exception' => $e,
-			];
 		} catch (\Throwable $e) {
 			$result = [
 				'success' => false,
