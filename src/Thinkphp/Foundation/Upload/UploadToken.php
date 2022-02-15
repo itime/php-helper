@@ -111,7 +111,7 @@ trait UploadToken
 
 		$fileType = $file['type'];
 		$maps = $this->extMaps();
-		if (!isset($maps[$type]) || !isset($maps[$type][$fileType])) {
+		if (!isset($maps[$type][$fileType])) {
 			throw new ValidateException("文件类型不支持上传。");
 		}
 

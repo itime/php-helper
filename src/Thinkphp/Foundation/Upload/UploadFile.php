@@ -35,7 +35,7 @@ trait UploadFile
 			return $this->uploadType;
 		}
 
-		return $request->request('type', 'image', 'trim');
+		return $request->param('type', 'image', 'trim');
 	}
 
 	/**
