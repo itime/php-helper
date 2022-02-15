@@ -7,6 +7,7 @@
 
 namespace Xin\Thinkphp\Foundation\Upload;
 
+use think\file\UploadedFile;
 use think\Request;
 
 /**
@@ -17,6 +18,7 @@ use think\Request;
  * @property string saveRule
  * @property string uploadName
  * @property string uploadType
+ * @method array buildSaveData(array $data, UploadedFile $file = null)
  */
 trait UploadFile
 {

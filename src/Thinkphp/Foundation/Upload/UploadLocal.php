@@ -13,9 +13,7 @@ use think\file\UploadedFile;
 use think\Request;
 use Xin\Thinkphp\Facade\Hint;
 
-/**
- * @method array buildSaveData(array $data, UploadedFile $file)
- */
+
 trait UploadLocal
 {
 
@@ -24,6 +22,9 @@ trait UploadLocal
 	 *
 	 * @param \think\Request $request
 	 * @return \think\Response
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	public function upload(Request $request)
 	{

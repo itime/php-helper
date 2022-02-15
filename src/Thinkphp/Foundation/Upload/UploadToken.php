@@ -11,6 +11,7 @@ use think\exception\HttpException;
 use think\exception\ValidateException;
 use think\helper\Str;
 use think\Request;
+use Xin\Contracts\Auth\AuthVerifyType;
 use Xin\Thinkphp\Facade\Filesystem;
 use Xin\Thinkphp\Facade\Hint;
 use function Qiniu\base64_urlSafeDecode;
@@ -159,6 +160,8 @@ trait UploadToken
 		$url = config('filesystem.disks.' . $this->disk() . '.url');
 
 		return json_encode([
+			"user_id" => $this->auth->getUserId(AuthVerifyType::NOT),
+			"user_type" => property_exists($this, 'userType') ? $this->userType : '',
 			"type" => $type,
 			"url" => "{$url}/$(key)",
 			"key" => "$(key)",
@@ -174,6 +177,9 @@ trait UploadToken
 	/**
 	 * @param \think\Request $request
 	 * @return \think\Response
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
 	 */
 	protected function saveByToken(Request $request)
 	{
@@ -195,13 +201,18 @@ trait UploadToken
 			]);
 		}
 
-		$data = $this->saveDb($type, [
+		$saveData = [
 			'path' => $data['url'],
 			'md5' => '',
 			'sha1' => $sha1,
 			'size' => $data['size'],
 			'type' => $data['mime'],
-		]);
+		];
+		if (method_exists($this, 'buildSaveData')) {
+			$saveData = $this->buildSaveData($saveData);
+		}
+
+		$data = $this->saveDb($type, $saveData);
 
 		return Hint::result($data);
 	}
@@ -215,7 +226,8 @@ trait UploadToken
 	private function string2Hex($string)
 	{
 		$hex = '';
-		for ($i = 0; $i < strlen($string); $i++) {
+		$strLength = strlen($string);
+		for ($i = 0; $i < $strLength; $i++) {
 			$hex .= dechex(ord($string[$i]));
 		}
 
