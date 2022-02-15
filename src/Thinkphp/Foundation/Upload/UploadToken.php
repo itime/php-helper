@@ -46,9 +46,10 @@ trait UploadToken
 			return Hint::error("没有上传文件");
 		}
 
+		$userId = $this->request->userId(AuthVerifyType::NOT);
 		$ext = $this->resolveExt($type, $file);
-		$filename = date('YmdHis') . Str::random(6);
-		$key = $this->savePath($type) . "/{$filename}.{$ext}";
+		$filename = Str::random(6) . '.' . $ext;
+		$key = $this->savePath($type) . '/' . $userId . '/' . date('YmdHis') . '/' . $filename;
 
 		$policy = $this->policy($request, $type);
 		$token = Filesystem::disk($this->disk())->getUploadToken(
