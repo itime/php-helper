@@ -17,6 +17,10 @@ use Xin\Support\Arr;
  */
 class HintManager extends Manager implements HintFactory
 {
+	/**
+	 * @var bool
+	 */
+	protected $lock = false;
 
 	/**
 	 * @var \Closure
@@ -51,6 +55,7 @@ class HintManager extends Manager implements HintFactory
 	 */
 	public function shouldUseWeb()
 	{
+
 		return $this->shouldUse('web');
 	}
 
@@ -61,6 +66,8 @@ class HintManager extends Manager implements HintFactory
 	 */
 	public function shouldUse($name)
 	{
+		$this->lock = true;
+
 		$this->setDefaultDriver($name);
 
 		return $this;
@@ -81,7 +88,7 @@ class HintManager extends Manager implements HintFactory
 	 */
 	public function getDefaultDriver()
 	{
-		if (is_callable($this->autoResolverCallback)) {
+		if (!$this->lock && is_callable($this->autoResolverCallback)) {
 			return call_user_func($this->autoResolverCallback);
 		}
 
