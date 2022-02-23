@@ -184,10 +184,13 @@ trait UploadToken
 	 */
 	protected function saveByToken(Request $request)
 	{
+		if (!$request->isPost()) {
+			throw new HttpException(404);
+		}
+
 		Hint::shouldUseApi();
 
 		$data = $request->post();
-
 		$type = $data['type'];
 		$sha1 = $data['sha1'];
 		$str = base64_urlSafeDecode($data['hash']);
