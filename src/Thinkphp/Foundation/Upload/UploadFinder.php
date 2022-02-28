@@ -81,10 +81,13 @@ trait UploadFinder
 			throw new HttpException(500, "文件保存失败！");
 		}
 
-		return [
+		$data['id'] = $id;
+		$renderData = method_exists($this, 'renderData') ? $this->renderData($renderData) : $data;
+
+		return array_merge($renderData, [
 			'id' => $id,
 			'path' => $data['path'],
-		];
+		]);
 	}
 
 	/**
