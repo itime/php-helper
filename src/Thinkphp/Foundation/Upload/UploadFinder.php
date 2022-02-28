@@ -82,7 +82,7 @@ trait UploadFinder
 		}
 
 		$data['id'] = $id;
-		$renderData = method_exists($this, 'renderData') ? $this->renderData($renderData) : $data;
+		$renderData = method_exists($this, 'renderData') ? $this->renderData($type, $renderData) : $data;
 
 		return array_merge($renderData, [
 			'id' => $id,

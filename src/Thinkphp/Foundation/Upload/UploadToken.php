@@ -10,6 +10,7 @@ namespace Xin\Thinkphp\Foundation\Upload;
 use think\exception\HttpException;
 use think\exception\ValidateException;
 use think\helper\Str;
+use think\Model;
 use think\Request;
 use Xin\Contracts\Auth\AuthVerifyType;
 use Xin\Thinkphp\Facade\Filesystem;
@@ -199,10 +200,15 @@ trait UploadToken
 
 		$info = $this->findBySHA1($type, $sha1);
 		if (!empty($info)) {
-			return Hint::result([
+			$renderData = $info instanceof Model ? $info->toArray() : $info;
+			if (method_exists($this, 'renderData')) {
+				$renderData = $this->renderData($type, $renderData);
+			}
+
+			return Hint::result(array_merge($renderData, [
 				'id' => $info['id'],
 				'path' => $info['path'],
-			]);
+			]));
 		}
 
 		$saveData = [
