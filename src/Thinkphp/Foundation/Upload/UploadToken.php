@@ -210,7 +210,8 @@ trait UploadToken
 			'md5' => '',
 			'sha1' => $sha1,
 			'size' => $data['size'],
-			'type' => $data['mime'],
+			'type' => $data['type'],
+			'mime_type' => $data['mime'],
 		];
 		if (method_exists($this, 'buildSaveData')) {
 			$saveData = $this->buildSaveData($saveData);
