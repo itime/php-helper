@@ -26,14 +26,20 @@ class DatabasePlugin extends Model
 {
 
 	// 缓存前缀
-	const CACHE_PREFIX = 'plugin:';
+	public const CACHE_PREFIX = 'plugin:';
 
 	/**
 	 * 插件配置缓存列表
 	 *
 	 * @var array
 	 */
-	protected static $pluginConfigCacheList = [];
+	protected static $configCacheList = [];
+
+	/**
+	 * 已被禁用的缓存列表
+	 * @var array
+	 */
+	protected static $disabledCacheList = null;
 
 	/**
 	 * @var string
@@ -74,10 +80,10 @@ class DatabasePlugin extends Model
 	 */
 	public static function getPluginConfig($plugin, $default = null, $isUpdateCache = false)
 	{
-		if (isset(static::$pluginConfigCacheList[$plugin])) {
-			$config = static::$pluginConfigCacheList[$plugin];
+		if (isset(static::$configCacheList[$plugin])) {
+			$config = static::$configCacheList[$plugin];
 		} else {
-			$key = static::resolvePluginConfigKey($plugin);
+			$key = static::getPluginConfigCacheKey($plugin);
 			$config = Cache::get($key);
 
 			// 加载数据库数据
@@ -91,7 +97,7 @@ class DatabasePlugin extends Model
 		if (is_null($config)) {
 			$config = $default instanceof \Closure ? $default() : $default;
 
-			static::$pluginConfigCacheList[$plugin] = $default;
+			static::$configCacheList[$plugin] = $default;
 
 			if ($isUpdateCache) {
 				static::setPluginConfigCache($plugin, $config);
@@ -109,7 +115,7 @@ class DatabasePlugin extends Model
 	 */
 	public static function setPluginConfigCache($plugin, $config)
 	{
-		$key = static::resolvePluginConfigKey($plugin);
+		$key = static::getPluginConfigCacheKey($plugin);
 
 		Cache::set($key, $config instanceof \Closure ? $config() : $config);
 	}
@@ -136,16 +142,82 @@ class DatabasePlugin extends Model
 	 * @param string $plugin
 	 * @return string
 	 */
-	public static function resolvePluginConfigKey($plugin)
+	public static function getPluginConfigCacheKey($plugin)
 	{
-		return static::CACHE_PREFIX . $plugin;
+		return static::CACHE_PREFIX . 'config:' . $plugin;
+	}
+
+
+	/**
+	 * 获取已禁用的列表
+	 * @return array
+	 */
+	public static function getPluginDisabledListCache()
+	{
+		$key = static::getPluginDisabledCacheKey();
+
+		$list = Cache::get($key);
+
+		if ($list === false || $list === null) {
+			$list = static::where('status', 0)->column('name');
+
+			Cache::set($key, $list);
+		}
+
+		return $list;
+	}
+
+	/**
+	 * 刷新已禁用列表的缓存
+	 * @return array
+	 */
+	public static function refreshPluginDisabledListCache()
+	{
+		$key = static::getPluginDisabledCacheKey();
+		Cache::delete($key);
+
+		return static::getPluginDisabledListCache();
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPluginDisabledCacheKey()
+	{
+
+		return static::CACHE_PREFIX . 'disabled_list';
+	}
+
+	/**
+	 * 获取已被禁用的插件列表
+	 * @return array
+	 */
+	public static function getPluginDisabledList()
+	{
+		if (static::$disabledCacheList === null) {
+			static::$disabledCacheList = static::getPluginDisabledListCache();
+		}
+
+		return static::$disabledCacheList;
+	}
+
+	/**
+	 * 检查是否已被禁用
+	 * @param string $plugin
+	 * @return bool
+	 */
+	public static function checkPluginDisabled($plugin)
+	{
+		$plugins = static::getPluginDisabledList();
+
+		return in_array($plugin, $plugins, true);
 	}
 
 	/**
 	 * 获取本地插件信息
 	 *
 	 * @param string $attr
-	 * @return \Xin\Contracts\Plugin\PluginInfo|null
+	 * @return array|\Xin\Plugin\PluginInfo|null
 	 * @throws \Xin\Contracts\Plugin\PluginNotFoundException
 	 */
 	public function getLocalInfo($attr = null)

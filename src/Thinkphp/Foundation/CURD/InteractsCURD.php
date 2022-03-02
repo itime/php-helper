@@ -16,6 +16,7 @@ use Xin\Thinkphp\Facade\Hint;
 
 /**
  * @property-read \think\Request|\Xin\Thinkphp\Http\HasValidate $request
+ * @deprecated
  */
 trait InteractsCURD
 {

@@ -19,6 +19,7 @@ use think\Request;
  * @property string uploadName
  * @property string uploadType
  * @method array buildSaveData(array $data, UploadedFile $file = null)
+ * @method array renderData(string $type, array $data)
  */
 trait UploadFile
 {
