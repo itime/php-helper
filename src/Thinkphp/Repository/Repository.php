@@ -8,10 +8,12 @@
 namespace Xin\Thinkphp\Repository;
 
 use think\db\Query;
+use think\exception\ValidateException;
 use think\facade\Db;
 use think\Model;
 use think\model\Collection;
 use think\Paginator;
+use think\Validate;
 use Xin\Repository\AbstractRepository;
 use Xin\Support\Arr;
 
@@ -143,38 +145,6 @@ class Repository extends AbstractRepository
 
 	/**
 	 * @inerhitDoc
-	 * @return mixed|Model
-	 */
-	public function show($filter, array $with = [], array $options = [])
-	{
-		$query = $this->query($filter, $with, $options);
-
-		return $this->middleware([
-			'type' => static::SCENE_SHOW,
-			'filter' => $filter,
-			'with' => $with,
-			'query' => $query,
-			'options' => $options,
-		], function () use ($query, $options) {
-			if ($options['fail'] ?? false) {
-				return $query->findOrFail();
-			}
-
-			return $query->find();
-		}, static::SCENE_SHOW);
-	}
-
-	/**
-	 * @inerhitDoc
-	 * @return mixed|Model
-	 */
-	public function showById($id, array $with = [], array $options = [])
-	{
-		return $this->show(['id' => $id], $with, $options);
-	}
-
-	/**
-	 * @inerhitDoc
 	 */
 	public function validate(array $data, $scene = null, array $options = [])
 	{
@@ -183,8 +153,28 @@ class Repository extends AbstractRepository
 			'scene' => $scene,
 			'data' => $data,
 			'options' => $options,
-		], function ($input) {
-			return $input['data'] ?? [];
+		], function ($input) use ($scene) {
+			$data = $input['data'] ?? [];
+
+			$validator = $this->getOption('validator');
+			if ($validator) {
+				if ($validator instanceof Validate) {
+					$validate = $validator;
+				} elseif (is_array($validator)) {
+					$validate = new Validate();
+					$validate->rule(
+						$validator['rules'] ?? [],
+						$validator['fields'] ?? []
+					)->message($validator['messages'] ?? []);
+				} else {
+					/** @var \think\Validate $validate */
+					$validate = app($validator);
+				}
+
+				$validate->scene($scene)->failException(true)->check($data);
+			}
+
+			return $data;
 		}, static::SCENE_VALIDATE);
 	}
 
@@ -251,8 +241,73 @@ class Repository extends AbstractRepository
 	/**
 	 * @inerhitDoc
 	 */
+	public function setValue(array $ids, $field, $value, array $options = [])
+	{
+		if (!$this->isAllowSetField($field)) {
+			throw new ValidateException("{$field} not in allow field list.");
+		}
+
+		// 验证规则
+		$allowSetFields = $this->getAllowSetFields();
+		if (isset($allowSetFields[$field]) && ($validateRule = $allowSetFields[$field])) {
+			Validate::failException(true)->checkRule($value, $validateRule);
+		}
+
+		return $this->transaction(function () use ($ids, $field, $value, $options) {
+			$query = $this->query([
+				['id', 'IN', $ids]
+			], [], $options);
+
+			return $this->middleware([
+				'type' => static::SCENE_UPDATE,
+				'ids' => $ids,
+				'field' => $field,
+				'value' => $value,
+				'query' => $query,
+				'options' => $options,
+			], function ($input) {
+				/** @var Query $query */
+				$query = $input['query'];
+				return $query->update([
+						$input['field'] => $input['value'],
+					]) === false;
+			}, static::SCENE_SET_VALUE);
+		});
+	}
+
+	/**
+	 * 是否允许设置字段
+	 *
+	 * @param string $field
+	 * @return bool
+	 */
+	protected function isAllowSetField($field)
+	{
+		$allowSetFields = $this->getAllowSetFields();
+
+		return in_array($field, array_map('strval', array_keys($allowSetFields)), true);
+	}
+
+	/**
+	 * 获取允许修改字段
+	 *
+	 * @return array
+	 */
+	protected function getAllowSetFields()
+	{
+		return array_merge([
+			'status' => 'in:0,1',
+		], $this->getOption('allow_fields', []));
+	}
+
+	/**
+	 * @inerhitDoc
+	 */
 	public function delete($filter, array $options = [])
 	{
+		$options = array_merge([
+			'force' => false
+		], $options);
 		return $this->transaction(function () use ($filter, $options) {
 			$query = $this->query($filter, [], $options);
 
@@ -261,8 +316,13 @@ class Repository extends AbstractRepository
 				'filter' => $filter,
 				'query' => $query,
 				'options' => $options,
-			], function () use ($query) {
-				return $query->removeOption('soft_delete')->delete(true);
+			], function ($input) use ($query) {
+				$isForce = $input['options']['force'] ?? false;
+				if ($isForce) {
+					return $query->removeOption('soft_delete')->delete(true);
+				}
+
+				return $query->delete();
 			}, static::SCENE_DELETE);
 		});
 	}
@@ -273,37 +333,6 @@ class Repository extends AbstractRepository
 	public function deleteByIdList(array $ids, array $options = [])
 	{
 		return $this->delete([
-			['id', 'in', $ids],
-		], $options);
-	}
-
-	/**
-	 * @inerhitDoc
-	 */
-	public function recovery($filter, array $options = [])
-	{
-		return $this->transaction(function () use ($filter, $options) {
-			$query = $this->query($filter, [], $options);
-
-			$input = [
-				'type' => static::SCENE_RECOVERY,
-				'filter' => $filter,
-				'query' => $query,
-				'options' => $options,
-			];
-
-			return $this->middleware($input, function () use ($query) {
-				return $query->delete();
-			}, static::SCENE_RECOVERY);
-		});
-	}
-
-	/**
-	 * @inerhitDoc
-	 */
-	public function recoveryByIdList(array $ids, array $options = [])
-	{
-		return $this->recovery([
 			['id', 'in', $ids],
 		], $options);
 	}
@@ -411,15 +440,6 @@ class Repository extends AbstractRepository
 		return $query;
 	}
 
-
-	/**
-	 * @inerhitDoc
-	 */
-	public function setField(array $ids, $field, $value, array $options = [])
-	{
-		// TODO: Implement setField() method.
-	}
-
 	/**
 	 * @inerhitDoc
 	 */
@@ -435,6 +455,4 @@ class Repository extends AbstractRepository
 	{
 		// TODO: Implement export() method.
 	}
-
-
 }

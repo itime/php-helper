@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Thinkphp\Foundation;
+namespace Xin\Thinkphp\Hashing;
 
 use think\Service;
 use Xin\Hashing\HashManager;

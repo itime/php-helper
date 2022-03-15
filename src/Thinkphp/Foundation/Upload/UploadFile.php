@@ -20,6 +20,7 @@ use think\Request;
  * @property string uploadType
  * @method array buildSaveData(array $data, UploadedFile $file = null)
  * @method array renderData(string $type, array $data)
+ * @deprecated
  */
 trait UploadFile
 {

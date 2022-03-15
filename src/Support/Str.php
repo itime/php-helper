@@ -412,7 +412,7 @@ final class Str
 		$microtime = explode(' ', microtime());
 		$microtime = intval($microtime[0] ? $microtime[0] * 100000 : 100000);
 
-		$nonceStr = substr(uniqid(), 7, 13);
+		$nonceStr = substr(uniqid('', true), 7, 13);
 		$nonceStr = str_split($nonceStr, 1);
 		$nonceStr = array_map('ord', $nonceStr);
 		$nonceStr = substr(implode(null, $nonceStr), -8);

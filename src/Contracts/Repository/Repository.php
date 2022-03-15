@@ -15,20 +15,17 @@ interface Repository
 	// 详情数据
 	public const SCENE_DETAIL = 'detail';
 
-	// 创建或编辑数据
-	public const SCENE_SHOW = 'show';
-
 	// 创建数据
 	public const SCENE_STORE = 'store';
 
 	// 更新数据
 	public const SCENE_UPDATE = 'update';
 
+	// 更新数据
+	public const SCENE_SET_VALUE = 'setvalue';
+
 	// 删除数据
 	public const SCENE_DELETE = 'delete';
-
-	// 回收数据
-	public const SCENE_RECOVERY = 'recovery';
 
 	// 恢复数据
 	public const SCENE_RESTORE = 'restore';
@@ -66,26 +63,6 @@ interface Repository
 	 * @return mixed
 	 */
 	public function filter($filter = [], array $with = [], array $options = []);
-
-	/**
-	 * 获取一条数据
-	 *
-	 * @param array|callable $filter
-	 * @param array $with
-	 * @param array $options
-	 * @return mixed
-	 */
-	public function show($filter, array $with = [], array $options = []);
-
-	/**
-	 * 获取一条数据
-	 *
-	 * @param int $id
-	 * @param array $with
-	 * @param array $options
-	 * @return mixed
-	 */
-	public function showById($id, array $with = [], array $options = []);
 
 	/**
 	 * 获取数据详情
@@ -154,7 +131,7 @@ interface Repository
 	 * @param array $options
 	 * @return array
 	 */
-	public function setField(array $ids, $field, $value, array $options = []);
+	public function setValue(array $ids, $field, $value, array $options = []);
 
 	/**
 	 * 删除数据
@@ -173,25 +150,6 @@ interface Repository
 	 * @return int
 	 */
 	public function deleteByIdList(array $ids, array $options = []);
-
-
-	/**
-	 * 软删除数据
-	 *
-	 * @param array|string|int $filter
-	 * @param array $options
-	 * @return mixed
-	 */
-	public function recovery($filter, array $options = []);
-
-	/**
-	 * 根据id软删除数据
-	 *
-	 * @param array $ids
-	 * @param array $options
-	 * @return int
-	 */
-	public function recoveryByIdList(array $ids, array $options = []);
 
 	/**
 	 * 恢复数据

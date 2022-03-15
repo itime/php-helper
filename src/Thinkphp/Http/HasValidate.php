@@ -80,15 +80,12 @@ trait HasValidate
 	 *
 	 * @param string $field
 	 * @return array
+	 * @see validIds alias
+	 * @deprecated
 	 */
 	public function idsWithValid($field = 'ids')
 	{
-		$ids = $this->ids($field);
-		if (empty($ids)) {
-			throw new ValidateException("param {$field} invalid.");
-		}
-
-		return $ids;
+		return $this->validIds($field);
 	}
 
 	/**
@@ -97,10 +94,41 @@ trait HasValidate
 	 * @param string $field
 	 * @return int
 	 * @see validId alias
+	 * @deprecated
 	 */
 	public function idWithValid($field = 'id')
 	{
 		return $this->validId($field);
+	}
+
+	/**
+	 * 获取整形数据并验证
+	 *
+	 * @param string $field
+	 * @param array $array
+	 * @param mixed $default
+	 * @return mixed
+	 * @deprecated
+	 * @see validIntIn alias
+	 */
+	public function intWithValidArray($field, $array, $default = null)
+	{
+		return $this->validIntIn($field, $array, $default);
+	}
+
+	/**
+	 * 获取字符串数据并验证
+	 *
+	 * @param string $field
+	 * @param mixed $default
+	 * @param string $filter
+	 * @return string
+	 * @deprecated
+	 * @see validString alias
+	 */
+	public function stringWithValid($field, $default = null, $filter = '')
+	{
+		return $this->validString($field, $default, $filter);
 	}
 
 	/**
@@ -121,17 +149,33 @@ trait HasValidate
 	}
 
 	/**
+	 * 获取ID 列表
+	 *
+	 * @param string $field
+	 * @return array
+	 */
+	public function validIds($field = 'ids')
+	{
+		$ids = $this->ids($field);
+		if (empty($ids)) {
+			throw new ValidateException("param {$field} invalid.");
+		}
+
+		return $ids;
+	}
+
+	/**
 	 * 获取整形数据并验证
 	 *
 	 * @param string $field
-	 * @param array $array
+	 * @param array $values
 	 * @param mixed $default
 	 * @return mixed
 	 */
-	public function intWithValidArray($field, $array, $default = null)
+	public function validIntIn($field, $values, $default = null)
 	{
 		$int = $this->param("{$field}/d", $default);
-		if (!in_array($int, $array)) {
+		if (!in_array($int, $values)) {
 			throw new ValidateException("param {$field} invalid.");
 		}
 
@@ -144,11 +188,11 @@ trait HasValidate
 	 * @param string $field
 	 * @param mixed $default
 	 * @param string $filter
-	 * @return int
+	 * @return string
 	 */
-	public function stringWithValid($field, $default = null, $filter = '')
+	public function validString($field, $default = null, $filter = '')
 	{
-		$value = $this->param("{$field}", $default, $filter);
+		$value = $this->param((string)$field, $default, $filter);
 
 		if (empty($value)) {
 			throw new ValidateException("param {$field} invalid.");

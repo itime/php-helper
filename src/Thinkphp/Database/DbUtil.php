@@ -37,10 +37,11 @@ class DbUtil
 
 	/**
 	 * @return void
+	 * @noinspection ForgottenDebugOutputInspection
 	 */
-	public static function dumpSqls()
+	public static function dump()
 	{
-		Db::listen(function ($sql) {
+		Db::listen(static function ($sql) {
 			dump($sql);
 		});
 	}

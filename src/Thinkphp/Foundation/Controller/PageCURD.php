@@ -23,6 +23,32 @@ trait PageCURD
 	/**
 	 * @inerhitDoc
 	 */
+	protected function renderIndexResponse($data)
+	{
+		return $this->fetch(
+			$this->property('listTpl', 'index'),
+			[
+				'data' => $data,
+			]
+		);
+	}
+
+	/**
+	 * @inerhitDoc
+	 */
+	protected function renderDetailResponse($info)
+	{
+		return $this->fetch(
+			$this->property('detailTpl', 'detail'),
+			[
+				'info' => $info,
+			]
+		);
+	}
+
+	/**
+	 * @inerhitDoc
+	 */
 	public function create()
 	{
 		if ($this->request->isGet()) {
@@ -36,10 +62,25 @@ trait PageCURD
 					->detailById($id);
 			}
 
-			return $this->renderCreate($info);
+			return $this->showCreateForm($info);
 		}
 
 		return $this->CURDCreate();
+	}
+
+	/**
+	 * 渲染数据创建页面
+	 * @param Model $info
+	 * @return string
+	 */
+	protected function showCreateForm($info)
+	{
+		return $this->fetch(
+			$this->property('editTpl', 'edit'),
+			[
+				'info' => $info,
+			]
+		);
 	}
 
 	/**
@@ -53,51 +94,10 @@ trait PageCURD
 				->repository()
 				->detailById($id);
 
-			return $this->renderUpdate($info);
+			return $this->showUpdateForm($info);
 		}
 
 		return $this->CURDUpdate();
-	}
-
-	/**
-	 * @inerhitDoc
-	 */
-	protected function renderIndex($data)
-	{
-		return $this->fetch(
-			$this->property('listTpl', 'index'),
-			[
-				'data' => $data,
-			]
-		);
-	}
-
-	/**
-	 * @inerhitDoc
-	 */
-	protected function renderDetail($info)
-	{
-		return $this->fetch(
-			$this->property('detailTpl', 'detail'),
-			[
-				'info' => $info,
-			]
-		);
-	}
-
-	/**
-	 * 渲染数据创建页面
-	 * @param Model $info
-	 * @return string
-	 */
-	protected function renderCreate($info)
-	{
-		return $this->fetch(
-			$this->property('editTpl', 'edit'),
-			[
-				'info' => $info,
-			]
-		);
 	}
 
 	/**
@@ -105,38 +105,10 @@ trait PageCURD
 	 * @param Model $info
 	 * @return string
 	 */
-	protected function renderUpdate($info)
+	protected function showUpdateForm($info)
 	{
 		return $this->fetch(
 			$this->property('editTpl', 'edit'),
-			[
-				'info' => $info,
-			]
-		);
-	}
-
-	/**
-	 * @return mixed
-	 * @noinspection PhpReturnDocTypeMismatchInspection
-	 */
-	public function show()
-	{
-		$id = $this->request->idWithValid();
-
-		$info = $this->attachHandler('showable')
-			->repository()
-			->showById($id);
-
-		return $this->renderShow($info);
-	}
-
-	/**
-	 * @inerhitDoc
-	 */
-	protected function renderShow($info)
-	{
-		return $this->fetch(
-			$this->property('editTpl', 'show'),
 			[
 				'info' => $info,
 			]

@@ -21,6 +21,7 @@ use Xin\Thinkphp\Repository\Repository;
  * @method mixed storeable($input, callable $next)
  * @method mixed showable($input, callable $next)
  * @method mixed updateable($input, callable $next)
+ * @method mixed setvalueable($input, callable $next)
  * @method mixed deleteable($input, callable $next)
  * @method mixed recoveryable($input, callable $next)
  * @method mixed restoreable($input, callable $next)
@@ -28,6 +29,10 @@ use Xin\Thinkphp\Repository\Repository;
  */
 trait CURD
 {
+	/**
+	 * @var Repository
+	 */
+	private $repository;
 
 	/**
 	 * 返回首页数据
@@ -46,7 +51,7 @@ trait CURD
 				$this->request->paginate()
 			);
 
-		return $this->renderIndex($data);
+		return $this->renderIndexResponse($data);
 	}
 
 	/**
@@ -54,7 +59,7 @@ trait CURD
 	 * @param Collection $data
 	 * @return \think\Response
 	 */
-	protected function renderIndex($data)
+	protected function renderIndexResponse($data)
 	{
 		return Hint::result($data);
 	}
@@ -66,13 +71,13 @@ trait CURD
 	 */
 	public function detail()
 	{
-		$id = $this->request->idWithValid();
+		$id = $this->request->validId();
 
 		$info = $this->attachHandler('detailable')
 			->repository()
 			->detailById($id);
 
-		return $this->renderDetail($info);
+		return $this->renderDetailResponse($info);
 	}
 
 	/**
@@ -80,7 +85,7 @@ trait CURD
 	 * @param Model $info
 	 * @return \think\Response
 	 */
-	protected function renderDetail($info)
+	protected function renderDetailResponse($info)
 	{
 		return Hint::result($info);
 	}
@@ -118,7 +123,7 @@ trait CURD
 	 */
 	public function update()
 	{
-		$id = $this->request->idWithValid();
+		$id = $this->request->validId();
 
 		$data = $this->request->param();
 		$info = $this->attachHandler([
@@ -139,23 +144,48 @@ trait CURD
 	}
 
 	/**
+	 * 设置字段值
+	 *
+	 * @return \think\Response
+	 */
+	public function setValue()
+	{
+		$ids = $this->request->validIds();
+		$field = $this->request->validString('field', '', 'trim');
+		$value = $this->request->param($field);
+
+		$this->attachHandler('setvalueable')
+			->repository()->setValue($ids, $field, $value);
+
+		return $this->renderSetValueResponse($ids, $field, $value);
+	}
+
+	/**
+	 * 数据更新成功响应
+	 * @param array $ids
+	 * @param string $field
+	 * @param mixed $value
+	 * @return \think\Response
+	 */
+	protected function renderSetValueResponse($ids, $field, $value)
+	{
+		return Hint::success('更新成功！');
+	}
+
+	/**
 	 * 删除/回收数据操作
 	 * @return \think\Response
 	 */
 	public function delete()
 	{
-		$ids = $this->request->idsWithValid();
+		$ids = $this->request->validIds();
 		$isForce = $this->request->param('force/d', 0);
 
-		if ($isForce) {
-			$result = $this->attachHandler('deleteable')
-				->repository()
-				->deleteByIdList($ids);
-		} else {
-			$result = $this->attachHandler('recoveryable')
-				->repository()
-				->recoveryByIdList($ids);
-		}
+		$result = $this->attachHandler('deleteable')
+			->repository()
+			->deleteByIdList($ids, [
+				'force' => $isForce
+			]);
 
 		return $this->renderDeleteResponse($result);
 	}
@@ -175,7 +205,7 @@ trait CURD
 	 */
 	public function restore()
 	{
-		$ids = $this->request->idsWithValid();
+		$ids = $this->request->validIds();
 
 		$result = $this->attachHandler('restoreable')
 			->repository()->restoreByIdList($ids);
@@ -219,12 +249,24 @@ trait CURD
 	 */
 	protected function repository(): Repository
 	{
-		$repository = $this->repositoryTo();
-		if ($repository instanceof Repository) {
-			return $repository;
+		if ($this->repository) {
+			return $this->repository;
 		}
 
-		return app(RepositoryFactory::class)->repository($repository);
+		$repository = $this->repositoryTo();
+		if (!($repository instanceof Repository)) {
+			$repository = app(RepositoryFactory::class)->repository($repository);
+		}
+
+		if (property_exists($this, 'allowFields')) {
+			$repository->setOption('allow_fields', $this->allowFields);
+		}
+
+		if (property_exists($this, 'allowForceDelete')) {
+			$repository->setOption('allow_force_delete', $this->allowForceDelete);
+		}
+
+		return $this->repository = $repository;
 	}
 
 	/**
