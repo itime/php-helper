@@ -58,7 +58,7 @@ class WechatMediaManager
 					],
 					[
 						'name' => 'media',
-						'contents' => fopen($localPath, 'r'),
+						'contents' => fopen($localPath, 'rb'),
 						'filename' => basename($fileUrl),
 					],
 				],

@@ -3,6 +3,7 @@
 namespace Xin\Wechat;
 
 use Exception;
+use Psr\Http\Message\StreamInterface;
 use Throwable;
 use Xin\Support\Arr;
 use Xin\Wechat\Exceptions\WechatBusinessException;
@@ -65,7 +66,7 @@ class WechatResult implements \ArrayAccess
 			return null;
 		}
 
-		return $this->isStream ? 0 : (int)($this->result['errcode'] ?? 0);
+		return $this->isStream() ? 0 : (int)($this->result['errcode'] ?? 0);
 	}
 
 	/**
@@ -210,6 +211,22 @@ class WechatResult implements \ArrayAccess
 		return Arr::except($this->result, [
 			'errcode', 'errmsg',
 		]);
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getRaw()
+	{
+		return $this->result;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isStream()
+	{
+		return $this->result instanceof StreamInterface;
 	}
 
 	/**
