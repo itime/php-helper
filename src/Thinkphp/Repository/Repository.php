@@ -13,6 +13,7 @@ use think\Model;
 use think\model\Collection;
 use think\Paginator;
 use Xin\Repository\AbstractRepository;
+use Xin\Support\Arr;
 
 class Repository extends AbstractRepository
 {
@@ -195,17 +196,17 @@ class Repository extends AbstractRepository
 		$data = $this->validate($data, static::SCENE_STORE, $options);
 
 		return $this->transaction(function () use ($data, $options) {
-			$query = $this->query(null, [], $options);
-
 			return $this->middleware([
 				'type' => static::SCENE_STORE,
 				'data' => $data,
-				'query' => $query,
 				'options' => $options,
-			], function ($input) use ($query) {
-				$query->save($input['data'] ?? []);
+			], function ($input) {
+				$data = $input['data'] ?? [];
 
-				return $query;
+				$model = $this->fill($data);
+				$model->save();
+
+				return $model;
 			}, static::SCENE_STORE);
 		});
 	}
@@ -227,9 +228,10 @@ class Repository extends AbstractRepository
 				'query' => $query,
 				'options' => $options,
 			], function ($input) use ($query) {
-				$model = $query->findOrFail();
+				$data = $input['data'] ?? [];
 
-				$model->save($input['data'] ?? []);
+				$model = $query->findOrFail();
+				$this->fill($data, $model)->save();
 
 				return $model;
 			}, static::SCENE_UPDATE);
@@ -260,7 +262,7 @@ class Repository extends AbstractRepository
 				'query' => $query,
 				'options' => $options,
 			], function () use ($query) {
-				return $query->delete(true);
+				return $query->removeOption('soft_delete')->delete(true);
 			}, static::SCENE_DELETE);
 		});
 	}
@@ -344,22 +346,51 @@ class Repository extends AbstractRepository
 	}
 
 	/**
-	 * @inerhitDoc
+	 * @return Model|Db
 	 */
-	public function query($filter, array $with = [], array $options = [])
+	protected function modelOrDbQuery()
 	{
 		if (isset($this->options['model'])) {
 			$modelClass = $this->options['model'];
 			/** @var \think\Model $model */
-			$model = new $modelClass();
+			return new $modelClass();
+		}
 
-			/** @var Query $query */
-			$query = $model->db();
-		} elseif (isset($this->options['table'])) {
+		if (isset($this->options['table'])) {
 			$table = $this->options['table'];
-			$query = Db::table($table);
+			return Db::table($table);
+		}
+
+		throw new \RuntimeException('Not support query type.');
+	}
+
+	/**
+	 * 填入数据
+	 * @param array $data
+	 * @return Db|Model
+	 */
+	protected function fill($data = [], $query = null)
+	{
+		$query = $query ?: $this->modelOrDbQuery();
+		if ($query instanceof Model) {
+			$query->data($data, true);
 		} else {
-			throw new \RuntimeException('Not support query type.');
+			$fields = $query->getTableFields();
+			$data = Arr::only($data, $fields);
+			$query->data($data);
+		}
+
+		return $query;
+	}
+
+	/**
+	 * @inerhitDoc
+	 */
+	public function query($filter, array $with = [], array $options = [])
+	{
+		$query = $this->modelOrDbQuery();
+		if ($query instanceof Model) {
+			$query = $query->db();
 		}
 
 		$query->with($with);
@@ -379,6 +410,7 @@ class Repository extends AbstractRepository
 
 		return $query;
 	}
+
 
 	/**
 	 * @inerhitDoc
