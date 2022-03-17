@@ -35,7 +35,7 @@ trait Requestable
 	/**
 	 * @var string
 	 */
-	protected $path = null;
+	protected $currentPath = null;
 
 	/**
 	 * 获取 ID list
@@ -290,8 +290,8 @@ trait Requestable
 	 */
 	public function path($complete = false)
 	{
-		if (is_null($this->path) === false) {
-			return $this->path;
+		if (is_null($this->currentPath) === false) {
+			return $this->currentPath;
 		}
 
 		$pathinfo = $this->pathinfo();
@@ -312,7 +312,7 @@ trait Requestable
 			$path = preg_replace('/\.' . $this->ext() . '$/i', '', $pathinfo);
 		}
 
-		return $path;
+		return $this->currentPath = $path;
 	}
 
 	/**

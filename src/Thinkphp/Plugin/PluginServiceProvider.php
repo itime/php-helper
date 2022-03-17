@@ -106,7 +106,7 @@ class PluginServiceProvider extends Service
 	 * @param string[] $commands
 	 * @return void
 	 */
-	protected function attachCommands($commands)
+	protected function attachCommands(array $commands)
 	{
 		$commands = array_unique($commands);
 		$this->commands($commands);
@@ -117,7 +117,7 @@ class PluginServiceProvider extends Service
 	 * @param string[] $tasks
 	 * @return void
 	 */
-	protected function attachTasks($tasks)
+	protected function attachTasks(array $tasks)
 	{
 		$cronConfig = $this->app->config->get('cron');
 

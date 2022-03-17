@@ -76,6 +76,7 @@ interface Factory
 
 	/**
 	 * 启动相关插件
+	 * @return void
 	 */
 	public function pluginBoot();
 

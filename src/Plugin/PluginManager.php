@@ -140,7 +140,7 @@ class PluginManager implements PluginFactory
 	 */
 	protected function useFilter()
 	{
-		return array_reduce($this->filters, function (Collection $plugins, $filter) {
+		return array_reduce($this->filters, static function (Collection $plugins, $filter) {
 			return $plugins->filter($filter);
 		}, $this->plugins);
 	}
