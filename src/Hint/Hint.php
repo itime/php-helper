@@ -65,6 +65,7 @@ class Hint extends Service implements HintContract
 			$msg = $msg->getMessage();
 			$extend = is_array($code) ? $code : [];
 		}
+		$extend['url'] = (string)$url;
 
 		return $this->render($code, $msg, null, $extend);
 	}

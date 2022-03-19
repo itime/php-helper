@@ -7,6 +7,7 @@
 
 namespace Xin\Thinkphp\Http;
 
+use Symfony\Component\HttpFoundation\AcceptHeader;
 use Xin\Support\Str;
 use Xin\Support\Time;
 
@@ -15,8 +16,8 @@ use Xin\Support\Time;
  */
 trait Requestable
 {
-
-	use HasValidate, HasPlatform, HasUser, HasApp;
+	use HasValidate, HasPlatform, HasUser, HasApp,
+		HasContentTypes;
 
 	/**
 	 * 数据源
@@ -35,7 +36,22 @@ trait Requestable
 	/**
 	 * @var string
 	 */
-	protected $currentPath = null;
+	protected $currentPath;
+
+	/**
+	 * @var array
+	 */
+	protected $acceptableContentTypes;
+
+	/**
+	 * @var array
+	 */
+	protected $charsets;
+
+	/**
+	 * @var array
+	 */
+	protected $encodings;
 
 	/**
 	 * 获取 ID list
@@ -348,4 +364,45 @@ trait Requestable
 		return http_build_query($qs, '', '&', \PHP_QUERY_RFC3986);
 	}
 
+	/**
+	 * Gets a list of content types acceptable by the client browser in preferable order.
+	 *
+	 * @return array
+	 */
+	public function getAcceptableContentTypes()
+	{
+		if (null !== $this->acceptableContentTypes) {
+			return $this->acceptableContentTypes;
+		}
+
+		return $this->acceptableContentTypes = array_keys(AcceptHeader::fromString($this->header('Accept'))->all());
+	}
+
+	/**
+	 * Gets a list of charsets acceptable by the client browser in preferable order.
+	 *
+	 * @return array
+	 */
+	public function getCharsets()
+	{
+		if (null !== $this->charsets) {
+			return $this->charsets;
+		}
+
+		return $this->charsets = array_keys(AcceptHeader::fromString($this->header('Accept-Charset'))->all());
+	}
+
+	/**
+	 * Gets a list of encodings acceptable by the client browser in preferable order.
+	 *
+	 * @return array
+	 */
+	public function getEncodings()
+	{
+		if (null !== $this->encodings) {
+			return $this->encodings;
+		}
+
+		return $this->encodings = array_keys(AcceptHeader::fromString($this->header('Accept-Encoding'))->all());
+	}
 }
