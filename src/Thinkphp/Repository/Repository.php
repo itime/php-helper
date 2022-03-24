@@ -254,7 +254,7 @@ class Repository extends AbstractRepository
 		// 验证规则
 		$allowSetFields = $this->getAllowSetFields();
 		if (isset($allowSetFields[$field]) && ($validateRule = $allowSetFields[$field])) {
-			Validate::failException(true)->checkRule($value, $validateRule);
+			(new Validate)->failException(true)->checkRule($value, $validateRule);
 		}
 
 		return $this->transaction(function () use ($ids, $field, $value, $options) {
