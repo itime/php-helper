@@ -1,0 +1,97 @@
+{extend name='layout'/}
+
+{block name="assign"}
+{assign name="page_title" value="{%title%}管理" /}
+{/block}
+
+{block name='body'}
+<div class="card">
+
+	<div class="card-header pb-0">
+		<form class="form-row align-items-center form-filter">
+			<input type="hidden" name="status" value="{$status}"/>
+			<div class="form-group col-auto">
+				<label>关键字</label>
+				<input type="text" name="keywords" placeholder="请输入" value="{$Request.get.keywords}" class="form-control"/>
+			</div>
+
+			<div class="form-group col-auto" style="margin-top: 28px">
+				<button class="btn btn-primary">
+					<i class="fa fa-search"></i>
+				</button>
+				<a href="{:plugin_url()}" class="btn btn-secondary">
+					<i class="fa fa-undo"></i>
+				</a>
+			</div>
+		</form>
+	</div>
+
+	<div class="card-body">
+		<div class="mb-3">
+			<a href="{:plugin_url('create')}" class="btn btn-primary">添加</a>
+			<a href="{:plugin_url('delete')}" class="btn btn-danger"
+					data-ajax-get="{confirm:true,mustTargetQuery:true,target:'[name=\'ids[]\']'}">删除</a>
+		</div>
+
+		<div class="table-responsive">
+			<table class="table table-hover table-centered">
+				<thead>
+				<tr>
+					<th style="width:24px">
+						<div class="custom-control custom-checkbox">
+							<input type="checkbox" name="ids[]" id="all-checkbox" class="custom-control-input"
+									data-choice-check data-target="tbody [name='ids[]']"/>
+							<label class="custom-control-label" for="all-checkbox"></label>
+						</div>
+					</th>
+					<th>名称</th>
+					<th class="text-center" style="width:48px">状态</th>
+					<th class="text-center" style="width:140px">操作</th>
+				</tr>
+				</thead>
+				<tbody>
+				{volist name="data" id="vo"}
+				<tr>
+					<td>
+						<div class="custom-control custom-checkbox">
+							<input type="checkbox" value="{$vo.id}" name="ids[]" id="item_{$vo.id}" class="custom-control-input"/>
+							<label class="custom-control-label" for="item_{$vo.id}"></label>
+						</div>
+					</td>
+					<td class="text-nowrap" data-preview>
+						<img src="{$vo.cover}?imageView2/1/q/75" class="bg-light rounded" alt=""
+								data-src="{$vo.cover}" mode="aspectFill" style="width:32px" height="32"/>
+						<span>{$vo.title}</span>
+					</td>
+					<td class="text-center">
+						{if $vo.status==0}
+						<span>禁用</span>
+						{else/}
+						<span class="text-success">启用</span>
+						{/if}
+					</td>
+					<td class="actions">
+						<a href="{:plugin_url('update',['id'=>$vo.id])}">编辑</a>
+						<div class="dropdown">
+							<a class="dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">更多</a>
+							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+								<a class="dropdown-item" href="{:plugin_url('update',['id'=>$vo.id,'copy'=>1])}" target="_blank">复制</a>
+								<a class="dropdown-item text-danger" href="{:plugin_url('delete',['ids'=>$vo.id])}" data-ajax-get="{confirm:true}">删除</a>
+							</div>
+						</div>
+					</td>
+				</tr>
+				{/volist}
+				</tbody>
+			</table>
+			{include file="empty"/}
+			{$data|raw}
+		</div>
+	</div>
+</div>
+{/block}
+
+{block name='foot'}
+<script>
+</script>
+{/block}

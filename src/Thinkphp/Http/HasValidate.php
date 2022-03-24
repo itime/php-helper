@@ -175,7 +175,7 @@ trait HasValidate
 	public function validIntIn($field, $values, $default = null)
 	{
 		$int = $this->param("{$field}/d", $default);
-		if (!in_array($int, $values)) {
+		if (!in_array($int, $values, true)) {
 			throw new ValidateException("param {$field} invalid.");
 		}
 

@@ -171,7 +171,11 @@ class Repository extends AbstractRepository
 					$validate = app($validator);
 				}
 
-				$validate->scene($scene)->failException(true)->check($data);
+				if ($scene) {
+					$validate->scene($scene);
+				}
+
+				$validate->failException(true)->check($data);
 			}
 
 			return $data;

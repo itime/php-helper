@@ -14,6 +14,7 @@ namespace Xin\Thinkphp\View;
 
 use Psr\SimpleCache\CacheInterface;
 use think\App;
+use Xin\Thinkphp\View\Storage\File as ViewStorageFile;
 
 class Template
 {
@@ -102,7 +103,7 @@ class Template
 	/**
 	 * 模板存储对象
 	 *
-	 * @var object
+	 * @var ViewStorageFile
 	 */
 	protected $storage;
 

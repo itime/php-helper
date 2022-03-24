@@ -10,28 +10,16 @@ namespace Xin\Thinkphp\Http;
 use Symfony\Component\HttpFoundation\AcceptHeader;
 use Xin\Support\Str;
 use Xin\Support\Time;
+use Xin\Thinkphp\Plugin\Url;
 
 /**
  * @mixin \think\Request
  */
 trait Requestable
 {
-	use HasValidate, HasPlatform, HasUser, HasApp,
+	use HasValidate, HasPlatform,
+		HasUser, HasApp, HasPlugin,
 		HasContentTypes;
-
-	/**
-	 * 数据源
-	 *
-	 * @var array
-	 */
-	protected $data = [];
-
-	/**
-	 * 插件
-	 *
-	 * @var string
-	 */
-	protected $plugin;
 
 	/**
 	 * @var string
@@ -96,12 +84,10 @@ trait Requestable
 	 */
 	public function page(): int
 	{
-		if (!isset($this->data['page'])) {
-			$page = $this->param('page/d', 0);
-			$this->data['page'] = $page < 1 ? 1 : $page;
-		}
+		$page = $this->param('page/d', 0);
+		$page = max($page, 1);
 
-		return (int)$this->data['page'];
+		return (int)$page;
 	}
 
 	/**
@@ -113,16 +99,14 @@ trait Requestable
 	 */
 	public function limit(int $max = 100, int $default = 15): int
 	{
-		if (!isset($this->data['limit'])) {
-			$limit = $this->param('limit/d', 0);
-			if ($limit < 1) {
-				$this->data['limit'] = $default;
-			} else {
-				$this->data['limit'] = $limit > $max ? $max : $limit;
-			}
+		$limit = $this->param('limit/d', 0);
+		if ($limit < 1) {
+			$limit = $default;
+		} else {
+			$limit = min($limit, $max);
 		}
 
-		return (int)$this->data['limit'];
+		return (int)$limit;
 	}
 
 	/**
@@ -132,12 +116,10 @@ trait Requestable
 	 */
 	public function offset(): int
 	{
-		if (!isset($this->data['offset'])) {
-			$offset = $this->param('offset/d', 0);
-			$this->data['offset'] = $offset < 1 ? 1 : $offset;
-		}
+		$offset = $this->param('offset/d', 0);
+		$offset = max($offset, 1);
 
-		return (int)$this->data['offset'];
+		return (int)$offset;
 	}
 
 	/**
@@ -148,7 +130,7 @@ trait Requestable
 	public function sort(): string
 	{
 		// todo 重新优化
-		return isset($_GET['sort']) ? trim($_GET['sort']) : '';
+		return $this->param('sort', '');
 	}
 
 	/**
@@ -174,19 +156,14 @@ trait Requestable
 	 */
 	public function keywords(string $field = 'keywords'): string
 	{
-		$key = 'keywords_' . $field;
-		if (!isset($this->data[$key])) {
-			if ($this->has($field, 'get')) {
-				$keywords = $this->get($field . '/s', '');
-			} else {
-				$keywords = $this->post($field . '/s', '');
-			}
-			$keywords = trim($keywords);
-			$keywords = Str::rejectEmoji($keywords);
-			$this->data[$key] = $keywords ?? '';
+		if ($this->has($field, 'get')) {
+			$keywords = $this->get($field . '/s', '');
+		} else {
+			$keywords = $this->post($field . '/s', '');
 		}
+		$keywords = trim($keywords);
 
-		return $this->data[$key];
+		return Str::rejectEmoji($keywords);
 	}
 
 	/**
@@ -201,43 +178,61 @@ trait Requestable
 	}
 
 	/**
-	 * 获取当前的模块名
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public function plugin(): string
-	{
-		return $this->plugin ?: '';
-	}
-
-	/**
-	 * 设置当前的插件名
-	 *
-	 * @access public
-	 * @param string $plugin 插件名
-	 * @return $this
-	 */
-	public function setPlugin(string $plugin): self
-	{
-		$this->plugin = $plugin;
-
-		return $this;
-	}
-
-	/**
+	 * 读取POST请求JSON字段
 	 * @param string $key
-	 * @return mixed|null
+	 * @return array|null
 	 */
 	public function postJSON(string $key)
 	{
-		if (!$this->has($key, 'post')) {
+		return $this->json($key, 'post');
+	}
+
+	/**
+	 * 读取PUT请求JSON字段
+	 * @param string $key
+	 * @return array|null
+	 */
+	public function putJSON(string $key)
+	{
+		return $this->json($key, 'post');
+	}
+
+	/**
+	 * 读取json数据
+	 * @param string $key
+	 * @param string $method
+	 * @return array|null
+	 */
+	public function json($key, $method = 'param')
+	{
+		if (!$this->has($key, $method)) {
 			return null;
 		}
 
-		$value = $this->post($key);
+		$value = $this->$method($key);
 
 		return json_decode($value, true, 512, JSON_PRESERVE_ZERO_FRACTION);
+	}
+
+	/**
+	 * 智能读取数据
+	 * @return array|mixed
+	 */
+	public function data($name = '', $default = null, $filter = '')
+	{
+		$method = $this->method(true);
+
+		// 自动获取请求变量
+		switch ($method) {
+			case 'POST':
+				return $this->post($name, $default, $filter);
+			case 'PUT':
+			case 'DELETE':
+			case 'PATCH':
+				return $this->put($name, $default, $filter);
+			default:
+				return $this->get($name, $default, $filter);
+		}
 	}
 
 	/**
@@ -306,29 +301,47 @@ trait Requestable
 	 */
 	public function path($complete = false)
 	{
-		if (is_null($this->currentPath) === false) {
-			return $this->currentPath;
+		if ($this->currentPath === null) {
+			$pathinfo = $this->pathinfo();
+			$pathinfo = trim($pathinfo, '/');
+
+			$suffix = app()->route->config('url_html_suffix');
+			if (false === $suffix) {
+				// 禁止伪静态访问
+				$path = $pathinfo;
+			} elseif ($suffix) {
+				// 去除正常的URL后缀
+				$path = preg_replace('/\.(' . ltrim($suffix, '.') . ')$/i', '', $pathinfo);
+			} else {
+				// 允许任何后缀访问
+				$path = preg_replace('/\.' . $this->ext() . '$/i', '', $pathinfo);
+			}
+
+			$this->currentPath = $path;
 		}
 
-		$pathinfo = $this->pathinfo();
-		if ($complete) {
-			$pathinfo = $this->root() . '/' . $pathinfo;
-		}
-		$pathinfo = trim($pathinfo, '/');
+		return $complete ? $this->root() . '/' . $this->currentPath : $this->currentPath;
+	}
 
-		$suffix = app()->route->config('url_html_suffix');
-		if (false === $suffix) {
-			// 禁止伪静态访问
-			$path = $pathinfo;
-		} elseif ($suffix) {
-			// 去除正常的URL后缀
-			$path = preg_replace('/\.(' . ltrim($suffix, '.') . ')$/i', '', $pathinfo);
-		} else {
-			// 允许任何后缀访问
-			$path = preg_replace('/\.' . $this->ext() . '$/i', '', $pathinfo);
+	/**
+	 * 获取当前请求路径并解析插件路径
+	 * @return string
+	 */
+	public function pathWithParsePlugin()
+	{
+		$path = $this->path(false);
+
+		if (Url::$pluginPrefix && strpos($path, Url::$pluginPrefix . "/") === 0) {
+			$info = explode('/', $path, 3);
+			if (isset($info[1])) {
+				$plugin = $info[1];
+				$path = isset($info[2]) ? $info[2] : '';
+
+				$path = $plugin . ">" . $path;
+			}
 		}
 
-		return $this->currentPath = $path;
+		return $path;
 	}
 
 	/**

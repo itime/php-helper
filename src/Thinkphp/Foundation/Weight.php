@@ -52,7 +52,7 @@ abstract class Weight
 
 		$this->view = new View($app);
 
-		$classPath = str_replace("\\", "/", get_class($this));
+		$classPath = str_replace("\\", DIRECTORY_SEPARATOR, get_class($this));
 		$this->view->engine()->config([
 			"view_dir_name" => "view",
 			"view_path" => root_path(dirname($classPath)),

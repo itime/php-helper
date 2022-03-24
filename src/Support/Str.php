@@ -294,8 +294,10 @@ final class Str
 	 */
 	public static function charsetEncode($input, $_output_charset, $_input_charset)
 	{
-		if (!isset ($_output_charset))
+		if (!isset ($_output_charset)) {
 			$_output_charset = $_input_charset;
+		}
+
 		if ($_input_charset == $_output_charset || $input == null) {
 			$output = $input;
 		} elseif (function_exists("mb_convert_encoding")) {
@@ -382,11 +384,15 @@ final class Str
 	 * 生成一个 UUID (version 4).
 	 *
 	 * @return \Ramsey\Uuid\UuidInterface
-	 * @noinspection PhpDocMissingThrowsInspection
 	 */
 	public static function uuid()
 	{
-		return Uuid::uuid4();
+		try {
+			return Uuid::uuid4();
+		} catch (\Exception $e) {
+		}
+
+		return null;
 	}
 
 	/**
@@ -410,7 +416,7 @@ final class Str
 	{ // 取出订单编号
 		$datetime = date('YmdHis');
 		$microtime = explode(' ', microtime());
-		$microtime = intval($microtime[0] ? $microtime[0] * 100000 : 100000);
+		$microtime = (int)($microtime[0] ? $microtime[0] * 100000 : 100000);
 
 		$nonceStr = substr(uniqid('', true), 7, 13);
 		$nonceStr = str_split($nonceStr, 1);
@@ -429,35 +435,13 @@ final class Str
 	public static function parseUrlQuery($url)
 	{
 		$index = strpos($url, "?");
-		$url = $index === false ? $url : substr($url, $index);
+		if ($index !== false) {
+			$url = substr($url, $index);
+		}
+
 		parse_str($url, $result);
 
 		return $result;
-		//
-		//		//分隔数据
-		//		$querys = explode("&", $url);
-		//		unset($url);
-		//		$regx = "/\\[(.*?)\\]/";
-		//		//返回的结果
-		//		$result = [];
-		//		foreach($querys as $key => $val){
-		//			list($name, $value) = explode('=', $val, 2);
-		//			unset($querys[$key]);
-		//
-		//			$name = trim($name);
-		//			//是否为数组
-		//			if(preg_match($regx, $name, $matches)){
-		//				$matches = $matches[1];
-		//				$name = substr($name, 0, strpos($name, "[") - 1);
-		//				if(empty($matches))
-		//					$result[$name][] = $value;
-		//				else
-		//					$result[$name][$matches] = $value;
-		//			}else{
-		//				$result[$name] = $value;
-		//			}
-		//		}
-		//		return $result;
 	}
 
 	/**
@@ -470,14 +454,14 @@ final class Str
 	 */
 	public static function matchUrl($checkUrl, $currentPath, $currentQuery = [])
 	{
-		$checkUrl = explode("?", $checkUrl, 2);
-		$checkPath = $checkUrl[0];
+		$checkUrlArr = explode("?", $checkUrl, 2);
+		$checkPath = $checkUrlArr[0];
 
 		if ($checkPath != $currentPath) {
 			return false;
 		}
 
-		$checkQueryStr = isset($checkUrl[1]) ? $checkUrl[1] : '';
+		$checkQueryStr = isset($checkUrlArr[1]) ? $checkUrlArr[1] : '';
 		if ($checkQueryStr) {
 			parse_str($checkQueryStr, $checkQuery);
 		} else {
@@ -503,7 +487,7 @@ final class Str
 	public static function buildUrlQuery($params, $valueHandler = null)
 	{
 		if (!is_callable($valueHandler)) {
-			$valueHandler = function ($key, $val) {
+			$valueHandler = static function ($key, $val) {
 				$type = gettype($val);
 				if ($type == 'object' || $type == 'array') {
 					return '';
@@ -691,9 +675,27 @@ final class Str
 	 */
 	public static function rejectEmoji($str)
 	{
-		return preg_replace_callback('/./u', function (array $match) {
+		return preg_replace_callback('/./u', static function (array $match) {
 			return strlen($match[0]) >= 4 ? '' : $match[0];
 		}, $str);
+	}
+
+	/**
+	 * 渲染Stub
+	 * @param string $tpl
+	 * @param array $data
+	 * @return array|string|string[]
+	 */
+	public static function stub($tpl, $data)
+	{
+		$variables = [];
+		$values = [];
+		foreach ($data as $key => $value) {
+			$variables[] = "{%{$key}%}";
+			$values[] = $value;
+		}
+
+		return str_replace($variables, $values, $tpl);
 	}
 
 }

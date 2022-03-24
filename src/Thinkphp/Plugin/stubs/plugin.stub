@@ -1,0 +1,33 @@
+<?php
+namespace plugin\\{%name%};
+
+use Xin\Contracts\Plugin\Factory as PluginManager;
+use Xin\Contracts\Plugin\Plugin as PluginContract;
+use Xin\Contracts\Plugin\PluginInfo;
+
+class Plugin implements PluginContract{
+
+	/**
+	 * @inheritDoc
+	 */
+	public function install(PluginInfo \$pluginInfo, PluginManager \$pluginManager){
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function uninstall(PluginInfo \$pluginInfo, PluginManager \$pluginManager){
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function upgrade(PluginInfo \$pluginInfo, PluginManager \$pluginManager, \$version){
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function boot(PluginInfo \$pluginInfo, PluginManager \$pluginManager){
+	}
+}

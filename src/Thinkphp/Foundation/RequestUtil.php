@@ -10,6 +10,9 @@ namespace Xin\Thinkphp\Foundation;
 use think\facade\App;
 use Xin\Thinkphp\Plugin\Url;
 
+/**
+ * @deprecated
+ */
 class RequestUtil
 {
 

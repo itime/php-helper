@@ -1,0 +1,13 @@
+<?php
+namespace plugin\\{%pluginName%}\\{%subDir%};
+
+use Xin\\Thinkphp\\Foundation\\Weight;
+
+class {%eventClass%}{
+
+	/**
+	 * @return void
+	 */
+	protected function handle(){
+	}
+}

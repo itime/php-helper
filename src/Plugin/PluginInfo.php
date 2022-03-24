@@ -160,10 +160,8 @@ class PluginInfo implements PluginInfoContract
 			foreach ($item['config'] as $value) {
 				if (isset($value['typeof'])) {
 					$result[$value['name']] = $value['typeof'];
-				} else {
-					if (isset($typeMap[$value['type']])) {
-						$result[$value['name']] = $typeMap[$value['type']];
-					}
+				} elseif (isset($typeMap[$value['type']])) {
+					$result[$value['name']] = $typeMap[$value['type']];
 				}
 			}
 		}

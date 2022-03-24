@@ -96,7 +96,7 @@ trait CURD
 	 */
 	public function create()
 	{
-		$data = $this->request->param();
+		$data = $this->request->data();
 
 		$info = $this->attachHandler([
 			'validateable', 'storeable'
@@ -125,7 +125,7 @@ trait CURD
 	{
 		$id = $this->request->validId();
 
-		$data = $this->request->param();
+		$data = $this->request->data();
 		$info = $this->attachHandler([
 			'validateable', 'updateable'
 		])->repository()->updateById($id, $data);

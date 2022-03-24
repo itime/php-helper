@@ -21,7 +21,7 @@ trait Appable
 	 */
 	public function withGlobalAppScope()
 	{
-		if (!in_array('app', $this->globalScope)) {
+		if (!in_array('app', $this->globalScope, true)) {
 			$this->globalScope[] = 'app';
 		}
 
@@ -35,7 +35,7 @@ trait Appable
 	 */
 	public function withoutGlobalAppScope()
 	{
-		$index = array_search('app_id', $this->globalScope);
+		$index = array_search('app_id', $this->globalScope, true);
 
 		if ($index !== false) {
 			array_splice($this->globalScope, $index, 1);

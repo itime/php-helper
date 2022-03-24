@@ -11,7 +11,7 @@ use think\App;
 use Xin\Contracts\Menu\Factory;
 use Xin\Menu\MenuManager;
 use Xin\Thinkphp\Facade\Auth;
-use Xin\Thinkphp\Foundation\RequestUtil;
+use Xin\Thinkphp\Http\Requestable;
 
 class Middleware
 {
@@ -22,7 +22,7 @@ class Middleware
 	protected $app;
 
 	/**
-	 * @var \think\Request
+	 * @var \think\Request|Requestable
 	 */
 	protected $request;
 
@@ -47,7 +47,7 @@ class Middleware
 	{
 		$this->request = $request;
 
-		$this->registerServices($request);
+		$this->registerServices();
 
 		$this->registerDrivers();
 
@@ -57,9 +57,9 @@ class Middleware
 	/**
 	 * 注册服务
 	 *
-	 * @param \think\Request $request
+	 * @return void
 	 */
-	protected function registerServices($request)
+	protected function registerServices()
 	{
 		$this->app->bind([
 			'menu' => Factory::class,
@@ -73,7 +73,7 @@ class Middleware
 			return $this->app['menu']->menu();
 		});
 
-		$this->app->bind('menu.show', function () use ($request) {
+		$this->app->bind('menu.show', function () {
 			/** @var \Xin\Menu\MenuManager $manager */
 			$manager = $this->app['menu'];
 
@@ -147,7 +147,7 @@ class Middleware
 	 */
 	protected function getPathRule()
 	{
-		return RequestUtil::getPathRule($this->request);
+		return $this->request->pathWithParsePlugin();
 	}
 
 	/**

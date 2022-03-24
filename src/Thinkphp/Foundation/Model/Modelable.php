@@ -12,7 +12,6 @@ use Xin\Support\SQL;
 
 /**
  * @mixin \think\Model
- * @method self plainList()
  * @method self simple()
  * @method self search(array $data, array $withoutFields = [])
  */
@@ -28,6 +27,7 @@ trait Modelable
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
+	 * @deprecated
 	 */
 	public static function getList($query = [], $options = [])
 	{
@@ -43,6 +43,7 @@ trait Modelable
 	 * @param bool $simple
 	 * @return \think\Paginator
 	 * @throws \think\db\exception\DbException
+	 * @deprecated
 	 */
 	public static function getPaginate($query, $options = [], $listRows = 15, $simple = false)
 	{
@@ -58,6 +59,7 @@ trait Modelable
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
+	 * @deprecated
 	 */
 	public static function getSimpleInfo($query, $options = [])
 	{
@@ -75,6 +77,7 @@ trait Modelable
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
+	 * @deprecated
 	 */
 	public static function getSimpleInfoById($id, $options = [])
 	{
@@ -121,6 +124,7 @@ trait Modelable
 	 * @param self $info
 	 * @param array $options
 	 * @return self
+	 * @deprecated
 	 */
 	protected static function resolvePlain($info, $options = [])
 	{
@@ -137,6 +141,7 @@ trait Modelable
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
+	 * @deprecated
 	 */
 	public static function getDetail($query, $with = [], $options = [])
 	{
@@ -157,6 +162,7 @@ trait Modelable
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\DbException
 	 * @throws \think\db\exception\ModelNotFoundException
+	 * @deprecated
 	 */
 	public static function getDetailById($id, $with = [], $options = [])
 	{
@@ -171,6 +177,7 @@ trait Modelable
 	 * @param self $info
 	 * @param array $options
 	 * @return self
+	 * @deprecated
 	 */
 	protected static function resolveDetail($info, $options = [])
 	{
@@ -314,7 +321,7 @@ trait Modelable
 	 * @param array $options
 	 * @return \think\db\Query|\think\Model
 	 */
-	public static function plainQuery($query = null, $options = [])
+	public static function simpleQuery($query = null, $options = [])
 	{
 		$fields = static::getSimpleFields();
 		if (isset($options['field'])) {
@@ -334,6 +341,19 @@ trait Modelable
 		}
 
 		return static::applyOptions($newQuery, $options);
+	}
+
+	/**
+	 * 获取基础查询对象
+	 *
+	 * @param mixed $query
+	 * @param array $options
+	 * @return \think\db\Query|\think\Model
+	 * @deprecated
+	 */
+	public static function plainQuery($query = null, $options = [])
+	{
+		return static::simpleQuery($query, $options);
 	}
 
 	/**

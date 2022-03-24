@@ -9,7 +9,7 @@ namespace Xin\Thinkphp\Auth\Access;
 
 use think\App;
 use Xin\Support\Str;
-use Xin\Thinkphp\Foundation\RequestUtil;
+use Xin\Thinkphp\Http\Requestable;
 
 class CheckForRoute
 {
@@ -20,7 +20,7 @@ class CheckForRoute
 	protected $app;
 
 	/**
-	 * @var \think\Request
+	 * @var \think\Request|Requestable
 	 */
 	protected $request;
 
@@ -86,7 +86,7 @@ class CheckForRoute
 	 *
 	 * @param mixed $user
 	 * @param array $menu
-	 * @return void
+	 * @return bool
 	 */
 	protected function isOwn($user, $menu)
 	{
@@ -94,7 +94,7 @@ class CheckForRoute
 			return false;
 		}
 
-		return in_array($menu['id'], $user->getAllMenuIds());
+		return in_array($menu['id'], $user->getAllMenuIds(), true);
 	}
 
 	/**
@@ -102,7 +102,7 @@ class CheckForRoute
 	 */
 	protected function getCurrentPath()
 	{
-		return RequestUtil::getPathRule($this->request);
+		return $this->request->pathWithParsePlugin();
 	}
 
 	/**
