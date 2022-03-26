@@ -112,9 +112,9 @@ class ExceptionHandle extends Handle
 	{
 		if ($this->isJson()) {
 			return Hint::error("登录已失效", -1, $e->redirectTo());
-		} else {
-			return redirect($e->redirectTo());
 		}
+
+		return redirect($e->redirectTo());
 	}
 
 	/**
@@ -175,7 +175,14 @@ class ExceptionHandle extends Handle
 			],
 		] : [];
 
-		return Hint::error($msg, $code, null, $extend);
+		$response = Hint::error($msg, $code, null, $extend);
+
+		if ($exception instanceof HttpException) {
+			$statusCode = $exception->getStatusCode();
+			$response->header($exception->getHeaders());
+		}
+
+		return $response->code($statusCode ?? 500);
 	}
 
 	/**
@@ -186,8 +193,8 @@ class ExceptionHandle extends Handle
 	protected function isJson()
 	{
 		return $this->app->http->getName() === 'api'
-			|| $this->app->request->isAjax()
-			|| $this->app->request->isJson();
+			|| (method_exists($this->app->request, 'expectsJson') && $this->app->request->expectsJson())
+			|| ($this->app->request->isAjax() || $this->app->request->isJson());
 	}
 
 }
