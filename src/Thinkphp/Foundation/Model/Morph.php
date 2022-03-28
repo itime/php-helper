@@ -7,6 +7,8 @@
 
 namespace Xin\Thinkphp\Foundation\Model;
 
+use think\db\exception\ModelNotFoundException;
+
 /**
  * Class Morph
  * @deprecated
@@ -79,6 +81,7 @@ class Morph
 	 * @param string $type
 	 * @param int $id
 	 * @return bool
+	 * @throws ModelNotFoundException
 	 */
 	public static function checkExist($type, $id)
 	{
@@ -92,7 +95,7 @@ class Morph
 		}
 
 		if (!$result) {
-			throw new \LogicException("morph resource not found!");
+			throw new ModelNotFoundException("morph resource not found!", $class);
 		}
 
 		return true;
