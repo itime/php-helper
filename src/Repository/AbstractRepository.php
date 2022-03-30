@@ -18,14 +18,17 @@ abstract class AbstractRepository implements Repository
 	/**
 	 * @var array
 	 */
-	protected $options;
+	protected $options = [
+		'find_or_fail' => true,
+		'allow_force_delete' => false
+	];
 
 	/**
 	 * @param array $options
 	 */
 	public function __construct(array $options)
 	{
-		$this->options = $options;
+		$this->options = array_replace_recursive($this->options, $options);
 		$this->middlewareManager = new MiddlewareManager();
 
 		if (isset($options['handler'])) {

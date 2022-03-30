@@ -17,6 +17,146 @@ use Xin\Support\SQL;
  */
 trait Modelable
 {
+	/**
+	 * Append attributes to query when building a query.
+	 *
+	 * @param array $append
+	 * @return $this
+	 */
+	public function append(array $append = [])
+	{
+		$this->append = array_unique(
+			array_merge($this->append, $append)
+		);
+
+		return $this;
+	}
+
+	/**
+	 * Set the accessors to append to model arrays.
+	 *
+	 * @param array $appends
+	 * @return $this
+	 */
+	public function setAppends(array $appends)
+	{
+		$this->append = $appends;
+
+		return $this;
+	}
+
+	/**
+	 * Return whether the accessor attribute has been appended.
+	 *
+	 * @param string $attribute
+	 * @return bool
+	 */
+	public function hasAppended($attribute)
+	{
+		return in_array($attribute, $this->append, true);
+	}
+
+	/**
+	 * Get the hidden attributes for the model.
+	 *
+	 * @return array
+	 */
+	public function getHidden()
+	{
+		return $this->hidden;
+	}
+
+	/**
+	 * Set the hidden attributes for the model.
+	 *
+	 * @param array $hidden
+	 * @return $this
+	 */
+	public function setHidden(array $hidden)
+	{
+		$this->hidden = $hidden;
+
+		return $this;
+	}
+
+	/**
+	 * Make the given, typically visible, attributes hidden.
+	 *
+	 * @param array $attributes
+	 * @return $this
+	 */
+	public function makeHidden(array $attributes)
+	{
+		$this->hidden = array_merge(
+			$this->hidden, $attributes
+		);
+
+		return $this;
+	}
+
+	/**
+	 * Make the given, typically visible, attributes hidden if the given truth test passes.
+	 *
+	 * @param bool|Closure $condition
+	 * @param array|string|null $attributes
+	 * @return $this
+	 */
+	public function makeHiddenIf($condition, $attributes)
+	{
+		return value($condition, $this) ? $this->makeHidden($attributes) : $this;
+	}
+
+	/**
+	 * Get the visible attributes for the model.
+	 *
+	 * @return array
+	 */
+	public function getVisible()
+	{
+		return $this->visible;
+	}
+
+	/**
+	 * Set the visible attributes for the model.
+	 *
+	 * @param array $visible
+	 * @return $this
+	 */
+	public function setVisible(array $visible)
+	{
+		$this->visible = $visible;
+
+		return $this;
+	}
+
+	/**
+	 * Make the given, typically hidden, attributes visible.
+	 *
+	 * @param array $attributes
+	 * @return $this
+	 */
+	public function makeVisible(array $attributes)
+	{
+		$this->hidden = array_diff($this->hidden, $attributes);
+
+		if (!empty($this->visible)) {
+			$this->visible = array_merge($this->visible, $attributes);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Make the given, typically hidden, attributes visible if the given truth test passes.
+	 *
+	 * @param bool|Closure $condition
+	 * @param array $attributes
+	 * @return $this
+	 */
+	public function makeVisibleIf($condition, array $attributes)
+	{
+		return value($condition, $this) ? $this->makeVisible($attributes) : $this;
+	}
 
 	/**
 	 * 获取数据列表

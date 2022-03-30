@@ -86,6 +86,7 @@ class Repository extends AbstractRepository
 	 */
 	public function filter($filter = null, array $with = [], array $options = [])
 	{
+		$options = array_replace_recursive($this->options, $options);
 		$query = $this->query($filter, $with, $options);
 
 		return $this->middleware([
@@ -117,6 +118,7 @@ class Repository extends AbstractRepository
 	 */
 	public function detail($filter, array $with = [], array $options = [])
 	{
+		$options = array_replace_recursive($this->options, $options);
 		$query = $this->query($filter, $with, $options);
 
 		return $this->middleware([
@@ -126,7 +128,7 @@ class Repository extends AbstractRepository
 			'query' => $query,
 			'options' => $options,
 		], function () use ($query, $options) {
-			if ($options['fail'] ?? false) {
+			if ($options['find_or_fail'] ?? false) {
 				return $query->findOrFail();
 			}
 
@@ -187,6 +189,7 @@ class Repository extends AbstractRepository
 	 */
 	public function store(array $data, array $options = [])
 	{
+		$options = array_replace_recursive($this->options, $options);
 		$data = $this->validate($data, static::SCENE_STORE, $options);
 
 		return $this->transaction(function () use ($data, $options) {
@@ -210,6 +213,7 @@ class Repository extends AbstractRepository
 	 */
 	public function update($filter, array $data, array $options = [])
 	{
+		$options = array_replace_recursive($this->options, $options);
 		$data = $this->validate($data, static::SCENE_UPDATE);
 
 		return $this->transaction(function () use ($filter, $data, $options) {
@@ -247,6 +251,7 @@ class Repository extends AbstractRepository
 	 */
 	public function setValue(array $ids, $field, $value, array $options = [])
 	{
+		$options = array_replace_recursive($this->options, $options);
 		if (!$this->isAllowSetField($field)) {
 			throw new ValidateException("{$field} not in allow field list.");
 		}
@@ -309,9 +314,7 @@ class Repository extends AbstractRepository
 	 */
 	public function delete($filter, array $options = [])
 	{
-		$options = array_merge([
-			'force' => false
-		], $options);
+		$options = array_replace_recursive($this->options, $options);
 		return $this->transaction(function () use ($filter, $options) {
 			$query = $this->query($filter, [], $options);
 
@@ -321,7 +324,7 @@ class Repository extends AbstractRepository
 				'query' => $query,
 				'options' => $options,
 			], function ($input) use ($query) {
-				$isForce = $input['options']['force'] ?? false;
+				$isForce = $input['options']['allow_force_delete'] ?? false;
 				if ($isForce) {
 					return $query->removeOption('soft_delete')->delete(true);
 				}
@@ -346,6 +349,7 @@ class Repository extends AbstractRepository
 	 */
 	public function restore($filter, array $options = [])
 	{
+		$options = array_replace_recursive($this->options, $options);
 		return $this->transaction(function () use ($filter, $options) {
 			$query = $this->query($filter, [], $options)->withTrashed();
 
