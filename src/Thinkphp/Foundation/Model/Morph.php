@@ -8,6 +8,7 @@
 namespace Xin\Thinkphp\Foundation\Model;
 
 use think\db\exception\ModelNotFoundException;
+use think\Model;
 
 /**
  * Class Morph
@@ -80,25 +81,27 @@ class Morph
 	 *
 	 * @param string $type
 	 * @param int $id
-	 * @return bool
+	 * @return Model
 	 * @throws ModelNotFoundException
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
 	 */
 	public static function checkExist($type, $id)
 	{
 		$class = static::getType($type);
 
-		$result = false;
+		$result = null;
 		if (method_exists($class, 'checkMorphExist')) {
 			$result = call_user_func([$class, 'checkMorphExist'], $id);
 		} elseif (is_subclass_of($class, \think\Model::class)) {
-			$result = $class::where('id', $id)->failException()->value('id');
+			$result = $class::where('id', $id)->failException()->find();
 		}
 
 		if (!$result) {
 			throw new ModelNotFoundException("morph resource not found!", $class);
 		}
 
-		return true;
+		return $result;
 	}
 
 	/**
