@@ -9,12 +9,9 @@ namespace Xin\Thinkphp\Filesystem;
 
 use think\File;
 use think\filesystem\driver\Local;
-use Xin\Filesystem\Adapter\Aliyun\Aliyun;
-use Xin\Filesystem\Adapter\QCloud\QCloud;
-use Xin\Filesystem\Adapter\Qiniu\Qiniu;
-use Xin\Filesystem\Filesystem;
+use Xin\Capsule\Manager;
+use Xin\Filesystem\Factory as FilesystemFactory;
 use Xin\Support\Arr;
-use Xin\Support\Manager;
 
 /**
  * Class FilesystemManager
@@ -57,7 +54,7 @@ class FilesystemManager extends Manager
 	 * @param string $disk
 	 * @param null $name
 	 * @param null $default
-	 * @return array
+	 * @return mixed
 	 */
 	public function getDiskConfig($disk, $name = null, $default = null)
 	{
@@ -69,8 +66,9 @@ class FilesystemManager extends Manager
 	}
 
 	/**
+	 * 解析类型
 	 * @param string $name
-	 * @return array|mixed|string
+	 * @return string
 	 */
 	protected function resolveType($name)
 	{
@@ -78,8 +76,9 @@ class FilesystemManager extends Manager
 	}
 
 	/**
+	 * 解析配置
 	 * @param string $name
-	 * @return array|mixed|string
+	 * @return array
 	 */
 	protected function resolveConfig($name)
 	{
@@ -121,7 +120,7 @@ class FilesystemManager extends Manager
 	 */
 	public function putFileAs(string $path, File $file, string $name, array $options = [])
 	{
-		$stream = fopen($file->getRealPath(), 'r');
+		$stream = fopen($file->getRealPath(), 'rb');
 		$path = trim($path . '/' . $name, '/');
 
 		$result = $this->putStream($path, $stream, $options);
@@ -163,7 +162,7 @@ class FilesystemManager extends Manager
 	 * 七牛驱动器
 	 *
 	 * @param array $config
-	 * @return mixed
+	 * @return FilesystemProxy
 	 * @throws \Xin\Filesystem\FilesystemException
 	 */
 	protected function createQiniuDriver(array $config)
@@ -172,16 +171,14 @@ class FilesystemManager extends Manager
 			throw new \LogicException("请先安装七牛云驱动！");
 		}
 
-		return new FilesystemProxy(
-			new Filesystem(new Qiniu($config))
-		);
+		return new FilesystemProxy(FilesystemFactory::qiniu($config));
 	}
 
 	/**
 	 * 阿里云OSS驱动器
 	 *
 	 * @param array $config
-	 * @return mixed
+	 * @return FilesystemProxy
 	 * @throws \Xin\Filesystem\FilesystemException
 	 */
 	protected function createAliyunDriver(array $config)
@@ -190,16 +187,14 @@ class FilesystemManager extends Manager
 			throw new \LogicException("请先安装阿里云OSS驱动！");
 		}
 
-		return new FilesystemProxy(
-			new Filesystem(new Aliyun($config))
-		);
+		return new FilesystemProxy(FilesystemFactory::aliyun($config));
 	}
 
 	/**
 	 * 腾讯云COS驱动器
 	 *
 	 * @param array $config
-	 * @return mixed
+	 * @return FilesystemProxy
 	 * @throws \Xin\Filesystem\FilesystemException
 	 */
 	protected function createQCloudDriver(array $config)
@@ -208,9 +203,7 @@ class FilesystemManager extends Manager
 			throw new \LogicException("请先安装腾讯云COS驱动！");
 		}
 
-		return new FilesystemProxy(
-			new Filesystem(new QCloud($config))
-		);
+		return new FilesystemProxy(FilesystemFactory::qcloud($config));
 	}
 
 }
