@@ -21,7 +21,6 @@ use Xin\Support\Arr;
  */
 class FilesystemManager extends Manager
 {
-
 	/**
 	 * @param null|string $name
 	 * @return \Xin\Filesystem\Filesystem
@@ -29,23 +28,6 @@ class FilesystemManager extends Manager
 	public function disk($name = null)
 	{
 		return $this->driver($name);
-	}
-
-	/**
-	 * 获取缓存配置
-	 *
-	 * @access public
-	 * @param null|string $name 名称
-	 * @param mixed $default 默认值
-	 * @return mixed
-	 */
-	public function getConfig($name = null, $default = null)
-	{
-		if (!is_null($name)) {
-			return $this->app->config->get('filesystem.' . $name, $default);
-		}
-
-		return $this->app->config->get('filesystem');
 	}
 
 	/**

@@ -23,7 +23,9 @@ class FilesystemServiceProvider extends Service
 			'filesystem' => FilesystemInterface::class,
 			BaseFilesystemInterface::class => FilesystemInterface::class,
 			FilesystemInterface::class => function () {
-				return new FilesystemManager($this->app);
+				$filesystem = new FilesystemManager($this->app->config->get('filesystem'));
+				$filesystem->setContainer($this->app);
+				return $filesystem;
 			},
 		]);
 	}
