@@ -40,7 +40,7 @@ class FilesystemManager extends Manager
 	 */
 	public function getDiskConfig($disk, $name = null, $default = null)
 	{
-		if ($config = $this->getConfig("disks.{$disk}")) {
+		if ($config = $this->getDriverConfig($disk)) {
 			return Arr::get($config, $name, $default);
 		}
 
@@ -48,33 +48,19 @@ class FilesystemManager extends Manager
 	}
 
 	/**
-	 * 解析类型
-	 * @param string $name
-	 * @return string
+	 * @inerhitDoc
 	 */
-	protected function resolveType($name)
+	public function getDriverConfig($name)
 	{
-		return $this->getDiskConfig($name, 'type', 'local');
+		return $this->getConfig($name ? "disks.{$name}" : 'disks');
 	}
 
 	/**
-	 * 解析配置
-	 * @param string $name
-	 * @return array
-	 */
-	protected function resolveConfig($name)
-	{
-		return $this->getDiskConfig($name);
-	}
-
-	/**
-	 * 默认驱动
-	 *
-	 * @return string|null
+	 * @inerhitDoc
 	 */
 	public function getDefaultDriver()
 	{
-		return $this->getConfig('default');
+		return $this->getConfig('default', 'local');
 	}
 
 	/**
@@ -123,7 +109,7 @@ class FilesystemManager extends Manager
 	 */
 	public function publicPath($savePath, $disk = null)
 	{
-		$disk = $disk ?: $this->getDefaultDriver();
+		$disk = $disk ?: (string)$this->getDefaultDriver();
 		$domain = $this->getDiskConfig($disk, 'url');
 
 		return $domain . '/' . str_replace("\\", "/", $savePath);
@@ -143,11 +129,11 @@ class FilesystemManager extends Manager
 	/**
 	 * 七牛驱动器
 	 *
+	 * @param string $name
 	 * @param array $config
 	 * @return FilesystemProxy
-	 * @throws \Xin\Filesystem\FilesystemException
 	 */
-	protected function createQiniuDriver(array $config)
+	protected function createQiniuDriver($name, array $config)
 	{
 		if (!class_exists('Qiniu\Auth')) {
 			throw new \LogicException("请先安装七牛云驱动！");
@@ -159,11 +145,11 @@ class FilesystemManager extends Manager
 	/**
 	 * 阿里云OSS驱动器
 	 *
+	 * @param string $name
 	 * @param array $config
 	 * @return FilesystemProxy
-	 * @throws \Xin\Filesystem\FilesystemException
 	 */
-	protected function createAliyunDriver(array $config)
+	protected function createAliyunDriver($name, array $config)
 	{
 		if (!class_exists('OSS\OssClient')) {
 			throw new \LogicException("请先安装阿里云OSS驱动！");
@@ -175,11 +161,11 @@ class FilesystemManager extends Manager
 	/**
 	 * 腾讯云COS驱动器
 	 *
+	 * @param string $name
 	 * @param array $config
 	 * @return FilesystemProxy
-	 * @throws \Xin\Filesystem\FilesystemException
 	 */
-	protected function createQCloudDriver(array $config)
+	protected function createQCloudDriver($name, array $config)
 	{
 		if (!class_exists('Qcloud\Cos\Client')) {
 			throw new \LogicException("请先安装腾讯云COS驱动！");

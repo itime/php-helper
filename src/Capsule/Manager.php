@@ -152,7 +152,6 @@ abstract class Manager
 		return $this->getConfig('defaults.driver', 'default');
 	}
 
-
 	/**
 	 * 设置默认驱动
 	 * @param string $name
