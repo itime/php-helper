@@ -10,45 +10,36 @@ class QiniuUploader extends AbstractUploader
 	/**
 	 * @inheritDoc
 	 */
-	public function file($scene, \SplFileInfo $file, array $options = [])
+	public function file($scene, $targetPath, \SplFileInfo $file, array $options = [])
 	{
-		$options = $this->optimizeOptions($options);
+		$result = $this->filesystem->put($targetPath, file_get_contents($file->getRealPath()));
 
-		$key = $this->key($scene, $file->getFilename(), $options);
-		$this->filesystem->put($key, file_get_contents($file->getRealPath()));
-		$config = $this->filesystem->getDriver()->getConfig();
-		$url = $this->carryUrl($config);
-
-		return [
-			'key' => $key,
-			'path' => $key,
-			'url' => $this->concatPathToUrl($url, $key),
+		return array_merge([
+			'path' => $targetPath,
 			'filename' => $file->getFilename(),
 			'size' => $file->getSize(),
 			'extension' => $file->getExtension(),
 			'mime' => mime_content_type($file->getRealPath()),
 			'md5' => md5_file($file->getRealPath()),
 			'sha1' => sha1_file($file->getRealPath()),
-		];
+		], $result);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function token($scene, $filename, array $options = [])
+	public function token($scene, $targetPath, array $options = [])
 	{
-		$key = $this->key($scene, $filename, $options);
+		$policy = $this->makePolicy($scene, $targetPath, $options);
 
-		$policy = $this->policy($scene, $filename, $options);
-
-		$expires = $this->expire($options);
+		$expires = $this->getExpire($options);
 
 		$token = $this->filesystem->getUploadToken(
-			$key, $expires, $policy, true
+			$targetPath, $expires, $policy, true
 		);
 
 		return [
-			'key' => $key,
+			'key' => $targetPath,
 			'token' => $token,
 			'policy' => $policy,
 		];
@@ -58,26 +49,13 @@ class QiniuUploader extends AbstractUploader
 	 * @param string $scene
 	 * @param string $filename
 	 * @param array $options
-	 * @return string
-	 */
-	protected function key($scene, $filename, array $options)
-	{
-		$basePath = $options['base_path'];
-
-		return "{$basePath}/{$scene}/{$filename}";
-	}
-
-	/**
-	 * @param string $scene
-	 * @param string $filename
-	 * @param array $options
 	 * @return array
 	 */
-	protected function policy($scene, $filename, array $options)
+	protected function makePolicy($scene, $filename, array $options)
 	{
 		$policy = [
-			'callbackUrl' => $this->callbackUrl($scene, $options),
-			'callbackBody' => $this->callbackBody($scene, $options),
+			'callbackUrl' => $this->getCallbackUrl($scene, $options),
+			'callbackBody' => $this->makeCallbackBody($scene, $options),
 			'callbackBodyType' => 'application/json',
 		];
 
@@ -99,7 +77,7 @@ class QiniuUploader extends AbstractUploader
 	 * @param array $options
 	 * @return string
 	 */
-	protected function callbackUrl($scene, array $options)
+	protected function getCallbackUrl($scene, array $options)
 	{
 		return Arr::get($options, 'callback_url', '');
 	}
@@ -109,7 +87,7 @@ class QiniuUploader extends AbstractUploader
 	 * @param array $options
 	 * @return string
 	 */
-	protected function callbackBody($scene, array $options)
+	protected function makeCallbackBody($scene, array $options)
 	{
 		$cdn = $options['cdn'];
 		$userData = $options['user_data'];
@@ -132,7 +110,7 @@ class QiniuUploader extends AbstractUploader
 	 * @param array $options
 	 * @return int
 	 */
-	protected function expire(array $options)
+	protected function getExpire(array $options)
 	{
 		return Arr::get($options, 'expire', 300);
 	}

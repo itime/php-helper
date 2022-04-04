@@ -53,25 +53,4 @@ abstract class AbstractUploader extends Service implements UploaderContract
 	{
 		return rtrim($url, '/') . '/' . ltrim($path, '/');
 	}
-
-	/**
-	 * @param \League\Flysystem\Config $config
-	 * @return string
-	 */
-	protected function carryUrl(Config $config)
-	{
-		if ($config->has('url')) {
-			return $config->get('url');
-		}
-
-		if ($config->has('domain')) {
-			return $config->get('domain');
-		}
-
-		if ($config->has('cdn')) {
-			return $config->get('cdn');
-		}
-
-		return '';
-	}
 }

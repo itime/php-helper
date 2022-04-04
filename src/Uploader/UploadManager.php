@@ -70,13 +70,11 @@ class UploadManager extends Manager implements Factory
 		if (!$info) {
 			$options = $this->optimizeOptions($options);
 
-			$path = $this->buildPath($scene, $file->getFilename(), $options);
-			$result = $this->disk($scene)->put($path, file_get_contents($file->getRealPath()));
+			$targetPath = $this->buildPath($scene, $file->getFilename(), $options);
+			$result = $this->uploader($scene)->file($scene, $targetPath, $file, $options);
+//			$result = $this->disk($scene)->put($path, file_get_contents($file->getRealPath()));
 
 			$info = $uploadProvider->save($scene, $result);
-
-//			$info = $this->uploader($scene)->file($scene, $file, $options);
-//			$info = $uploadProvider->save($scene, $info);
 		}
 
 		return method_exists($uploadProvider, 'renderData') ? $uploadProvider->renderData($info) : $info;
@@ -91,7 +89,9 @@ class UploadManager extends Manager implements Factory
 	 */
 	public function token($scene, $filename, array $options = [])
 	{
-		return $this->uploader($scene)->token($scene, $filename, $options);
+		$targetPath = $this->buildPath($scene, $filename, $options);
+
+		return $this->uploader($scene)->token($scene, $targetPath, $options);
 	}
 
 	/**
