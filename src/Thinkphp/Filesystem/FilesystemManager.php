@@ -131,7 +131,7 @@ class FilesystemManager extends Manager
 	 *
 	 * @param string $name
 	 * @param array $config
-	 * @return FilesystemProxy
+	 * @return FilesystemAdapter
 	 */
 	protected function createQiniuDriver($name, array $config)
 	{
@@ -139,7 +139,7 @@ class FilesystemManager extends Manager
 			throw new \LogicException("请先安装七牛云驱动！");
 		}
 
-		return new FilesystemProxy(FilesystemFactory::qiniu($config));
+		return new FilesystemAdapter(FilesystemFactory::qiniu($config));
 	}
 
 	/**
@@ -147,7 +147,7 @@ class FilesystemManager extends Manager
 	 *
 	 * @param string $name
 	 * @param array $config
-	 * @return FilesystemProxy
+	 * @return FilesystemAdapter
 	 */
 	protected function createAliyunDriver($name, array $config)
 	{
@@ -155,7 +155,7 @@ class FilesystemManager extends Manager
 			throw new \LogicException("请先安装阿里云OSS驱动！");
 		}
 
-		return new FilesystemProxy(FilesystemFactory::aliyun($config));
+		return new FilesystemAdapter(FilesystemFactory::aliyun($config));
 	}
 
 	/**
@@ -163,7 +163,7 @@ class FilesystemManager extends Manager
 	 *
 	 * @param string $name
 	 * @param array $config
-	 * @return FilesystemProxy
+	 * @return FilesystemAdapter
 	 */
 	protected function createQCloudDriver($name, array $config)
 	{
@@ -171,7 +171,7 @@ class FilesystemManager extends Manager
 			throw new \LogicException("请先安装腾讯云COS驱动！");
 		}
 
-		return new FilesystemProxy(FilesystemFactory::qcloud($config));
+		return new FilesystemAdapter(FilesystemFactory::qcloud($config));
 	}
 
 }

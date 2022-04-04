@@ -14,7 +14,7 @@ use think\File;
  *
  * @mixin \Xin\Filesystem\Filesystem
  */
-class FilesystemProxy
+class FilesystemAdapter
 {
 
 	/**
