@@ -7,10 +7,11 @@
 
 namespace Xin\Thinkphp\Filesystem;
 
+use League\Flysystem\Filesystem;
 use think\File;
 
 /**
- * Class FilesystemProxy
+ * Class FilesystemAdapter
  *
  * @mixin \Xin\Filesystem\Filesystem
  */
@@ -18,7 +19,7 @@ class FilesystemAdapter
 {
 
 	/**
-	 * @var object
+	 * @var Filesystem
 	 */
 	protected $target;
 
@@ -57,7 +58,7 @@ class FilesystemAdapter
 	 */
 	public function putFileAs(string $path, File $file, string $name, array $options = [])
 	{
-		$stream = fopen($file->getRealPath(), 'r');
+		$stream = fopen($file->getRealPath(), 'rb');
 		$path = trim($path . '/' . $name, '/');
 
 		$result = $this->putStream($path, $stream, $options);
@@ -77,6 +78,14 @@ class FilesystemAdapter
 	public function __call($name, $arguments)
 	{
 		return call_user_func_array([$this->target, $name], $arguments);
+	}
+
+	/**
+	 * @return Filesystem
+	 */
+	public function getFilesystem()
+	{
+		return $this->target;
 	}
 
 }

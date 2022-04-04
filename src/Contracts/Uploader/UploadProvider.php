@@ -10,28 +10,21 @@ namespace Xin\Contracts\Uploader;
 interface UploadProvider
 {
 	/**
-	 * 根据Etag算法获取文件信息
+	 * 根据ID获取文件信息
 	 * @param string $scene
-	 * @param string $etag
+	 * @param int $id
 	 * @return array
 	 */
-	public function getByETag($scene, $etag);
+	public function retrieveById($scene, $id);
 
 	/**
-	 * 根据Md5算法获取文件信息
+	 * 根据文件hash值算法获取文件信息
 	 * @param string $scene
-	 * @param string $md5
+	 * @param string $hashType
+	 * @param string $hash
 	 * @return array
 	 */
-	public function getByMd5($scene, $md5);
-
-	/**
-	 * 根据Sha1算法获取文件信息
-	 * @param string $scene
-	 * @param string $sha1
-	 * @return array
-	 */
-	public function getBySha1($scene, $sha1);
+	public function retrieveByHash($scene, $hashType, $hash);
 
 	/**
 	 * @param string $scene

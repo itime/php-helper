@@ -11,7 +11,7 @@ trait WithConfig
 	 * 获取配置
 	 * @param string $key
 	 * @param mixed $default
-	 * @return array|\ArrayAccess|mixed
+	 * @return mixed
 	 */
 	public function getConfig(string $key, $default = null)
 	{

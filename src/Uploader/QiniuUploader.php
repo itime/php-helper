@@ -12,17 +12,7 @@ class QiniuUploader extends AbstractUploader
 	 */
 	public function file($scene, $targetPath, \SplFileInfo $file, array $options = [])
 	{
-		$result = $this->filesystem->put($targetPath, file_get_contents($file->getRealPath()));
-
-		return array_merge([
-			'path' => $targetPath,
-			'filename' => $file->getFilename(),
-			'size' => $file->getSize(),
-			'extension' => $file->getExtension(),
-			'mime' => mime_content_type($file->getRealPath()),
-			'md5' => md5_file($file->getRealPath()),
-			'sha1' => sha1_file($file->getRealPath()),
-		], $result);
+		return $this->filesystem->put($targetPath, file_get_contents($file->getRealPath()));
 	}
 
 	/**
@@ -41,7 +31,6 @@ class QiniuUploader extends AbstractUploader
 		return [
 			'key' => $targetPath,
 			'token' => $token,
-			'policy' => $policy,
 		];
 	}
 
@@ -59,13 +48,12 @@ class QiniuUploader extends AbstractUploader
 			'callbackBodyType' => 'application/json',
 		];
 
-		$size = Arr::get($options, 'size');
-		if ($size) {
+		if ($size = Arr::get($options, 'size')) {
 			$policy['fsizeLimit'] = $size;
 		}
 
-		if (isset($config['mime'])) {
-			$policy['mimeLimit'] = $config['mime'];
+		if ($mimes = Arr::get($options, 'mimes')) {
+			$policy['mimeLimit'] = is_array($mimes) ? implode(";", $mimes) : $mimes;
 		}
 
 		return $policy;
@@ -89,8 +77,8 @@ class QiniuUploader extends AbstractUploader
 	 */
 	protected function makeCallbackBody($scene, array $options)
 	{
-		$cdn = $options['cdn'];
-		$userData = $options['user_data'];
+		$cdn = $this->filesystem->getAdapter()->url('');
+		$userData = $options['user_data'] ?? [];
 
 		$data = array_merge([
 			'type' => $scene,

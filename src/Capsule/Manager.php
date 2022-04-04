@@ -124,8 +124,8 @@ abstract class Manager
 	 */
 	protected function setDriverContainer($driver)
 	{
-		if (method_exists($driver, 'setContainer')) {
-			$driver->setContainer($this->getContainer());
+		if (method_exists($driver, 'setContainer') && $container = $this->getContainer()) {
+			$driver->setContainer($container);
 		}
 	}
 

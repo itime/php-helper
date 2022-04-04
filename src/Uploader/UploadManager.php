@@ -3,11 +3,12 @@
 namespace Xin\Uploader;
 
 
-use http\Exception\RuntimeException;
 use League\Flysystem\Filesystem;
+use think\helper\Str;
 use Xin\Capsule\Manager;
 use Xin\Contracts\Uploader\Factory;
 use Xin\Contracts\Uploader\Uploader;
+use Xin\Support\Arr;
 
 /**
  * @mixin Uploader
@@ -40,6 +41,11 @@ class UploadManager extends Manager implements Factory
 	protected $uploadProviderResolver;
 
 	/**
+	 * @var callable
+	 */
+	protected $validateFileResolver;
+
+	/**
 	 * @param callable $filesystemResolver
 	 * @param callable|null $uploadProviderResolver
 	 * @param array $config
@@ -60,20 +66,50 @@ class UploadManager extends Manager implements Factory
 	 */
 	public function file($scene, \SplFileInfo $file, array $options = [])
 	{
+		$config = $this->getDriverConfig($scene);
+		$config = array_replace_recursive($config, $options);
+
+		return $this->getFileInfo($scene, $file, function () use ($scene, $file, $options) {
+			$this->validateFile($scene, $file, $options);
+
+			$targetPath = $this->buildPath($scene, $file->getPathname(), $options) . "." .
+				$this->getExtension(mime_content_type($file->getPathname()));
+
+			$result = $this->uploader($scene)->file($scene, $targetPath, $file, $options);
+
+			return $this->normalizeFileInfo($targetPath, $file, $result);
+		});
+	}
+
+	/**
+	 * 验证文件合法性
+	 * @return void
+	 */
+	protected function validateFile($scene, \SplFileInfo $file, $options = [])
+	{
+		$config = $this->getDriverConfig($scene);
+		$config = array_replace_recursive($config, $options);
+
+		return call_user_func($this->validateFileResolver, $file, $config);
+	}
+
+	/**
+	 * 获取文件信息
+	 * @param string $scene
+	 * @param \SplFileInfo $file
+	 * @param callable $callback
+	 * @return array
+	 */
+	protected function getFileInfo($scene, \SplFileInfo $file, $callback)
+	{
 		$uploadProvider = $this->getUploadProvider($scene);
 
-		$hash = $this->getFileHash($file);
-		$hashType = $this->getHashType();
-		$hashMethod = "getBy{$hashType}";
-		$info = $uploadProvider->{$hashMethod}($scene, $hash);
+		$hashType = $this->getFileHashType($scene);
+		$hash = $this->getFileHash($hashType, $file->getRealPath());
+		$info = $uploadProvider->retrieveByHash($scene, $hashType, $hash);
 
 		if (!$info) {
-			$options = $this->optimizeOptions($options);
-
-			$targetPath = $this->buildPath($scene, $file->getFilename(), $options);
-			$result = $this->uploader($scene)->file($scene, $targetPath, $file, $options);
-//			$result = $this->disk($scene)->put($path, file_get_contents($file->getRealPath()));
-
+			$result = $callback();
 			$info = $uploadProvider->save($scene, $result);
 		}
 
@@ -83,15 +119,22 @@ class UploadManager extends Manager implements Factory
 	/**
 	 * 获取上传令牌
 	 * @param string $scene
-	 * @param string $filename
+	 * @param array $file
 	 * @param array $options
 	 * @return array
 	 */
-	public function token($scene, $filename, array $options = [])
+	public function token($scene, array $file, array $options = [])
 	{
-		$targetPath = $this->buildPath($scene, $filename, $options);
+		$config = $this->getDriverConfig($scene);
+		$config = array_replace_recursive($config, $options);
 
-		return $this->uploader($scene)->token($scene, $targetPath, $options);
+		$mimeType = $file['mime'] ?? $file['type'] ?? '';
+		$extension = $this->getExtension($mimeType);
+		$filename = Str::random(6);
+
+		$targetPath = $this->buildPath($scene, $filename, $config) . '.' . $extension;
+
+		return $this->uploader($scene)->token($scene, $targetPath, $config);
 	}
 
 	/**
@@ -126,20 +169,19 @@ class UploadManager extends Manager implements Factory
 	public function getUploadProvider($scene)
 	{
 		$scene = $this->getSceneAlias($scene);
-		$providerClass = $this->getDriverConfig($scene . 'provider');
-
-		if (empty($providerClass)) {
-			$providerClass = $this->getDefaultConfig('provider');
-		}
+		$sceneConfig = $this->getDriverConfig($scene);
+		$providerClass = Arr::get($sceneConfig, 'provider', $this->getDefaultConfig('provider'));
 
 		if (empty($providerClass)) {
 			throw new \RuntimeException("UploadManager scene({$scene}) provider not defined.");
 		}
 
 		if ($this->uploadProviderResolver) {
-			$provider = call_user_func($this->uploadProviderResolver, $providerClass, $scene);
+			$provider = call_user_func($this->uploadProviderResolver, $providerClass, $scene, $sceneConfig);
 		} elseif (method_exists($this->container, 'make')) {
-			$provider = $this->container->make($providerClass);
+			$provider = $this->container->make($providerClass, [
+				'config' => $sceneConfig
+			]);
 		} elseif (method_exists($this->container, 'get')) {
 			$provider = $this->container->get($providerClass);
 		} else {
@@ -197,67 +239,57 @@ class UploadManager extends Manager implements Factory
 	 * @param string $name
 	 * @return array|\ArrayAccess|mixed
 	 */
-	public function getDriverConfig($name)
+	public function getDriverConfig($name, $default = null)
 	{
 		$key = 'scenes';
 
-		return $this->getConfig($name ? "{$key}.{$name}" : $key);
+		return $this->getConfig($name ? "{$key}.{$name}" : $key, $default);
 	}
 
 	/**
+	 * 获取默认配置
 	 * @param string $key
 	 * @param mixed $default
-	 * @return array|\ArrayAccess|mixed
+	 * @return mixed
 	 */
-	protected function getDefaultConfig($key, $default = null)
+	public function getDefaultConfig($key, $default = null)
 	{
 		return $this->getConfig('defaults.' . $key, $default);
-	}
-
-	/**
-	 * 获取文件hash
-	 * @param \SplFileInfo $file
-	 * @return string
-	 */
-	protected function getFileHash(\SplFileInfo $file)
-	{
-		$hashType = $this->getHashType();
-		if (self::HASH_ETAG === $hashType) {
-			return Etag::sum($file->getFilename());
-		}
-
-		if (self::HASH_MD5 === $hashType) {
-			return md5_file($file->getRealPath());
-		}
-
-		if (self::HASH_SHA1 === $hashType) {
-			return sha1_file($file->getRealPath());
-		}
-
-		if (in_array($hashType, hash_algos(), true)) {
-			return hash_file($hashType, $file, true);
-		}
-
-		throw new RuntimeException("hash_type[{$hashType}] is not support.");
 	}
 
 	/**
 	 * 获取hash类型
 	 * @return string
 	 */
-	public function getHashType()
+	public function getFileHashType($scene)
 	{
-		return $this->getDefaultConfig('hash_type', 'etag');
+		return $this->getDriverConfig($scene . ".hash_type") ?: $this->getDefaultConfig('hash_type', 'etag');
 	}
 
 	/**
-	 * 优化配置项
-	 * @param array $options
-	 * @return array
+	 * 获取文件hash
+	 * @param string $filepath
+	 * @return string
 	 */
-	protected function optimizeOptions($options)
+	public function getFileHash($hashType, $filepath)
 	{
-		return array_replace_recursive($this->config, $options);
+		if (self::HASH_ETAG === $hashType) {
+			return Etag::sum($filepath);
+		}
+
+		if (self::HASH_MD5 === $hashType) {
+			return md5_file($filepath);
+		}
+
+		if (self::HASH_SHA1 === $hashType) {
+			return sha1_file($filepath);
+		}
+
+		if (in_array($hashType, hash_algos(), true)) {
+			return hash_file($hashType, $filepath, true);
+		}
+
+		throw new \RuntimeException("hash_type[{$hashType}] is not support.");
 	}
 
 	/**
@@ -269,8 +301,65 @@ class UploadManager extends Manager implements Factory
 	 */
 	protected function buildPath($scene, $filename, array $options)
 	{
-		$basePath = $options['base_path'];
+//		$hash = hash_file('md5', $filename);
+//		$hashName = substr($hash, 0, 2) . DIRECTORY_SEPARATOR . substr($hash, 2);
+		$hashName = date('Ymd') . '/' . md5(microtime(true) . $filename);
 
-		return "{$basePath}/{$scene}/{$filename}";
+		$basePath = $options['base_path'] ?? '';
+
+		return "{$basePath}/{$scene}/{$hashName}";
+	}
+
+	/**
+	 * 根据mimeType获取文件扩展名
+	 * @param string $mimeType
+	 * @return string
+	 */
+	protected function getExtension($mimeType)
+	{
+		$mimeMaps = $this->getMimeMaps();
+		if (!isset($mimeMaps[$mimeType])) {
+			throw new \LogicException("文件类型不允许上传！");
+		}
+
+		return $mimeMaps[$mimeType];
+	}
+
+	/**
+	 * 获取mime 映射后缀名
+	 * @return array
+	 */
+	public function getMimeMaps()
+	{
+		return $this->getConfig('ext_maps', []);
+	}
+
+	/**
+	 * @param string $targetPath
+	 * @param \SplFileInfo $file
+	 * @param array $result
+	 * @return array
+	 */
+	protected function normalizeFileInfo($targetPath, \SplFileInfo $file, $result)
+	{
+		return array_merge([
+			'path' => $targetPath,
+			'filename' => $file->getFilename(),
+			'size' => $file->getSize(),
+			'extension' => $file->getExtension(),
+			'mime_type' => mime_content_type($file->getRealPath()),
+			'md5' => md5_file($file->getRealPath()),
+			'sha1' => sha1_file($file->getRealPath()),
+		], $result);
+	}
+
+	/**
+	 * 使用回调验证器
+	 * @param callable $callback
+	 * @return void
+	 */
+	public function validateFileUsing(callable $callback)
+	{
+		$this->validateFileResolver = $callback;
 	}
 }

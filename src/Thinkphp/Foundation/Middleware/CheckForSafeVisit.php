@@ -56,15 +56,13 @@ class CheckForSafeVisit
 
 		if ($safeKey == $request->pathinfo()) {
 			$this->app->cookie->set($this->cookieSafeKeyName(), $safeKey);
-		} else {
-			if ($safeKey != $this->clientSafeKey($request)) {
-				// 要排除的URL
-				if ($this->isExcept($request)) {
-					return $next($request);
-				}
-
-				throw new HttpException(404, '页面不存在！');
+		} elseif ($safeKey != $this->clientSafeKey($request)) {
+			// 要排除的URL
+			if ($this->isExcept($request)) {
+				return $next($request);
 			}
+
+//			throw new HttpException(404, '页面不存在！');
 		}
 
 		return $next($request);

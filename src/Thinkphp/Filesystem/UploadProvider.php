@@ -17,26 +17,26 @@ class UploadProvider extends Service implements UploadProviderContract
 {
 	/**
 	 * @inheritDoc
+	 * @return array|mixed|Query|\think\Model|null
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public function getByMd5($scene, $md5)
+	public function retrieveById($scene, $id)
 	{
-		return (array)$this->query()->where('type', $scene)->where('md5', $md5)->find();
+		return $this->query()->where('type', $scene)->where('id', $id)->find();
 	}
 
 	/**
 	 * @inheritDoc
+	 * @return array|mixed|Query|\think\Model|null
+	 * @throws \think\db\exception\DataNotFoundException
+	 * @throws \think\db\exception\DbException
+	 * @throws \think\db\exception\ModelNotFoundException
 	 */
-	public function getBySha1($scene, $sha1)
+	public function retrieveByHash($scene, $hashType, $hash)
 	{
-		return (array)$this->query()->where('type', $scene)->where('sha1', $sha1)->find();
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function getByETag($scene, $etag)
-	{
-		return (array)$this->query()->where('type', $scene)->where('etag', $etag)->find();
+		return $this->query()->where('type', $scene)->where($hashType, $hash)->find();
 	}
 
 	/**
@@ -44,9 +44,19 @@ class UploadProvider extends Service implements UploadProviderContract
 	 */
 	public function save($scene, array $data)
 	{
-		$saveData = array_merge([
+		$saveData = Arr::transformKeys(Arr::only($data, [
+			"type", "size", "mime_type",
+			"md5", "sha1", "hash",
+			"mimetype", "url",
+		]), [
+			'url' => 'path',
+			'hash' => 'etag',
+		]);
+		$saveData = array_merge($saveData, [
 			'type' => $scene,
-		], Arr::except($data, ['key']));
+			'create_time' => now()->getTimestamp()
+		]);
+
 		$saveData['id'] = $this->query()->insertGetId($saveData);
 
 		return $saveData;
