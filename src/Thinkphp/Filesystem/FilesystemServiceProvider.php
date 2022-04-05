@@ -12,6 +12,7 @@ use think\Service;
 use Xin\Contracts\Auth\AuthVerifyType;
 use Xin\Contracts\Uploader\Factory as UploaderFactory;
 use Xin\Filesystem\FilesystemInterface;
+use Xin\Foundation\Filesystem\StorageBuilder;
 use Xin\Support\Arr;
 use Xin\Uploader\UploadManager;
 
@@ -39,6 +40,10 @@ class FilesystemServiceProvider extends Service
 				return $filesystem;
 			},
 		]);
+
+		StorageBuilder::setDefaultFilesystemCreator(static function () {
+			return app('filesystem')->disk();
+		});
 	}
 
 	protected function registerUploadManager()
