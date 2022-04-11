@@ -12,11 +12,11 @@ use think\exception\ValidateException;
 use think\facade\App;
 use think\facade\Db;
 use Xin\Bus\Balance\BalanceModifyException;
-use Xin\Contracts\Bus\Balance\BalanceRepository;
+use Xin\Contracts\Bus\Balance\BalanceRepository as BalanceRepositoryContract;
 use Xin\Support\Arr;
 use Xin\Support\Str;
 
-class Balance implements BalanceRepository
+class BalanceRepository implements BalanceRepositoryContract
 {
 
 	/**

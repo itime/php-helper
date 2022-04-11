@@ -91,12 +91,25 @@ trait CURD
 	}
 
 	/**
+	 * 要排除的字段
+	 * @return array
+	 */
+	protected function requestExcludeKeys()
+	{
+		return [
+			'create_time', 'update_time'
+		];
+	}
+
+	/**
 	 * 创建数据操作
 	 * @return \think\Response
 	 */
 	public function create()
 	{
-		$data = $this->request->data();
+		$data = $this->request->data(
+			$this->requestExcludeKeys()
+		);
 
 		$info = $this->attachHandler([
 			'validateable', 'storeable'
@@ -125,7 +138,10 @@ trait CURD
 	{
 		$id = $this->request->validId();
 
-		$data = $this->request->data();
+		$data = $this->request->data(
+			$this->requestExcludeKeys()
+		);
+
 		$info = $this->attachHandler([
 			'validateable', 'updateable'
 		])->repository()->updateById($id, $data);

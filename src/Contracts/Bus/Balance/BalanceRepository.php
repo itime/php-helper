@@ -36,7 +36,7 @@ interface BalanceRepository
 	 * 获取用户余额数据
 	 *
 	 * @param int $userId
-	 * @return mixed
+	 * @return int|float
 	 */
 	public function value($userId);
 

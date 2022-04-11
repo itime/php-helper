@@ -8,6 +8,7 @@
 namespace Xin\Thinkphp\Http;
 
 use Symfony\Component\HttpFoundation\AcceptHeader;
+use Xin\Support\Arr;
 use Xin\Support\Str;
 use Xin\Support\Time;
 use Xin\Thinkphp\Plugin\Url;
@@ -216,23 +217,30 @@ trait Requestable
 
 	/**
 	 * 智能读取数据
-	 * @return array|mixed
+	 * @param array $excludes
+	 * @param string $filter
+	 * @return array
 	 */
-	public function data($name = '', $default = null, $filter = '')
+	public function data($excludes = [], $filter = '')
 	{
 		$method = $this->method(true);
 
 		// 自动获取请求变量
 		switch ($method) {
 			case 'POST':
-				return $this->post($name, $default, $filter);
+				$data = $this->post('', null, $filter);
+				break;
 			case 'PUT':
 			case 'DELETE':
 			case 'PATCH':
-				return $this->put($name, $default, $filter);
+				$data = $this->put('', null, $filter);
+				break;
 			default:
-				return $this->get($name, $default, $filter);
+				$data = $this->get('', null, $filter);
+				break;
 		}
+
+		return Arr::except($data, $excludes);
 	}
 
 	/**

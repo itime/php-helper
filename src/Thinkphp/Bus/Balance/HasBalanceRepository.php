@@ -9,31 +9,31 @@ namespace Xin\Thinkphp\Bus\Balance;
 
 use Xin\Support\Str;
 
-trait Balanceable
+trait HasBalanceRepository
 {
 
 	/**
-	 * @var \Xin\Contracts\Bus\Balance\BalanceRepository
+	 * @var BalanceRepository[]
 	 */
-	private $balancers = [];
+	private static $balancerRepositories = [];
 
 	/**
 	 * 获取余额处理器实例
 	 *
 	 * @return \Xin\Contracts\Bus\Balance\BalanceRepository
 	 */
-	public function balance($bag = 'default')
+	public static function balance($bag = 'default')
 	{
-		if (isset($this->balancers[$bag])) {
-			return $this->balancers[$bag];
+		if (isset(static::$balancerRepositories[$bag])) {
+			return static::$balancerRepositories[$bag];
 		}
 
 		$method = 'make' . Str::camel($bag) . 'Balance';
-		if (!method_exists($this, $method)) {
+		if (!method_exists(static::class, $method)) {
 			throw new \RuntimeException("{$bag} balance not defined.");
 		}
 
-		return $this->balancers[$bag] = $this->$method();
+		return static::$balancerRepositories[$bag] = call_user_func([static::class, $method]);
 	}
 
 	/**
@@ -41,16 +41,25 @@ trait Balanceable
 	 *
 	 * @return \Xin\Contracts\Bus\Balance\BalanceRepository
 	 */
-	protected function makeDefaultBalance()
+	protected static function makeDefaultBalance()
 	{
-		return new Balance([
+		return new BalanceRepository('balance');
+	}
+
+	/**
+	 * 创建余额仓库管理器
+	 * @param array $config
+	 * @return BalanceRepository
+	 */
+	protected static function makeBalance(array $config)
+	{
+		return new BalanceRepository(array_replace_recursive([
 			'model' => static::class,
-			'field' => 'balance',
 			'log' => [
 				'type' => 'table',
-				'table' => $this->name . "_balance_log",
+				'table' => (new static)->getName() . "_balance_log",
 			],
-		]);
+		], $config));
 	}
 
 	/**
@@ -63,7 +72,7 @@ trait Balanceable
 	 */
 	public function recharge($amount, $remark = '', $attributes = [], $bag = 'default')
 	{
-		return $this->balance($bag)->recharge($this->getOrigin('id'), $amount, $remark, $attributes);
+		return static::balance($bag)->recharge($this->getOrigin('id'), $amount, $remark, $attributes);
 	}
 
 	/**
@@ -76,7 +85,7 @@ trait Balanceable
 	 */
 	public function consume($amount, $remark = '', $attributes = [], $bag = 'default')
 	{
-		return $this->balance($bag)->consume($this->getOrigin('id'), $amount, $remark, $attributes);
+		return static::balance($bag)->consume($this->getOrigin('id'), $amount, $remark, $attributes);
 	}
 
 	/**
@@ -86,7 +95,7 @@ trait Balanceable
 	 */
 	public function getBalance($bag = 'default')
 	{
-		return $this->balance($bag)->value(
+		return static::balance($bag)->value(
 			$this->getOrigin('id')
 		);
 	}

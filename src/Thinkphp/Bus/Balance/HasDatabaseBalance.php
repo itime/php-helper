@@ -11,6 +11,7 @@ use Xin\Bus\Balance\SceneEnum;
 
 /**
  * Trait HasDatabaseBalance
+ * @todo
  */
 trait HasDatabaseBalance
 {
