@@ -9,13 +9,13 @@ trait WithConfig
 
 	/**
 	 * 获取配置
-	 * @param string $key
+	 * @param string|null $key
 	 * @param mixed $default
 	 * @return mixed
 	 */
-	public function getConfig(string $key, $default = null)
+	public function getConfig(string $key = null, $default = null)
 	{
-		return Arr::get($this->config, $key, $default);
+		return $key ? Arr::get($this->config, $key, $default) : $this->config;
 	}
 
 	/**

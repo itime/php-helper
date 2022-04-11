@@ -43,7 +43,9 @@ trait HasBalanceRepository
 	 */
 	protected static function makeDefaultBalance()
 	{
-		return new BalanceRepository('balance');
+		return static::makeBalance([
+			'field' => 'balance'
+		]);
 	}
 
 	/**

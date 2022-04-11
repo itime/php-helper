@@ -8,16 +8,17 @@
 namespace Xin\Thinkphp\Bus\Balance;
 
 use think\db\BaseQuery as Query;
-use think\exception\ValidateException;
 use think\facade\App;
 use think\facade\Db;
+use Xin\Bus\Balance\BalanceInsufficientException;
 use Xin\Bus\Balance\BalanceModifyException;
+use Xin\Capsule\WithConfig;
 use Xin\Contracts\Bus\Balance\BalanceRepository as BalanceRepositoryContract;
-use Xin\Support\Arr;
 use Xin\Support\Str;
 
 class BalanceRepository implements BalanceRepositoryContract
 {
+	use WithConfig;
 
 	/**
 	 * @var array
@@ -48,7 +49,7 @@ class BalanceRepository implements BalanceRepositoryContract
 
 		$result = $query->update($attributes);
 		if (!$result) {
-			throw new \LogicException("余额变更失败！", 40100);
+			throw new BalanceModifyException("余额变更失败！");
 		}
 
 		$logData = $this->insertLog($userId, 1, $amount, $remark, $attributes);
@@ -67,7 +68,7 @@ class BalanceRepository implements BalanceRepositoryContract
 	{
 		$value = $this->newQuery()->where('id', $userId)->value($this->field());
 		if ($value < $amount) {
-			throw new ValidateException("余额不足！");
+			throw new BalanceInsufficientException("余额不足！");
 		}
 
 		$result = $this->newQuery()->where('id', $userId)->dec($this->field(), $amount)->update($attributes);
@@ -124,7 +125,7 @@ class BalanceRepository implements BalanceRepositoryContract
 	 */
 	protected function field()
 	{
-		return Arr::get($this->config, 'field', 'balance');
+		return $this->getConfig('field', 'balance');
 	}
 
 	/**
@@ -134,7 +135,7 @@ class BalanceRepository implements BalanceRepositoryContract
 	 */
 	protected function fieldTotal()
 	{
-		return Arr::get($this->config, 'field_total', null);
+		return $this->getConfig('field_total', null);
 	}
 
 	/**
@@ -144,7 +145,7 @@ class BalanceRepository implements BalanceRepositoryContract
 	 */
 	protected function triggerEvent($logData)
 	{
-		$eventClass = Arr::get($this->config, 'event');
+		$eventClass = $this->getConfig('event');
 		if (!$eventClass) {
 			return;
 		}
@@ -159,11 +160,11 @@ class BalanceRepository implements BalanceRepositoryContract
 	/**
 	 * 获取模型查询实例
 	 *
-	 * @return Query
+	 * @return Query|Db
 	 */
 	protected function newQuery()
 	{
-		$modelClass = Arr::get($this->config, 'model');
+		$modelClass = $this->getConfig('model');
 		if (!$modelClass) {
 			throw new \RuntimeException("balance model not defined.");
 		}
@@ -176,7 +177,7 @@ class BalanceRepository implements BalanceRepositoryContract
 	 */
 	protected function logQuery()
 	{
-		$config = Arr::get($this->config, 'log');
+		$config = $this->getConfig('log');
 		if ($config['type'] === 'model') {
 			$modelClass = $config['model'];
 
