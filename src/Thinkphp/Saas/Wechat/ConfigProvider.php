@@ -30,7 +30,7 @@ class ConfigProvider implements ConfigProviderContract
 	 */
 	public function retrieveById($id, $type)
 	{
-		if (in_array($type, [WechatType::WORK, WechatType::OPEN_WORK])) {
+		if (in_array($type, [WechatType::WORK, WechatType::OPEN_WORK], true)) {
 			return $this->getByWorkId($id);
 		} else {
 			return $this->getByWechatAccountId($id);
@@ -73,7 +73,7 @@ class ConfigProvider implements ConfigProviderContract
 	 */
 	public function retrieveByAppId($appId, $type, $name = null)
 	{
-		if (in_array($type, [WechatType::WORK, WechatType::OPEN_WORK])) {
+		if (in_array($type, [WechatType::WORK, WechatType::OPEN_WORK], true)) {
 			return $this->getByWorkAppId($appId);
 		} else {
 			return $this->getByWechatAccountAppId($appId, $type);

@@ -104,7 +104,11 @@ class PaymentManager implements PaymentFactory
 	 */
 	public function hasWechat($name = null)
 	{
-		return $this->hasConfig('wechat' . ($name ?: $this->getDefault('wechat')));
+		$name = $name ?: $this->getDefault('wechat');
+		$key = 'wechat.' . $name;
+		return $this->hasConfig($key) &&
+			$this->hasConfig($key . '.mch_id') &&
+			$this->hasConfig($key . '.key');
 	}
 
 	/**
@@ -156,7 +160,8 @@ class PaymentManager implements PaymentFactory
 	 */
 	public function hasAlipay($name = null)
 	{
-		return $this->hasConfig('alipay' . ($name ?: $this->getDefault('alipay')));
+		$name = $name ?: $this->getDefault('alipay');
+		return $this->hasConfig('alipay.' . $name);
 	}
 
 	/**

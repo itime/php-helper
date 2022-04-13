@@ -7,9 +7,9 @@
 
 namespace Xin\Saas\Payment;
 
+use Xin\Contracts\Saas\Payment\ConfigProvider;
 use Xin\Contracts\Saas\Payment\PaymentType;
 use Xin\Contracts\Saas\Payment\Repository;
-use Xin\Contracts\Saas\Wechat\ConfigProvider;
 use Xin\Payment\Exceptions\PaymentNotConfigureException;
 use Xin\Payment\PaymentManager as BasePaymentManager;
 

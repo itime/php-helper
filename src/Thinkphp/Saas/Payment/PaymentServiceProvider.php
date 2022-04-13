@@ -11,10 +11,13 @@ use think\Service;
 use Xin\Contracts\Saas\Payment\Repository as PaymentRepository;
 use Xin\Payment\PaymentManager;
 use Xin\Saas\Payment\PaymentManager as SaasPaymentManager;
-use Xin\Thinkphp\Saas\Wechat\ConfigProvider;
 
 class PaymentServiceProvider extends Service
 {
+	/**
+	 * @var int
+	 */
+	protected static $appId;
 
 	/**
 	 * 启动器
@@ -28,7 +31,7 @@ class PaymentServiceProvider extends Service
 				return tap(new SaasPaymentManager(
 					$this->app->config->get('payment'),
 					new ConfigProvider()
-				), function (SaasPaymentManager $manager) {
+				), static function (SaasPaymentManager $manager) {
 					if (static::$appId) {
 						$manager->shouldUseOfAppId(static::$appId);
 					}
