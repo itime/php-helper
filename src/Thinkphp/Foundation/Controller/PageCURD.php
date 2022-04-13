@@ -89,7 +89,7 @@ trait PageCURD
 	public function update()
 	{
 		if ($this->request->isGet()) {
-			$id = $this->request->idWithValid();
+			$id = $this->request->validId();
 			$info = $this->attachHandler('detailable')
 				->repository()
 				->detailById($id);

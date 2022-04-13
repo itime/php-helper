@@ -25,7 +25,12 @@ use Xin\Thinkphp\Repository\Repository;
  * @method mixed deleteable($input, callable $next)
  * @method mixed recoveryable($input, callable $next)
  * @method mixed restoreable($input, callable $next)
+ * @method array getIndexOptions()
  * @property Requestable $request
+ * @property array $allowFields
+ * @property bool $allowForceDelete
+ * @property array $indexWith
+ * @property array $indexOptions
  */
 trait CURD
 {
@@ -43,12 +48,19 @@ trait CURD
 	{
 		$search = $this->request->param();
 
+		$indexWith = $this->property('indexWith', []);
+		$options = method_exists($this, 'getIndexOptions') ? $this->getIndexOptions() : $this->property('indexOptions', []);
+		$options = array_replace_recursive([
+			'order' => 'id desc'
+		], $options);
+
 		$data = $this->attachHandler('filterable')
 			->repository()
 			->paginate(
 				$search,
-				$this->property('indexWith', []),
-				$this->request->paginate()
+				$indexWith,
+				$this->request->paginate(),
+				$options
 			);
 
 		return $this->renderIndexResponse($data);
