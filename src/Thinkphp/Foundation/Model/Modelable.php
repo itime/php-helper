@@ -46,6 +46,23 @@ trait Modelable
 	}
 
 	/**
+	 * Remove the accessors to append to model arrays.
+	 *
+	 * @param array $appends
+	 * @return $this
+	 */
+	public function removeAppends(array $appends)
+	{
+		foreach ($appends as $append) {
+			if (($index = array_search($append, $this->append, true)) !== false) {
+				unset($this->append[$index]);
+			}
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Return whether the accessor attribute has been appended.
 	 *
 	 * @param string $attribute
