@@ -38,7 +38,7 @@ class BalanceRepository implements BalanceRepositoryContract
 	/**
 	 * @inheritDoc
 	 */
-	public function recharge($userId, $amount, $remark = '', $attributes = [])
+	public function recharge($userId, $amount, $remark = '', $attributes = [], $logAttributes = [])
 	{
 		$query = $this->newQuery()->where('id', $userId)->inc($this->field(), $amount);
 
@@ -52,7 +52,7 @@ class BalanceRepository implements BalanceRepositoryContract
 			throw new BalanceModifyException("余额变更失败！");
 		}
 
-		$logData = $this->insertLog($userId, 1, $amount, $remark, $attributes);
+		$logData = $this->insertLog($userId, 1, $amount, $remark, $logAttributes);
 
 		$logData['current'] = $value = $this->value($userId);
 
