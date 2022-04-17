@@ -120,6 +120,9 @@ class PluginServiceProvider extends Service
 	protected function attachTasks(array $tasks)
 	{
 		$cronConfig = $this->app->config->get('cron');
+		if (empty($cronConfig)) {
+			return;
+		}
 
 		$tasks = array_merge($cronConfig['tasks'], $tasks);
 		$cronConfig['tasks'] = array_unique($tasks);
