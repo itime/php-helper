@@ -17,9 +17,10 @@ interface BalanceRepository
 	 * @param float $amount
 	 * @param string $remark
 	 * @param array $attributes
+	 * @param array $logAttributes
 	 * @return float
 	 */
-	public function recharge($userId, $amount, $remark = '', $attributes = []);
+	public function recharge($userId, $amount, $remark = '', $attributes = [], $logAttributes = []);
 
 	/**
 	 * 消费
