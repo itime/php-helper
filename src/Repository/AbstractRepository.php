@@ -124,8 +124,8 @@ abstract class AbstractRepository implements Repository
 	 */
 	public static function ofModel($modelClass, $options = [])
 	{
-		return new static([
-				'model' => $modelClass,
-			] + $options);
+		return new static(array_replace_recursive([
+			'model' => $modelClass,
+		], $options));
 	}
 }
