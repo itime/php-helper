@@ -106,11 +106,11 @@ trait CURD
 	 * 要排除的字段
 	 * @return array
 	 */
-	protected function requestExcludeKeys()
+	protected function requestExcludeKeys($scene = null)
 	{
-		return [
-			'create_time', 'update_time'
-		];
+		return array_merge(($scene === 'create' ? ['id'] : []), [
+			'delete_time', 'create_time', 'update_time'
+		]);
 	}
 
 	/**
@@ -120,7 +120,7 @@ trait CURD
 	public function create()
 	{
 		$data = $this->request->data(
-			$this->requestExcludeKeys()
+			$this->requestExcludeKeys('create')
 		);
 
 		$info = $this->attachHandler([

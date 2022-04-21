@@ -28,4 +28,11 @@ interface Uploader
 	 */
 	public function token($scene, $targetPath, array $options = []);
 
+	/**
+	 * 转换异步回调数据
+	 * @param array $notifyData
+	 * @return array
+	 */
+	public function transformNotifyData($notifyData);
+
 }

@@ -117,6 +117,29 @@ class UploadManager extends Manager implements Factory
 	}
 
 	/**
+	 * 保存文件信息
+	 * @param string $scene
+	 * @param array $notifyData
+	 * @return array
+	 */
+	public function saveFileInfo($scene, $notifyData)
+	{
+		$uploadProvider = $this->getUploadProvider($scene);
+
+		$fileInfo = $this->uploader($scene)->transformNotifyData($notifyData);
+
+		$hashType = $this->getFileHashType($scene);
+		$hash = $fileInfo['hash'];
+
+		$info = $uploadProvider->retrieveByHash($scene, $hashType, $hash);
+		if (!$info) {
+			$info = $uploadProvider->save($scene, $fileInfo);
+		}
+
+		return method_exists($uploadProvider, 'renderData') ? $uploadProvider->renderData($info) : $info;
+	}
+
+	/**
 	 * 获取上传令牌
 	 * @param string $scene
 	 * @param array $file

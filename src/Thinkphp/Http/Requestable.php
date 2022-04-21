@@ -244,6 +244,34 @@ trait Requestable
 	}
 
 	/**
+	 * 智能读取数据
+	 * @param array $onlyKeys
+	 * @param string $filter
+	 * @return array
+	 */
+	public function dataOnly($onlyKeys = [], $filter = '')
+	{
+		$method = $this->method(true);
+
+		// 自动获取请求变量
+		switch ($method) {
+			case 'POST':
+				$type = "post";
+				break;
+			case 'PUT':
+			case 'DELETE':
+			case 'PATCH':
+				$type = "put";
+				break;
+			default:
+				$type = "get";
+				break;
+		}
+
+		return $this->only($onlyKeys, $type, $filter);
+	}
+
+	/**
 	 * Generates the normalized query string for the Request.
 	 * It builds a normalized query string, where keys/value pairs are alphabetized
 	 * and have consistent escaping.
