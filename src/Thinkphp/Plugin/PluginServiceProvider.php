@@ -46,13 +46,18 @@ class PluginServiceProvider extends Service
 	{
 		$this->app->bind("pluginManager", PluginFactory::class);
 		$this->app->bind(PluginFactory::class, function () {
-			return new PluginManager(array_merge([
+			$config = array_merge([
 				'default' => [
 					'app_name' => 'admin',
 				],
 				'namespace' => 'plugins',
 				'path' => root_path('plugins'),
-			], config('plugin')));
+			], config('plugin'));
+
+			$pluginManager = new PluginManager($config);
+			$pluginManager->setContainer($this->app);
+
+			return $pluginManager;
 		});
 	}
 

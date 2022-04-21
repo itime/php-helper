@@ -28,4 +28,23 @@ trait WithContainer
 		$this->container = $container;
 	}
 
+	/**
+	 * 生成类实例
+	 * @param string $class
+	 * @param array $args
+	 * @return mixed
+	 */
+	protected function makeClassInstance($class, $args = [])
+	{
+		if (method_exists($this->container, 'make')) {
+			return $this->container->make($class, $args);
+		}
+
+		if (method_exists($class, '__make')) {
+			return call_user_func_array([$class, '__make'], $args);
+		}
+
+		return $this->container->get($class);
+	}
+
 }

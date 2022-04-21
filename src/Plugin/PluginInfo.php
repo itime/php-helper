@@ -7,18 +7,14 @@
 
 namespace Xin\Plugin;
 
-use think\Container;
+use Xin\Capsule\WithContainer;
 use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Contracts\Plugin\PluginInfo as PluginInfoContract;
 use Xin\Support\Version;
 
 class PluginInfo implements PluginInfoContract
 {
-
-	/**
-	 * @var \think\App
-	 */
-	protected $app;
+	use WithContainer;
 
 	/**
 	 * @var PluginFactory
@@ -57,7 +53,6 @@ class PluginInfo implements PluginInfoContract
 		$this->name = $name;
 		$this->pluginClass = $pluginClass;
 		$this->factory = $factory;
-		$this->app = Container::getInstance()->get('app');
 	}
 
 	/**
@@ -113,7 +108,7 @@ class PluginInfo implements PluginInfoContract
 	public function plugin()
 	{
 		if (!is_object($this->pluginClass)) {
-			$this->pluginClass = $this->app->invokeClass($this->pluginClass);
+			$this->pluginClass = $this->makeClassInstance($this->pluginClass);
 		}
 
 		return $this->pluginClass;

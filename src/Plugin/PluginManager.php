@@ -7,12 +7,14 @@
 
 namespace Xin\Plugin;
 
+use Xin\Capsule\WithContainer;
 use Xin\Contracts\Plugin\Factory as PluginFactory;
 use Xin\Support\Arr;
 use Xin\Support\Collection;
 
 class PluginManager implements PluginFactory
 {
+	use WithContainer;
 
 	/**
 	 * @var array
@@ -99,6 +101,7 @@ class PluginManager implements PluginFactory
 		}
 
 		$pluginInfo = new PluginInfo($plugin, $class, $this);
+		$pluginInfo->setContainer($this->container);
 		$this->plugins->set($plugin, $pluginInfo);
 
 		return $pluginInfo;
@@ -126,7 +129,9 @@ class PluginManager implements PluginFactory
 				continue;
 			}
 
-			$plugins[$name] = new PluginInfo($name, $class, $this);
+			$pluginInfo = new PluginInfo($name, $class, $this);
+			$pluginInfo->setContainer($this->container);
+			$plugins[$name] = $pluginInfo;
 		}
 
 		$this->plugins = new Collection($plugins);
