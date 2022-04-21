@@ -7,7 +7,7 @@
 
 namespace Xin\Bus\Favorite\Contracts;
 
-use app\common\event\FavoriteEvent;
+use Xin\Bus\Favorite\Events\FavoriteEvent;
 
 interface FavoriteListenerOfStatic
 {

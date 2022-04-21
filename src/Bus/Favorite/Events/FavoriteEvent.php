@@ -28,14 +28,30 @@ class FavoriteEvent
 	protected $isFavorite;
 
 	/**
+	 * @var mixed
+	 */
+	protected $target;
+
+	/**
 	 * @param string $topicType
 	 * @param int $topicId
+	 * @param bool $isFavorite
+	 * @param mixed $target
 	 */
-	public function __construct($topicType, $topicId, $isFavorite)
+	public function __construct($topicType, $topicId, $isFavorite, $target = null)
 	{
 		$this->topicType = $topicType;
 		$this->topicId = $topicId;
 		$this->isFavorite = $isFavorite;
+		$this->target = $target;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getTarget()
+	{
+		return $this->target;
 	}
 
 	/**
