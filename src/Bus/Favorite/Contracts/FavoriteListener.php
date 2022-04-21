@@ -17,6 +17,6 @@ interface FavoriteListener
 	 * @param FavoriteEvent $event
 	 * @return mixed
 	 */
-	public static function onFavorite(FavoriteEvent $event);
+	public function onFavorite(FavoriteEvent $event);
 
 }

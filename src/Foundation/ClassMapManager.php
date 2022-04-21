@@ -127,32 +127,6 @@ class ClassMapManager implements \ArrayAccess
 	}
 
 	/**
-	 * 检查对应关联的资源是否存在
-	 *
-	 * @param string $type
-	 * @param int $id
-	 * @return bool
-	 * @todo
-	 */
-	public function checkExist($type, $id)
-	{
-		$class = $this->get($type);
-
-		$result = false;
-		if (method_exists($class, 'checkMorphExist')) {
-			$result = call_user_func([$class, 'checkMorphExist'], $id);
-		} elseif (is_subclass_of($class, \think\Model::class)) {
-			$result = $class::where('id', $id)->failException()->value('id');
-		}
-
-		if (!$result) {
-			throw new \LogicException("morph resource not found!");
-		}
-
-		return true;
-	}
-
-	/**
 	 * @inheritDoc
 	 */
 	public function offsetExists($offset)

@@ -9,21 +9,38 @@ namespace Xin\Thinkphp\Foundation\Model;
 
 use think\db\exception\ModelNotFoundException;
 use think\Model;
+use Xin\Foundation\ClassMapManager;
 
 /**
  * Class Morph
- * @deprecated
- * @see \Xin\Foundation\ClassMapManager
+ * @mixin ClassMapManager
+ * @see ClassMapManager
  */
-class Morph
+final class Morph
 {
+	/**
+	 * @var \Xin\Foundation\ClassMapManager
+	 */
+	protected static $classMapManager;
 
 	/**
-	 * 多态关联类型
-	 *
-	 * @var array
+	 * 私有构造器
 	 */
-	protected static $morphList = [];
+	private function __construct()
+	{
+	}
+
+	/**
+	 * @return \Xin\Foundation\ClassMapManager
+	 */
+	public static function getClassMapManager()
+	{
+		if (self::$classMapManager === null) {
+			self::$classMapManager = new ClassMapManager();
+		}
+
+		return self::$classMapManager;
+	}
 
 	/**
 	 * 获取类型列表
@@ -32,7 +49,7 @@ class Morph
 	 */
 	public static function getTypeList()
 	{
-		return self::$morphList;
+		return self::getClassMapManager()->getMaps();
 	}
 
 	/**
@@ -43,11 +60,11 @@ class Morph
 	 */
 	public static function bindType($type, $modelClass)
 	{
-		if (static::hasType($type)) {
+		if (self::hasType($type)) {
 			throw new \LogicException("morph type {$type} duplicate defined.");
 		}
 
-		self::$morphList[$type] = $modelClass;
+		self::getClassMapManager()->bind($type, $modelClass);
 	}
 
 	/**
@@ -58,7 +75,7 @@ class Morph
 	 */
 	public static function hasType($type)
 	{
-		return isset(self::$morphList[$type]);
+		return self::getClassMapManager()->has($type);
 	}
 
 	/**
@@ -69,11 +86,11 @@ class Morph
 	 */
 	public static function getType($type)
 	{
-		if (!static::hasType($type)) {
+		if (!self::hasType($type)) {
 			throw new \LogicException("morph type {$type} not defined.");
 		}
 
-		return self::$morphList[$type];
+		return self::getClassMapManager()->get($type);
 	}
 
 	/**
@@ -88,13 +105,13 @@ class Morph
 	 */
 	public static function checkExist($type, $id)
 	{
-		$class = static::getType($type);
+		$class = self::getType($type);
 
 		$result = null;
 		if (method_exists($class, 'checkMorphExist')) {
 			$result = call_user_func([$class, 'checkMorphExist'], $id);
 		} elseif (is_subclass_of($class, \think\Model::class)) {
-			$result = $class::where('id', $id)->failException()->find();
+			$result = (new $class)->where('id', $id)->failException()->find();
 		}
 
 		if (!$result) {
@@ -110,17 +127,41 @@ class Morph
 	 * @param string $type
 	 * @param string $method
 	 * @param array $args
-	 * @return false|mixed
+	 * @return mixed
+	 * @deprecated
 	 */
 	public static function callMethod($type, $method, $args = [])
 	{
-		$class = static::getType($type);
+		return self::callStaticMethod($type, $method, $args);
+	}
+
+	/**
+	 * 调用对应关联资源的方法
+	 *
+	 * @param string $type
+	 * @param string $method
+	 * @param array $args
+	 * @return mixed
+	 */
+	public static function callStaticMethod($type, $method, $args = [])
+	{
+		$class = self::getType($type);
 
 		if (!method_exists($class, $method)) {
 			return null;
 		}
 
 		return call_user_func_array([$class, $method], $args);
+	}
+
+	/**
+	 * @param string $name
+	 * @param array $arguments
+	 * @return mixed
+	 */
+	public static function __callStatic($name, $arguments)
+	{
+		return call_user_func_array([self::getClassMapManager(), $name], $arguments);
 	}
 
 }
