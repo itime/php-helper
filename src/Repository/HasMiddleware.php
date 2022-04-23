@@ -51,10 +51,11 @@ trait HasMiddleware
 	}
 
 	/**
+	 * 添加一个过滤中间件
 	 * @param \Closure $closure
 	 * @return $this
 	 */
-	public function filterable(\Closure $closure)
+	public function filterMiddleware(\Closure $closure)
 	{
 		$this->registerMiddleware(static::SCENE_FILTER, $closure);
 
@@ -62,10 +63,11 @@ trait HasMiddleware
 	}
 
 	/**
+	 * 添加一个详情中间件
 	 * @param \Closure $closure
 	 * @return $this
 	 */
-	public function detailable(\Closure $closure)
+	public function detailMiddleware(\Closure $closure)
 	{
 		$this->registerMiddleware(static::SCENE_DETAIL, $closure);
 
@@ -73,21 +75,11 @@ trait HasMiddleware
 	}
 
 	/**
+	 * 添加一个验证中间件
 	 * @param \Closure $closure
 	 * @return $this
 	 */
-	public function showable(\Closure $closure)
-	{
-		$this->registerMiddleware(static::SCENE_SHOW, $closure);
-
-		return $this;
-	}
-
-	/**
-	 * @param \Closure $closure
-	 * @return $this
-	 */
-	public function validateable(\Closure $closure)
+	public function validateMiddleware(\Closure $closure)
 	{
 		$this->registerMiddleware(static::SCENE_VALIDATE, $closure);
 
@@ -95,10 +87,11 @@ trait HasMiddleware
 	}
 
 	/**
+	 * 添加一个存储中间件
 	 * @param \Closure $closure
 	 * @return $this
 	 */
-	public function storeable(\Closure $closure)
+	public function storeMiddleware(\Closure $closure)
 	{
 		$this->registerMiddleware(static::SCENE_STORE, $closure);
 
@@ -106,10 +99,11 @@ trait HasMiddleware
 	}
 
 	/**
+	 * 添加一个更新中间件
 	 * @param \Closure $closure
 	 * @return $this
 	 */
-	public function updateable(\Closure $closure)
+	public function updateMiddleware(\Closure $closure)
 	{
 		$this->registerMiddleware(static::SCENE_UPDATE, $closure);
 
@@ -117,10 +111,11 @@ trait HasMiddleware
 	}
 
 	/**
+	 * 添加一个删除中间件
 	 * @param \Closure $closure
 	 * @return $this
 	 */
-	public function deleteable(\Closure $closure)
+	public function deleteMiddleware(\Closure $closure)
 	{
 		$this->registerMiddleware(static::SCENE_DELETE, $closure);
 
@@ -128,21 +123,11 @@ trait HasMiddleware
 	}
 
 	/**
+	 * 添加一个数据恢复中间件
 	 * @param \Closure $closure
 	 * @return $this
 	 */
-	public function recoveryable(\Closure $closure)
-	{
-		$this->registerMiddleware(static::SCENE_RECOVERY, $closure);
-
-		return $this;
-	}
-
-	/**
-	 * @param \Closure $closure
-	 * @return $this
-	 */
-	public function restoreable(\Closure $closure)
+	public function restoreMiddleware(\Closure $closure)
 	{
 		$this->registerMiddleware(static::SCENE_RESTORE, $closure);
 
@@ -150,6 +135,7 @@ trait HasMiddleware
 	}
 
 	/**
+	 * 注册中间件
 	 * @param string $name
 	 * @param \Closure $closure
 	 */
@@ -159,6 +145,7 @@ trait HasMiddleware
 	}
 
 	/**
+	 * 获取全局中间件
 	 * @return MiddlewareManager
 	 */
 	public static function globalMiddlewareManager()
@@ -173,7 +160,7 @@ trait HasMiddleware
 	/**
 	 * @param \Closure $closure
 	 */
-	public static function globalFilterable(\Closure $closure)
+	public static function globalFilterMiddleware(\Closure $closure)
 	{
 		static::registerGlobalMiddleware(static::SCENE_FILTER, $closure);
 	}
@@ -181,7 +168,7 @@ trait HasMiddleware
 	/**
 	 * @param \Closure $closure
 	 */
-	public static function globalDetailable(\Closure $closure)
+	public static function globalDetailMiddleware(\Closure $closure)
 	{
 		static::registerGlobalMiddleware(static::SCENE_DETAIL, $closure);
 	}
@@ -189,15 +176,7 @@ trait HasMiddleware
 	/**
 	 * @param \Closure $closure
 	 */
-	public static function globalShowable(\Closure $closure)
-	{
-		static::registerGlobalMiddleware(static::SCENE_SHOW, $closure);
-	}
-
-	/**
-	 * @param \Closure $closure
-	 */
-	public static function globalValidateable(\Closure $closure)
+	public static function globalValidateMiddleware(\Closure $closure)
 	{
 		static::registerGlobalMiddleware(static::SCENE_VALIDATE, $closure);
 	}
@@ -205,7 +184,7 @@ trait HasMiddleware
 	/**
 	 * @param \Closure $closure
 	 */
-	public static function globalStoreable(\Closure $closure)
+	public static function globalStoreMiddleware(\Closure $closure)
 	{
 		static::registerGlobalMiddleware(static::SCENE_STORE, $closure);
 	}
@@ -213,7 +192,7 @@ trait HasMiddleware
 	/**
 	 * @param \Closure $closure
 	 */
-	public static function globalUpdateable(\Closure $closure)
+	public static function globalUpdateMiddleware(\Closure $closure)
 	{
 		static::registerGlobalMiddleware(static::SCENE_UPDATE, $closure);
 	}
@@ -221,7 +200,7 @@ trait HasMiddleware
 	/**
 	 * @param \Closure $closure
 	 */
-	public static function globalDeleteable(\Closure $closure)
+	public static function globalDeleteMiddleware(\Closure $closure)
 	{
 		static::registerGlobalMiddleware(static::SCENE_DELETE, $closure);
 	}
@@ -229,15 +208,7 @@ trait HasMiddleware
 	/**
 	 * @param \Closure $closure
 	 */
-	public static function globalRecoveryable(\Closure $closure)
-	{
-		static::registerGlobalMiddleware(static::SCENE_RECOVERY, $closure);
-	}
-
-	/**
-	 * @param \Closure $closure
-	 */
-	public static function globalRestoreable(\Closure $closure)
+	public static function globalRestoreMiddleware(\Closure $closure)
 	{
 		static::registerGlobalMiddleware(static::SCENE_RESTORE, $closure);
 	}

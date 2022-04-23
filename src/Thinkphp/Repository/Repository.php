@@ -25,7 +25,7 @@ class Repository extends AbstractRepository
 	 */
 	protected function registerSearchMiddleware()
 	{
-		$this->filterable(function ($input, $next) {
+		$this->filterMiddleware(function ($input, $next) {
 			if (!isset($input['options']['search'])) {
 				$input['options']['search'] = [];
 			}

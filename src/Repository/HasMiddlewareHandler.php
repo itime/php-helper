@@ -21,39 +21,31 @@ trait HasMiddlewareHandler
 		$instance = $reflect->newInstance();
 
 		if ($reflect->hasMethod('filterable')) {
-			$this->filterable($reflect->getMethod('filterable')->getClosure($instance));
+			$this->filterMiddleware($reflect->getMethod('filterable')->getClosure($instance));
 		}
 
 		if ($reflect->hasMethod('detailable')) {
-			$this->detailable($reflect->getMethod('detailable')->getClosure($instance));
-		}
-
-		if ($reflect->hasMethod('showable')) {
-			$this->showable($reflect->getMethod('showable')->getClosure($instance));
+			$this->detailMiddleware($reflect->getMethod('detailable')->getClosure($instance));
 		}
 
 		if ($reflect->hasMethod('validateable')) {
-			$this->validateable($reflect->getMethod('validateable')->getClosure($instance));
+			$this->validateMiddleware($reflect->getMethod('validateable')->getClosure($instance));
 		}
 
 		if ($reflect->hasMethod('storeable')) {
-			$this->storeable($reflect->getMethod('storeable')->getClosure($instance));
+			$this->storeMiddleware($reflect->getMethod('storeable')->getClosure($instance));
 		}
 
 		if ($reflect->hasMethod('updateable')) {
-			$this->updateable($reflect->getMethod('updateable')->getClosure($instance));
+			$this->updateMiddleware($reflect->getMethod('updateable')->getClosure($instance));
 		}
 
 		if ($reflect->hasMethod('deleteable')) {
-			$this->deleteable($reflect->getMethod('deleteable')->getClosure($instance));
-		}
-
-		if ($reflect->hasMethod('recoveryable')) {
-			$this->recoveryable($reflect->getMethod('recoveryable')->getClosure($instance));
+			$this->deleteMiddleware($reflect->getMethod('deleteable')->getClosure($instance));
 		}
 
 		if ($reflect->hasMethod('restoreable')) {
-			$this->restoreable($reflect->getMethod('restoreable')->getClosure($instance));
+			$this->restoreMiddleware($reflect->getMethod('restoreable')->getClosure($instance));
 		}
 	}
 
@@ -68,39 +60,31 @@ trait HasMiddlewareHandler
 		$instance = $reflect->newInstance();
 
 		if ($reflect->hasMethod('filterable')) {
-			static::globalFilterable($reflect->getMethod('filterable')->getClosure($instance));
+			static::globalFilterMiddleware($reflect->getMethod('filterable')->getClosure($instance));
 		}
 
 		if ($reflect->hasMethod('detailable')) {
-			static::globalDetailable($reflect->getMethod('detailable')->getClosure($instance));
-		}
-
-		if ($reflect->hasMethod('showable')) {
-			static::globalShowable($reflect->getMethod('showable')->getClosure($instance));
+			static::globalDetailMiddleware($reflect->getMethod('detailable')->getClosure($instance));
 		}
 
 		if ($reflect->hasMethod('validateable')) {
-			static::globalValidateable($reflect->getMethod('validateable')->getClosure($instance));
+			static::globalValidateMiddleware($reflect->getMethod('validateable')->getClosure($instance));
 		}
 
 		if ($reflect->hasMethod('storeable')) {
-			static::globalStoreable($reflect->getMethod('storeable')->getClosure($instance));
+			static::globalStoreMiddleware($reflect->getMethod('storeable')->getClosure($instance));
 		}
 
 		if ($reflect->hasMethod('updateable')) {
-			static::globalUpdateable($reflect->getMethod('updateable')->getClosure($instance));
+			static::globalUpdateMiddleware($reflect->getMethod('updateable')->getClosure($instance));
 		}
 
 		if ($reflect->hasMethod('deleteable')) {
-			static::globalDeleteable($reflect->getMethod('deleteable')->getClosure($instance));
-		}
-
-		if ($reflect->hasMethod('recoveryable')) {
-			static::globalRecoveryable($reflect->getMethod('recoveryable')->getClosure($instance));
+			static::globalDeleteMiddleware($reflect->getMethod('deleteable')->getClosure($instance));
 		}
 
 		if ($reflect->hasMethod('restoreable')) {
-			static::globalRestoreable($reflect->getMethod('restoreable')->getClosure($instance));
+			static::globalRestoreMiddleware($reflect->getMethod('restoreable')->getClosure($instance));
 		}
 	}
 
