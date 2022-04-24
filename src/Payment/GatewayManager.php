@@ -52,7 +52,7 @@ class GatewayManager implements GatewayFactoryContract
 	 */
 	public function miniapp(array $paymentInfo, $type = null)
 	{
-		$payOrder = $this->makePayOrder($paymentInfo);
+		$payOrder = $this->makePayOrder($paymentInfo, $type);
 
 		$paymentInfo = $this->preparePaymentInfo($paymentInfo, $payOrder);
 
@@ -72,7 +72,7 @@ class GatewayManager implements GatewayFactoryContract
 	 */
 	public function app(array $paymentInfo, $type = null)
 	{
-		$payOrder = $this->makePayOrder($paymentInfo);
+		$payOrder = $this->makePayOrder($paymentInfo, $type);
 
 		$paymentInfo = $this->preparePaymentInfo($paymentInfo, $payOrder);
 
@@ -174,12 +174,12 @@ class GatewayManager implements GatewayFactoryContract
 	/**
 	 * 预处理支付信息
 	 * @param array $paymentInfo
-	 * @param PayLog $payOrder
+	 * @param mixed $payOrder
 	 * @return array
 	 */
-	protected function preparePaymentInfo(array $paymentInfo, PayLog $payOrder)
+	protected function preparePaymentInfo(array $paymentInfo, $payOrder)
 	{
-		$paymentInfo['out_trade_no'] = $payOrder->pay_no;
+		$paymentInfo['out_trade_no'] = $payOrder['pay_no'];
 
 		unset($paymentInfo['user_data']);
 
@@ -190,15 +190,18 @@ class GatewayManager implements GatewayFactoryContract
 	 * 创建支付单号
 	 *
 	 * @param array $paymentInfo
+	 * @param $type
 	 * @return \plugins\order\model\PayLog
 	 */
-	public function makePayOrder(array $paymentInfo)
+	public function makePayOrder(array $paymentInfo, $type)
 	{
+		$type = $type ?: $this->getType();
+
 		$payNo = Str::makeOrderSn();
 
 		$data = [
 			'app_id' => $this->getAppId(),
-			'type' => PayType::WECHAT,
+			'type' => $type,
 			'pay_no' => $payNo,
 			'out_trade_no' => $paymentInfo['out_trade_no'],
 			'amount' => $paymentInfo['out_trade_no'] ?? '',
@@ -217,6 +220,6 @@ class GatewayManager implements GatewayFactoryContract
 			$data['amount'] = bcdiv($paymentInfo['total_fee'], 100, 2);
 		}
 
-		return PayLog::create($data);
+		return $this->payOrderProvider->createPayOrder($data);
 	}
 }

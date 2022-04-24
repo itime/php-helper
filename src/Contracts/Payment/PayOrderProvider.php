@@ -35,4 +35,11 @@ interface PayOrderProvider
 	 * @return mixed
 	 */
 	public function retrieveByPayTradeNo($payTradeNo, $type = null);
+
+	/**
+	 * 创建支付单
+	 * @param array $data
+	 * @return mixed
+	 */
+	public function createPayOrder($data);
 }
