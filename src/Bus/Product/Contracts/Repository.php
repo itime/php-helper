@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Product;
+namespace Xin\Bus\Product\Contracts;
 
 use Xin\Contracts\Repository\Repository as BaseRepository;
 

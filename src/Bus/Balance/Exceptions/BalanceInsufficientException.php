@@ -1,6 +1,6 @@
 <?php
 
-namespace Xin\Bus\Balance;
+namespace Xin\Bus\Balance\Exceptions;
 
 class BalanceInsufficientException extends \LogicException
 {

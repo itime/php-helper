@@ -5,13 +5,10 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Order;
+namespace Xin\Bus\Order\Contracts;
 
 use Xin\Contracts\Repository\Repository as BaseRepository;
 
-/**
- * @deprecated
- */
 interface Repository extends BaseRepository
 {
 

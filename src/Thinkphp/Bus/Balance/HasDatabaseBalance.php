@@ -7,7 +7,7 @@
 
 namespace Xin\Thinkphp\Bus\Balance;
 
-use Xin\Bus\Balance\SceneEnum;
+use Xin\Bus\Balance\Enums\Scene;
 
 /**
  * Trait HasDatabaseBalance
@@ -25,7 +25,7 @@ trait HasDatabaseBalance
 	{
 		$val = $this->getOrigin('scene');
 
-		return SceneEnum::data()[$val]['title'];
+		return Scene::data()[$val]['title'];
 	}
 
 }

@@ -5,10 +5,8 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Order;
-/**
- * @deprecated
- */
+namespace Xin\Bus\Order\Contracts;
+
 interface OrderListenerOfStatic
 {
 

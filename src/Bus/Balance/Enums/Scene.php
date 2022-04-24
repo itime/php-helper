@@ -5,12 +5,12 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Bus\Balance;
+namespace Xin\Bus\Balance\Enums;
 
 /**
  * 余额变动场景枚举类
  */
-class SceneEnum
+class Scene
 {
 
 	// 用户充值

@@ -5,11 +5,8 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Order;
+namespace Xin\Bus\Order\Contracts;
 
-/**
- * @deprecated
- */
 interface Orderable
 {
 

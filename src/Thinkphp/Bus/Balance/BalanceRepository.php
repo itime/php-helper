@@ -10,10 +10,10 @@ namespace Xin\Thinkphp\Bus\Balance;
 use think\db\BaseQuery as Query;
 use think\facade\App;
 use think\facade\Db;
-use Xin\Bus\Balance\BalanceInsufficientException;
-use Xin\Bus\Balance\BalanceModifyException;
+use Xin\Bus\Balance\Contracts\BalanceRepository as BalanceRepositoryContract;
+use Xin\Bus\Balance\Exceptions\BalanceInsufficientException;
+use Xin\Bus\Balance\Exceptions\BalanceModifyException;
 use Xin\Capsule\WithConfig;
-use Xin\Contracts\Bus\Balance\BalanceRepository as BalanceRepositoryContract;
 use Xin\Support\Str;
 
 class BalanceRepository implements BalanceRepositoryContract

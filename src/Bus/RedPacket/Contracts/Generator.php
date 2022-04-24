@@ -5,16 +5,16 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\RedPacket;
+namespace Xin\Bus\RedPacket\Contracts;
 
-interface Receiver
+interface Generator
 {
 
 	/**
-	 * 领取红包
+	 * 红包金额生成
 	 *
-	 * @return array
+	 * @return array|float
 	 */
-	public function receive();
+	public function generate();
 
 }

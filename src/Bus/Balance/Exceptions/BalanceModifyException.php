@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Bus\Balance;
+namespace Xin\Bus\Balance\Exceptions;
 
 class BalanceModifyException extends \LogicException
 {

@@ -20,7 +20,7 @@ trait HasBalanceRepository
 	/**
 	 * 获取余额处理器实例
 	 *
-	 * @return \Xin\Contracts\Bus\Balance\BalanceRepository
+	 * @return \Xin\Bus\Balance\Contracts\BalanceRepository
 	 */
 	public static function balance($bag = 'default')
 	{
@@ -39,7 +39,7 @@ trait HasBalanceRepository
 	/**
 	 * 返回默认余额处理器
 	 *
-	 * @return \Xin\Contracts\Bus\Balance\BalanceRepository
+	 * @return \Xin\Bus\Balance\Contracts\BalanceRepository
 	 */
 	protected static function makeDefaultBalance()
 	{
