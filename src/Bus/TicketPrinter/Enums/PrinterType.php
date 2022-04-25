@@ -1,11 +1,13 @@
 <?php
 
-namespace Xin\TicketPrinter;
+namespace Xin\Bus\TicketPrinter\Enums;
+
+use Xin\Enum\Enum;
 
 /**
  * 小票打印机类型 枚举类
  */
-class PrinterType
+class PrinterType extends Enum
 {
 
 	/* @const FEI_E_YUN 飞鹅打印机 */

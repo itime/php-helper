@@ -1,6 +1,6 @@
 <?php
 
-namespace Xin\Contracts\Task;
+namespace Xin\Bus\Task\Contracts;
 
 interface Taskable
 {

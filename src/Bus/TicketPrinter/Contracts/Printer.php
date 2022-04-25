@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Bus\TicketPrinter;
+namespace Xin\Bus\TicketPrinter\Contracts;
 
 interface Printer
 {

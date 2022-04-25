@@ -7,7 +7,7 @@
 
 namespace Xin\Thinkphp\Transaction\Transactions;
 
-use Xin\Contracts\Transaction\Transaction as TransactionContract;
+use Xin\Bus\Transaction\Contracts\Transaction as TransactionContract;
 use Xin\Thinkphp\Transaction\DatabaseTransaction;
 
 class Database implements TransactionContract

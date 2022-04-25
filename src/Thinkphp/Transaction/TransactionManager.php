@@ -7,7 +7,7 @@
 
 namespace Xin\Thinkphp\Transaction;
 
-use Xin\Contracts\Transaction\Factory;
+use Xin\Bus\Transaction\Contracts\Factory;
 use Xin\Support\Arr;
 use Xin\Support\Manager;
 

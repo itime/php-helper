@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Contracts\Transaction;
+namespace Xin\Bus\Transaction\Contracts;
 
 interface Repository
 {
@@ -14,7 +14,7 @@ interface Repository
 	 * 创建一个事务
 	 *
 	 * @param array $attributes
-	 * @return \Xin\Contracts\Transaction\Transaction
+	 * @return \Xin\Bus\Transaction\Contracts\Transaction
 	 */
 	public function create($attributes = []);
 

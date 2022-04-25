@@ -7,8 +7,8 @@
 
 namespace Xin\Thinkphp\Transaction\Repositoies;
 
-use Xin\Contracts\Transaction\Repository;
-use Xin\Contracts\Transaction\TransactionNotFoundException;
+use Xin\Bus\Transaction\Contracts\Repository;
+use Xin\Bus\Transaction\Exceptions\TransactionNotFoundException;
 use Xin\Thinkphp\Transaction\DatabaseTransaction;
 use Xin\Thinkphp\Transaction\Transactions\Database as TransactionDatabase;
 

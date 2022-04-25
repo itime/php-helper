@@ -5,7 +5,7 @@
  * @author: 晋<657306123@qq.com>
  */
 
-namespace Xin\Bus\TicketPrinter;
+namespace Xin\Bus\TicketPrinter\Contracts;
 
 interface Factory
 {
@@ -13,7 +13,7 @@ interface Factory
 	/**
 	 * 获取打印机
 	 *
-	 * @return \Xin\Bus\TicketPrinter\Printer
+	 * @return \Xin\Bus\TicketPrinter\Contracts\Printer
 	 */
 	public function printer($driver);
 
