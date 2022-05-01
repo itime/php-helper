@@ -7,6 +7,7 @@
 
 namespace Xin\Thinkphp\Foundation\Controller;
 
+use think\db\Query;
 use think\Model;
 use think\model\Collection;
 use Xin\Contracts\Repository\Factory as RepositoryFactory;
@@ -18,20 +19,27 @@ use Xin\Thinkphp\Repository\Repository;
 /**
  * @method mixed filterable($input, callable $next)
  * @method mixed detailable($input, callable $next)
+ * @method void onFilter(Query $query)
  * @method mixed validateable($input, callable $next)
+ * @method void onBeforeValidate(&$data, $input)
+ * @method void onAfterValidate(&$data, $input)
  * @method mixed storeable($input, callable $next)
- * @method mixed showable($input, callable $next)
  * @method mixed updateable($input, callable $next)
+ * @method void onBeforeWrite($data, $input)
+ * @method void onAfterWrite(Model $info, $data, $input)
  * @method mixed setvalueable($input, callable $next)
  * @method mixed deleteable($input, callable $next)
  * @method mixed recoveryable($input, callable $next)
  * @method mixed restoreable($input, callable $next)
  * @method array getIndexOptions()
+ * @method array getDetailOptions()
  * @property Requestable $request
  * @property array $allowFields
  * @property bool $allowForceDelete
  * @property array $indexWith
  * @property array $indexOptions
+ * @property array $detailWith
+ * @property array $detailOptions
  */
 trait CURD
 {
@@ -39,6 +47,20 @@ trait CURD
 	 * @var Repository
 	 */
 	private $repository;
+
+	/**
+	 * @return \Closure
+	 */
+	protected function filterCallback()
+	{
+		return function ($input, callable $next) {
+			if (method_exists($this, 'onFilter')) {
+				$this->onFilter($input['query']);
+			}
+
+			return $next($input);
+		};
+	}
 
 	/**
 	 * 返回首页数据
@@ -49,17 +71,20 @@ trait CURD
 	{
 		$search = $this->request->param();
 
-		$indexWith = $this->property('indexWith', []);
-		$options = method_exists($this, 'getIndexOptions') ? $this->getIndexOptions() : $this->property('indexOptions', []);
+		$with = $this->property('indexWith', []);
+		$options = method_exists($this, 'getIndexOptions')
+			? $this->getIndexOptions()
+			: $this->property('indexOptions', []);
 		$options = array_replace_recursive([
 			'order' => 'id desc'
 		], $options);
 
 		$data = $this->attachHandler('filterable')
 			->repository()
+			->filterMiddleware($this->filterCallback())
 			->paginate(
 				$search,
-				$indexWith,
+				$with,
 				$this->request->paginate(),
 				$options
 			);
@@ -86,9 +111,15 @@ trait CURD
 	{
 		$id = $this->request->validId();
 
+		$with = $this->property('detailWith', []);
+		$options = method_exists($this, 'getDetailOptions')
+			? $this->getDetailOptions()
+			: $this->property('detailOptions', []);
+
 		$info = $this->attachHandler('detailable')
 			->repository()
-			->detailById($id);
+			->detailMiddleware($this->filterCallback())
+			->detailById($id, $with, $options);
 
 		return $this->renderDetailResponse($info);
 	}
@@ -115,6 +146,46 @@ trait CURD
 	}
 
 	/**
+	 * @return \Closure
+	 */
+	protected function writerCallback()
+	{
+		return function ($input, callable $next) {
+			if (method_exists($this, 'onBeforeWrite')) {
+				$this->onBeforeWrite($input['data'], $input);
+			}
+
+			$info = $next($input);
+
+			if (method_exists($this, 'onAfterWrite')) {
+				$this->onAfterWrite($info, $input['data'], $input);
+			}
+
+			return $info;
+		};
+	}
+
+	/**
+	 * @return \Closure
+	 */
+	protected function validateDataCallback()
+	{
+		return function ($input, callable $next) {
+			if (method_exists($this, 'onBeforeValidate')) {
+				$this->onBeforeValidate($input['data'], $input);
+			}
+
+			$data = $next($input);
+
+			if (method_exists($this, 'onAfterValidate')) {
+				$this->onAfterValidate($data, $input);
+			}
+
+			return $data;
+		};
+	}
+
+	/**
 	 * 创建数据操作
 	 * @return \think\Response
 	 */
@@ -128,6 +199,8 @@ trait CURD
 			'validateable', 'storeable'
 		])
 			->repository()
+			->validateMiddleware($this->validateDataCallback())
+			->storeMiddleware($this->writerCallback())
 			->store($data);
 
 		return $this->renderCreateResponse($info);
@@ -157,7 +230,12 @@ trait CURD
 
 		$info = $this->attachHandler([
 			'validateable', 'updateable'
-		])->repository()->updateById($id, $data);
+		])
+			->repository()
+			->validateMiddleware($this->validateDataCallback())
+			->updateMiddleware($this->filterCallback())
+			->updateMiddleware($this->writerCallback())
+			->updateById($id, $data);
 
 		return $this->renderUpdateResponse($info);
 	}
@@ -184,7 +262,9 @@ trait CURD
 		$value = $this->request->param($field);
 
 		$this->attachHandler('setvalueable')
-			->repository()->setValue($ids, $field, $value);
+			->repository()
+			->registerMiddleware('setvalueable', $this->filterCallback())
+			->setValue($ids, $field, $value);
 
 		return $this->renderSetValueResponse($ids, $field, $value);
 	}
@@ -212,6 +292,7 @@ trait CURD
 
 		$result = $this->attachHandler('deleteable')
 			->repository()
+			->deleteMiddleware($this->filterCallback())
 			->deleteByIdList($ids, [
 				'force' => $isForce
 			]);
@@ -230,6 +311,7 @@ trait CURD
 	}
 
 	/**
+	 * 恢复数据
 	 * @return \think\Response
 	 */
 	public function restore()
@@ -237,7 +319,9 @@ trait CURD
 		$ids = $this->request->validIds();
 
 		$result = $this->attachHandler('restoreable')
-			->repository()->restoreByIdList($ids);
+			->repository()
+			->restoreMiddleware($this->filterCallback())
+			->restoreByIdList($ids);
 
 		return $this->renderRestoreResponse($result);
 	}
@@ -253,6 +337,7 @@ trait CURD
 	}
 
 	/**
+	 * 挂载处理器
 	 * @param string|array $scenes
 	 * @return $this
 	 */
@@ -282,6 +367,7 @@ trait CURD
 	}
 
 	/**
+	 * 获取仓库实例
 	 * @return Repository
 	 */
 	protected function repository(): Repository
@@ -307,6 +393,7 @@ trait CURD
 	}
 
 	/**
+	 * 抽象获取仓库实例
 	 * @return string|\Xin\Contracts\Repository\Repository
 	 */
 	abstract protected function repositoryTo();

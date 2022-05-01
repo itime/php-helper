@@ -174,7 +174,7 @@ trait HasValidate
 	 * @param string $field
 	 * @param array $values
 	 * @param mixed $default
-	 * @return mixed
+	 * @return int
 	 */
 	public function validIntIn($field, $values, $default = null)
 	{

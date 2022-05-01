@@ -40,6 +40,10 @@ trait HasMiddlewareHandler
 			$this->updateMiddleware($reflect->getMethod('updateable')->getClosure($instance));
 		}
 
+		if ($reflect->hasMethod('setvalueable')) {
+			$this->updateMiddleware($reflect->getMethod('setvalueable')->getClosure($instance));
+		}
+
 		if ($reflect->hasMethod('deleteable')) {
 			$this->deleteMiddleware($reflect->getMethod('deleteable')->getClosure($instance));
 		}
@@ -77,6 +81,10 @@ trait HasMiddlewareHandler
 
 		if ($reflect->hasMethod('updateable')) {
 			static::globalUpdateMiddleware($reflect->getMethod('updateable')->getClosure($instance));
+		}
+
+		if ($reflect->hasMethod('setvalueable')) {
+			static::globalUpdateMiddleware($reflect->getMethod('setvalueable')->getClosure($instance));
 		}
 
 		if ($reflect->hasMethod('deleteable')) {
