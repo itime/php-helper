@@ -10,6 +10,7 @@ namespace Xin\Thinkphp\Foundation\Controller;
 use think\Model;
 use think\model\Collection;
 use Xin\Contracts\Repository\Factory as RepositoryFactory;
+use Xin\Support\Str;
 use Xin\Thinkphp\Facade\Hint;
 use Xin\Thinkphp\Http\Requestable;
 use Xin\Thinkphp\Repository\Repository;
@@ -265,7 +266,15 @@ trait CURD
 			if ($thisRef->hasMethod($scene)) {
 				$method = $thisRef->getMethod($scene);
 				$method->setAccessible(true);
-				$repository->$scene($method->getClosure($this));
+				$handler = $method->getClosure($this);
+				if (Str::endsWith($scene, 'able')) {
+					$scene = Str::before($scene, 'able');
+					$repository->registerMiddleware($scene, $handler);
+				} elseif (Str::endsWith($scene, 'middleware')) {
+					$repository->$scene($handler);
+				} else {
+					$repository->registerMiddleware($scene, $handler);
+				}
 			}
 		}
 

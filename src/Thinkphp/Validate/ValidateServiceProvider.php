@@ -36,6 +36,10 @@ class ValidateServiceProvider extends ServiceProvider
 			$v->extend('password', function ($value) use ($v) {
 				return $v->regex($value, '/^[\\~!@#$%^&*()-_=+|{}\[\],.?\/:;\'\"\d\w]{6,16}/');
 			}, ':attribute无效');
+
+			$v->extend('nullable', function () {
+				return true;
+			});
 		});
 	}
 

@@ -9,6 +9,7 @@ namespace Xin\Thinkphp\Http;
 
 use think\exception\ValidateException;
 use think\Validate;
+use Xin\Support\Reflect;
 
 /**
  * Trait RequestValidate
@@ -25,26 +26,26 @@ trait HasValidate
 	 * @param string|array $validate 验证器名或者验证规则数组
 	 * @param bool $batch 是否批量验证
 	 * @return array
+	 * @throws \think\exception\ValidateException
 	 */
 	public function validate($name, $validate, bool $batch = false)
 	{
-		if (!is_array($validate)) {
-			$validate = [
-				'rules' => $validate,
-			];
-		}
-
-		if (is_array($validate['rules'])) {
+		if (is_array($validate)) {
 			$v = new Validate();
 			$v->rule(
 				$validate['rules'],
 				isset($validate['fields']) ? $validate['fields'] : []
 			);
-		} else {
-			$validator = $validate['rules'];
-			if (strpos($validator, '.')) {
+
+			if (isset($validate['messages'])) {
+				$v->message($validate['messages']);
+			}
+		} elseif (is_string($validate)) {
+			if (strpos($validate, '.')) {
 				// 支持场景
-				[$validator, $scene] = explode('.', $validator);
+				[$validator, $scene] = explode('.', $validate);
+			} else {
+				$validator = $validate;
 			}
 
 			/** @var Validate $v */
@@ -53,19 +54,22 @@ trait HasValidate
 			if (isset($scene)) {
 				$v->scene($scene);
 			}
+
 		}
 
-		if (isset($validate['messages'])) {
-			$v->message($validate['messages']);
+		if (!isset($v) || !($v instanceof Validate)) {
+			throw new \RuntimeException("validate 无法实例化一个验证器");
 		}
 
 		// 是否批量验证
 		$v->batch($batch);
 
-		if (empty($name)) {
-			$data = $this->param();
+		if ($name === null) {
+			$data = $this->data();
 		} else {
-			$data = $this->only($name);
+			$ruleKeys = array_keys(Reflect::getPropertyValue($v, 'rule') ?: []);
+			$name = array_unique(array_merge($name, $ruleKeys));
+			$data = $this->dataOnly($name);
 		}
 
 		if (!$v->check($data)) {
