@@ -69,7 +69,7 @@ trait CURD
 	 */
 	public function index()
 	{
-		$search = $this->request->param();
+		$search = $this->request->data();
 
 		$with = $this->property('indexWith', []);
 		$options = method_exists($this, 'getIndexOptions')
@@ -82,6 +82,7 @@ trait CURD
 		$data = $this->attachHandler('filterable')
 			->repository()
 			->filterMiddleware($this->filterCallback())
+			->useSearchMiddleware()
 			->paginate(
 				$search,
 				$with,

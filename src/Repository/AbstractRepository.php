@@ -29,20 +29,12 @@ abstract class AbstractRepository implements Repository
 	public function __construct(array $options)
 	{
 		$this->options = array_replace_recursive($this->options, $options);
-		$this->middlewareManager = new MiddlewareManager();
+		$this->setMiddlewareManager(new MiddlewareManager());
 
 		if (isset($options['handler'])) {
 			$this->setupHandler($options['handler']);
 		}
-
-		$this->registerSearchMiddleware();
 	}
-
-	/**
-	 * 注册搜索中间件
-	 * @return void
-	 */
-	abstract protected function registerSearchMiddleware();
 
 	/**
 	 * 执行事务

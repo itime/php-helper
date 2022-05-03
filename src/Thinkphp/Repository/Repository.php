@@ -21,9 +21,9 @@ class Repository extends AbstractRepository
 {
 	/**
 	 * 注册搜索中间件
-	 * @return void
+	 * @return $this
 	 */
-	protected function registerSearchMiddleware()
+	public function useSearchMiddleware()
 	{
 		$this->filterMiddleware(function ($input, $next) {
 			if (!isset($input['options']['search'])) {
@@ -52,6 +52,8 @@ class Repository extends AbstractRepository
 
 			return $next($input);
 		});
+
+		return $this;
 	}
 
 	/**

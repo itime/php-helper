@@ -135,6 +135,22 @@ trait HasMiddleware
 	}
 
 	/**
+	 * @return \Xin\Middleware\MiddlewareManager
+	 */
+	public function getMiddlewareManager()
+	{
+		return $this->middlewareManager;
+	}
+
+	/**
+	 * @param \Xin\Middleware\MiddlewareManager $middlewareManager
+	 */
+	public function setMiddlewareManager(MiddlewareManager $middlewareManager)
+	{
+		$this->middlewareManager = $middlewareManager;
+	}
+
+	/**
 	 * 注册中间件
 	 * @param string $name
 	 * @param \Closure $closure
