@@ -10,8 +10,8 @@ namespace Xin\Thinkphp\Foundation\Controller;
 use think\Model;
 
 /**
- * @method string fetch(string $template, array $data)
- * @method void assign(string $name, mixed $data)
+ * @method string fetch(string $template = null, array $data = [])
+ * @method void assign(string $name, mixed $data = [])
  */
 trait PageCURD
 {
