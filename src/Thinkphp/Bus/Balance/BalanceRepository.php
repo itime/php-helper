@@ -108,7 +108,7 @@ class BalanceRepository implements BalanceRepositoryContract
 			'log_no' => Str::makeOrderSn(),
 			'user_id' => $userId,
 			'type' => $type,
-			'amount' => $amount,
+			$this->logField() => $amount,
 			'remark' => $remark,
 			'create_time' => time(),
 		]);
@@ -136,6 +136,16 @@ class BalanceRepository implements BalanceRepositoryContract
 	protected function fieldTotal()
 	{
 		return $this->getConfig('field_total', null);
+	}
+
+	/**
+	 * 获取日志余额字段
+	 *
+	 * @return string
+	 */
+	protected function logField()
+	{
+		return $this->getConfig('log.field', $this->field());
 	}
 
 	/**
