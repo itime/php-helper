@@ -2,7 +2,6 @@
 
 namespace Xin\Uploader;
 
-use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
 use Xin\Capsule\Service;
 use Xin\Contracts\Uploader\Uploader as UploaderContract;
@@ -52,5 +51,13 @@ abstract class AbstractUploader extends Service implements UploaderContract
 	protected function concatPathToUrl($url, $path)
 	{
 		return rtrim($url, '/') . '/' . ltrim($path, '/');
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function transformNotifyData($notifyData)
+	{
+		return $notifyData;
 	}
 }
