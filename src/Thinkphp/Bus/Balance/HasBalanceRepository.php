@@ -44,7 +44,10 @@ trait HasBalanceRepository
 	protected static function makeDefaultBalance()
 	{
 		return static::makeBalance([
-			'field' => 'balance'
+			'field' => 'balance',
+			'log' => [
+				'field' => 'amount',
+			]
 		]);
 	}
 
