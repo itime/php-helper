@@ -27,6 +27,7 @@ trait HasValidate
 	 * @param bool $batch 是否批量验证
 	 * @return array
 	 * @throws \think\exception\ValidateException
+	 * @noinspection PhpDocMissingThrowsInspection
 	 */
 	public function validate($name, $validate, bool $batch = false)
 	{

@@ -22,12 +22,12 @@ use Xin\Thinkphp\Repository\Repository;
  * @method mixed detailable($input, callable $next)
  * @method void onDetail($info)
  * @method mixed validateable($input, callable $next)
- * @method void onBeforeValidate(&$data, $input)
- * @method void onAfterValidate(&$data, $input)
+ * @method void onBeforeValidate(&$data, $scene, $input)
+ * @method void onAfterValidate(&$data, $scene, $input)
  * @method mixed storeable($input, callable $next)
  * @method mixed updateable($input, callable $next)
- * @method void onBeforeWrite($data, $input)
- * @method void onAfterWrite(Model $info, $data, $input)
+ * @method void onBeforeWrite($data, $scene, $input)
+ * @method void onAfterWrite(Model $info, $data, $scene, $input)
  * @method mixed setvalueable($input, callable $next)
  * @method mixed deleteable($input, callable $next)
  * @method mixed recoveryable($input, callable $next)
@@ -158,13 +158,13 @@ trait CURD
 	{
 		return function ($input, callable $next) {
 			if (method_exists($this, 'onBeforeWrite')) {
-				$this->onBeforeWrite($input['data'], $input);
+				$this->onBeforeWrite($input['data'], $input['type'], $input);
 			}
 
 			$info = $next($input);
 
 			if (method_exists($this, 'onAfterWrite')) {
-				$this->onAfterWrite($info, $input['data'], $input);
+				$this->onAfterWrite($info, $input['data'], $input['type'], $input);
 			}
 
 			return $info;
@@ -178,13 +178,13 @@ trait CURD
 	{
 		return function ($input, callable $next) {
 			if (method_exists($this, 'onBeforeValidate')) {
-				$this->onBeforeValidate($input['data'], $input);
+				$this->onBeforeValidate($input['data'], $input['scene'], $input);
 			}
 
 			$data = $next($input);
 
 			if (method_exists($this, 'onAfterValidate')) {
-				$this->onAfterValidate($data, $input);
+				$this->onAfterValidate($data, $input['scene'], $input);
 			}
 
 			return $data;
