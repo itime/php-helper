@@ -17,9 +17,10 @@ use Xin\Thinkphp\Http\Requestable;
 use Xin\Thinkphp\Repository\Repository;
 
 /**
+ * @method void onFilter(Query $query)
  * @method mixed filterable($input, callable $next)
  * @method mixed detailable($input, callable $next)
- * @method void onFilter(Query $query)
+ * @method void onDetail($info)
  * @method mixed validateable($input, callable $next)
  * @method void onBeforeValidate(&$data, $input)
  * @method void onAfterValidate(&$data, $input)
@@ -121,6 +122,10 @@ trait CURD
 			->repository()
 			->detailMiddleware($this->filterCallback())
 			->detailById($id, $with, $options);
+
+		if (method_exists($this, 'onDetail')) {
+			$this->onDetail($info);
+		}
 
 		return $this->renderDetailResponse($info);
 	}

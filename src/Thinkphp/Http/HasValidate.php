@@ -178,12 +178,15 @@ trait HasValidate
 	 */
 	public function validIntIn($field, $values, $default = null)
 	{
-		$int = $this->param("{$field}/d", $default);
-		if (!in_array($int, $values, true)) {
+		$value = $this->param($field);
+		if ($value === '' || $value === null) {
+			$value = $default;
+		}
+		if (!in_array($value, $values, true)) {
 			throw new ValidateException("param {$field} invalid.");
 		}
 
-		return $int;
+		return $value;
 	}
 
 	/**
@@ -196,7 +199,7 @@ trait HasValidate
 	 */
 	public function validString($field, $default = null, $filter = '')
 	{
-		$value = $this->param((string)$field, $default, $filter);
+		$value = $this->param($field, $default, $filter);
 
 		if (empty($value)) {
 			throw new ValidateException("param {$field} invalid.");
