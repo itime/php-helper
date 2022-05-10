@@ -78,6 +78,7 @@ class QiniuUploader extends AbstractUploader
 	protected function makeCallbackBody($scene, array $options)
 	{
 		$cdn = $this->filesystem->getAdapter()->url('');
+		$cdn = rtrim($cdn, '/');
 		$userData = $options['user_data'] ?? [];
 
 		$data = array_merge([
