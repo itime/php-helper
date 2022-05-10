@@ -324,13 +324,18 @@ class UploadManager extends Manager implements Factory
 	 */
 	protected function buildPath($scene, $filename, array $options)
 	{
+		$path = '';
+
 //		$hash = hash_file('md5', $filename);
 //		$hashName = substr($hash, 0, 2) . DIRECTORY_SEPARATOR . substr($hash, 2);
 		$hashName = date('Ymd') . '/' . md5(microtime(true) . $filename);
 
 		$basePath = $options['base_path'] ?? '';
+		if ($basePath) {
+			$path .= "{$basePath}/";
+		}
 
-		return "{$basePath}/{$scene}/{$hashName}";
+		return $path . "{$scene}/{$hashName}";
 	}
 
 	/**
