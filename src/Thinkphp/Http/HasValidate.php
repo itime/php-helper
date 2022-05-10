@@ -182,6 +182,7 @@ trait HasValidate
 		if ($value === '' || $value === null) {
 			$value = $default;
 		}
+		$value = (int)$value;
 		if (!in_array($value, $values, true)) {
 			throw new ValidateException("param {$field} invalid.");
 		}
