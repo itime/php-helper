@@ -37,7 +37,7 @@ class WechatGateway extends AbstractGateway
 		$paymentInfo = $this->preparePaymentInfo($paymentInfo);
 
 		return $this->call(function () use ($paymentInfo) {
-			return $this->gateway->app($paymentInfo);
+			return json_decode($this->gateway->app($paymentInfo)->getContent(), true);
 		});
 	}
 
@@ -49,7 +49,7 @@ class WechatGateway extends AbstractGateway
 	protected function preparePaymentInfo(array $paymentInfo)
 	{
 		if (isset($paymentInfo['amount'])) {
-			$paymentInfo['total_fee'] = (int)$paymentInfo['amount'] * 100;
+			$paymentInfo['total_fee'] = (int)($paymentInfo['amount'] * 100);
 			unset($paymentInfo['amount']);
 		}
 
