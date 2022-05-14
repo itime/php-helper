@@ -49,7 +49,7 @@ class VerifyCodeManager extends Manager implements Factory
 	 */
 	public function createSmsDriver($name, $config)
 	{
-		return $this->createReposityory($config, new SmsSender($config));
+		return $this->createRepository($config, new SmsSender($config));
 	}
 
 	/**
@@ -58,7 +58,7 @@ class VerifyCodeManager extends Manager implements Factory
 	 * @param Sender $sender
 	 * @return Repository
 	 */
-	protected function createReposityory($config, $sender)
+	protected function createRepository($config, $sender)
 	{
 		if (method_exists($sender, 'setContainer')) {
 			$sender->setContainer($this->getContainer());
