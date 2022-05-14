@@ -31,7 +31,7 @@ interface BalanceRepository
 	 * @param array $attributes
 	 * @return mixed
 	 */
-	public function consume($userId, $amount, $remark = '', $attributes = []);
+	public function consume($userId, $amount, $remark = '', $attributes = [], $logAttributes = []);
 
 	/**
 	 * 获取用户余额数据

@@ -64,7 +64,7 @@ class BalanceRepository implements BalanceRepositoryContract
 	/**
 	 * @inheritDoc
 	 */
-	public function consume($userId, $amount, $remark = '', $attributes = [])
+	public function consume($userId, $amount, $remark = '', $attributes = [], $logAttributes = [])
 	{
 		$value = $this->newQuery()->where('id', $userId)->value($this->field());
 		if ($value < $amount) {
