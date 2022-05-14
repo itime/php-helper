@@ -76,7 +76,7 @@ class BalanceRepository implements BalanceRepositoryContract
 			throw new BalanceModifyException("余额变更失败！", 40200);
 		}
 
-		$logData = $this->insertLog($userId, 0, $amount, $remark, $attributes);
+		$logData = $this->insertLog($userId, 0, $amount, $remark, $logAttributes);
 		$logData['current'] = $value - $amount;
 
 		$this->triggerEvent($logData);
