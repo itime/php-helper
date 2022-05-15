@@ -430,7 +430,6 @@ trait Modelable
 
 		$fields = array_diff(static::getSearchFields(), $withoutFields);
 		$fields = array_intersect($fields, array_keys($data));
-		$fields = array_values($fields);
 
 		$query->withSearch($fields, $data);
 	}
