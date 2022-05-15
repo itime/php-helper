@@ -129,7 +129,7 @@ interface Repository
 	 * @param string $field
 	 * @param mixed $value
 	 * @param array $options
-	 * @return array
+	 * @return mixed
 	 */
 	public function setValue(array $ids, $field, $value, array $options = []);
 

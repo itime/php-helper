@@ -26,9 +26,11 @@ use Xin\Thinkphp\Repository\Repository;
  * @method void onAfterValidate(&$data, $scene, $input)
  * @method mixed storeable($input, callable $next)
  * @method mixed updateable($input, callable $next)
- * @method void onBeforeWrite($data, $scene, $input)
- * @method void onAfterWrite(Model $info, $data, $scene, $input)
+ * @method void onBeforeWrite(&$data, $scene, &$input)
+ * @method void onAfterWrite(Model $info, &$data, $scene, &$input)
  * @method mixed setvalueable($input, callable $next)
+ * @method void onBeforeSetValue($ids, $field, &$value, $input)
+ * @method void onAfterSetValue(mixed $result, $ids, $field, &$value, $input)
  * @method mixed deleteable($input, callable $next)
  * @method mixed recoveryable($input, callable $next)
  * @method mixed restoreable($input, callable $next)
@@ -80,8 +82,7 @@ trait CURD
 			'order' => 'id desc'
 		], $options);
 
-		$data = $this->attachHandler('filterable')
-			->repository()
+		$data = $this->repositoryAttachHandler(['filterable'])
 			->filterMiddleware($this->filterCallback())
 			->useSearchMiddleware()
 			->paginate(
@@ -118,8 +119,7 @@ trait CURD
 			? $this->getDetailOptions()
 			: $this->property('detailOptions', []);
 
-		$info = $this->attachHandler('detailable')
-			->repository()
+		$info = $this->repositoryAttachHandler(['detailable'])
 			->detailMiddleware($this->filterCallback())
 			->detailById($id, $with, $options);
 
@@ -201,10 +201,7 @@ trait CURD
 			$this->requestExcludeKeys('create')
 		);
 
-		$info = $this->attachHandler([
-			'validateable', 'storeable'
-		])
-			->repository()
+		$info = $this->repositoryAttachHandler(['validateable', 'storeable'])
 			->validateMiddleware($this->validateDataCallback())
 			->storeMiddleware($this->writerCallback())
 			->store($data);
@@ -234,10 +231,7 @@ trait CURD
 			$this->requestExcludeKeys()
 		);
 
-		$info = $this->attachHandler([
-			'validateable', 'updateable'
-		])
-			->repository()
+		$info = $this->repositoryAttachHandler(['validateable', 'updateable'])
 			->validateMiddleware($this->validateDataCallback())
 			->updateMiddleware($this->filterCallback())
 			->updateMiddleware($this->writerCallback())
@@ -257,6 +251,26 @@ trait CURD
 	}
 
 	/**
+	 * @return \Closure
+	 */
+	protected function setValueCallback()
+	{
+		return function ($input, callable $next) {
+			if (method_exists($this, 'onBeforeSetValue')) {
+				$this->onBeforeSetValue($input['ids'], $input['field'], $input['value'], $input);
+			}
+
+			$result = $next($input);
+
+			if (method_exists($this, 'onAfterSetValue')) {
+				$this->onAfterSetValue($result, $input['ids'], $input['field'], $input['value'], $input);
+			}
+
+			return $result;
+		};
+	}
+
+	/**
 	 * 设置字段值
 	 *
 	 * @return \think\Response
@@ -267,9 +281,9 @@ trait CURD
 		$field = $this->request->validString('field', '', 'trim');
 		$value = $this->request->param($field);
 
-		$this->attachHandler('setvalueable')
-			->repository()
+		$this->repositoryAttachHandler(['setvalueable'])
 			->registerMiddleware('setvalueable', $this->filterCallback())
+			->updateMiddleware($this->setValueCallback())
 			->setValue($ids, $field, $value);
 
 		return $this->renderSetValueResponse($ids, $field, $value);
@@ -284,7 +298,7 @@ trait CURD
 	 */
 	protected function renderSetValueResponse($ids, $field, $value)
 	{
-		return Hint::success('更新成功！');
+		return Hint::success('更新成功！', $this->jumpUrl(), $value);
 	}
 
 	/**
@@ -296,8 +310,7 @@ trait CURD
 		$ids = $this->request->validIds();
 		$isForce = $this->request->param('force/d', 0);
 
-		$result = $this->attachHandler('deleteable')
-			->repository()
+		$result = $this->repositoryAttachHandler(['deleteable'])
 			->deleteMiddleware($this->filterCallback())
 			->deleteByIdList($ids, [
 				'force' => $isForce
@@ -324,8 +337,7 @@ trait CURD
 	{
 		$ids = $this->request->validIds();
 
-		$result = $this->attachHandler('restoreable')
-			->repository()
+		$result = $this->repositoryAttachHandler(['restoreable'])
 			->restoreMiddleware($this->filterCallback())
 			->restoreByIdList($ids);
 
@@ -344,10 +356,10 @@ trait CURD
 
 	/**
 	 * 挂载处理器
-	 * @param string|array $scenes
-	 * @return $this
+	 * @param array $scenes
+	 * @return Repository
 	 */
-	protected function attachHandler($scenes)
+	protected function repositoryAttachHandler($scenes = [])
 	{
 		$scenes = is_array($scenes) ? $scenes : [$scenes];
 		$thisRef = new \ReflectionClass($this);
@@ -369,14 +381,14 @@ trait CURD
 			}
 		}
 
-		return $this;
+		return $repository;
 	}
 
 	/**
 	 * 获取仓库实例
 	 * @return Repository
 	 */
-	protected function repository(): Repository
+	protected function repository()
 	{
 		if ($this->repository) {
 			return $this->repository;

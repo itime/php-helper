@@ -270,7 +270,7 @@ class Repository extends AbstractRepository
 			], [], $options);
 
 			return $this->middleware([
-				'type' => static::SCENE_UPDATE,
+				'type' => static::SCENE_SET_VALUE,
 				'ids' => $ids,
 				'field' => $field,
 				'value' => $value,
@@ -279,9 +279,10 @@ class Repository extends AbstractRepository
 			], function ($input) {
 				/** @var Query $query */
 				$query = $input['query'];
-				return $query->update([
-						$input['field'] => $input['value'],
-					]) === false;
+				$query->update([
+					$input['field'] => $input['value'],
+				]);
+				return $input['value'];
 			}, static::SCENE_SET_VALUE);
 		});
 	}

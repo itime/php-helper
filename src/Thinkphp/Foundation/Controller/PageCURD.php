@@ -57,7 +57,7 @@ trait PageCURD
 
 			$info = null;
 			if ($isCopy && $id > 0) {
-				$info = $this->attachHandler('detailable')
+				$info = $this->repositoryAttachHandler('detailable')
 					->repository()
 					->detailById($id);
 			}
@@ -90,7 +90,7 @@ trait PageCURD
 	{
 		if ($this->request->isGet()) {
 			$id = $this->request->validId();
-			$info = $this->attachHandler('detailable')
+			$info = $this->repositoryAttachHandler('detailable')
 				->repository()
 				->detailById($id);
 
