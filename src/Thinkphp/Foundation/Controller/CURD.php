@@ -101,7 +101,7 @@ trait CURD
 			);
 
 		if (method_exists($this, 'onList')) {
-			$this->onDetail($data);
+			$this->onList($data);
 		}
 
 		return $this->renderIndexResponse($data);
