@@ -20,6 +20,7 @@ use Xin\Thinkphp\Repository\Repository;
  * @method void onFilter(Query $query)
  * @method mixed filterable($input, callable $next)
  * @method mixed filterDestination($input)
+ * @method mixed onList($data)
  * @method mixed detailable($input, callable $next)
  * @method mixed detailDestination($input)
  * @method void onDetail($info)
@@ -98,6 +99,10 @@ trait CURD
 				$this->request->paginate(),
 				$options
 			);
+
+		if (method_exists($this, 'onList')) {
+			$this->onDetail($data);
+		}
 
 		return $this->renderIndexResponse($data);
 	}
