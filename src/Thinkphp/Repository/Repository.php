@@ -91,27 +91,30 @@ class Repository extends AbstractRepository
 		$options = array_replace_recursive($this->options, $options);
 		$query = $this->query($filter, $with, $options);
 
+		$destination = isset($options['filter_destination']) ? $options['filter_destination'] :
+			static function ($input) use ($query) {
+				$options = $input['options'] ?? [];
+
+				$paginate = $options['paginate'] ?? null;
+				if ($paginate) {
+					$paginate = is_array($paginate) ? $paginate
+						: (is_numeric($paginate) ? ['page' => $paginate,] : []);
+
+					$data = $query->paginate($paginate);
+				} else {
+					$data = $query->select();
+				}
+
+				return $data;
+			};
+
 		return $this->middleware([
 			'type' => static::SCENE_FILTER,
 			'filter' => $filter,
 			'with' => $with,
 			'query' => $query,
 			'options' => $options,
-		], function ($input) use ($query) {
-			$options = $input['options'] ?? [];
-
-			$paginate = $options['paginate'] ?? null;
-			if ($paginate) {
-				$paginate = is_array($paginate) ? $paginate
-					: (is_numeric($paginate) ? ['page' => $paginate,] : []);
-
-				$data = $query->paginate($paginate);
-			} else {
-				$data = $query->select();
-			}
-
-			return $data;
-		}, static::SCENE_FILTER);
+		], $destination, static::SCENE_FILTER);
 	}
 
 	/**
@@ -123,19 +126,22 @@ class Repository extends AbstractRepository
 		$options = array_replace_recursive($this->options, $options);
 		$query = $this->query($filter, $with, $options);
 
+		$destination = isset($options['detail_destination']) ? $options['detail_destination'] :
+			static function () use ($query, $options) {
+				if ($options['find_or_fail'] ?? false) {
+					return $query->findOrFail();
+				}
+
+				return $query->find();
+			};
+
 		return $this->middleware([
 			'type' => static::SCENE_DETAIL,
 			'filter' => $filter,
 			'with' => $with,
 			'query' => $query,
 			'options' => $options,
-		], function () use ($query, $options) {
-			if ($options['find_or_fail'] ?? false) {
-				return $query->findOrFail();
-			}
-
-			return $query->find();
-		}, static::SCENE_DETAIL);
+		], $destination, static::SCENE_DETAIL);
 	}
 
 	/**
@@ -152,38 +158,40 @@ class Repository extends AbstractRepository
 	 */
 	public function validate(array $data, $scene = null, array $options = [])
 	{
+		$destination = isset($options['validate_destination']) ? $options['validate_destination'] :
+			function ($input) use ($scene) {
+				$data = $input['data'] ?? [];
+
+				$validator = $this->getOption('validator');
+				if ($validator) {
+					if ($validator instanceof Validate) {
+						$validate = $validator;
+					} elseif (is_array($validator)) {
+						$validate = new Validate();
+						$validate->rule(
+							$validator['rules'] ?? [],
+							$validator['fields'] ?? []
+						)->message($validator['messages'] ?? []);
+					} else {
+						/** @var \think\Validate $validate */
+						$validate = app($validator);
+					}
+
+					if ($scene) {
+						$validate->scene($scene);
+					}
+
+					$validate->failException(true)->check($data);
+				}
+
+				return $data;
+			};
 		return $this->middleware([
 			'type' => static::SCENE_VALIDATE,
 			'scene' => $scene,
 			'data' => $data,
 			'options' => $options,
-		], function ($input) use ($scene) {
-			$data = $input['data'] ?? [];
-
-			$validator = $this->getOption('validator');
-			if ($validator) {
-				if ($validator instanceof Validate) {
-					$validate = $validator;
-				} elseif (is_array($validator)) {
-					$validate = new Validate();
-					$validate->rule(
-						$validator['rules'] ?? [],
-						$validator['fields'] ?? []
-					)->message($validator['messages'] ?? []);
-				} else {
-					/** @var \think\Validate $validate */
-					$validate = app($validator);
-				}
-
-				if ($scene) {
-					$validate->scene($scene);
-				}
-
-				$validate->failException(true)->check($data);
-			}
-
-			return $data;
-		}, static::SCENE_VALIDATE);
+		], $destination, static::SCENE_VALIDATE);
 	}
 
 	/**
@@ -195,18 +203,19 @@ class Repository extends AbstractRepository
 		$data = $this->validate($data, static::SCENE_STORE, $options);
 
 		return $this->transaction(function () use ($data, $options) {
-			return $this->middleware([
-				'type' => static::SCENE_STORE,
-				'data' => $data,
-				'options' => $options,
-			], function ($input) {
+			$destination = isset($options['store_destination']) ? $options['store_destination'] : function ($input) {
 				$data = $input['data'] ?? [];
 
 				$model = $this->fill($data);
 				$model->save();
 
 				return $model;
-			}, static::SCENE_STORE);
+			};
+			return $this->middleware([
+				'type' => static::SCENE_STORE,
+				'data' => $data,
+				'options' => $options,
+			], $destination, static::SCENE_STORE);
 		});
 	}
 
@@ -220,21 +229,22 @@ class Repository extends AbstractRepository
 
 		return $this->transaction(function () use ($filter, $data, $options) {
 			$query = $this->query($filter, [], $options);
+			$destination = isset($options['update_destination']) ? $options['update_destination']
+				: function ($input) use ($query) {
+					$data = $input['data'] ?? [];
 
+					$model = $query->findOrFail();
+					$this->fill($data, $model)->save();
+
+					return $model;
+				};
 			return $this->middleware([
 				'type' => static::SCENE_UPDATE,
 				'filter' => $filter,
 				'data' => $data,
 				'query' => $query,
 				'options' => $options,
-			], function ($input) use ($query) {
-				$data = $input['data'] ?? [];
-
-				$model = $query->findOrFail();
-				$this->fill($data, $model)->save();
-
-				return $model;
-			}, static::SCENE_UPDATE);
+			], $destination, static::SCENE_UPDATE);
 		});
 	}
 
@@ -268,7 +278,15 @@ class Repository extends AbstractRepository
 			$query = $this->query([
 				['id', 'IN', $ids]
 			], [], $options);
-
+			$destination = isset($options['setvalue_destination']) ? $options['setvalue_destination'] :
+				static function ($input) {
+					/** @var Query $query */
+					$query = $input['query'];
+					$query->update([
+						$input['field'] => $input['value'],
+					]);
+					return $input['value'];
+				};
 			return $this->middleware([
 				'type' => static::SCENE_SET_VALUE,
 				'ids' => $ids,
@@ -276,14 +294,7 @@ class Repository extends AbstractRepository
 				'value' => $value,
 				'query' => $query,
 				'options' => $options,
-			], function ($input) {
-				/** @var Query $query */
-				$query = $input['query'];
-				$query->update([
-					$input['field'] => $input['value'],
-				]);
-				return $input['value'];
-			}, static::SCENE_SET_VALUE);
+			], $destination, static::SCENE_SET_VALUE);
 		});
 	}
 
@@ -320,20 +331,21 @@ class Repository extends AbstractRepository
 		$options = array_replace_recursive($this->options, $options);
 		return $this->transaction(function () use ($filter, $options) {
 			$query = $this->query($filter, [], $options);
+			$destination = isset($options['delete_destination']) ? $options['delete_destination'] :
+				function ($input) use ($query) {
+					$isForce = $input['options']['allow_force_delete'] ?? false;
+					if ($isForce) {
+						return $query->removeOption('soft_delete')->delete(true);
+					}
 
+					return $query->delete();
+				};
 			return $this->middleware([
 				'type' => static::SCENE_DELETE,
 				'filter' => $filter,
 				'query' => $query,
 				'options' => $options,
-			], function ($input) use ($query) {
-				$isForce = $input['options']['allow_force_delete'] ?? false;
-				if ($isForce) {
-					return $query->removeOption('soft_delete')->delete(true);
-				}
-
-				return $query->delete();
-			}, static::SCENE_DELETE);
+			], $destination, static::SCENE_DELETE);
 		});
 	}
 
@@ -355,15 +367,17 @@ class Repository extends AbstractRepository
 		$options = array_replace_recursive($this->options, $options);
 		return $this->transaction(function () use ($filter, $options) {
 			$query = $this->query($filter, [], $options)->withTrashed();
+			$destination = isset($options['delete_destination']) ? $options['delete_destination'] :
+				static function () use ($query) {
+					return $query->restore();
+				};
 
 			return $this->middleware([
 				'type' => static::SCENE_RESTORE,
 				'filter' => $filter,
 				'query' => $query,
 				'options' => $options,
-			], function () use ($query) {
-				return $query->restore();
-			}, static::SCENE_RESTORE);
+			], $destination, static::SCENE_RESTORE);
 		});
 	}
 

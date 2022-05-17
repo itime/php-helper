@@ -19,21 +19,28 @@ use Xin\Thinkphp\Repository\Repository;
 /**
  * @method void onFilter(Query $query)
  * @method mixed filterable($input, callable $next)
+ * @method mixed filterDestination($input)
  * @method mixed detailable($input, callable $next)
+ * @method mixed detailDestination($input)
  * @method void onDetail($info)
  * @method mixed validateable($input, callable $next)
+ * @method mixed validateDestination($input)
  * @method void onBeforeValidate(&$data, $scene, $input)
  * @method void onAfterValidate(&$data, $scene, $input)
  * @method mixed storeable($input, callable $next)
+ * @method mixed storeDestination($input)
  * @method mixed updateable($input, callable $next)
+ * @method mixed updateDestination($input)
  * @method void onBeforeWrite(&$data, $scene, &$input)
  * @method void onAfterWrite(Model $info, &$data, $scene, &$input)
  * @method mixed setvalueable($input, callable $next)
+ * @method mixed setValueDestination($input)
  * @method void onBeforeSetValue($ids, $field, &$value, $input)
  * @method void onAfterSetValue(mixed $result, $ids, $field, &$value, $input)
  * @method mixed deleteable($input, callable $next)
- * @method mixed recoveryable($input, callable $next)
+ * @method mixed deleteDestination($input)
  * @method mixed restoreable($input, callable $next)
+ * @method mixed restoreDestination($input)
  * @method array getIndexOptions()
  * @method array getDetailOptions()
  * @property Requestable $request
@@ -405,6 +412,38 @@ trait CURD
 
 		if (property_exists($this, 'allowForceDelete')) {
 			$repository->setOption('allow_force_delete', $this->allowForceDelete);
+		}
+
+		if (method_exists($this, 'filterDestination')) {
+			$repository->setOption('filter_destination', \Closure::fromCallable([$this, 'filterDestination']));
+		}
+
+		if (method_exists($this, 'detailDestination')) {
+			$repository->setOption('detail_destination', \Closure::fromCallable([$this, 'detailDestination']));
+		}
+
+		if (method_exists($this, 'validateDestination')) {
+			$repository->setOption('validate_destination', \Closure::fromCallable([$this, 'validateDestination']));
+		}
+
+		if (method_exists($this, 'storeDestination')) {
+			$repository->setOption('store_destination', \Closure::fromCallable([$this, 'storeDestination']));
+		}
+
+		if (method_exists($this, 'updateDestination')) {
+			$repository->setOption('update_destination', \Closure::fromCallable([$this, 'updateDestination']));
+		}
+
+		if (method_exists($this, 'setvalueDestination')) {
+			$repository->setOption('setvalue_destination', \Closure::fromCallable([$this, 'setvalueDestination']));
+		}
+
+		if (method_exists($this, 'deleteDestination')) {
+			$repository->setOption('delete_destination', \Closure::fromCallable([$this, 'deleteDestination']));
+		}
+
+		if (method_exists($this, 'restoreDestination')) {
+			$repository->setOption('restore_destination', \Closure::fromCallable([$this, 'restoreDestination']));
 		}
 
 		return $this->repository = $repository;
