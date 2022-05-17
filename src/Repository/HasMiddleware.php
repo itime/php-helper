@@ -111,6 +111,18 @@ trait HasMiddleware
 	}
 
 	/**
+	 * 添加一个更新中间件
+	 * @param \Closure $closure
+	 * @return $this
+	 */
+	public function setValueMiddleware(\Closure $closure)
+	{
+		$this->registerMiddleware(static::SCENE_SET_VALUE, $closure);
+
+		return $this;
+	}
+
+	/**
 	 * 添加一个删除中间件
 	 * @param \Closure $closure
 	 * @return $this

@@ -295,7 +295,7 @@ trait CURD
 
 		$this->repositoryAttachHandler(['setvalueable'])
 			->registerMiddleware('setvalueable', $this->filterCallback())
-			->updateMiddleware($this->setValueCallback())
+			->setValueMiddleware($this->setValueCallback())
 			->setValue($ids, $field, $value);
 
 		return $this->renderSetValueResponse($ids, $field, $value);
