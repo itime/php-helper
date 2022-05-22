@@ -336,13 +336,11 @@ class Repository extends AbstractRepository
 		return $this->transaction(function () use ($filter, $options) {
 			$query = $this->query($filter, [], $options);
 			$destination = isset($options['delete_destination']) ? $options['delete_destination'] :
-				function ($input) use ($query) {
+				static function ($input) use ($query) {
 					$isForce = $input['options']['allow_force_delete'] ?? false;
-					if ($isForce) {
-						return $query->removeOption('soft_delete')->delete(true);
-					}
-
-					return $query->delete();
+					return $query->select()->each(function (Model $item) use ($isForce) {
+						$item->force($isForce)->delete();
+					});
 				};
 			return $this->middleware([
 				'type' => static::SCENE_DELETE,

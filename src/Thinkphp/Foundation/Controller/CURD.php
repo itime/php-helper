@@ -322,13 +322,13 @@ trait CURD
 	{
 		return function ($input, callable $next) {
 			if (method_exists($this, 'onBeforeDelete')) {
-				$this->onBeforeDelete($input['ids'], $input);
+				$this->onBeforeDelete($input['options']['ids'], $input);
 			}
 
 			$result = $next($input);
 
 			if (method_exists($this, 'onAfterDelete')) {
-				$this->onAfterDelete($result, $input['ids'], $input);
+				$this->onAfterDelete($result, $input['options']['ids'], $input);
 			}
 
 			return $result;
