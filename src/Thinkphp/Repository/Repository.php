@@ -358,6 +358,7 @@ class Repository extends AbstractRepository
 	 */
 	public function deleteByIdList(array $ids, array $options = [])
 	{
+		$options['ids'] = $ids;
 		return $this->delete([
 			['id', 'in', $ids],
 		], $options);
