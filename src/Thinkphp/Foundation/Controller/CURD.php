@@ -39,6 +39,8 @@ use Xin\Thinkphp\Repository\Repository;
  * @method void onBeforeSetValue($ids, $field, &$value, $input)
  * @method void onAfterSetValue(mixed $result, $ids, $field, &$value, $input)
  * @method mixed deleteable($input, callable $next)
+ * @method void onBeforeDelete(array $ids, array $input)
+ * @method void onAfterDelete($result, array $ids, array $input)
  * @method mixed deleteDestination($input)
  * @method mixed restoreable($input, callable $next)
  * @method mixed restoreDestination($input)
@@ -314,6 +316,26 @@ trait CURD
 	}
 
 	/**
+	 * @return \Closure
+	 */
+	protected function deleteCallback()
+	{
+		return function ($input, callable $next) {
+			if (method_exists($this, 'onBeforeDelete')) {
+				$this->onBeforeDelete($input['ids'], $input);
+			}
+
+			$result = $next($input);
+
+			if (method_exists($this, 'onAfterDelete')) {
+				$this->onAfterDelete($result, $input['ids'], $input);
+			}
+
+			return $result;
+		};
+	}
+
+	/**
 	 * 删除/回收数据操作
 	 * @return \think\Response
 	 */
@@ -324,6 +346,7 @@ trait CURD
 
 		$result = $this->repositoryAttachHandler(['deleteable'])
 			->deleteMiddleware($this->filterCallback())
+			->deleteMiddleware($this->deleteCallback())
 			->deleteByIdList($ids, [
 				'force' => $isForce
 			]);
