@@ -40,7 +40,7 @@ use Xin\Thinkphp\Repository\Repository;
  * @method void onAfterSetValue(mixed $result, $ids, $field, &$value, $input)
  * @method mixed deleteable($input, callable $next)
  * @method void onBeforeDelete(array $ids, array $input)
- * @method void onAfterDelete($result, array $ids, array $input)
+ * @method void onAfterDelete(Collection $result, array $ids, array $input)
  * @method mixed deleteDestination($input)
  * @method mixed restoreable($input, callable $next)
  * @method mixed restoreDestination($input)
