@@ -312,7 +312,7 @@ trait CURD
 	 */
 	protected function renderSetValueResponse($ids, $field, $value)
 	{
-		return Hint::success('更新成功！', $this->jumpUrl(), $value);
+		return Hint::success('更新成功！', null, $value);
 	}
 
 	/**
