@@ -160,7 +160,7 @@ trait CURD
 	 */
 	protected function requestExcludeKeys($scene = null)
 	{
-		return array_merge(($scene === 'create' ? ['id'] : []), [
+		return array_merge($scene === 'create' ? ['id'] : [], [
 			'delete_time', 'create_time', 'update_time'
 		]);
 	}
@@ -408,7 +408,7 @@ trait CURD
 				if (Str::endsWith($scene, 'able')) {
 					$scene = Str::before($scene, 'able');
 					$repository->registerMiddleware($scene, $handler);
-				} elseif (Str::endsWith($scene, 'middleware')) {
+				} elseif (Str::endsWith($scene, 'Middleware')) {
 					$repository->$scene($handler);
 				} else {
 					$repository->registerMiddleware($scene, $handler);
