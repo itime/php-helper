@@ -1,0 +1,19 @@
+<?php
+namespace plugin\\{%name%}\\admin\\controller;
+
+use app\admin\Controller;
+use think\db\Query;
+use Xin\Thinkphp\Foundation\Controller\PageCURD;
+
+class IndexController extends Controller{
+
+	use PageCURD;
+
+	/**
+	 * @return string
+	 */
+	protected function repositoryTo()
+	{
+		return {%className%}::class;
+	}
+}

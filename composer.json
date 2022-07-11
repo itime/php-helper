@@ -2,21 +2,21 @@
 	"name":"xin/helper",
 	"description":"PHP项目日常开发必备基础库，数组工具类、字符串工具类、数字工具类、函数工具类、服务器工具类、加密工具类",
 	"type":"library",
-	"version":"2.0.3",
 	"authors":[
 		{
 			"name":"晋",
 			"email":"657306123@qq.com"
 		}
 	],
-	"autoload":{
-		"psr-4":{
-			"Xin\\Support\\":"src/"
-		}
-	},
 	"license":"Apache-2.0",
-	"minimum-stability":"stable",
 	"require":{
+		"php":">=7.1.9",
+		"nesbot/carbon":"^2.0",
+		"swiftmailer/swiftmailer":"^6.2",
+		"doctrine/inflector":"^2.0",
+		"ramsey/uuid":"^3.5 | ^4.0",
+		"opis/closure":"^3.6",
+		"league/pipeline":"^1.0",
 		"ext-json":"*",
 		"ext-openssl":"*",
 		"ext-mbstring":"*",
@@ -24,5 +24,35 @@
 		"ext-ctype":"*",
 		"ext-libxml":"*",
 		"ext-simplexml":"*"
+	},
+	"require-dev":{
+		"xin/filesystem":"^3.0",
+		"overtrue/wechat":"~4.0",
+		"yansongda/pay":"^2.10",
+		"overtrue/easy-sms": "^2.1"
+	},
+	"autoload":{
+		"files":[
+			"src/Support/helpers.php",
+			"src/Thinkphp/Foundation/helpers.php",
+			"src/Thinkphp/Auth/helpers.php",
+			"src/Thinkphp/Plugin/helpers.php"
+		],
+		"psr-4":{
+			"Xin\\":"src/"
+		}
+	},
+	"suggest":{
+		"xin/filesystem":"Filesystem",
+		"yansongda/pay":"支付宝与微信支付的轮子",
+		"overtrue/wechat":"微信开发必备SDK包",
+		"overtrue/easy-sms": "一款满足你的多种发送需求的短信发送组件"
+	},
+	"minimum-stability":"dev",
+	"prefer-stable":true,
+	"config": {
+		"allow-plugins": {
+			"easywechat-composer/easywechat-composer": false
+		}
 	}
 }

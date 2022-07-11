@@ -1,0 +1,22 @@
+<?php
+return [
+	[
+		'title'  => '{%title%}',
+		'url'    => '{%name%}>index/index',
+		'show'   => true,
+		'link'   => true,
+		'icon'   => 'fa fa-gavel',
+		'sort'   => 300,
+		'parent' => 'marketing',
+		'child'  => [
+			[
+				'title' => '新增{%title%}',
+				'url'   => '{%name%}>index/create',
+			],
+			[
+				'title' => '更新{%title%}',
+				'url'   => '{%name%}>index/update',
+			],
+		],
+	],
+];
